@@ -8,6 +8,8 @@
   
 세팅 상황
   - develop 브랜치 추가
+  - hotfix 브랜치 추가
+  - release 브랜치 추가
 
 git 이용 순서
   1. (작업시작 전) pull 을 당긴다
