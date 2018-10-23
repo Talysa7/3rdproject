@@ -6,6 +6,8 @@
   - diff/merge tool (kdiff3 추천)
   - 브랜치 운용 전략
   
+세팅 상황
+  - develop 브랜치 추가
 
 git 이용 순서
   1. (작업시작 전) pull 을 당긴다
