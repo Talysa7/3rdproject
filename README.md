@@ -1,6 +1,6 @@
 # 3rdproject
 프로젝트 초반 세팅 고려사항
- + git 관련 세팅
+  git 관련 세팅
   - git tool 고려 (source tree)
   - github 기능 issues / Projects
   - diff/merge tool (kdiff3 추천)
