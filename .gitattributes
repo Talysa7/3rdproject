@@ -1,0 +1,99 @@
+# A primer on a few git attributes
+# whitespace=space-before-tab = do not allow spaces followed by tabs
+# whitespace=tab-in-indent    = do not allow indentation by tabs
+# whitespace=trailing-space   = do not allow trailing spaces
+
+# ==============================================================================
+
+# Default behaviour, in case the git client doesn't have core.autocrlf set:
+# commit only LF line endings, but use CRLF locally if needed
+# https://help.github.com/articles/dealing-with-line-endings/
+# http://adaptivepatchwork.com/2012/03/01/mind-the-end-of-your-line/
+* text=auto
+
+# Whitespace ===================================================================
+* whitespace=space-before-tab,tab-in-indent,trailing-space,tab
+# *.erl whitespace=space-before-tab,tab-in-indent,trailing-space
+# *.hrl whitespace=space-before-tab,tab-in-indent,trailing-space
+# *.yrl whitespace=space-before-tab,tab-in-indent,trailing-space
+# *.c whitespace=space-before-tab,tab-in-indent,trailing-space
+# *.h whitespace=space-before-tab,tab-in-indent,trailing-space
+# *.cpp whitespace=space-before-tab,tab-in-indent,trailing-space
+# *.java whitespace=space-before-tab,tab-in-indent,trailing-space
+# *.js whitespace=space-before-tab,tab-in-indent,trailing-space
+# *.nc whitespace=space-before-tab,tab-in-indent,trailing-space
+# *.xml whitespace=space-before-tab,tab-in-indent,trailing-space
+# *.yang whitespace=space-before-tab,tab-in-indent,trailing-space
+
+# Whitespace (exclusions) ======================================================
+.gitmodules -whitespace
+Makefile* -whitespace
+*.lux -whitespace
+*.luxinc -whitespace
+*.sh -whitespace
+*.env -whitespace
+*.md -whitespace
+*.mk whitespace=space-before-tab,-tab-in-indent,trailing-space
+*.xml whitespace=space-before-tab,-tab-in-indent,trailing-space
+*.patch whitespace=space-before-tab,-tab-in-indent,trailing-space
+Makefile* whitespace=space-before-tab,-tab-in-indent,trailing-space
+.classpath whitespace=space-before-tab,-tab-in-indent,trailing-space
+.project whitespace=space-before-tab,-tab-in-indent,trailing-space
+
+# Text =========================================================================
+*.c text
+*.conf text 
+*.cpp text
+*.erl text 
+*.hrl text 
+*.yrl text 
+*.func text 
+*.h text
+*.html text
+*.inc text 
+*.java text
+*.js text 
+*.json text 
+*.mk text 
+*.nc text 
+*.perl text
+*.php text
+*.pl text
+*.pm text
+*.py text
+*.sh text 
+*.txt text 
+*.xml text 
+*.yang text 
+Makefile* text 
+.classpath text 
+.project text 
+
+# Text (CRLF exclusions) =======================================================
+# /win32.xml text
+
+# Text (exclusions) ============================================================
+*.lux -text
+*.luxinc -text
+
+# Binaries =====================================================================
+
+*.docx binary
+*.gif binary
+*.ico binary
+*.jpg binary diff=exif
+*.pdf binary
+*.png binary
+*.tar.gz binary
+*.tgz binary
+*.xlsx binary
+*.zip binary
+
+# Binaries (exclusions) ========================================================
+
+# Max line length ==============================================================
+
+# Ignore when exporting ========================================================
+#.gitattributes export-ignore
+#.gitignore export-ignore
+#.gitmodules export-ignore
