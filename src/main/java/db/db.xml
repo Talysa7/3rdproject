@@ -7,7 +7,9 @@
 	<delete id="deleteUser" parameterType="String">
 	 	delete from gg_user where user_id=#{user_id}
 	</delete>
-	
+	<select id="test" resultType="String" >
+        SELECT DISTINCT name FROM TEST2
+    </select> 
 	<select id="getUsers" parameterType="java.util.Map" resultType="db.UserDataBean">
 		select user_id,user_name,email,gender,reg_date,r
 		from (
