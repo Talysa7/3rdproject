@@ -29,7 +29,6 @@ import db.TripDBBean;
 import db.TripDataBean;
 import db.UserDBBean;
 import db.UserDataBean;
-import jdk.nashorn.internal.ir.RuntimeNode.Request;
 
 @Controller
 public class SvcViewHandler {
