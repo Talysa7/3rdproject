@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="album">
+	<select id="getThumbail" parameterType="String" resultType="String">
+		select photo_url from pao_thumbnail where b_id=#{b_id}
+	</select>
+	<select id="getBoardTags" parameterType="int" resultType="java.util.List">
+		select tag_value from pao_tag where tag_id in
+		(select tag_id from pao_trip_tag where b_no=#{b_no})
+	</select>
+</mapper>
