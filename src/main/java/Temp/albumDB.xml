@@ -3,7 +3,7 @@
   	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="album">
-	<select id="getThumbail" parameterType="String" resultType="String">
+	<select id="getThumbnail" parameterType="String" resultType="String">	
 		select photo_url from pao_thumbnail where b_id=#{b_id}
 	</select>
 </mapper>
