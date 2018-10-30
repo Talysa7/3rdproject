@@ -63,8 +63,8 @@ public class AdmDelHandler {
 		try {
 			num=Integer.parseInt(request.getParameter("num"));
 			for(int i=0;i<num;i++) {
-				String tb_no=request.getParameter("key"+i+"").trim();
-				result=tbDao.deleteTrip(Integer.parseInt(tb_no));
+				String board_no=request.getParameter("key"+i+"").trim();
+				result=tbDao.deleteTrip(Integer.parseInt(board_no));
 				results.add(result);
 			}
 			if(results.contains(0)) {

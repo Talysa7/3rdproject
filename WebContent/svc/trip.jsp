@@ -33,15 +33,15 @@
 				<c:if test="${isOwner eq 1}">
 					<div>
 						<input type="button" value="${btn_mod}"
-							onclick="modifyBoard(${tb_no})" class="btn btn-sm"> <input
+							onclick="modifyBoard(${board_no})" class="btn btn-sm"> <input
 							type="button" value="${btn_delete}"
-							onclick="deleteBoard(${tb_no})" class="btn btn-sm">
+							onclick="deleteBoard(${board_no})" class="btn btn-sm">
 					</div>
 				</c:if>
 				<c:if test="${user_level eq 9}">
 					<div>
 						<input type="button" value="${btn_delete}" class="btn btn-sm"
-							onclick="deleteBoard(${tb_no})"> <input type="button"
+							onclick="deleteBoard(${board_no})"> <input type="button"
 							value="${btn_back_admin}" class="btn btn-sm"
 							onclick="goAdminPage()">
 					</div>
@@ -49,7 +49,7 @@
 			</div>
 			<!--  -->
 			<br>
-			<input type="hidden" value="${tbDto.tb_notice}" id="notice" />
+			<input type="hidden" value="${tbDto.board_notice}" id="notice" />
 			<!----- 공지 ----->
 			<article>
 				<section>
@@ -161,7 +161,7 @@
 				</c:if>
 					<div class="row" id="album">
 						<jsp:include
-							page='boardAlbum.go?tb_no=${tb_no}&start=${start}&tab=${tab}'
+							page='boardAlbum.go?board_no=${board_no}&start=${start}&tab=${tab}'
 							flush='false' />
 					</div>
 				</section>
@@ -185,7 +185,7 @@
 				<label for="content">comment</label>
 				<form name="commentInsertForm" method="post">
 					<div class="input-group">
-						<input type="hidden" name="tb_no" value="${tb_no}" /> <input
+						<input type="hidden" name="board_no" value="${board_no}" /> <input
 							type="hidden" name="session" value="${user_id}" /> <input
 							type="text" class="input col-11" id="c_content" name="c_content"
 							placeholder="${trip_entercontent}"> <span

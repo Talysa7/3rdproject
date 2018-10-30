@@ -46,8 +46,8 @@
 					              	</c:forEach>
 									</strong>
 									<h3 class="mb-0">
-										<a class="text-dark" href="trip.go?tb_no=${i.tb_no}">
-										<c:if test="${i.tb_notice eq 1}">
+										<a class="text-dark" href="trip.go?board_no=${i.board_no}">
+										<c:if test="${i.board_level eq 1}">
 											 ${trip_notice_1}
 										</c:if>
 										${i.tb_title}

@@ -52,7 +52,7 @@ public class TbDBBean {
 	}
 	public int insertTb_no(TbDataBean tbDto) {
 	      return session.insert("db.insertTb_no",tbDto);
-	   }
+	}
 	//write a new trip post
 	//We have to update three tables
 	//trip_board : post

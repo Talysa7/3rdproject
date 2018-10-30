@@ -94,13 +94,13 @@ public class AdmListHandler {
 				List<TbDataBean>trips=tbDao.getTrips(map);
 				request.setAttribute("trips", trips);
 		}
-		String tb_no=request.getParameter("tb_no");
+		String board_no=request.getParameter("board_no");
 		String notice=request.getParameter("yn");
-		if(tb_no!=null&&notice!=null) {
+		if(board_no!=null&&notice!=null) {
 			if(notice.equals("yes"))
-				tripDao.notice(Integer.parseInt(tb_no));
+				tripDao.notice(Integer.parseInt(board_no));
 			else {
-				tripDao.noticeX(Integer.parseInt(tb_no));
+				tripDao.noticeX(Integer.parseInt(board_no));
 			}
 		}
 		return new ModelAndView("adm/trip");
