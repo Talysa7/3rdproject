@@ -2,12 +2,63 @@
 <!DOCTYPE mapper
   	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="album">
+<mapper namespace="board">
+<!--
+	FIXME : albumDB.xml에 동일한 메서드 존재함
+	한쪽만 존재한다면 albumDB 쪽이 더 어울리지 않나 싶어 주석
 	<select id="getThumbail" parameterType="String" resultType="String">
 		select photo_url from pao_thumbnail where b_id=#{b_id}
-	</select>
+	</select> 
+-->
 	<select id="getBoardTags" parameterType="int" resultType="java.util.List">
 		select tag_value from pao_tag where tag_id in
 		(select tag_id from pao_trip_tag where b_no=#{b_no})
 	</select>
+	
+	<!--/////////////////////////////////////////////////// pao_comment table ///////////////////////////////////////////////////-->
+	<insert id="insertComment" parameterType="db.CmtDataBean">
+		insert into gg_comment(c_id, tb_no, user_id, c_content, c_reg_date)
+		values(SEQ_gg_comment_comment_id.NEXTVAL, #{tb_no}, #{user_id},
+		#{c_content, jdbcType=VARCHAR}, SYSDATE)
+	</insert>
+	<update id="updateComment" parameterType="Temp.CmtDataBean">
+		UPDATE pao_comment 
+		SET	comment_content = #{comment_content} 
+		WHERE comment_id = #{comment_id}
+	</update>
+	<delete id="deleteComment" parameterType="int">
+		DELETE FROM pao_comment
+		WHERE comment_id = #{comment_id}
+	</delete>
+	<select id="getCmtCount" resultType="int">
+		select count(*) from
+		gg_comment
+	</select>
+	<select id="getComment" parameterType="int" resultType="db.CmtDataBean">
+		select * from gg_comment where tb_no=#{tb_no} order by c_id
+		desc
+	</select>
+	<select id="getComments" parameterType="java.util.Map" resultType="Temp.CmtDataBean">
+		SELECT 
+			comment_id,tb_no,user_id,comment_content,comment_reg_date,r
+		FROM (
+			SELECT 
+				comment_id,tb_no,user_id,comment_content,comment_reg_date,rownum r 
+			FROM (
+				SELECT
+					comment_id,tb_no,user_id,comment_content,comment_reg_date 
+				FROM 
+					gg_comment 
+				ORDER BY
+					comment_reg_date DESC
+				)
+			ORDER BY 
+				comment_reg_date DESC)
+		WHERE 
+			r &gt;= #{start} 
+		AND 
+			r
+		&lt;=#{end}
+	</select>
+	
 </mapper>

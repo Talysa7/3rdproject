@@ -383,12 +383,12 @@
 
 	<!--cmt DB -->
 
-	<select id="getCmtCount" resultType="int">
+<!-- 	<select id="getCmtCount" resultType="int">
 		select count(*) from
 		gg_comment
-	</select>
+	</select> -->
 
-	<select id="getComments" parameterType="java.util.Map" resultType="db.CmtDataBean">
+<!-- 	<select id="getComments" parameterType="java.util.Map" resultType="db.CmtDataBean">
 		select c_id,tb_no,user_id,c_content,c_reg_date,r
 		from (
 		select c_id,tb_no,user_id,c_content,c_reg_date,rownum r from (
@@ -397,33 +397,28 @@
 		c_reg_date desc)
 		order by c_reg_date desc)where r &gt;= #{start} and r
 		&lt;=#{end}
-	</select>
+	</select> -->
 
-	<delete id="delComment" parameterType="int">
-		delete from gg_comment
-		where c_id=#{c_id}
-	</delete>
-
-	<insert id="insertComment" parameterType="db.CmtDataBean">
+<!-- 	<insert id="insertComment" parameterType="db.CmtDataBean">
 		insert into gg_comment(c_id, tb_no, user_id, c_content, c_reg_date)
 		values(SEQ_gg_comment_comment_id.NEXTVAL, #{tb_no}, #{user_id},
 		#{c_content, jdbcType=VARCHAR}, SYSDATE)
-	</insert>
+	</insert> -->
 
-	<select id="getComment" parameterType="int" resultType="db.CmtDataBean">
+<!-- 	<select id="getComment" parameterType="int" resultType="db.CmtDataBean">
 		select * from gg_comment where tb_no=#{tb_no} order by c_id
 		desc
-	</select>
+	</select> -->
 
-	<update id="updateComment" parameterType="db.CmtDataBean">
+<!-- 	<update id="updateComment" parameterType="db.CmtDataBean">
 		update gg_comment set
 		c_content = #{c_content} where c_id = #{c_id}
-	</update>
+	</update> -->
 
-	<delete id="deleteComment" parameterType="int">
+<!-- 	<delete id="deleteComment" parameterType="int">
 		delete from gg_comment
 		where c_id = #{c_id}
-	</delete>
+	</delete> -->
 	
 	<update id="updateTb" parameterType="db.TbDataBean">
 		update gg_trip_board set tb_title=#{tb_title}, tb_content=#{tb_content}, tb_m_num=#{tb_m_num}, tb_talk=#{tb_talk} 
