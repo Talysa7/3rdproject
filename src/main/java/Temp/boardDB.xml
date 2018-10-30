@@ -15,11 +15,11 @@
 		(select tag_id from pao_trip_tag where b_no=#{b_no})
 	</select>
 	
-	<!--/////////////////////////////////////////////////// pao_comment table ///////////////////////////////////////////////////-->
-	<insert id="insertComment" parameterType="db.CmtDataBean">
-		insert into gg_comment(c_id, tb_no, user_id, c_content, c_reg_date)
-		values(SEQ_gg_comment_comment_id.NEXTVAL, #{tb_no}, #{user_id},
-		#{c_content, jdbcType=VARCHAR}, SYSDATE)
+	<!--/////////////////////////////////////////////////// start-line pao_comment table ///////////////////////////////////////////////////-->
+	<!-- FIXME : Temp 합치고 난 후에 parameterType 등의 Temp. 어쩌구 전부 교체 필요함 -->
+	<insert id="insertComment" parameterType="Temp.CmtDataBean">
+		INSERT INTO pao_comment(comment_content, comment_reg_date, board_no, user_id)
+		VALUES( #{comment_content, jdbcType=VARCHAR}, SYSDATE, #{board_no}, #{user_id} )
 	</insert>
 	<update id="updateComment" parameterType="Temp.CmtDataBean">
 		UPDATE pao_comment 
@@ -31,34 +31,27 @@
 		WHERE comment_id = #{comment_id}
 	</delete>
 	<select id="getCmtCount" resultType="int">
-		select count(*) from
-		gg_comment
+		SELECT count(*) 
+		FROM pao_comment
 	</select>
-	<select id="getComment" parameterType="int" resultType="db.CmtDataBean">
-		select * from gg_comment where tb_no=#{tb_no} order by c_id
-		desc
+	<select id="getComment" parameterType="int" resultType="Temp.CmtDataBean">
+		SELECT * 
+		FROM pao_comment 
+		WHERE board_no=#{board_no} 
+		ORDER BY comment_id DESC
 	</select>
 	<select id="getComments" parameterType="java.util.Map" resultType="Temp.CmtDataBean">
-		SELECT 
-			comment_id,tb_no,user_id,comment_content,comment_reg_date,r
+		SELECT comment_id,board_no,user_id,comment_content,comment_reg_date,r
 		FROM (
-			SELECT 
-				comment_id,tb_no,user_id,comment_content,comment_reg_date,rownum r 
+			SELECT comment_id,board_no,user_id,comment_content,comment_reg_date,rownum r 
 			FROM (
-				SELECT
-					comment_id,tb_no,user_id,comment_content,comment_reg_date 
-				FROM 
-					gg_comment 
-				ORDER BY
-					comment_reg_date DESC
+				SELECT comment_id,board_no,user_id,comment_content,comment_reg_date 
+				FROM pao_comment 
+				ORDER BY comment_reg_date DESC
 				)
-			ORDER BY 
-				comment_reg_date DESC)
-		WHERE 
-			r &gt;= #{start} 
-		AND 
-			r
-		&lt;=#{end}
+			ORDER BY comment_reg_date DESC)
+		WHERE r &gt;= #{start} 
+		AND r &lt;= #{end}
 	</select>
-	
+	<!--/////////////////////////////////////////////////// end-line pao_comment table ///////////////////////////////////////////////////-->
 </mapper>
