@@ -29,7 +29,7 @@
 			</c:when>
 			<c:otherwise>
 				<c:forEach var="trip" items="${myTrips}">
-						<label>게시물 보기 : </label><a href="/trip.go?tb_no=${trip.tb_no}">link</a><br>
+						<label>게시물 보기 : </label><a href="/trip.go?board_no=${trip.board_no}">link</a><br>
 						<label>가는 곳 : </label> ${trip.country_name}<br>
 						<label>날짜 : </label>${trip.cal_start_date}~${trip.cal_end_date}<br>
 					<hr size="1px" color="black" noshade>
