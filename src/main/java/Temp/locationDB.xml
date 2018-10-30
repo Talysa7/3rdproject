@@ -2,8 +2,14 @@
 <!DOCTYPE mapper
   	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="album">
+<mapper namespace="location">
 	<select id="getRegions" parameterType="int" resultType="java.util.List">
 		select region_id from pao_region_match where coord_id=#{coord_id}
+	</select>
+	<select id="selectCountry" parameterType="int" resultType="Temp.CountryDataBean">	
+		select * from pao_country where country_id in(
+		select country_id from pao_coordinate where coord_id in(
+		select coord_id from pao_trip where pao_trip_id in(
+		select pao_trip_id from pao_board where b_no=#{b_no})))
 	</select>
 </mapper>
