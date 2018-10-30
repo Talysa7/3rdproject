@@ -5,7 +5,7 @@ import java.util.List;
 
 //database table : pao_board
 public class BoardDataBean {
-	private int b_no;					//int (10), PK
+	private int board_no;					//int (10), PK
 	private String b_title;				//varchar (50), not null
 	private String b_content;			//text (3000), not null
 	private int b_v_count;				//int (10), not null
@@ -24,11 +24,12 @@ public class BoardDataBean {
 										//If there is no thumbnail, set it to default image's url
 	private List<String> b_tags;		//article's tag value list
 	
-	public int getB_no() {
-		return b_no;
+	
+	public int getBoard_no() {
+		return board_no;
 	}
-	public void setB_no(int b_no) {
-		this.b_no = b_no;
+	public void setBoard_no(int board_no) {
+		this.board_no = board_no;
 	}
 	public String getB_title() {
 		return b_title;

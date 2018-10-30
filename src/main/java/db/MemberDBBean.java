@@ -10,8 +10,8 @@ import bean.SqlMapClient;
 public class MemberDBBean {
 	private SqlSession session=SqlMapClient.getSession();
 	
-	public List<UserDataBean> getCurrentMember(String td_trip_id) {
-		List<UserDataBean> memberList=session.selectList("user.getCurrentMember", td_trip_id);
+	public List<UserDataBean> getCurrentMember(String pao_trip_id) {
+		List<UserDataBean> memberList=session.selectList("user.getCurrentMember", pao_trip_id);
 		for(UserDataBean user:memberList) {
 			user.setUser_name((String)session.selectOne("db.getUserName", user.getUser_id()));
 		}

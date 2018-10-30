@@ -88,7 +88,7 @@ public class UserDBBean {
 	public int deleteMember( String user_id ) {
 		return session.delete("Member.deleteUser", user_id);
 	}
-	
+	//the code below is moved to MemberDBBean
 	/*public List<UserDataBean> getCurrentMember(String td_trip_id) {
 		List<UserDataBean> memberList=session.selectList("db.getCurrentMember", td_trip_id);
 		for(UserDataBean user:memberList) {
