@@ -18,9 +18,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import db.AlbumDBBean;
 import db.AlbumDataBean;
+import db.BoardDataBean;
 import db.CmtDBBean;
 import db.LocDBBean;
 import db.LocDataBean;
+import db.MemberDBBean;
+import db.MemberDataBean;
 import db.TagDBBean;
 import db.TagDataBean;
 import db.TbDBBean;
@@ -51,6 +54,8 @@ public class SvcViewHandler {
 	private UserDBBean userDao;
 	@Resource
 	private TbDBBean tbDao;
+	@Resource
+	private MemberDBBean memberDao;
 	
 	/////////////////////////////////default pages/////////////////////////////////
 	
@@ -182,7 +187,7 @@ public class SvcViewHandler {
 		boolean isMember=false;
 		for(Map<String, String> tempMap:memInfoList) {
 			String temp_trip_id=""+tempMap.get("td_trip_id");
-			List<UserDataBean> currendMember=userDao.getCurrentMember(temp_trip_id);
+			List<UserDataBean> currendMember=memberDao.getCurrentMember(temp_trip_id);
 			String members="";
 			if (currendMember.size()>0) {
 				for(int i=0; i<currendMember.size(); i++) {
@@ -294,13 +299,13 @@ public class SvcViewHandler {
 	
 	@RequestMapping("/svc/boardAlbum")//svc/boardAlbum
 	public ModelAndView svcBoardAlbumProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
-		int tb_no=Integer.parseInt(request.getParameter("tb_no"));
-		request.setAttribute("tb_no", tb_no);
+		int b_no=Integer.parseInt(request.getParameter("b_no"));
+		request.setAttribute("b_no", b_no);
 		
 		String user_id=(String) request.getSession().getAttribute( "user_id" );
 		if(user_id==null)user_id="";
 		
-		int count=albumDao.getBoardCount(tb_no);
+		int count=albumDao.getBoardCount(b_no);
 		request.setAttribute("count", count);
 		
 		if(count>0) {
@@ -317,17 +322,17 @@ public class SvcViewHandler {
 			Map<String, Integer>map=new HashMap<String,Integer>();
 			map.put("start",start);
 			map.put("end", end);
-			map.put("tb_no", tb_no);
+			map.put("b_no", b_no);
 			List<AlbumDataBean>album=albumDao.getBoardAlbum(map);
 			request.setAttribute("album", album);
 		}
 		
 		//check user whether user is member or not
-		TbDataBean tbDto=new TbDataBean();
+		BoardDataBean tbDto=new BoardDataBean();
 		user_id=(user_id==null?"":user_id);
 		tbDto.setUser_id(user_id);
-		tbDto.setTb_no(tb_no);
-		boolean isMember=tbDao.isMember(tbDto);
+		tbDto.setB_no(b_no);
+		boolean isMember=memberDao.isTBMember(tbDto);
 		request.setAttribute("isMember", isMember);
 		return new ModelAndView("svc/boardAlbum");
 	}

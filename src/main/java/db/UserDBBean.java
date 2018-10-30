@@ -89,7 +89,7 @@ public class UserDBBean {
 		return session.delete("Member.deleteUser", user_id);
 	}
 	
-	public List<UserDataBean> getCurrentMember(String td_trip_id) {
+	/*public List<UserDataBean> getCurrentMember(String td_trip_id) {
 		List<UserDataBean> memberList=session.selectList("db.getCurrentMember", td_trip_id);
 		for(UserDataBean user:memberList) {
 			user.setUser_name((String)session.selectOne("db.getUserName", user.getUser_id()));
@@ -107,6 +107,6 @@ public class UserDBBean {
 	
 	public int isMember(Map<String, String> delMemberMap) {
 		return session.selectOne("db.isMember2", delMemberMap);
-	}
+	}*/
 
 }

@@ -16,12 +16,19 @@
 	<delete id="delTripMember" parameterType="java.util.Map">
 		delete from pao_member where user_id=#{user_id} and pao_trip_id=#{pao_trip_id}
 	</delete>
-	<select id="isMember2" parameterType="java.util.Map" resultType="int">
+	<select id="isMember" parameterType="java.util.Map" resultType="int">
 		select count(*) from pao_member where user_id=#{user_id} and pao_trip_id=#{pao_trip_id}
+	</select>
+	<select id="isTBMember" parameterType="db.TbDataBean" resultType="int">
+		select count(*) from pao_member where user_id=#{user_id} and
+		pao_trip_id in(
+		select pao_trip_id from pao_trip where
+		board_no=#{board_no})
 	</select>
 <!-- Tag -->
 	<select id="getUserTags" parameterType="String" resultType="java.util.List">
 		select tag_value from pao_tag where tag_id in 
 		(select tag_id from pao_user_tag where user_id=#{user_id})
 	</select>
+	
 </mapper>
