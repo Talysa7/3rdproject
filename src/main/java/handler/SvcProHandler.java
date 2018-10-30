@@ -45,6 +45,7 @@ import db.CmtDBBean;
 import db.CmtDataBean;
 import db.LocDBBean;
 import db.LocDataBean;
+import db.MemberDBBean;
 import db.TagDBBean;
 import db.TagDataBean;
 import db.TbDBBean;
@@ -75,6 +76,8 @@ public class SvcProHandler {
 	private UserDBBean userDao;
 	@Resource
 	private TbDBBean tbDao;
+	@Resource
+	private MemberDBBean memberDao;
 
 	///////////////////////////////// user pages/////////////////////////////////
 
@@ -391,8 +394,8 @@ public class SvcProHandler {
 			Map<String, String> addMember=new HashMap<String, String>();
 			String td_trip_id_string=""+td_trip_id;
 			addMember.put("user_id", (String) request.getSession().getAttribute("user_id"));
-			addMember.put("td_trip_id", td_trip_id_string);
-			userDao.addTripMember(addMember);
+			addMember.put("pao_trip_id", td_trip_id_string);
+			memberDao.addTripMember(addMember);
 
 			// gg_coordinate&location
 			String country_code = request.getParameter("country_code" + i + "");
@@ -490,7 +493,6 @@ public class SvcProHandler {
 			throws HandlerException {
 
 		String uploadPath = request.getServletContext().getRealPath("/");
-		System.out.println(uploadPath);
 		String path = uploadPath + "save/";
 		String DBpath = request.getContextPath() + "/save/";
 
@@ -757,21 +759,21 @@ public class SvcProHandler {
 	@ResponseBody
 	private List<UserDataBean> memberAttendProcess(HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		String td_trip_id = request.getParameter("td_trip_id");
+		String pao_trip_id = request.getParameter("pao_trip_id");
 		String user_id = request.getParameter("user_id");
 		Map<String, String> addMemberMap = new HashMap<String, String>();
 		addMemberMap.put("user_id", user_id);
-		addMemberMap.put("td_trip_id", td_trip_id);
+		addMemberMap.put("pao_trip_id", pao_trip_id);
 
-		int memberCheck = userDao.isMember(addMemberMap);
+		int memberCheck = memberDao.isMember(addMemberMap);
 
 		if (memberCheck == 0) {
-			int addMemberResult = userDao.addTripMember(addMemberMap);
+			int addMemberResult = memberDao.addTripMember(addMemberMap);
 			request.setAttribute("addMemberResult", addMemberResult);
 			request.setAttribute("isMember", true);
 		}
 
-		List<UserDataBean> memberList = userDao.getCurrentMember(td_trip_id);
+		List<UserDataBean> memberList = memberDao.getCurrentMember(pao_trip_id);
 		return memberList;
 	}
 
@@ -779,20 +781,20 @@ public class SvcProHandler {
 	@ResponseBody
 	private List<UserDataBean> memberAbsentProcess(HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		String td_trip_id = request.getParameter("td_trip_id");
+		String pao_trip_id = request.getParameter("pao_trip_id");
 		String user_id = request.getParameter("user_id");
 
 		Map<String, String> delMemberMap = new HashMap<String, String>();
 		delMemberMap.put("user_id", user_id);
-		delMemberMap.put("td_trip_id", td_trip_id);
-		int memberCheck = userDao.isMember(delMemberMap);
+		delMemberMap.put("pao_trip_id", pao_trip_id);
+		int memberCheck = memberDao.isMember(delMemberMap);
 
 		if (memberCheck != 0) {
-			int delMemberResult = userDao.delTripMember(delMemberMap);
+			int delMemberResult = memberDao.delTripMember(delMemberMap);
 			request.setAttribute("delMemberResult", delMemberResult);
 			request.setAttribute("isMember", false);
 		}
-		List<UserDataBean> memberList = userDao.getCurrentMember(td_trip_id);
+		List<UserDataBean> memberList = memberDao.getCurrentMember(pao_trip_id);
 		return memberList;
 	}
 
