@@ -4,65 +4,83 @@
   	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="location">
 	<select id="getRegions" parameterType="int" resultType="java.util.List">
-		select region_id from pao_region_match where coord_id=#{coord_id}
+		SELECT region_id FROM pao_region_match WHERE coord_id=#{coord_id}
 	</select>
 	
 	<!--/////////////////////////////////////////////////// start-line pao_coordinate table ///////////////////////////////////////////////////-->
-	<insert id="insertCoord" parameterType="db.LocDataBean" keyProperty="coord_id">
-		insert into gg_coordinate values(
-				(select country_id from gg_country where country_code=#{country_code}),#{coord_long},#{coord_lat},#{coord_order},SEQ_gg_coordinate_coord_id.NEXTVAL)
+	<insert id="insertCoord" parameterType="db. CoordDataBean" keyProperty="coord_id">
+		INSERT INTO pao_coordinate 
+		VALUES(
+				(
+				SELECT country_id 
+				FROM pao_country 
+				WHERE country_code=#{country_code}
+				), #{coord_long}, #{coord_lat}, #{coord_order}, SEQ_pao_coordinate_coord_id.NEXTVAL)
 		<selectKey keyProperty="coord_id" resultType="int" order="AFTER">
-			select SEQ_gg_coordinate_coord_id.currval from dual
+			SELECT SEQ_pao_coordinate_coord_id.currval FROM dual
 		</selectKey>
 	</insert>
- 	<insert id="insertCal" parameterType="db.LocDataBean">
-		insert into gg_calendar values(TO_DATE(#{cal_start_date},'MM/DD/YYYY'), TO_DATE(#{cal_end_date},'MM/DD/YYYY'),#{coord_id},#{td_trip_id})
+ 	<insert id="insertCal" parameterType="db. CoordDataBean">
+		INSERT INTO pao_calendar VALUES(TO_DATE(#{cal_start_date},'MM/DD/YYYY'), TO_DATE(#{cal_end_date},'MM/DD/YYYY'),#{coord_id},#{td_trip_id})
 	</insert>
-	<select id="selectDetail" parameterType="int" resultType="db.LocDataBean">
-		select * from gg_calendar where td_trip_id in(select td_trip_id from gg_trip_detail where tb_no=#{tb_no})
+	<select id="selectDetail" parameterType="int" resultType="db. CoordDataBean">
+		SELECT * FROM pao_calendar WHERE td_trip_id IN(SELECT td_trip_id FROM pao_trip_detail WHERE tb_no=#{tb_no})
 	</select>
-	<select id="selectCoordinate" parameterType="int" resultType="db.LocDataBean">
-		select * from gg_coordinate where coord_id in(select coord_id from gg_calendar where td_trip_id in(select td_trip_id from gg_trip_detail where tb_no=#{tb})) 
+	<select id="selectCoordinate" parameterType="int" resultType="db. CoordDataBean">
+		SELECT * FROM pao_coordinate WHERE coord_id IN(SELECT coord_id FROM pao_calendar WHERE td_trip_id IN(SELECT td_trip_id FROM pao_trip_detail WHERE tb_no=#{tb})) 
 	</select>
-	<select id="selectCountry" parameterType="int" resultType="db.LocDataBean">	
-		select * from gg_country where country_id in(
-		select country_id from gg_coordinate where coord_id in(
-		select coord_id from gg_calendar where td_trip_id in(
-		select td_trip_id from gg_trip_detail where tb_no=#{tb_no})))
+	<select id="selectCountry" parameterType="int" resultType="db. CoordDataBean">	
+		SELECT * FROM pao_country WHERE country_id IN(
+		SELECT country_id FROM pao_coordinate WHERE coord_id IN(
+		SELECT coord_id FROM pao_calendar WHERE td_trip_id IN(
+		SELECT td_trip_id FROM pao_trip_detail WHERE tb_no=#{tb_no})))
 	</select>
 	
 	<!-- getTripDetail 에서 쓰는 쿼리 모음  -->
 	<!-- FIXME : getTripDetail 자체가 join 이나 서브쿼리로 해결 될 수 없는지 연구해봐야겠다 -->
-	<select id="getCalendar" parameterType="int" resultType="db.LocDataBean">
-		select * from gg_calendar where td_trip_id=#{td_trip_id}
+	<select id="getCalendar" parameterType="int" resultType="db. CoordDataBean">
+		SELECT * FROM pao_calendar WHERE td_trip_id=#{td_trip_id}
 	</select>
 	<select id="getCoordLong" parameterType="int" resultType="double">
-		select coord_long from gg_coordinate where coord_id=#{coord_id}
+		SELECT coord_long FROM pao_coordinate WHERE coord_id=#{coord_id}
 	</select>
 	<select id="getCoordLat" parameterType="int" resultType="double">
-		select coord_lat from gg_coordinate where coord_id=#{coord_id}
+		SELECT coord_lat FROM pao_coordinate WHERE coord_id=#{coord_id}
 	</select>
 	<select id="getCountryName" parameterType="int" resultType="String">
-		select country_name from gg_country where country_id=
-		(select country_id from gg_coordinate where coord_id=#{coord_id})
+		SELECT country_name FROM pao_country WHERE country_id=
+		(SELECT country_id FROM pao_coordinate WHERE coord_id=#{coord_id})
 	</select>
 	<!-- FIXME : 여기까지 getTripDetail -->
 	
 	<!-- getPhotoLoc 에서 쓰는 쿼리 모음 -->
 	<select id="getTripIds" resultType="int">
-		select td_trip_id from gg_trip_detail where tb_no=#{tb_no}
+		SELECT td_trip_id FROM pao_trip_detail WHERE tb_no=#{tb_no}
 	</select>
 	<select id="getTripCountry" parameterType="int" resultType="String">
-		select country_name from gg_country where country_id=
-		(select country_id from gg_coordinate where coord_id=
-		(select coord_id from gg_calendar where td_trip_id=#{td_trip_id}))
+		SELECT country_name FROM pao_country WHERE country_id=
+		(SELECT country_id FROM pao_coordinate WHERE coord_id=
+		(SELECT coord_id FROM pao_calendar WHERE td_trip_id=#{td_trip_id}))
 	</select>
-	<select id="getMyTrips" parameterType="String" resultType="db.LocDataBean">
-		select ca.cal_start_date, ca.cal_end_date, ca.coord_id, ca.td_trip_id, co.coord_long, co.coord_lat, co.coord_order, co.coord_id, ctr.country_name from
-		(select cal_start_date, cal_end_date, coord_id, td_trip_id from gg_calendar where td_trip_id in
-		(select td_trip_id from gg_trip_detail where tb_no in 
-		(select tb_no from gg_trip_board where user_id=#{user_id}))) ca, 
-		gg_coordinate co, gg_country ctr where ca.coord_id=co.coord_id and co.country_id=ctr.country_id
+	<select id="getMyTrips" parameterType="String" resultType="db. CoordDataBean">
+		SELECT ca.cal_start_date, ca.cal_end_date, ca.coord_id, ca.td_trip_id, co.coord_long, co.coord_lat, co.coord_order, co.coord_id, ctr.country_name 
+		FROM (
+			SELECT cal_start_date, cal_end_date, coord_id, td_trip_id 
+			FROM pao_calendar 
+			WHERE td_trip_id IN 
+				(
+				SELECT td_trip_id 
+				FROM pao_trip_detail 
+				WHERE tb_no IN 
+					(
+					SELECT tb_no 
+					FROM pao_trip_board 
+					WHERE user_id=#{user_id}
+					)
+				)
+			) ca, pao_coordinate co, pao_country ctr 
+		WHERE ca.coord_id = co.coord_id 
+		AND co.country_id = ctr.country_id
 	</select>
 	<!--/////////////////////////////////////////////////// end-line pao_coordinate table ///////////////////////////////////////////////////-->
 </mapper>
