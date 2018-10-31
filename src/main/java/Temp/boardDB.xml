@@ -3,11 +3,57 @@
   	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="album">
+	<!-- trip select -->
 	<select id="getThumbail" parameterType="String" resultType="String">
-		select photo_url from pao_thumbnail where b_id=#{b_id}
+		select photo_url 
+		from pao_thumbnail 
+		where b_id=#{b_id}
 	</select>
 	<select id="getBoardTags" parameterType="int" resultType="java.util.List">
-		select tag_value from pao_tag where tag_id in
-		(select tag_id from pao_trip_tag where b_no=#{b_no})
+		select tag_value 
+		from pao_tag 
+		where tag_id in
+		(
+			select tag_id 
+			from pao_trip_tag 
+			where b_no=#{b_no}
+		)
 	</select>
+	<select id="getTripList" parameterType="int" resultType="java.util.List">
+		select * 
+		from pao_trip 
+		where board_no=#{board_no}
+	</select>
+	<select id="getTrip" parameterType="int" resultType="db.TripDataBean">
+		select * 
+		from pao_trip 
+		where trip_id=#{trip_id}
+	</select>
+	<!-- trip insert -->
+	<insert id="addTrip" parameterType="db.TripDataBean">
+		insert into pao_trip 
+		values(#{board_no}, #{trip_id}, #{trip_member_count}, #{coord_id}, #{start_date}, #{end_date})
+	</insert>
+	<!-- trip update -->
+	<update id="addBoardViewCount" parameterType="int">
+		update pao_board 
+		set board_view_count=board_view_count+1 
+		where board_no=#{board_no}
+	</update>
+	<update id="updateTrip" parameterType="db.BoardDataBean">
+		update pao_trip 
+		set trip_member_count=#{trip_member_count, coord_id=#{coord_id}, 
+		start_date=#{start_date}, end_date=#{end_date}
+		where trip_id=#{trip_id}
+	</update>
+	<update id="setBoardLevel" parameterType="db.BoardDataBean">
+		update pao_board 
+		set board_level=#{board_level} 
+		where board_no=#{board_no}
+	</update>
+	<!-- trip delete -->
+	<delete id="deleteTrip" parameterType="int">
+		delete from pao_trip 
+		where trip_id=#{trip_id}
+	</delete>
 </mapper>
