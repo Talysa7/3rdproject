@@ -14,30 +14,28 @@ import Temp.UserDataBean;
 public class MemberDBBean {
 	private SqlSession session=SqlMapClient.getSession();
 
-	public List<UserDataBean> getCurrentMember(String pao_trip_id) {
-		List<UserDataBean> memberList=session.selectList("user.getCurrentMember", pao_trip_id);
+	public List<UserDataBean> getCurrentMember(int trip_id) {
+		List<UserDataBean> memberList=session.selectList("user.getCurrentMember", trip_id);
 		for(UserDataBean user:memberList) {
 			user.setUser_name((String)session.selectOne("user.getUserName", user.getUser_id()));
 		}
 		return memberList;
 	}
 	
-	public int addTripMember(Map<String, String> addMemberMap) {
-		return session.update("user.addTripMember", addMemberMap);
+	public String getUserName(String user_id) {
+		return session.selectOne("user.getUserName", user_id);
 	}
 	
-	public int delTripMember(Map<String, String> delMemberMap) {
-		return session.delete("user.delTripMember", delMemberMap);
+	public int delTripMember(MemberDataBean memberDto) {
+		return session.delete("user.delTripMember", memberDto);
 	}
 	
-	public int isMember(Map<String, String> delMemberMap) {
-		return session.selectOne("user.isMember", delMemberMap);
-	}
 	public boolean isTBMember(BoardDataBean tbDto) {
-		int count=session.selectOne("user.isTBMember",tbDto);
+		int count=session.selectOne("board.isTBMember",tbDto);
 		if(count>0)return true;
 		else return false;
 	}
+	
 	public List<Map<String, String>> getMemInfoList(int board_no) {
 		List<Map<String, String>> memNumList=new ArrayList<Map<String, String>>();
 		List<Integer> tripIds=session.selectList("location.getTripIds", board_no);
@@ -52,10 +50,20 @@ public class MemberDBBean {
 				currentTrip.put("trip_id", trip_id_string);
 				currentTrip.put("trip_member_count", memNum_string);
 				memNumList.add(currentTrip);
-				int actualNum = session.selectOne("user.getActualMemberCount", trip_id);
-			}			
-		}		
+			}		
+		}
 		return memNumList;
 	}
 	
+	public List<UserDataBean> getMember(int board_no) {
+		return session.selectList("board.getMember", board_no);
+	}
+
+	public int isMember(MemberDataBean memberDto) {
+		return session.selectOne("user.isMember", memberDto);
+	}
+
+	public int addTripMember(MemberDataBean memberDto) {
+		return session.selectOne("user.addTripMember", memberDto);
+	}
 }

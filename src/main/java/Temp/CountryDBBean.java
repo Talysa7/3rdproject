@@ -11,6 +11,6 @@ public class CountryDBBean {
 	private SqlSession session=SqlMapClient.getSession();
 	
 	public List<BoardDataBean> selectCountry(int board_no) {
-		return session.selectList("location.selectCountry",b_no);
+		return session.selectList("location.selectCountry",board_no);
 	}
 }

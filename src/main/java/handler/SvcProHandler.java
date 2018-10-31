@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,14 +46,15 @@ import db.CmtDBBean;
 import db.CmtDataBean;
 import db.LocDBBean;
 import db.LocDataBean;
-import db.MemberDBBean;
+import Temp.MemberDBBean;
+import Temp.MemberDataBean;
 import db.TagDBBean;
 import db.TagDataBean;
 import db.TbDBBean;
 import db.TbDataBean;
 import db.TripDBBean;
-import db.UserDBBean;
-import db.UserDataBean;
+import Temp.UserDBBean;
+import Temp.UserDataBean;
 
 @Controller
 public class SvcProHandler {
@@ -100,10 +102,13 @@ public class SvcProHandler {
 		int gender = Integer.parseInt(request.getParameter("gender"));
 
 		userDto.setGender(gender);
-		userDto.setReg_date(new Timestamp(System.currentTimeMillis()));
+		
+		Timestamp currentT = new Timestamp(System.currentTimeMillis());
+		Date userReg= new Date(currentT.getTime());
+		userDto.setReg_date(userReg);
 
 		int result = userDao.insertUser(userDto);
-
+		
 		if(tag_id !=null) {
 			for(String tag:tag_id) {
         Map<String, String> map = new HashMap<>(); 
@@ -388,14 +393,14 @@ public class SvcProHandler {
 		LocDataBean locDto = new LocDataBean();
 		for (int i = 1; i <= schedulenum; i++) {
 			tbDao.insertTripDetail(tbDto);
-			int td_trip_id = tbDto.getTd_trip_id();
+			int trip_id = tbDto.getTd_trip_id();
 			
 			//set writer as a member of his trips
-			Map<String, String> addMember=new HashMap<String, String>();
-			String td_trip_id_string=""+td_trip_id;
-			addMember.put("user_id", (String) request.getSession().getAttribute("user_id"));
-			addMember.put("pao_trip_id", td_trip_id_string);
-			memberDao.addTripMember(addMember);
+			String user_id = (String) (request.getSession().getAttribute("user_id"));
+			MemberDataBean memberDto = new MemberDataBean();
+			memberDto.setUser_id(user_id);
+			memberDto.setTrip_id(trip_id);
+			memberDao.addTripMember(memberDto);
 
 			// gg_coordinate&location
 			String country_code = request.getParameter("country_code" + i + "");
@@ -415,7 +420,7 @@ public class SvcProHandler {
 
 				locDto.setCal_start_date(cal_start_date);
 				locDto.setCal_end_date(cal_end_date);
-				locDto.setTd_trip_id(td_trip_id);
+				locDto.setTd_trip_id(trip_id);
 
 				int calResult = locDao.insertCal(locDto);// 일정에 맞는 calendar table 레코드추가
 			}
@@ -759,21 +764,22 @@ public class SvcProHandler {
 	@ResponseBody
 	private List<UserDataBean> memberAttendProcess(HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		String pao_trip_id = request.getParameter("pao_trip_id");
+		String trip_id = request.getParameter("trip_id");
 		String user_id = request.getParameter("user_id");
-		Map<String, String> addMemberMap = new HashMap<String, String>();
-		addMemberMap.put("user_id", user_id);
-		addMemberMap.put("pao_trip_id", pao_trip_id);
+		int trip_id_int = Integer.parseInt(trip_id);
+		MemberDataBean memberDto = new MemberDataBean();		
+		memberDto.setTrip_id(trip_id_int);
+		memberDto.setUser_id(user_id);
 
-		int memberCheck = memberDao.isMember(addMemberMap);
+		int memberCheck = memberDao.isMember(memberDto);
 
 		if (memberCheck == 0) {
-			int addMemberResult = memberDao.addTripMember(addMemberMap);
+			int addMemberResult = memberDao.addTripMember(memberDto);
 			request.setAttribute("addMemberResult", addMemberResult);
 			request.setAttribute("isMember", true);
 		}
 
-		List<UserDataBean> memberList = memberDao.getCurrentMember(pao_trip_id);
+		List<UserDataBean> memberList = memberDao.getMember(trip_id_int);
 		return memberList;
 	}
 
@@ -781,20 +787,22 @@ public class SvcProHandler {
 	@ResponseBody
 	private List<UserDataBean> memberAbsentProcess(HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		String pao_trip_id = request.getParameter("pao_trip_id");
+		String trip_id = request.getParameter("trip_id");
 		String user_id = request.getParameter("user_id");
+	    int trip_id_int = Integer.parseInt(trip_id);
+	    
+	    MemberDataBean memberDto = new MemberDataBean();
+	    memberDto.setTrip_id(trip_id_int);
+	    memberDto.setUser_id(user_id);
 
-		Map<String, String> delMemberMap = new HashMap<String, String>();
-		delMemberMap.put("user_id", user_id);
-		delMemberMap.put("pao_trip_id", pao_trip_id);
-		int memberCheck = memberDao.isMember(delMemberMap);
+		int memberCheck = memberDao.isMember(memberDto);
 
 		if (memberCheck != 0) {
-			int delMemberResult = memberDao.delTripMember(delMemberMap);
+			int delMemberResult = memberDao.delTripMember(memberDto);
 			request.setAttribute("delMemberResult", delMemberResult);
 			request.setAttribute("isMember", false);
 		}
-		List<UserDataBean> memberList = memberDao.getCurrentMember(pao_trip_id);
+		List<UserDataBean> memberList = memberDao.getCurrentMember(trip_id_int);
 		return memberList;
 	}
 

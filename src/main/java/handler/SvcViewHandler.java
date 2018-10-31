@@ -22,16 +22,16 @@ import db.BoardDataBean;
 import db.CmtDBBean;
 import db.LocDBBean;
 import db.LocDataBean;
-import db.MemberDBBean;
-import db.MemberDataBean;
+import Temp.MemberDBBean;
+import Temp.MemberDataBean;
 import db.TagDBBean;
 import db.TagDataBean;
 import db.TbDBBean;
 import db.TbDataBean;
 import db.TripDBBean;
 import db.TripDataBean;
-import db.UserDBBean;
-import db.UserDataBean;
+import Temp.UserDBBean;
+import Temp.UserDataBean;
 import jdk.nashorn.internal.ir.RuntimeNode.Request;
 
 @Controller
@@ -136,11 +136,11 @@ public class SvcViewHandler {
 		request.setAttribute("user_id", user_id);
 		
 		//get tb_no of the post
-		int tb_no=Integer.parseInt(request.getParameter("tb_no"));
-		request.setAttribute("tb_no", tb_no);
+		int board_no=Integer.parseInt(request.getParameter("tb_no"));
+		request.setAttribute("tb_no", board_no);
 		
 		//getTrip-게시물 정보 가져오기
-		TbDataBean tbDto=tbDao.getTb(tb_no);
+		TbDataBean tbDto=tbDao.getTb(board_no);
 		request.setAttribute("tbDto", tbDto);
 		
 		//trip details
@@ -154,11 +154,11 @@ public class SvcViewHandler {
 			request.setAttribute("locDtoList", locDtoList);
 		}
 		
-		tbDao.addCount(tb_no);
+		tbDao.addCount(board_no);
 		
 		//authorization for deletion and modification-수정 삭제 권한 
 		TripDataBean tripDto=new TripDataBean();
-		tripDto.setTb_no(tb_no);
+		tripDto.setTb_no(board_no);
 		user_id=(user_id==null?"":user_id);
 		tripDto.setUser_id(user_id);
 		int isOwner=tripDao.isOwner(tripDto);
@@ -183,11 +183,12 @@ public class SvcViewHandler {
 		request.setAttribute("start",start);
 		
 		//member Info of each trip
-		List<Map<String, String>> memInfoList=tbDao.getMemInfoList(tb_no);
+		List<Map<String, String>> memInfoList=memberDao.getMemInfoList(board_no);
 		boolean isMember=false;
 		for(Map<String, String> tempMap:memInfoList) {
 			String temp_trip_id=""+tempMap.get("td_trip_id");
-			List<UserDataBean> currendMember=memberDao.getCurrentMember(temp_trip_id);
+			int trip_id = Integer.parseInt(tempMap.get("td_trip_id"));
+			List<UserDataBean> currendMember=memberDao.getMember(trip_id);
 			String members="";
 			if (currendMember.size()>0) {
 				for(int i=0; i<currendMember.size(); i++) {
@@ -200,7 +201,7 @@ public class SvcViewHandler {
 					}
 					String id=(String)request.getSession().getAttribute("user_id");
 					if(id!=null) {
-						String name=userDao.getUserName(id);
+						String name=memberDao.getUserName(id);
 						if(name.equals(currendMember.get(i).getUser_name())) {
 							isMember=true;
 						}
@@ -331,7 +332,7 @@ public class SvcViewHandler {
 		BoardDataBean tbDto=new BoardDataBean();
 		user_id=(user_id==null?"":user_id);
 		tbDto.setUser_id(user_id);
-		tbDto.setB_no(b_no);
+		tbDto.setBoard_no(b_no);
 		boolean isMember=memberDao.isTBMember(tbDto);
 		request.setAttribute("isMember", isMember);
 		return new ModelAndView("svc/boardAlbum");
