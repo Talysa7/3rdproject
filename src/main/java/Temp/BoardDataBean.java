@@ -5,13 +5,13 @@ import java.util.List;
 
 //database table : pao_board
 public class BoardDataBean {
-	private int b_no;					//int (10), PK
-	private String b_title;				//varchar (50), not null
-	private String b_content;			//text (3000), not null
-	private int b_v_count;				//int (10), not null
-	private int b_level;				//tinyint (1)
-	private String b_contact;			//varchar (100)
-	private Date b_reg_date;			//timestamp, not null
+	private int board_no;					//int (10), PK
+	private String board_title;				//varchar (50), not null
+	private String board_content;			//text (3000), not null
+	private int board_view_count;				//int (10), not null
+	private int board_level;				//tinyint (1)
+	private String board_contact;			//varchar (100)
+	private Date board_reg_date;			//timestamp, not null
 	//FK
 	private String user_id;				//varchar (20), on delete cascade
 	//guest value from database table : pao_user
@@ -22,50 +22,10 @@ public class BoardDataBean {
 	private String thumbnail;			//varchar (10)
 										//Thumnail image of this article
 										//If there is no thumbnail, set it to default image's url
-	private List<String> b_tags;		//article's tag value list
+	private List<String> board_tags;		//article's tag value list
+	private List<TripDataBean> tripLists;	// 관련된 TripData들을 가져와 보관하기 위함.
 	
-	public int getB_no() {
-		return b_no;
-	}
-	public void setB_no(int b_no) {
-		this.b_no = b_no;
-	}
-	public String getB_title() {
-		return b_title;
-	}
-	public void setB_title(String b_title) {
-		this.b_title = b_title;
-	}
-	public String getB_content() {
-		return b_content;
-	}
-	public void setB_content(String b_content) {
-		this.b_content = b_content;
-	}
-	public int getB_v_count() {
-		return b_v_count;
-	}
-	public void setB_v_count(int b_v_count) {
-		this.b_v_count = b_v_count;
-	}
-	public int getB_level() {
-		return b_level;
-	}
-	public void setB_level(int b_level) {
-		this.b_level = b_level;
-	}
-	public String getB_contact() {
-		return b_contact;
-	}
-	public void setB_contact(String b_contact) {
-		this.b_contact = b_contact;
-	}
-	public Date getB_reg_date() {
-		return b_reg_date;
-	}
-	public void setB_reg_date(Date b_reg_date) {
-		this.b_reg_date = b_reg_date;
-	}
+
 	public String getUser_id() {
 		return user_id;
 	}
@@ -96,11 +56,62 @@ public class BoardDataBean {
 	public String getThumbnail() {
 		return thumbnail;
 	}
-	public void setB_tags(int b_no) {
-		TagDBBean tagDao=new TagDBBean();
-		this.b_tags=tagDao.getB_tags(b_no);
+	public int getBoard_no() {
+		return board_no;
 	}
-	public List<String> getB_tags() {
-		return b_tags;
+	public void setBoard_no(int board_no) {
+		this.board_no = board_no;
 	}
+	public String getBoard_title() {
+		return board_title;
+	}
+	public void setBoard_title(String board_title) {
+		this.board_title = board_title;
+	}
+	public String getBoard_content() {
+		return board_content;
+	}
+	public void setBoard_content(String board_content) {
+		this.board_content = board_content;
+	}
+	public int getBoard_view_count() {
+		return board_view_count;
+	}
+	public void setBoard_view_count(int board_view_count) {
+		this.board_view_count = board_view_count;
+	}
+	public int getBoard_level() {
+		return board_level;
+	}
+	public void setBoard_level(int board_level) {
+		this.board_level = board_level;
+	}
+	public String getBoard_contact() {
+		return board_contact;
+	}
+	public void setBoard_contact(String board_contact) {
+		this.board_contact = board_contact;
+	}
+	public Date getBoard_reg_date() {
+		return board_reg_date;
+	}
+	public void setBoard_reg_date(Date board_reg_date) {
+		this.board_reg_date = board_reg_date;
+	}
+	public List<String> getBoard_tags() {
+		return board_tags;
+	}
+	public void setBoard_tags(List<String> board_tags) {
+		this.board_tags = board_tags;
+	}
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
+	}
+	public List<TripDataBean> getTripLists() {
+		return tripLists;
+	}
+	public void setTripLists(List<TripDataBean> tripLists) {
+		this.tripLists = tripLists;
+	}
+	
 }

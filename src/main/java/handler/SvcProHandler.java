@@ -45,7 +45,6 @@ import db.CmtDBBean;
 import db.CmtDataBean;
 import db.LocDBBean;
 import db.LocDataBean;
-import db.MemberDBBean;
 import db.TagDBBean;
 import db.TagDataBean;
 import db.TbDBBean;
@@ -76,8 +75,6 @@ public class SvcProHandler {
 	private UserDBBean userDao;
 	@Resource
 	private TbDBBean tbDao;
-	@Resource
-	private MemberDBBean memberDao;
 
 	///////////////////////////////// user pages/////////////////////////////////
 
@@ -381,9 +378,9 @@ public class SvcProHandler {
 		tbDto.setTb_talk(request.getParameter("tb_talk"));
 		tbDto.setTb_content(request.getParameter("content"));
 
-		tbDao.insertTb_no(tbDto);
-		int tb_no = tbDto.getTb_no();// tb_no
-		request.setAttribute("tb_no", tb_no);
+		tbDao.insertBoard_no(tbDto);
+		int board_no = tbDto.getBoard_no();// board_no
+		request.setAttribute("board_no", board_no);
 
 		LocDataBean locDto = new LocDataBean();
 		for (int i = 1; i <= schedulenum; i++) {
@@ -394,8 +391,8 @@ public class SvcProHandler {
 			Map<String, String> addMember=new HashMap<String, String>();
 			String td_trip_id_string=""+td_trip_id;
 			addMember.put("user_id", (String) request.getSession().getAttribute("user_id"));
-			addMember.put("pao_trip_id", td_trip_id_string);
-			memberDao.addTripMember(addMember);
+			addMember.put("td_trip_id", td_trip_id_string);
+			userDao.addTripMember(addMember);
 
 			// gg_coordinate&location
 			String country_code = request.getParameter("country_code" + i + "");
@@ -427,7 +424,7 @@ public class SvcProHandler {
 			// put them in a Map and call db update
 			Map<String, Integer> tagSetter = new HashMap<String, Integer>();
 			for (String tag : tags) {
-				tagSetter.put("tb_no", tb_no);
+				tagSetter.put("board_no", board_no);
 				tagSetter.put("tag_id", Integer.parseInt(tag));
 				tagDao.setTripTag(tagSetter);
 			}
@@ -444,11 +441,11 @@ public class SvcProHandler {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		System.out.println(request.getParameter("tb_no"));
-		int tb_no = Integer.parseInt(request.getParameter("tb_no"));
+		System.out.println(request.getParameter("board_no"));
+		int board_no = Integer.parseInt(request.getParameter("board_no"));
 		// update gg_trip_board
 		TbDataBean tbDto = new TbDataBean();
-		tbDto.setTb_no(tb_no);
+		tbDto.setBoard_no(board_no);
 		tbDto.setUser_id((String) request.getSession().getAttribute("user_id"));
 		tbDto.setTb_title(request.getParameter("trip_title"));
 		tbDto.setTb_m_num(Integer.parseInt(request.getParameter("trip_m_num")));
@@ -469,8 +466,8 @@ public class SvcProHandler {
 		//update modified "tripMod" in DB
 		int result = tbDao.updateTb(tbDto);
 		request.setAttribute("result", result);
-		request.setAttribute("tb_no", tb_no);
-		result=tagDao.updateTripTags(tb_no, tripTags);
+		request.setAttribute("board_no", board_no);
+		result=tagDao.updateTripTags(board_no, tripTags);
 		
 		return new ModelAndView("svc/tripModPro");
 	}
@@ -480,8 +477,8 @@ public class SvcProHandler {
 	@RequestMapping("/tripDelPro")
 	public ModelAndView svcTripDelProProcess(HttpServletRequest request, HttpServletResponse response)
 			throws HandlerException {
-		int tb_no = Integer.parseInt(request.getParameter("tb_no"));
-		int result = tbDao.deleteTrip(tb_no);
+		int board_no = Integer.parseInt(request.getParameter("board_no"));
+		int result = tbDao.deleteTrip(board_no);
 		request.setAttribute("result", result);
 		return new ModelAndView("svc/tripDel");
 	}
@@ -493,6 +490,7 @@ public class SvcProHandler {
 			throws HandlerException {
 
 		String uploadPath = request.getServletContext().getRealPath("/");
+		System.out.println(uploadPath);
 		String path = uploadPath + "save/";
 		String DBpath = request.getContextPath() + "/save/";
 
@@ -526,9 +524,9 @@ public class SvcProHandler {
 				// db insert
 				albumDto = new AlbumDataBean();
 				albumDto.setPhoto_url(safeDBFile);
-				int tb_no=Integer.parseInt(request.getParameter("tb_no"));
-				albumDto.setTb_no(tb_no);
-				request.setAttribute("tb_no",tb_no);
+				int board_no=Integer.parseInt(request.getParameter("board_no"));
+				albumDto.setBoard_no(board_no);
+				request.setAttribute("board_no",board_no);
 				int result = albumDao.addPhoto(albumDto);
 			} catch (IllegalStateException e) {
 				e.printStackTrace();
@@ -543,25 +541,25 @@ public class SvcProHandler {
 	@RequestMapping("/photoDel")
 	public ModelAndView svcPhotoDelProcess(HttpServletRequest request, HttpServletResponse response)
 			throws HandlerException {
-		int tb_no = Integer.parseInt(request.getParameter("tb_no"));
-		request.setAttribute("tb_no", tb_no);
+		int board_no = Integer.parseInt(request.getParameter("board_no"));
+		request.setAttribute("board_no", board_no);
 
 		int photo_id = Integer.parseInt(request.getParameter("photo_id"));
 		int result = albumDao.delPhoto(photo_id);
 		request.setAttribute("result", result);
-		return new ModelAndView("redirect:trip.go?tb_no="+tb_no);
+		return new ModelAndView("redirect:trip.go?board_no="+board_no);
 	}
 
 	@RequestMapping("/downloadAlbum.go")
 	public void downloadAlbumProcess(HttpServletRequest request, HttpServletResponse response)
 			throws HandlerException, IOException {
-		int tb_no = Integer.parseInt(request.getParameter("tb_no"));
-		List<String> photo_urls = albumDao.getPhoto_urls(tb_no);
+		int board_no = Integer.parseInt(request.getParameter("board_no"));
+		List<String> photo_urls = albumDao.getPhoto_urls(board_no);
 
 		String realFolder = request.getServletContext().getRealPath("/") + "save/";
 		int bufferSize = LIMIT_SIZE;
 		ZipOutputStream zos = null;
-		String zipName = "Travelers_Album" + tb_no;
+		String zipName = "Travelers_Album" + board_no;
 
 		response.reset();
 		response.setHeader("Content-Disposition", "attachment; filename=" + zipName + ".zip" + ";");
@@ -702,7 +700,7 @@ public class SvcProHandler {
 		CmtDataBean cmtDto = new CmtDataBean();
 		if(c_content != null) {
 		cmtDto.setUser_id(user_id); // jsp에서 히든으로 가져오면됨
-		cmtDto.setTb_no(Integer.parseInt(request.getParameter("tb_no")));
+		cmtDto.setBoard_no(Integer.parseInt(request.getParameter("board_no")));
 		cmtDto.setC_content(c_content);
 		
 		cmtDao.insertComment(cmtDto);
@@ -714,8 +712,8 @@ public class SvcProHandler {
 	public List<CmtDataBean> commentSelectProcess(HttpServletRequest request, HttpServletResponse response)
 			throws HandlerException {
 
-		int tb_no = Integer.parseInt(request.getParameter("tb_no"));
-		List<CmtDataBean> comment = cmtDao.getComment(tb_no);
+		int board_no = Integer.parseInt(request.getParameter("board_no"));
+		List<CmtDataBean> comment = cmtDao.getComment(board_no);
 		for (CmtDataBean dto : comment) {
 			String user_name;
 			String user_id = dto.getUser_id();
@@ -759,21 +757,21 @@ public class SvcProHandler {
 	@ResponseBody
 	private List<UserDataBean> memberAttendProcess(HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		String pao_trip_id = request.getParameter("pao_trip_id");
+		String td_trip_id = request.getParameter("td_trip_id");
 		String user_id = request.getParameter("user_id");
 		Map<String, String> addMemberMap = new HashMap<String, String>();
 		addMemberMap.put("user_id", user_id);
-		addMemberMap.put("pao_trip_id", pao_trip_id);
+		addMemberMap.put("td_trip_id", td_trip_id);
 
-		int memberCheck = memberDao.isMember(addMemberMap);
+		int memberCheck = userDao.isMember(addMemberMap);
 
 		if (memberCheck == 0) {
-			int addMemberResult = memberDao.addTripMember(addMemberMap);
+			int addMemberResult = userDao.addTripMember(addMemberMap);
 			request.setAttribute("addMemberResult", addMemberResult);
 			request.setAttribute("isMember", true);
 		}
 
-		List<UserDataBean> memberList = memberDao.getCurrentMember(pao_trip_id);
+		List<UserDataBean> memberList = userDao.getCurrentMember(td_trip_id);
 		return memberList;
 	}
 
@@ -781,20 +779,20 @@ public class SvcProHandler {
 	@ResponseBody
 	private List<UserDataBean> memberAbsentProcess(HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		String pao_trip_id = request.getParameter("pao_trip_id");
+		String td_trip_id = request.getParameter("td_trip_id");
 		String user_id = request.getParameter("user_id");
 
 		Map<String, String> delMemberMap = new HashMap<String, String>();
 		delMemberMap.put("user_id", user_id);
-		delMemberMap.put("pao_trip_id", pao_trip_id);
-		int memberCheck = memberDao.isMember(delMemberMap);
+		delMemberMap.put("td_trip_id", td_trip_id);
+		int memberCheck = userDao.isMember(delMemberMap);
 
 		if (memberCheck != 0) {
-			int delMemberResult = memberDao.delTripMember(delMemberMap);
+			int delMemberResult = userDao.delTripMember(delMemberMap);
 			request.setAttribute("delMemberResult", delMemberResult);
 			request.setAttribute("isMember", false);
 		}
-		List<UserDataBean> memberList = memberDao.getCurrentMember(pao_trip_id);
+		List<UserDataBean> memberList = userDao.getCurrentMember(td_trip_id);
 		return memberList;
 	}
 

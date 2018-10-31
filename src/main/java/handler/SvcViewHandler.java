@@ -18,12 +18,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import db.AlbumDBBean;
 import db.AlbumDataBean;
-import db.BoardDataBean;
 import db.CmtDBBean;
 import db.LocDBBean;
 import db.LocDataBean;
-import db.MemberDBBean;
-import db.MemberDataBean;
 import db.TagDBBean;
 import db.TagDataBean;
 import db.TbDBBean;
@@ -32,7 +29,6 @@ import db.TripDBBean;
 import db.TripDataBean;
 import db.UserDBBean;
 import db.UserDataBean;
-import jdk.nashorn.internal.ir.RuntimeNode.Request;
 
 @Controller
 public class SvcViewHandler {
@@ -54,8 +50,6 @@ public class SvcViewHandler {
 	private UserDBBean userDao;
 	@Resource
 	private TbDBBean tbDao;
-	@Resource
-	private MemberDBBean memberDao;
 	
 	/////////////////////////////////default pages/////////////////////////////////
 	
@@ -94,11 +88,11 @@ public class SvcViewHandler {
 		String user_id=(String)request.getSession().getAttribute("user_id");
 		//get user's trip list
 		List<LocDataBean> myTrips=locDao.getMyTrips(user_id);
-		//put tb_no... it was too much value...
+		//put board_no... it was too much value...
 		if(myTrips.size()>0) {
 			for(LocDataBean trip:myTrips) {
-				int tb_no=tbDao.getTbNo(trip.getTd_trip_id());
-				trip.setTb_no(tb_no);
+				int board_no=tbDao.getTbNo(trip.getTd_trip_id());
+				trip.setBoard_no(board_no);
 			}
 		}
 		request.setAttribute("myTrips", myTrips);
@@ -135,12 +129,12 @@ public class SvcViewHandler {
 		String user_id=(String)request.getSession().getAttribute("user_id");
 		request.setAttribute("user_id", user_id);
 		
-		//get tb_no of the post
-		int tb_no=Integer.parseInt(request.getParameter("tb_no"));
-		request.setAttribute("tb_no", tb_no);
+		//get board_no of the post
+		int board_no=Integer.parseInt(request.getParameter("board_no"));
+		request.setAttribute("board_no", board_no);
 		
 		//getTrip-게시물 정보 가져오기
-		TbDataBean tbDto=tbDao.getTb(tb_no);
+		TbDataBean tbDto=tbDao.getTb(board_no);
 		request.setAttribute("tbDto", tbDto);
 		
 		//trip details
@@ -154,11 +148,11 @@ public class SvcViewHandler {
 			request.setAttribute("locDtoList", locDtoList);
 		}
 		
-		tbDao.addCount(tb_no);
+		tbDao.addCount(board_no);
 		
 		//authorization for deletion and modification-수정 삭제 권한 
 		TripDataBean tripDto=new TripDataBean();
-		tripDto.setTb_no(tb_no);
+		tripDto.setBoard_no(board_no);
 		user_id=(user_id==null?"":user_id);
 		tripDto.setUser_id(user_id);
 		int isOwner=tripDao.isOwner(tripDto);
@@ -183,11 +177,11 @@ public class SvcViewHandler {
 		request.setAttribute("start",start);
 		
 		//member Info of each trip
-		List<Map<String, String>> memInfoList=tbDao.getMemInfoList(tb_no);
+		List<Map<String, String>> memInfoList=tbDao.getMemInfoList(board_no);
 		boolean isMember=false;
 		for(Map<String, String> tempMap:memInfoList) {
 			String temp_trip_id=""+tempMap.get("td_trip_id");
-			List<UserDataBean> currendMember=memberDao.getCurrentMember(temp_trip_id);
+			List<UserDataBean> currendMember=userDao.getCurrentMember(temp_trip_id);
 			String members="";
 			if (currendMember.size()>0) {
 				for(int i=0; i<currendMember.size(); i++) {
@@ -266,24 +260,24 @@ public class SvcViewHandler {
 			List<Map<String, String>> photoInfos=new ArrayList<Map<String, String>>();
 			List<Map<String, String>> photoTags=new ArrayList<Map<String, String>>();
 			if(count>0) {
-				int tb_no=0;
+				int board_no=0;
 				for(int i=0; i<album.size(); i++) {
-					if(tb_no!=album.get(i).getTb_no()) {
-						//tb_no of this photo, if it has same with previous one, then pass
-						tb_no=album.get(i).getTb_no();
-						String this_tb_no=""+tb_no;
+					if(board_no!=album.get(i).getBoard_no()) {
+						//board_no of this photo, if it has same with previous one, then pass
+						board_no=album.get(i).getBoard_no();
+						String this_board_no=""+board_no;
 						
 						//send photo countries
 						Map<String, String> photoInfo=new HashMap<String, String>();
-						photoInfo.put("this_tb_no", this_tb_no);
-						photoInfo.put("photoLoc", locDao.getPhotoLoc(album.get(i).getTb_no()));
+						photoInfo.put("this_board_no", this_board_no);
+						photoInfo.put("photoLoc", locDao.getPhotoLoc(album.get(i).getBoard_no()));
 						photoInfos.add(photoInfo);
 						
 						//send photo tags
-						List<TagDataBean> photoTag=tagDao.getTripTags(tb_no);
+						List<TagDataBean> photoTag=tagDao.getTripTags(board_no);
 						for(TagDataBean tb:photoTag) {
 							Map<String, String> tempTags=new HashMap<String, String>();
-							tempTags.put("this_tb_no", this_tb_no);
+							tempTags.put("this_board_no", this_board_no);
 							tempTags.put("tag_value", tb.getTag_value());
 							photoTags.add(tempTags);
 						}
@@ -299,13 +293,13 @@ public class SvcViewHandler {
 	
 	@RequestMapping("/svc/boardAlbum")//svc/boardAlbum
 	public ModelAndView svcBoardAlbumProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
-		int b_no=Integer.parseInt(request.getParameter("b_no"));
-		request.setAttribute("b_no", b_no);
+		int board_no=Integer.parseInt(request.getParameter("board_no"));
+		request.setAttribute("board_no", board_no);
 		
 		String user_id=(String) request.getSession().getAttribute( "user_id" );
 		if(user_id==null)user_id="";
 		
-		int count=albumDao.getBoardCount(b_no);
+		int count=albumDao.getBoardCount(board_no);
 		request.setAttribute("count", count);
 		
 		if(count>0) {
@@ -322,17 +316,17 @@ public class SvcViewHandler {
 			Map<String, Integer>map=new HashMap<String,Integer>();
 			map.put("start",start);
 			map.put("end", end);
-			map.put("b_no", b_no);
+			map.put("board_no", board_no);
 			List<AlbumDataBean>album=albumDao.getBoardAlbum(map);
 			request.setAttribute("album", album);
 		}
 		
 		//check user whether user is member or not
-		BoardDataBean tbDto=new BoardDataBean();
+		TbDataBean tbDto=new TbDataBean();
 		user_id=(user_id==null?"":user_id);
 		tbDto.setUser_id(user_id);
-		tbDto.setB_no(b_no);
-		boolean isMember=memberDao.isTBMember(tbDto);
+		tbDto.setBoard_no(board_no);
+		boolean isMember=tbDao.isMember(tbDto);
 		request.setAttribute("isMember", isMember);
 		return new ModelAndView("svc/boardAlbum");
 	}
