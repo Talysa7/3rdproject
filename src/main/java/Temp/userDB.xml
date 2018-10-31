@@ -21,7 +21,7 @@
 		from (
 		select user_id,user_name,email,gender,reg_date,rownum r from (
 		select
-		user_id,user_name,email,gender,reg_date from gg_user where user_level!=9 order by
+		user_id,user_name,email,gender,reg_date from pao_user where user_level!=9 order by
 		reg_date
 		desc)
 		order by reg_date desc)where r &gt;= #{start} and r &lt;=#{end}
