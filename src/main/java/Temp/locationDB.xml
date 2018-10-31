@@ -10,6 +10,9 @@
 		select * from pao_country where country_id in(
 		select country_id from pao_coordinate where coord_id in(
 		select coord_id from pao_trip where pao_trip_id in(
-		select pao_trip_id from pao_board where b_no=#{b_no})))
+		select trip_id from pao_board where board_no=#{board_no})))
+	</select>
+	<select id="getTripIds" resultType="int">
+		select trip_id from pao_trip where board_no=#{board_no}
 	</select>
 </mapper>

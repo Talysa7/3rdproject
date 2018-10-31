@@ -8,22 +8,25 @@
 		select user_name from pao_user where user_id=#{user_id}
 	</select>	
 	<select id="getCurrentMember" parameterType="String" resultType="Temp.UserDataBean">
-		select * from pao_member where pao_trip_id=#{pao_trip_id}
+		select * from pao_member where pao_trip_id=#{trip_id}
 	</select>
 	<update id="addTripMember" parameterType="java.util.Map">
-		insert into pao_member values(#{user_id}, #{pao_trip_id})
+		insert into pao_member values(#{user_id}, #{trip_id})
 	</update>	
 	<delete id="delTripMember" parameterType="java.util.Map">
-		delete from pao_member where user_id=#{user_id} and pao_trip_id=#{pao_trip_id}
+		delete from pao_member where user_id=#{user_id} and trip_id=#{trip_id}
 	</delete>
 	<select id="isMember" parameterType="java.util.Map" resultType="int">
-		select count(*) from pao_member where user_id=#{user_id} and pao_trip_id=#{pao_trip_id}
+		select count(*) from pao_member where user_id=#{user_id} and trip_id=#{trip_id}
 	</select>
-	<select id="isTBMember" parameterType="db.TbDataBean" resultType="int">
+	<select id="isTBMember" parameterType="db.BoardDataBean" resultType="int">
 		select count(*) from pao_member where user_id=#{user_id} and
-		pao_trip_id in(
-		select pao_trip_id from pao_trip where
+		trip_id in(
+		select trip_id from pao_trip where
 		board_no=#{board_no})
+	</select>
+	<select id="getMemberCount" parameterType="int" resultType="int">
+		select count(*) from pao_member where trip_id=#{trip_id}
 	</select>
 <!-- Tag -->
 	<select id="getUserTags" parameterType="String" resultType="java.util.List">

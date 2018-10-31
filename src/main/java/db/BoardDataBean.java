@@ -6,12 +6,12 @@ import java.util.List;
 //database table : pao_board
 public class BoardDataBean {
 	private int board_no;					//int (10), PK
-	private String b_title;				//varchar (50), not null
-	private String b_content;			//text (3000), not null
-	private int b_v_count;				//int (10), not null
-	private int b_level;				//tinyint (1)
-	private String b_contact;			//varchar (100)
-	private Date b_reg_date;			//timestamp, not null
+	private String board_title;			//varchar (50), not null
+	private String board_content;			//text (3000), not null
+	private int board_view_count;				//int (10), not null
+	private int board_level;				//tinyint (1)
+	private String board_contact;			//varchar (100)
+	private Date board_reg_date;			//timestamp, not null
 	//FK
 	private String user_id;				//varchar (20), on delete cascade
 	//guest value from database table : pao_user
@@ -31,6 +31,7 @@ public class BoardDataBean {
 	public void setBoard_no(int board_no) {
 		this.board_no = board_no;
 	}
+	
 	public String getB_title() {
 		return b_title;
 	}
