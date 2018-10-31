@@ -127,10 +127,10 @@ public class SvcFormHandler {
 	@RequestMapping("/tripMod")
 	public ModelAndView svcTripModFormProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		//get the origin;
-		//basic contents(essential 'var' for tripMod.jsp: tb_no, user_id, tb_content, tb_m_num, tb_talk, td_trip_id, locs[], tags[])
-		int tb_no=Integer.parseInt(request.getParameter("tb_no"));
-		request.setAttribute("tb_no", tb_no);	
-		TbDataBean tbDto=tbDao.getTb(tb_no);
+		//basic contents(essential 'var' for tripMod.jsp: board_no, user_id, tb_content, tb_m_num, tb_talk, td_trip_id, locs[], tags[])
+		int board_no=Integer.parseInt(request.getParameter("board_no"));
+		request.setAttribute("board_no", board_no);	
+		TbDataBean tbDto=tbDao.getTb(board_no);
 		request.setAttribute("tbDto", tbDto);
 		
 		//trip details
@@ -144,7 +144,7 @@ public class SvcFormHandler {
 				request.setAttribute("locDtoList", locDtoList);
 			}
 		//get tag details & total list 
-		List<TagDataBean> tripTags=tagDao.getTripTags(tb_no);
+		List<TagDataBean> tripTags=tagDao.getTripTags(board_no);
 		List<TagDataBean> tagList=tagDao.getStyleTags();
 		request.setAttribute("tagList", tagList);	
 		request.setAttribute("tripTags", tripTags); 

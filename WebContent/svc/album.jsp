@@ -42,7 +42,7 @@
 		                <div class="card-body">
 		                	<c:set var="done" value="false"/>
 		                  <c:forEach var='eachPhoto' items="${photoInfos}">
-		                  	<c:if test="${eachPhoto.this_tb_no eq photo.tb_no and not done}">
+		                  	<c:if test="${eachPhoto.this_board_no eq photo.board_no and not done}">
 		                  	<p class="card-text">
 		                  		${eachPhoto.photoLoc}
 		                  		<c:set var="done" value="true"/>
@@ -52,12 +52,12 @@
 		                  <div class="d-flex justify-content-between align-items-center">
 		                    <div class="btn-group">
 		                    	<c:forEach var="tags" items="${photoTags}">
-		                    		<c:if test="${tags.this_tb_no eq photo.tb_no}">
+		                    		<c:if test="${tags.this_board_no eq photo.board_no}">
 		                    		<button type="button" class="btn btn-sm btn-outline-secondary" disabled>#${tags.tag_value}</button>
 		                    		</c:if>
 		                    	</c:forEach>
 		                    </div>
-		                    <small class="text-muted"><fmt:formatDate value="${photo.alb_reg_date}" pattern="yyyy-MM-dd HH:mm"/></small>
+		                    <small class="text-muted"><fmt:formatDate value="${photo.photo_reg_date}" pattern="yyyy-MM-dd HH:mm"/></small>
 		                  </div>
 		                </div>
 		              </div>

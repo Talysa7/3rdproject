@@ -8,17 +8,13 @@ import org.apache.ibatis.session.SqlSession;
 import bean.SqlMapClient;
 
 public class AlbumDBBean {
-	SqlSession session=SqlMapClient.getSession();
+	private SqlSession session=SqlMapClient.getSession();
 	
 	public int addPhoto(AlbumDataBean albumDto) {
 		return session.insert("db.addPhoto",albumDto);
 	}
 	public int delPhoto(int photo_id) {
 		return session.delete("db.delPhoto",photo_id);
-	}
-	public void addPhotos() {
-	}
-	public void delPhotos() {
 	}
 	public List<AlbumDataBean> getAlbum(){
 		return session.selectList("db.getAlbum");
@@ -29,10 +25,16 @@ public class AlbumDBBean {
 	public int getCount() {
 		return session.selectOne("db.getPCount");
 	}
-	public int getBoardCount(int tb_no) {
-		return session.selectOne("db.getBoardPCount",tb_no);
+	public int getBoardCount(int board_no) {
+		return session.selectOne("db.getBoardPCount",board_no);
 	}
-	public List<String> getPhoto_urls(int tb_no){
-		return session.selectList("db.getPhoto_urls",tb_no);
+	public List<String> getPhoto_urls(int board_no){
+		return session.selectList("db.getPhoto_urls",board_no);
+	}
+	
+	
+	public String getThumbnail (int board_no) {
+		//get an url from view 'pao_thumbnail'
+		return session.selectOne("album.getThumbail", board_no);
 	}
 }

@@ -2,13 +2,65 @@
 <!DOCTYPE mapper
   	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="album">
-	<!-- trip select -->
-	<select id="getThumbail" parameterType="String" resultType="String">
-		select photo_url 
-		from pao_thumbnail 
-		where b_id=#{b_id}
+<mapper namespace="board">
+	<select id="getTrip" parameterType="int" resultType="db.BoardDataBean">
+		select * from pao_board where board_no=#{board_no}
 	</select>
+	<select id="getCount" resultType="int">
+		select count(*) from pao_board
+	</select>
+	<select id="getTripList" parameterType="int" resultType="db.TripDataBean">
+		select * from pao_trip where board_no=#{board_no}
+	</select>
+	<select id="getTrips" parameterType="java.util.Map" resultType="db.BoardDataBean">
+		select board_no,board_title,board_content,board_view_count,board_level,board_contact,board_reg_date,user_id,r from (
+			select board_no,board_title,board_content,board_view_count,board_level,board_contact,board_reg_date,user_id,rownum r from (
+				select board_no,board_title,board_content,board_view_count,board_level,board_contact,board_reg_date,user_id from pao_board order by board_level desc,board_reg_date desc)
+			order by board_level desc,board_reg_date desc)
+		where r &gt;= #{start} and r &lt;=#{end}
+	</select>
+
+
+
+	
+	
+	<!-- 요거도 셀렉트키 바꿔서 확인필요. -->
+	<insert id="insertBoard_no" parameterType="db.BoardDataBean" keyProperty="board_no">
+       insert into pao_board (board_title, board_content, board_view_count, board_level, board_contact , board_reg_date, user_id )
+      values(#{board_title}, #{board_content}, 0 , 0, #{board_contact}, sysdate, #{user_id})
+      <selectKey keyProperty="board_no" resultType="int" order="AFTER">
+         select LAST_INSERT_ID()
+      </selectKey>
+   	</insert>
+   	<insert id="insertTrip" parameterType="db.BoardDataBean" keyProperty="trip_id">
+   		insert into pao_trip(board_no,trip_member_count,coord_id,start_date,end_date) values(#{board_no},#{trip_member_count},#{coord_id},#{start_date},#{end_date})
+	   	<selectKey keyProperty="trip_id" resultType="int" order="AFTER">
+	       select LAST_INSERT_ID()
+	    </selectKey>
+    </insert>
+	<!-- TODO: user관련. 나중에 체크후 user에 추가 
+	<select id="getUserName" parameterType="String" resultType="String">
+		select user_name from pao_user where user_id=#{user_id}
+	</select>
+	<select id="getUserId" parameterType="String" resultType="String">
+		select user_id from pao_user where user_name=#{user_name}
+	</select>
+	<select id="isMember" parameterType="db.boardDataBean" resultType="int">
+		select count(*) from pao_member where user_id=#{user_id} and trip_id in(
+			select trip_id from pao_trip where board_no=#{board_no})
+	</select>
+	
+	-->
+	<update id="addCount" parameterType="int">
+		update pao_board set board_view_count=board_view_count+1 where board_no=#{board_no}  
+	</update>
+	<update id="updateBoard" parameterType="db.BoardDataBean">
+		update pao_board set board_title=#{board_title}, board_content=#{board_content},  board_level=#{board_level} where board_no=#{board_no}
+	</update>
+	<delete id="deleteTrip" parameterType="int">
+		delete from pao_board where board_no=#{board_no}
+	</delete>
+
 	<select id="getBoardTags" parameterType="int" resultType="java.util.List">
 		select tag_value 
 		from pao_tag 
@@ -19,6 +71,7 @@
 			where b_no=#{b_no}
 		)
 	</select>
+<<<<<<< HEAD
 	<select id="getTripList" parameterType="int" resultType="java.util.List">
 		select * 
 		from pao_trip 
@@ -56,4 +109,46 @@
 		delete from pao_trip 
 		where trip_id=#{trip_id}
 	</delete>
+=======
+	
+	<!--/////////////////////////////////////////////////// start-line pao_comment table ///////////////////////////////////////////////////-->
+	<!-- FIXME : Temp 합치고 난 후에 parameterType 등의 Temp. 어쩌구 전부 교체 필요함 -->
+	<insert id="insertComment" parameterType="Temp.CmtDataBean">
+		INSERT INTO pao_comment(comment_content, comment_reg_date, board_no, user_id)
+		VALUES( #{comment_content, jdbcType=VARCHAR}, SYSDATE, #{board_no}, #{user_id} )
+	</insert>
+	<update id="updateComment" parameterType="Temp.CmtDataBean">
+		UPDATE pao_comment 
+		SET	comment_content = #{comment_content} 
+		WHERE comment_id = #{comment_id}
+	</update>
+	<delete id="deleteComment" parameterType="int">
+		DELETE FROM pao_comment
+		WHERE comment_id = #{comment_id}
+	</delete>
+	<select id="getCmtCount" resultType="int">
+		SELECT count(*) 
+		FROM pao_comment
+	</select>
+	<select id="getComment" parameterType="int" resultType="Temp.CmtDataBean">
+		SELECT * 
+		FROM pao_comment 
+		WHERE board_no=#{board_no} 
+		ORDER BY comment_id DESC
+	</select>
+	<select id="getComments" parameterType="java.util.Map" resultType="Temp.CmtDataBean">
+		SELECT comment_id,board_no,user_id,comment_content,comment_reg_date,r
+		FROM (
+			SELECT comment_id,board_no,user_id,comment_content,comment_reg_date,rownum r 
+			FROM (
+				SELECT comment_id,board_no,user_id,comment_content,comment_reg_date 
+				FROM pao_comment 
+				ORDER BY comment_reg_date DESC
+				)
+			ORDER BY comment_reg_date DESC)
+		WHERE r &gt;= #{start} 
+		AND r &lt;= #{end}
+	</select>
+	<!--/////////////////////////////////////////////////// end-line pao_comment table ///////////////////////////////////////////////////-->
+>>>>>>> develop
 </mapper>

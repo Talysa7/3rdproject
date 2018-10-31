@@ -31,9 +31,9 @@ var filesize=5*1024*1024;
 
 
 $(document).ready(function(){
-	var tb_no=$('input[name=tb_no]').val();
-	if(tb_no){
-		commentList(tb_no); //페이지 로딩시 댓글 목록 출력 
+	var board_no=$('input[name=board_no]').val();
+	if(board_no){
+		commentList(board_no); //페이지 로딩시 댓글 목록 출력 
 	}
 	var num=$('label[name=schedule]').length;//일정 개수 
 	if(num){
@@ -225,23 +225,23 @@ function previous(start,size){
 }
 //page넘기기
 function albumPaging(start){
-	var tb_no=$('input[name=tb_no]').val();
+	var board_no=$('input[name=board_no]').val();
 	var tab=1;
 
-	var page="svc/boardAlbum.go?tb_no="+tb_no+"&start="+start+"&tab="+tab;
+	var page="svc/boardAlbum.go?board_no="+board_no+"&start="+start+"&tab="+tab;
 	$('#album').load(page);
 }
 //사진 지우기
-function deletePhoto(tb_no,photo_id,start){
+function deletePhoto(board_no,photo_id,start){
 	$.ajax({
 		type:'POST',
 		url:'photoDel.go',
 		data:{
-			tb_no:tb_no,
+			board_no:board_no,
 			photo_id:photo_id
 		},
 		success:function(data){
-			var page="svc/boardAlbum.go?tb_no="+tb_no+"&start="+start;
+			var page="svc/boardAlbum.go?board_no="+board_no+"&start="+start;
 			$('#album').load(page);
 		},
 		error:function(e){
@@ -377,12 +377,12 @@ function inputcheck() {
 	}
 }
 //modify tripBoard-게시물 수정
-function modifyBoard(tb_no){
-	location.href="tripMod.go?tb_no="+tb_no;
+function modifyBoard(board_no){
+	location.href="tripMod.go?board_no="+board_no;
 }
 //delete tripBoard-게시물 삭제
-function deleteBoard(tb_no){
-	location.href="tripDelPro.go?tb_no="+tb_no;
+function deleteBoard(board_no){
+	location.href="tripDelPro.go?board_no="+board_no;
 }
 //사진 선택click->create checkbox
 function selectPhotos(){
@@ -498,12 +498,12 @@ function commentInsert(){ //댓글 등록 버튼 클릭시
 }
 
 /////댓글 목록 
-function commentList(tb_no){
+function commentList(board_no){
 	var SessionID=$("input[name=session]").val();
 	$.ajax({
         url : 'commentSelect.go',
         type : 'get',
-        data : {tb_no : tb_no},
+        data : {board_no : board_no},
         success : function(data){
             var commentView ='';
             var UserName = 'Ex-User';
@@ -528,7 +528,7 @@ function commentList(tb_no){
 
 //댓글 등록
 function CmtInsert(insertData){
-	var tb_no=$("input[name=tb_no").val();
+	var board_no=$("input[name=board_no").val();
 	if(commentInsertForm.c_content.value){
 	$.ajax({
         url : 'commentInsert.go',
@@ -538,7 +538,7 @@ function CmtInsert(insertData){
         	if(data == 1) {
         		/*오류메세지 작성*/
            }else{
-        	   commentList(tb_no);
+        	   commentList(board_no);
         	   $('[name=c_content]').val('');
            }
         },
@@ -566,20 +566,20 @@ function commentUpdate(c_id, c_content){
 //댓글 수정
 function commentUpdateProc(c_id){
     var updateContent = $('input[name=c_content_'+c_id+']').val();
-    var tb_no=$("input[name=tb_no").val();
+    var board_no=$("input[name=board_no").val();
     $.ajax({
         url : 'commentUpdate.go',
         type : 'post',
         data : {'c_content' : updateContent, 'c_id' : c_id},
         success : function(data){
-            commentList(tb_no); //댓글 수정후 목록 출력 
+            commentList(board_no); //댓글 수정후 목록 출력 
         }
     });
 }
  
 //댓글 삭제 
 function commentDelete(c_id){
-	var tb_no=$("input[name=tb_no]").val();
+	var board_no=$("input[name=board_no]").val();
     $.ajax({
         url : 'commentDelete.go',
         type : 'post',
@@ -587,7 +587,7 @@ function commentDelete(c_id){
         	c_id : c_id
         },
         success : function(data){
-            commentList(tb_no); //댓글 삭제후 목록 출력 
+            commentList(board_no); //댓글 삭제후 목록 출력 
         },
         error : function(error) {
             alert("error : " + error);
@@ -619,7 +619,7 @@ function loadMoreList(last_row) {
 																	}
 					listForAppend+=					'</strong>';
 					listForAppend+=					'<h3 class="mb-0">';
-					listForAppend+=						'<a class="text-dark" href="trip.go?tb_no='+additionalList.tb_no+'">'+additionalList.tb_title+'</a>';
+					listForAppend+=						'<a class="text-dark" href="trip.go?board_no='+additionalList.board_no+'">'+additionalList.tb_title+'</a>';
 					listForAppend+=					'</h3>';
 					listForAppend+=					'<div class="mb-1 text-muted text-right">';
 					listForAppend+=						'<i><b>With</b></i>&nbsp;'+additionalList.user_id;
