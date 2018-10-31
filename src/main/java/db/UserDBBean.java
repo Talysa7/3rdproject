@@ -16,8 +16,7 @@ import bean.SqlMapClient;
 public class UserDBBean {
 	private SqlSession session=SqlMapClient.getSession();
 	
-	//the code below is annotated due to avoid conflict
-	/*public List<UserDataBean> getUsers(Map<String, Integer> map) {
+	public List<UserDataBean> getUsers(Map<String, Integer> map) {
 		return session.selectList("db.getUsers",map);
 	}
 	public int getCount() {
@@ -88,7 +87,7 @@ public class UserDBBean {
 	
 	public int deleteMember( String user_id ) {
 		return session.delete("Member.deleteUser", user_id);
-	}*/
+	}
 	//the code below is moved to MemberDBBean
 	/*public List<UserDataBean> getCurrentMember(String td_trip_id) {
 		List<UserDataBean> memberList=session.selectList("db.getCurrentMember", td_trip_id);

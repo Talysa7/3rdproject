@@ -53,8 +53,8 @@ import db.TagDataBean;
 import db.TbDBBean;
 import db.TbDataBean;
 import db.TripDBBean;
-import Temp.UserDBBean;
-import Temp.UserDataBean;
+import db.UserDBBean;
+import db.UserDataBean;
 
 @Controller
 public class SvcProHandler {
@@ -102,10 +102,8 @@ public class SvcProHandler {
 		int gender = Integer.parseInt(request.getParameter("gender"));
 
 		userDto.setGender(gender);
-		
-		Timestamp currentT = new Timestamp(System.currentTimeMillis());
-		Date userReg= new Date(currentT.getTime());
-		userDto.setReg_date(userReg);
+	
+		userDto.setReg_date(new Timestamp(System.currentTimeMillis()));
 
 		int result = userDao.insertUser(userDto);
 		
@@ -728,7 +726,7 @@ public class SvcProHandler {
 				user_name = "Ex-User";
 				dto.setUser_name(user_name);
 			} else {
-				user_name = userDao.getUserName(user_id);
+				user_name = memberDao.getUserName(user_id);
 				dto.setUser_name(user_name);
 			}
 		}
@@ -762,7 +760,7 @@ public class SvcProHandler {
 
 	@RequestMapping(value = "/memberAttend.go", method = RequestMethod.POST)
 	@ResponseBody
-	private List<UserDataBean> memberAttendProcess(HttpServletRequest request, HttpServletResponse response)
+	private List<MemberDataBean> memberAttendProcess(HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		String trip_id = request.getParameter("trip_id");
 		String user_id = request.getParameter("user_id");
@@ -779,13 +777,13 @@ public class SvcProHandler {
 			request.setAttribute("isMember", true);
 		}
 
-		List<UserDataBean> memberList = memberDao.getMember(trip_id_int);
+		List<MemberDataBean> memberList = memberDao.getMember(trip_id_int);
 		return memberList;
 	}
 
 	@RequestMapping(value = "/memberAbsent.go", method = RequestMethod.POST)
 	@ResponseBody
-	private List<UserDataBean> memberAbsentProcess(HttpServletRequest request, HttpServletResponse response)
+	private List<MemberDataBean> memberAbsentProcess(HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		String trip_id = request.getParameter("trip_id");
 		String user_id = request.getParameter("user_id");
@@ -802,7 +800,7 @@ public class SvcProHandler {
 			request.setAttribute("delMemberResult", delMemberResult);
 			request.setAttribute("isMember", false);
 		}
-		List<UserDataBean> memberList = memberDao.getCurrentMember(trip_id_int);
+		List<MemberDataBean> memberList = memberDao.getCurrentMember(trip_id_int);
 		return memberList;
 	}
 

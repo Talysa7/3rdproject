@@ -183,12 +183,12 @@ public class SvcViewHandler {
 		request.setAttribute("start",start);
 		
 		//member Info of each trip
-		List<Map<String, String>> memInfoList=memberDao.getMemInfoList(board_no);
+		List<Temp.TripDataBean> memInfoList=memberDao.getMemInfoList(board_no);
+		Temp.TripDataBean tripDto1 = new Temp.TripDataBean();
 		boolean isMember=false;
-		for(Map<String, String> tempMap:memInfoList) {
-			String temp_trip_id=""+tempMap.get("td_trip_id");
-			int trip_id = Integer.parseInt(tempMap.get("td_trip_id"));
-			List<UserDataBean> currendMember=memberDao.getMember(trip_id);
+		for(Temp.TripDataBean trip1Dto : memInfoList) {
+			int trip_id=tripDto1.getTrip_id();
+			List<MemberDataBean> currendMember=memberDao.getMember(trip_id);
 			String members="";
 			if (currendMember.size()>0) {
 				for(int i=0; i<currendMember.size(); i++) {
@@ -208,7 +208,7 @@ public class SvcViewHandler {
 					}
 				}
 			}
-			tempMap.put("members", members);
+			
 		}
 		
 		request.setAttribute("memInfoList", memInfoList);

@@ -15,7 +15,7 @@ import db.CmtDBBean;
 import db.TagDBBean;
 import db.TbDBBean;
 import db.TripDBBean;
-import Temp.UserDBBean;
+import db.UserDBBean;
 
 @Controller
 public class AdmDelHandler {
