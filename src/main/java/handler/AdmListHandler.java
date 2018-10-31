@@ -21,8 +21,8 @@ import db.TagDataBean;
 import db.TbDBBean;
 import db.TbDataBean;
 import db.TripDBBean;
-import db.UserDBBean;
-import db.UserDataBean;
+import Temp.UserDBBean;
+import Temp.UserDataBean;
 
 @Controller
 public class AdmListHandler {
