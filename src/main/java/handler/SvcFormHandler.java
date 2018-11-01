@@ -13,12 +13,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import db.AlbumDBBean;
 import db.CmtDBBean;
-import db.LocDBBean;
-import db.LocDataBean;
+import db.CoordDBBean;
+import db.CoordDataBean;
 import db.TagDBBean;
 import db.TagDataBean;
-import db.TbDBBean;
-import db.TbDataBean;
+import db.BoardDBBean;
+import db.BoardDataBean;
 import db.TripDBBean;
 import db.UserDBBean;
 import db.UserDataBean;
@@ -32,11 +32,11 @@ public class SvcFormHandler {
 	@Resource
 	private CmtDBBean cmtDao;
 	@Resource
-	private LocDBBean locDao;
+	private CoordDBBean coordDao;
 	@Resource
 	private TagDBBean tagDao;
 	@Resource
-	private TbDBBean tbDao;
+	private BoardDBBean boardDao;
 	@Resource
 	private UserDBBean userDao;
 	
@@ -127,19 +127,19 @@ public class SvcFormHandler {
 	@RequestMapping("/tripMod")
 	public ModelAndView svcTripModFormProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		//get the origin;
-		//basic contents(essential 'var' for tripMod.jsp: board_no, user_id, tb_content, tb_m_num, tb_talk, td_trip_id, locs[], tags[])
+		//basic contents(essential 'var' for tripMod.jsp: board_no, user_id, board_content, board_m_num, board_talk, td_trip_id, locs[], tags[])
 		int board_no=Integer.parseInt(request.getParameter("board_no"));
 		request.setAttribute("board_no", board_no);	
-		TbDataBean tbDto=tbDao.getTb(board_no);
-		request.setAttribute("tbDto", tbDto);
+		BoardDataBean boardDto=boardDao.getBoard(board_no);
+		request.setAttribute("boardDto", boardDto);
 		
-		//trip details
-		List<LocDataBean> locDtoList=new ArrayList<LocDataBean>();
-			//tbDto has td_trip_ids
-			if(tbDto.getTd_trip_ids().length>0) {
-				for(int trip_id:tbDto.getTd_trip_ids()) {
-					LocDataBean locDto=locDao.getTripDetail(trip_id);
-					locDtoList.add(locDto);
+		//trip details		//FIXME : 여기는 전체 다 수정 필요. trip id위치가 바뀜.
+		List<CoordDataBean> locDtoList=new ArrayList<CoordDataBean>();
+			//boardDto has td_trip_ids
+			if(boardDto.getTd_trip_ids().length>0) {
+				for(int trip_id:boardDto.getTd_trip_ids()) {
+					CoordDataBean coordDto=coordDao.getTripDetail(trip_id);
+					locDtoList.add(coordDto);
 				}
 				request.setAttribute("locDtoList", locDtoList);
 			}

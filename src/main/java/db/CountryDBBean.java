@@ -1,11 +1,10 @@
-﻿package Temp;
+﻿package db;
 
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 
 import bean.SqlMapClient;
-import Temp.BoardDataBean;
 
 public class CountryDBBean {
 

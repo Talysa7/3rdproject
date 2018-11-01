@@ -8,11 +8,14 @@ import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
 import db.AlbumDBBean;
 import db.CmtDBBean;
-import db.LocDBBean;
+import db.CoordDBBean;
 import db.TagDBBean;
-import db.TbDBBean;
+import db.BoardDBBean;
 import db.TripDBBean;
 import db.UserDBBean;
+import db.CountryDBBean;
+import db.MemberDBBean;
+import db.RegionDBBean;
 
 @Configuration
 public class CreateBean {
@@ -25,25 +28,38 @@ public class CreateBean {
 		return new CmtDBBean();
 	}
 	@Bean
-	public LocDBBean locDao() {
-		return new LocDBBean();
+	public CoordDBBean coordDao() {
+		return new CoordDBBean();
 	}
 	@Bean
 	public TagDBBean tagDao() {
 		return new TagDBBean();
 	}
 	@Bean
-	public TbDBBean tbDao() {
-		return new TbDBBean();
+	public BoardDBBean boardDao() {
+		return new BoardDBBean();
 	}
 	@Bean
 	public TripDBBean tripDao() {
 		return new TripDBBean();
 	}
 	@Bean
+	public CountryDBBean countryDao() {
+		return new CountryDBBean();
+	}
+	@Bean
+	public MemberDBBean memberDao() {
+		return new MemberDBBean();
+	}
+	@Bean
+	public RegionDBBean regionDao() {
+		return new RegionDBBean();
+	}
+	@Bean
 	public UserDBBean userDao() {
 		return new UserDBBean();
 	}
+
 	@Bean
 	public ViewResolver viewResolver() {
 		UrlBasedViewResolver viewResolver=new UrlBasedViewResolver();

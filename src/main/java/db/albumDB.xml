@@ -36,7 +36,7 @@
 		select photo_url from pao_album where board_no=#{board_no}
 	</select>
 	
-	<select id="getThumbail" parameterType="String" resultType="String">
+	<select id="getThumbnail" parameterType="String" resultType="String">
 		select photo_url from pao_thumbnail where b_id=#{b_id}
 	</select>
 </mapper>

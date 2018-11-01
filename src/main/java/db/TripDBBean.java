@@ -1,47 +1,57 @@
 package db;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 
 import bean.SqlMapClient;
+import db.TripDataBean;
 
 public class TripDBBean {
-	SqlSession session=SqlMapClient.getSession();
+	private SqlSession session=SqlMapClient.getSession();
 	
-	public TripDataBean getTrip(int tb_no) {
-		TripDataBean tripDto=session.selectOne("db.getTrip", tb_no);
-		return tripDto;
+	//get trips of the article
+	public List<TripDataBean> getTripList(int board_no) {
+		return session.selectList("board.getTripList", board_no);
 	}
-	public void addViewCount(int tb_no) {
-		session.update("db.addViewCount", tb_no);
+	//get a specific trip
+	public TripDataBean getTrip(int trip_id) {
+		return session.selectOne("board.getTrip", trip_id);
 	}
-	public int deleteTripDetail(int tb_no) {
-		return session.delete("db.deleteTripDetail",tb_no);
+	//New! add new trip, this bean parameter must have every value!
+	public int addTrip(TripDataBean tripDto) {
+		return session.update("board.addTrip", tripDto);
 	}
-	public int deleteCal(int tb_no) {
-		return session.delete("db.deleteCal",tb_no);
+	//Rename, deleteTripDetail->deleteTrip
+	//Delete each Trip by trip_ip
+	public int deleteTrip(int trip_id) {
+		return session.delete("board.deleteTrip", trip_id);
 	}
-	//delete trip board-게시물 삭제
-	public int deleteTrip(int tb_no) {
-		int result;
-		int calResult=deleteCal(tb_no);
-		int detailResult=deleteTripDetail(tb_no);
-		result=session.delete("db.deleteTrip",tb_no);
-		return result;
+	//New! update a trip, this bean parameter must have every value
+	public int updateTrip(TripDataBean tripDto) {
+		return session.update("board.updateTrip", tripDto);
 	}
-	//notice
-	public void notice(int tb_no) {
-		session.update("db.notice",tb_no);
+	//I changed notice to setBoardLevel, that value has been changed to board_level
+	public void setBoardLevel(int board_no, int board_level) {
+		//Bean for parameter
+		BoardDataBean boardDto=new BoardDataBean();
+		boardDto.setBoard_no(board_no);
+		boardDto.setBoard_level(board_level);
+		session.update("board.setBoardLevel", boardDto);
 	}
-	//notice cancel
-	public void noticeX(int tb_no) {
-		session.update("db.noticeX",tb_no);
-	}
-	//게시물의 주인 판별
-	public int isOwner(TripDataBean tripDto) {
-		int count=session.selectOne("db.isOwner",tripDto);
-		if(count!=0) {
-			count=1;
+	
+	//I removed 'deleteCal(from gg_calendar), that table merged into Trip!
+	
+	//I removed 'deleteTrip(from gg_tb)', because this is the TripDBBean!
+	
+	//I removed 'noticeX', we can set level with 'setBoardLevel' method.
+	
+	//Why is this here? Anyway I fixed it.
+		public void addViewCount(int board_no) {
+			session.update("board.addBoardViewCount", board_no);
 		}
-		return count;
-	}
+	
+	//Here was a method 'isOwner' testing 'Is this user the owner of this article?'
+	//This method should be moved to BoardDBBean or Handler, maybe we don't need this!
+	//Do we need this? I don't think so.
 }

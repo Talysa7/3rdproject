@@ -1,4 +1,4 @@
-package Temp;
+package db;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,8 +8,6 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 
 import bean.SqlMapClient;
-import db.TagDataBean;
-import db.TbDataBean;
 
 public class BoardDBBean {
 	private SqlSession session=SqlMapClient.getSession();
@@ -23,7 +21,7 @@ public class BoardDBBean {
 	}
 	
 	//get one trip post by tb_no, including location and tag list
-	public BoardDataBean getTb(int board_no) {
+	public BoardDataBean getBoard(int board_no) {
 		//original trip data
 		BoardDataBean boardDto=session.selectOne("db.getTrip", board_no);
 		//set Nickname instead of id
@@ -55,12 +53,12 @@ public class BoardDBBean {
 	public String getUserId(String user_name) {
 		return session.selectOne("db.getUserId", user_name);
 	}
-	public int updateBoard(TbDataBean boardDto) {
+	public int updateBoard(BoardDataBean boardDto) {
 		return session.update("db.updateBoard", boardDto);
 	}
 	
 	//trip board list
-	public List<TbDataBean> getTrips(Map<String,Integer> map){
+	public List<BoardDataBean> getTrips(Map<String,Integer> map){
 		return session.selectList("db.getTrips",map);
 	}
 	
@@ -78,7 +76,7 @@ public class BoardDBBean {
 		return null;
 	}
 	
-	public List<TbDataBean> findTripByUser(String keyword) {	// 수정필요.
+	public List<BoardDataBean> findTripByUser(String keyword) {	// 수정필요.
 		return null;
 	}
 	

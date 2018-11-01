@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import db.AlbumDBBean;
+import db.BoardDBBean;
 import db.CmtDBBean;
 import db.TagDBBean;
-import db.TbDBBean;
 import db.TripDBBean;
 import db.UserDBBean;
 
@@ -30,7 +30,7 @@ public class AdmDelHandler {
 	@Resource
 	private TagDBBean tagDao;
 	@Resource
-	private TbDBBean tbDao;
+	private BoardDBBean boardDao;
 	
 	@RequestMapping("/adminUserDel")
 	public ModelAndView userDelProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
@@ -64,7 +64,7 @@ public class AdmDelHandler {
 			num=Integer.parseInt(request.getParameter("num"));
 			for(int i=0;i<num;i++) {
 				String board_no=request.getParameter("key"+i+"").trim();
-				result=tbDao.deleteTrip(Integer.parseInt(board_no));
+				result=boardDao.deleteTrip(Integer.parseInt(board_no));
 				results.add(result);
 			}
 			if(results.contains(0)) {
