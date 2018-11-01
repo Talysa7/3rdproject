@@ -4,15 +4,15 @@ import java.util.List;
 
 //database table : pao_coordinate
 public class CoordDataBean {
-	private int coord_id;				//int (8), PK, on delete set 1, 1 should be somewhere in Seoul
-	private String coord_name;			//varchar (30), not null
-	private double coord_long;			//double (10, 6), not null
-	private double coord_lat;			//double (10, 6), not null
-	//FK
-	private String country_id;			//smallint (4), not null, on delete cascade
-	//guest parameter from pao_region_match
-	private List<String> region_types;			//Array of region_type, varchar (30)
-										//region types of this coordinate
+	private int coord_id;				// int (8), PK, on delete set 1, 1 should be somewhere in Seoul
+	private String coord_name;			// varchar (50), not null
+	private String country_id;			// FK / smallint (4), not null, on delete cascade
+	private double coord_long;			// double (10, 6), not null
+	private double coord_lat;			// double (10, 6), not null
+	private int coord_order;			// tinyint (1) / 장소들의 순서를 정해줌
+	// guest parameter from pao_region_match
+	private List<String> region_types;			// Array of region_type, varchar (30)
+												// region types of this coordinate
 	
 	public int getCoord_id() {
 		return coord_id;

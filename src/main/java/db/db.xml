@@ -103,13 +103,13 @@
 		select count(*) from gg_member where td_trip_id=#{td_trip_id}
 	</select>
 	
-	<select id="getMyTrips" parameterType="String" resultType="db.LocDataBean">
+<!-- 	<select id="getMyTrips" parameterType="String" resultType="db.LocDataBean">
 		select ca.cal_start_date, ca.cal_end_date, ca.coord_id, ca.td_trip_id, co.coord_long, co.coord_lat, co.coord_order, co.coord_id, ctr.country_name from
 		(select cal_start_date, cal_end_date, coord_id, td_trip_id from gg_calendar where td_trip_id in
 		(select td_trip_id from gg_trip_detail where tb_no in 
 		(select tb_no from gg_trip_board where user_id=#{user_id}))) ca, 
 		gg_coordinate co, gg_country ctr where ca.coord_id=co.coord_id and co.country_id=ctr.country_id
-	</select>
+	</select> -->
 	
 	<select id="getTbNo" parameterType="int" resultType="int">
 		select tb_no from gg_trip_detail where td_trip_id=#{td_trip_id}
@@ -266,7 +266,7 @@
 	    </selectKey>
     </insert>
    
-	<select id="selectDetail" parameterType="int" resultType="db.LocDataBean">
+<!-- 	<select id="selectDetail" parameterType="int" resultType="db.LocDataBean">
 		select * from gg_calendar where td_trip_id in(select td_trip_id from gg_trip_detail where tb_no=#{tb_no})
 	</select>
 
@@ -279,7 +279,7 @@
 		select country_id from gg_coordinate where coord_id in(
 		select coord_id from gg_calendar where td_trip_id in(
 		select td_trip_id from gg_trip_detail where tb_no=#{tb_no})))
-	</select>
+	</select> -->
 <!-- 	<insert id="writeTrip" parameterType="db.TbDataBean">
 		insert into gg_trip_board
 		(tb_no, user_id, tb_title, tb_content, tb_reg_date, tb_v_count,
@@ -427,25 +427,25 @@
 
 	<!-- location -->
 
-	<select id="getTripIds" resultType="int">
+<!-- 	<select id="getTripIds" resultType="int">
 		select td_trip_id from gg_trip_detail where tb_no=#{tb_no}
-	</select>
+	</select> -->
 	
 	<select id="getDestination" resultType="String">
 		select country_name from gg_country where country_id=(select country_id from gg_coordinate where coord_id=(select coord_id from gg_calendar where td_trip_id=#{td_trip_id}))
 	</select>
 	
 	<!-- locDB -->
-	<insert id="insertCoord" parameterType="db.LocDataBean" keyProperty="coord_id">
+<!-- 	<insert id="insertCoord" parameterType="db.LocDataBean" keyProperty="coord_id">
 		insert into gg_coordinate values(
 				(select country_id from gg_country where country_code=#{country_code}),#{coord_long},#{coord_lat},#{coord_order},SEQ_gg_coordinate_coord_id.NEXTVAL)
 		<selectKey keyProperty="coord_id" resultType="int" order="AFTER">
 			select SEQ_gg_coordinate_coord_id.currval from dual
 		</selectKey>
-	</insert>
- 	<insert id="insertCal" parameterType="db.LocDataBean">
+	</insert> -->
+<!--  	<insert id="insertCal" parameterType="db.LocDataBean">
 		insert into gg_calendar values(TO_DATE(#{cal_start_date},'MM/DD/YYYY'), TO_DATE(#{cal_end_date},'MM/DD/YYYY'),#{coord_id},#{td_trip_id})
-	</insert> 
+	</insert>  -->
 	<!--album DB -->
 
 	<insert id="addPhoto" parameterType="db.AlbumDataBean">
@@ -491,13 +491,13 @@
 		select photo_url from gg_album where tb_no=#{tb_no}
 	</select>
 	
-	<select id="getTripCountry" parameterType="int" resultType="String">
+<!-- 	<select id="getTripCountry" parameterType="int" resultType="String">
 		select country_name from gg_country where country_id=
 		(select country_id from gg_coordinate where coord_id=
 		(select coord_id from gg_calendar where td_trip_id=#{td_trip_id}))
-	</select>
+	</select> -->
 	
-	<select id="getCalendar" parameterType="int" resultType="db.LocDataBean">
+<!-- 	<select id="getCalendar" parameterType="int" resultType="db.LocDataBean">
 		select * from gg_calendar where td_trip_id=#{td_trip_id}
 	</select>
 	
@@ -512,7 +512,7 @@
 	<select id="getCountryName" parameterType="int" resultType="String">
 		select country_name from gg_country where country_id=
 		(select country_id from gg_coordinate where coord_id=#{coord_id})
-	</select>
+	</select> -->
 	
 	<select id="getCoordOrder" parameterType="int" resultType="int">
 		select coord_order from gg_coordinate where coord_id=#{coord_id}

@@ -1,4 +1,4 @@
-package handler;
+﻿package handler;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -18,17 +18,20 @@ import org.springframework.web.servlet.ModelAndView;
 
 import db.AlbumDBBean;
 import db.AlbumDataBean;
+import db.BoardDataBean;
 import db.CmtDBBean;
 import db.LocDBBean;
 import db.LocDataBean;
+import db.MemberDBBean;
+import db.MemberDataBean;
 import db.TagDBBean;
 import db.TagDataBean;
 import db.TbDBBean;
 import db.TbDataBean;
 import db.TripDBBean;
 import db.TripDataBean;
-import db.UserDBBean;
-import db.UserDataBean;
+import Temp.UserDBBean;
+import Temp.UserDataBean;
 
 @Controller
 public class SvcViewHandler {
@@ -177,11 +180,12 @@ public class SvcViewHandler {
 		request.setAttribute("start",start);
 		
 		//member Info of each trip
-		List<Map<String, String>> memInfoList=tbDao.getMemInfoList(board_no);
+		List<TripDataBean> memInfoList=memberDao.getMemInfoList(board_no);
+		Temp.TripDataBean tripDto1 = new Temp.TripDataBean();
 		boolean isMember=false;
-		for(Map<String, String> tempMap:memInfoList) {
-			String temp_trip_id=""+tempMap.get("td_trip_id");
-			List<UserDataBean> currendMember=userDao.getCurrentMember(temp_trip_id);
+		for(Temp.TripDataBean trip1Dto : memInfoList) {
+			int trip_id=tripDto1.getTrip_id();
+			List<MemberDataBean> currendMember=memberDao.getMember(trip_id);
 			String members="";
 			if (currendMember.size()>0) {
 				for(int i=0; i<currendMember.size(); i++) {
@@ -194,14 +198,14 @@ public class SvcViewHandler {
 					}
 					String id=(String)request.getSession().getAttribute("user_id");
 					if(id!=null) {
-						String name=userDao.getUserName(id);
+						String name=memberDao.getUserName(id);
 						if(name.equals(currendMember.get(i).getUser_name())) {
 							isMember=true;
 						}
 					}
 				}
 			}
-			tempMap.put("members", members);
+			
 		}
 		
 		request.setAttribute("memInfoList", memInfoList);
@@ -326,7 +330,7 @@ public class SvcViewHandler {
 		user_id=(user_id==null?"":user_id);
 		tbDto.setUser_id(user_id);
 		tbDto.setBoard_no(board_no);
-		boolean isMember=tbDao.isMember(tbDto);
+		boolean isMember=memberDao.isTBMember(tbDto);
 		request.setAttribute("isMember", isMember);
 		return new ModelAndView("svc/boardAlbum");
 	}
