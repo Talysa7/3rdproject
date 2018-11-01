@@ -11,11 +11,13 @@
 	<insert id="insertCoord" parameterType="db. CoordDataBean" keyProperty="coord_id">
 		INSERT INTO pao_coordinate 
 		VALUES(
-				(
-				SELECT country_id 
-				FROM pao_country 
-				WHERE country_code=#{country_code}
-				), #{coord_long}, #{coord_lat}, #{coord_order}, SEQ_pao_coordinate_coord_id.NEXTVAL)
+			(
+			SELECT country_id
+			FROM pao_country 
+			WHERE country_code=#{country_code}
+			), 
+			#{coord_long}, #{coord_lat}, #{coord_order}, SEQ_pao_coordinate_coord_id.NEXTVAL
+		)
 		<selectKey keyProperty="coord_id" resultType="int" order="AFTER">
 			SELECT SEQ_pao_coordinate_coord_id.currval FROM dual
 		</selectKey>
