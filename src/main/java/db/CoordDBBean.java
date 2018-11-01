@@ -1,12 +1,11 @@
-package Temp;
+package db;
 
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 
 import bean.SqlMapClient;
-// FIXME : Temp 수정 필요
-import Temp.CoordDataBean;
+
 
 public class CoordDBBean {
 	SqlSession session=SqlMapClient.getSession();

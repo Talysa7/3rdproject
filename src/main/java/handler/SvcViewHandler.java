@@ -20,18 +20,18 @@ import db.AlbumDBBean;
 import db.AlbumDataBean;
 import db.BoardDataBean;
 import db.CmtDBBean;
-import db.LocDBBean;
-import db.LocDataBean;
+import db.CoordDBBean;
+import db.CoordDataBean;
 import db.MemberDBBean;
 import db.MemberDataBean;
 import db.TagDBBean;
 import db.TagDataBean;
-import db.TbDBBean;
-import db.TbDataBean;
+import db.BoardDBBean;
+import db.BoardDataBean;
 import db.TripDBBean;
 import db.TripDataBean;
-import Temp.UserDBBean;
-import Temp.UserDataBean;
+import db.UserDBBean;
+import db.UserDataBean;
 
 @Controller
 public class SvcViewHandler {
@@ -46,13 +46,15 @@ public class SvcViewHandler {
 	@Resource
 	private CmtDBBean cmtDao;
 	@Resource
-	private LocDBBean locDao;
+	private CoordDBBean coordDao;
 	@Resource
 	private TagDBBean tagDao;
 	@Resource
 	private UserDBBean userDao;
 	@Resource
-	private TbDBBean tbDao;
+	private BoardDBBean boardDao;
+	@Resource
+	private MemberDBBean memberDao;
 	
 	/////////////////////////////////default pages/////////////////////////////////
 	
@@ -90,11 +92,11 @@ public class SvcViewHandler {
 	public ModelAndView SvcMyTripProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		String user_id=(String)request.getSession().getAttribute("user_id");
 		//get user's trip list
-		List<LocDataBean> myTrips=locDao.getMyTrips(user_id);
+		List<CoordDataBean> myTrips=coordDao.getMyTrips(user_id);
 		//put board_no... it was too much value...
 		if(myTrips.size()>0) {
-			for(LocDataBean trip:myTrips) {
-				int board_no=tbDao.getTbNo(trip.getTd_trip_id());
+			for(CoordDataBean trip:myTrips) {
+				int board_no=boardDao.getTbNo(trip.getTd_trip_id()); //FIXME : Trip이 걸려있음.
 				trip.setBoard_no(board_no);
 			}
 		}
@@ -109,7 +111,7 @@ public class SvcViewHandler {
 	@RequestMapping("/tripList")
 	public ModelAndView svcListProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		UserDataBean userDto=(UserDataBean)request.getAttribute("userDto");
-		List<TbDataBean> tripList=tbDao.getTripList();
+		List<BoardDataBean> tripList=boardDao.getTripList();//FIXME : start End 값 줄필요가 있음.
 		int startTrip=0;
 		int endTrip=0;
 		if(tripList.size()>=10) {
@@ -118,7 +120,7 @@ public class SvcViewHandler {
 			request.setAttribute("last_row", tripList.size()+1);
 		}
 		
-		int count=tbDao.getCount();
+		int count=boardDao.getCount();
 		request.setAttribute("userDto", userDto);
 		request.setAttribute("tripList", tripList);
 		request.setAttribute("startTrip", startTrip);
@@ -137,27 +139,27 @@ public class SvcViewHandler {
 		request.setAttribute("board_no", board_no);
 		
 		//getTrip-게시물 정보 가져오기
-		TbDataBean tbDto=tbDao.getTb(board_no);
-		request.setAttribute("tbDto", tbDto);
+		BoardDataBean boardDto=boardDao.getBoard(board_no);
+		request.setAttribute("boardDto", boardDto);
 		
 		//trip details
-		List<LocDataBean> locDtoList=new ArrayList<LocDataBean>();
+		List<CoordDataBean> coordDtoList=new ArrayList<CoordDataBean>();
 		//tbDto has td_trip_ids
-		if(tbDto.getTd_trip_ids().length>0) {
-			for(int trip_id:tbDto.getTd_trip_ids()) {
-				LocDataBean locDto=locDao.getTripDetail(trip_id);
-				locDtoList.add(locDto);
+		if(boardDto.getTd_trip_ids().length>0) {		//FIXME : trip 이슈
+			for(int trip_id:boardDto.getTd_trip_ids()) {
+				CoordDataBean coordDto=coordDao.getTripDetail(trip_id);
+				coordDtoList.add(coordDto);
 			}
-			request.setAttribute("locDtoList", locDtoList);
+			request.setAttribute("locDtoList", coordDtoList);
 		}
 		
-		tbDao.addCount(board_no);
+		boardDao.addCount(board_no);
 		
 		//authorization for deletion and modification-수정 삭제 권한 
 		TripDataBean tripDto=new TripDataBean();
 		tripDto.setBoard_no(board_no);
 		user_id=(user_id==null?"":user_id);
-		tripDto.setUser_id(user_id);
+		tripDto.setUser_id(user_id);		//데이터 빈에 userId X 네임만 있음.
 		int isOwner=tripDao.isOwner(tripDto);
 		request.setAttribute("isOwner", isOwner);
 		
@@ -181,9 +183,9 @@ public class SvcViewHandler {
 		
 		//member Info of each trip
 		List<TripDataBean> memInfoList=memberDao.getMemInfoList(board_no);
-		Temp.TripDataBean tripDto1 = new Temp.TripDataBean();
+		TripDataBean tripDto1 = new TripDataBean();
 		boolean isMember=false;
-		for(Temp.TripDataBean trip1Dto : memInfoList) {
+		for(TripDataBean trip1Dto : memInfoList) {
 			int trip_id=tripDto1.getTrip_id();
 			List<MemberDataBean> currendMember=memberDao.getMember(trip_id);
 			String members="";
@@ -228,13 +230,13 @@ public class SvcViewHandler {
 		request.setAttribute("keyword", keyword);
 		
 		//set List
-		List<TbDataBean> foundList;
+		List<BoardDataBean> foundList;
 		
 		//find trips for each type
 		if(selectedType.equals("schedule")) {
-			foundList=tbDao.findTripByKeyword(keyword);
+			foundList=boardDao.findTripByKeyword(keyword);
 		} else {
-			foundList=tbDao.findTripByUser(keyword);
+			foundList=boardDao.findTripByUser(keyword);
 		}
 		
 		//count check
@@ -274,7 +276,7 @@ public class SvcViewHandler {
 						//send photo countries
 						Map<String, String> photoInfo=new HashMap<String, String>();
 						photoInfo.put("this_board_no", this_board_no);
-						photoInfo.put("photoLoc", locDao.getPhotoLoc(album.get(i).getBoard_no()));
+						photoInfo.put("photoLoc", coordDao.getPhotoLoc(album.get(i).getBoard_no()));
 						photoInfos.add(photoInfo);
 						
 						//send photo tags
@@ -326,7 +328,7 @@ public class SvcViewHandler {
 		}
 		
 		//check user whether user is member or not
-		TbDataBean tbDto=new TbDataBean();
+		BoardDataBean tbDto=new BoardDataBean();
 		user_id=(user_id==null?"":user_id);
 		tbDto.setUser_id(user_id);
 		tbDto.setBoard_no(board_no);
@@ -338,9 +340,9 @@ public class SvcViewHandler {
 	/////////////////////////////////ajax method list/////////////////////////////////
 	@RequestMapping(value="/loadMoreList", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public List<TbDataBean> loadMoreList(int last_row) {
+	public List<BoardDataBean> loadMoreList(int last_row) {
 		//get more 5 trip articles when 'load more' button is pressed
-		List<TbDataBean> additionalList=tbDao.loadMoreList(last_row);
+		List<BoardDataBean> additionalList=boardDao.loadMoreList(last_row);//FIXME: 이 메소드 삭제함. list메소드 하나로 쓰기로 하였으니 참고.
 		
 		return additionalList;
 	}

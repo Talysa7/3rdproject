@@ -18,8 +18,8 @@ import db.CmtDBBean;
 import db.CmtDataBean;
 import db.TagDBBean;
 import db.TagDataBean;
-import db.TbDBBean;
-import db.TbDataBean;
+import db.BoardDBBean;
+import db.BoardDataBean;
 import db.TripDBBean;
 import db.UserDBBean;
 import db.UserDataBean;
@@ -39,7 +39,7 @@ public class AdmListHandler {
 	@Resource
 	private TripDBBean tripDao;
 	@Resource
-	private TbDBBean tbDao;
+	private BoardDBBean boardDao;
 	@Resource
 	private AlbumDBBean albumDao;
 	@Resource
@@ -56,7 +56,7 @@ public class AdmListHandler {
 	@RequestMapping("adminTrip")
 	public ModelAndView adminTripHandler(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		request.setAttribute("page", tripP);
-		int count=tbDao.getCount();//list row num
+		int count=boardDao.getCount();//list row num
 		
 		String pageNum=request.getParameter("pageNum");
 		if(pageNum==null || pageNum.equals("")){
@@ -91,14 +91,14 @@ public class AdmListHandler {
 				map.put("start", start);
 				map.put("end", end);
 				
-				List<TbDataBean>trips=tbDao.getTrips(map);
+				List<BoardDataBean>trips=boardDao.getTrips(map);
 				request.setAttribute("trips", trips);
 		}
 		String board_no=request.getParameter("board_no");
 		String notice=request.getParameter("yn");
 		if(board_no!=null&&notice!=null) {
 			if(notice.equals("yes"))
-				tripDao.notice(Integer.parseInt(board_no));
+				tripDao.notice(Integer.parseInt(board_no));// FIXME: 두개다 필요함
 			else {
 				tripDao.noticeX(Integer.parseInt(board_no));
 			}

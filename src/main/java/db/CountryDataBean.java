@@ -1,4 +1,4 @@
-package Temp;
+package db;
 
 //database table : pao_country
 public class CountryDataBean {

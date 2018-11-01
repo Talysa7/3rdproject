@@ -44,14 +44,14 @@ import db.AlbumDBBean;
 import db.AlbumDataBean;
 import db.CmtDBBean;
 import db.CmtDataBean;
-import db.LocDBBean;
-import db.LocDataBean;
+import db.CoordDBBean;
+import db.CoordDataBean;
 import db.MemberDBBean;
 import db.MemberDataBean;
 import db.TagDBBean;
 import db.TagDataBean;
-import db.TbDBBean;
-import db.TbDataBean;
+import db.BoardDBBean;
+import db.BoardDataBean;
 import db.TripDBBean;
 import db.UserDBBean;
 import db.UserDataBean;
@@ -71,13 +71,15 @@ public class SvcProHandler {
 	@Resource
 	private CmtDBBean cmtDao;
 	@Resource
-	private LocDBBean locDao;
+	private CoordDBBean locDao;
 	@Resource
 	private TagDBBean tagDao;
 	@Resource
 	private UserDBBean userDao;
 	@Resource
-	private TbDBBean tbDao;
+	private BoardDBBean boardDao;
+	@Resource
+	private MemberDBBean memberDao; 
 
 	///////////////////////////////// user pages/////////////////////////////////
 
@@ -374,22 +376,22 @@ public class SvcProHandler {
 		int schedulenum=Integer.parseInt(request.getParameter("schedulenum"));//일정개수
 		//insert gg_trip_board 
 
-		TbDataBean tbDto = new TbDataBean();
+		BoardDataBean boardDto = new BoardDataBean();
 
-		tbDto.setUser_id((String) request.getSession().getAttribute("user_id"));
-		tbDto.setTb_title(request.getParameter("trip_title"));
-		tbDto.setTb_m_num(Integer.parseInt(request.getParameter("trip_m_num")));
-		tbDto.setTb_talk(request.getParameter("tb_talk"));
-		tbDto.setTb_content(request.getParameter("content"));
+		boardDto.setUser_id((String) request.getSession().getAttribute("user_id"));
+		boardDto.setBoard_title(request.getParameter("trip_title"));
+		boardDto.setBoard_member_num(Integer.parseInt(request.getParameter("trip_m_num"))); // FIXME: 얘도 TRIP DB로 빠져있음.
+		boardDto.setBoard_talk(request.getParameter("tb_talk"));
+		boardDto.setBoard_content(request.getParameter("content"));
 
-		tbDao.insertBoard_no(tbDto);
-		int board_no = tbDto.getBoard_no();// board_no
+		boardDao.insertBoard_no(boardDto);
+		int board_no = boardDto.getBoard_no();// board_no
 		request.setAttribute("board_no", board_no);
 
-		LocDataBean locDto = new LocDataBean();
+		CoordDataBean coordDto = new CoordDataBean();
 		for (int i = 1; i <= schedulenum; i++) {
-			tbDao.insertTripDetail(tbDto);
-			int trip_id = tbDto.getTd_trip_id();
+			boardDao.insertTrip(boardDto);
+			int trip_id = boardDto.getTrip_id();//FIXME : 얘도 빠져있음.
 			
 			//set writer as a member of his trips
 			String user_id = (String) (request.getSession().getAttribute("user_id"));
@@ -404,21 +406,21 @@ public class SvcProHandler {
 			double coord_long = Double.parseDouble(request.getParameter("lng" + i + ""));
 			if (country_code != null) {
 				int coord_order = i;
-				locDto.setCountry_code(country_code);
-				locDto.setCoord_lat(coord_lat);
-				locDto.setCoord_long(coord_long);
-				locDto.setCoord_order(coord_order);
+				coordDto.setCountry_id(country_code);
+				coordDto.setCoord_lat(coord_lat);
+				coordDto.setCoord_long(coord_long);
+				coordDto.setCoord_order(coord_order);
 
-				int coordResult = locDao.insertCoord(locDto);// locDto의 coord_id에 좌표값 저장한 후 생성된 coord_id저장 됨
+				int coordResult = locDao.insertCoord(coordDto);// locDto의 coord_id에 좌표값 저장한 후 생성된 coord_id저장 됨
 
 				String cal_start_date = request.getParameter("start" + i + "");
 				String cal_end_date = request.getParameter("end" + i + "");
 
-				locDto.setCal_start_date(cal_start_date);
-				locDto.setCal_end_date(cal_end_date);
-				locDto.setTd_trip_id(trip_id);
+				coordDto.setCal_start_date(cal_start_date);//FIXME: 여기도 Trip으로 옮겨간 부분.정리필요.
+				coordDto.setCal_end_date(cal_end_date);
+				coordDto.setTd_trip_id(trip_id);
 
-				int calResult = locDao.insertCal(locDto);// 일정에 맞는 calendar table 레코드추가
+				int calResult = locDao.insertCal(coordDto);// 일정에 맞는 calendar table 레코드추가
 			}
 		}
 
@@ -430,7 +432,7 @@ public class SvcProHandler {
 			for (String tag : tags) {
 				tagSetter.put("board_no", board_no);
 				tagSetter.put("tag_id", Integer.parseInt(tag));
-				tagDao.setTripTag(tagSetter);
+				tagDao.setTripTag(tagSetter);	//	FIXME: 태그 후일 정리 부분.
 			}
 		}
 		
@@ -448,13 +450,13 @@ public class SvcProHandler {
 		System.out.println(request.getParameter("board_no"));
 		int board_no = Integer.parseInt(request.getParameter("board_no"));
 		// update gg_trip_board
-		TbDataBean tbDto = new TbDataBean();
-		tbDto.setBoard_no(board_no);
-		tbDto.setUser_id((String) request.getSession().getAttribute("user_id"));
-		tbDto.setTb_title(request.getParameter("trip_title"));
-		tbDto.setTb_m_num(Integer.parseInt(request.getParameter("trip_m_num")));
-		tbDto.setTb_talk(request.getParameter("tb_talk"));
-		tbDto.setTb_content(request.getParameter("content"));
+		BoardDataBean boardDto = new BoardDataBean();
+		boardDto.setBoard_no(board_no);
+		boardDto.setUser_id((String) request.getSession().getAttribute("user_id"));
+		boardDto.setBoard_title(request.getParameter("trip_title"));
+		boardDto.setBoard_member_num(Integer.parseInt(request.getParameter("trip_m_num")));//FIXME :얘도 trip DB로 이동
+		boardDto.setTb_talk(request.getParameter("tb_talk"));
+		boardDto.setBoard_content(request.getParameter("content"));
 
 		String[] tagValues=request.getParameterValues("tags");
 		
@@ -468,7 +470,7 @@ public class SvcProHandler {
 		}
 		
 		//update modified "tripMod" in DB
-		int result = tbDao.updateTb(tbDto);
+		int result = boardDao.updateBoard(boardDto);
 		request.setAttribute("result", result);
 		request.setAttribute("board_no", board_no);
 		result=tagDao.updateTripTags(board_no, tripTags);
@@ -482,7 +484,7 @@ public class SvcProHandler {
 	public ModelAndView svcTripDelProProcess(HttpServletRequest request, HttpServletResponse response)
 			throws HandlerException {
 		int board_no = Integer.parseInt(request.getParameter("board_no"));
-		int result = tbDao.deleteTrip(board_no);
+		int result = boardDao.deleteTrip(board_no);
 		request.setAttribute("result", result);
 		return new ModelAndView("svc/tripDel");
 	}
@@ -531,7 +533,7 @@ public class SvcProHandler {
 				int board_no=Integer.parseInt(request.getParameter("board_no"));
 				albumDto.setBoard_no(board_no);
 				request.setAttribute("board_no",board_no);
-				int result = albumDao.addPhoto(albumDto);
+				albumDao.addPhoto(albumDto);
 			} catch (IllegalStateException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -718,15 +720,15 @@ public class SvcProHandler {
 
 		int board_no = Integer.parseInt(request.getParameter("board_no"));
 		List<CmtDataBean> comment = cmtDao.getComment(board_no);
-		for (CmtDataBean dto : comment) {
+		for (CmtDataBean cmtDto : comment) {
 			String user_name;
-			String user_id = dto.getUser_id();
+			String user_id = cmtDto.getUser_id();
 			if (user_id == null || user_id.equals("")) {
 				user_name = "Ex-User";
-				dto.setUser_name(user_name);
+				cmtDto.setUser_name(user_name);		//FIXME : userName이 databean에 ㅇ벗음.
 			} else {
 				user_name = memberDao.getUserName(user_id);
-				dto.setUser_name(user_name);
+				cmtDto.setUser_name(user_name);
 			}
 		}
 

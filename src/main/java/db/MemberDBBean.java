@@ -1,4 +1,4 @@
-﻿package Temp;
+﻿package db;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,7 +9,6 @@ import org.apache.ibatis.session.SqlSession;
 
 import bean.SqlMapClient;
 import db.BoardDataBean;
-import Temp.UserDataBean;
 
 public class MemberDBBean {
 	private SqlSession session=SqlMapClient.getSession();
@@ -52,7 +51,7 @@ public class MemberDBBean {
 				int memNum=session.selectOne("user.getMemberCount", trip_id);
 				TripDataBean tripDto = new TripDataBean();
 				tripDto.setTrip_id(trip_id);
-				tripDto.setTrip_m_count(memNum);
+				tripDto.setTrip_member_count(memNum);
 				memNumList.add(tripDto);
 			}		
 		}

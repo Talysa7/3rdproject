@@ -1,4 +1,4 @@
-package Temp;
+package db;
 
 //Mapping table
 //database table : pao_members

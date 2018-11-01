@@ -1,69 +1,60 @@
 package db;
 
-import java.sql.Timestamp;
+import java.sql.Date;
 
+//database view(with user_name) : pao_view_trip
+//database table : pao_trip
 public class TripDataBean {
-	public int tb_no;
-	public String user_id;
-	public String tb_title;
-	public String tb_content;
-	public Timestamp tb_reg_date;
-	public int tb_v_count;
-	public int tb_m_num;
-	public int tb_notice;
-	public String tb_talk;
-	public int getTb_no() {
-		return tb_no;
+	private int trip_id;										//int (10), PK, not null, on delete cascade
+	private int trip_member_count;					//smallint (4), not null
+	private Date start_date;								//timestamp, not null
+	private Date end_date;								//timestamp, not null
+	//FK
+	private int board_no;											//int (10), not null
+	private int coord_id;									//int (8), not null
+	//guest value from pao_user
+	private String user_name;							//varchar (20), not null
+	
+	public int getTrip_id() {
+		return trip_id;
 	}
-	public void setTb_no(int tb_no) {
-		this.tb_no = tb_no;
+	public void setTrip_id(int trip_id) {
+		this.trip_id = trip_id;
 	}
-	public String getUser_id() {
-		return user_id;
+	public int getTrip_member_count() {
+		return trip_member_count;
 	}
-	public void setUser_id(String user_id) {
-		this.user_id = user_id;
+	public void setTrip_member_count(int trip_member_count) {
+		this.trip_member_count = trip_member_count;
 	}
-	public String getTb_title() {
-		return tb_title;
+	public int getCoord_id() {
+		return coord_id;
 	}
-	public void setTb_title(String tb_title) {
-		this.tb_title = tb_title;
+	public void setCoord_id(int coord_id) {
+		this.coord_id = coord_id;
 	}
-	public String getTb_content() {
-		return tb_content;
+	public Date getStart_date() {
+		return start_date;
 	}
-	public void setTb_content(String tb_content) {
-		this.tb_content = tb_content;
+	public void setStart_date(Date start_date) {
+		this.start_date = start_date;
 	}
-	public Timestamp getTb_reg_date() {
-		return tb_reg_date;
+	public Date getEnd_date() {
+		return end_date;
 	}
-	public void setTb_reg_date(Timestamp tb_reg_date) {
-		this.tb_reg_date = tb_reg_date;
+	public void setEnd_date(Date end_date) {
+		this.end_date = end_date;
 	}
-	public int getTb_v_count() {
-		return tb_v_count;
+	public int getBoard_no() {
+		return board_no;
 	}
-	public void setTb_v_count(int tb_v_count) {
-		this.tb_v_count = tb_v_count;
+	public void setBoard_no(int board_no) {
+		this.board_no = board_no;
 	}
-	public int getTb_m_num() {
-		return tb_m_num;
+	public String getUser_name() {
+		return user_name;
 	}
-	public void setTb_m_num(int tb_m_num) {
-		this.tb_m_num = tb_m_num;
-	}
-	public int getTb_notice() {
-		return tb_notice;
-	}
-	public void setTb_notice(int tb_notice) {
-		this.tb_notice = tb_notice;
-	}
-	public String getTb_talk() {
-		return tb_talk;
-	}
-	public void setTb_talk(String tb_talk) {
-		this.tb_talk = tb_talk;
+	public void setUser_name(String user_name) {
+		this.user_name = user_name;
 	}
 }
