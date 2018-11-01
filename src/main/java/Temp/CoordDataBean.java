@@ -46,7 +46,19 @@ public class CoordDataBean {
 	}
 	public List<String> getRegion_types(int coord_id) {
 		RegionDBBean regionDao = new RegionDBBean();
-		region_types=regionDao.getRegions(coord_id);
+		region_types = regionDao.getRegions(coord_id);
 		return region_types;
+	}
+	public int getCoord_order() {
+		return coord_order;
+	}
+	public void setCoord_order(int coord_order) {
+		this.coord_order = coord_order;
+	}
+	public List<String> getRegion_types() {
+		return region_types;
+	}
+	public void setRegion_types(List<String> region_types) {
+		this.region_types = region_types;
 	}
 }
