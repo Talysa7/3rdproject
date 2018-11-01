@@ -108,7 +108,7 @@ public class AdmListHandler {
 	@RequestMapping("adminComment")
 	public ModelAndView adminContentHandler(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		request.setAttribute("page", commentP);
-		int count=cmtDao.getCount();//list row num
+		int count=cmtDao.getCmtCount();//list row num
 		
 		String pageNum=request.getParameter("pageNum");
 		if(pageNum==null || pageNum.equals("")){
