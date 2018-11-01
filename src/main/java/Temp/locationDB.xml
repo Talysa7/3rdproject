@@ -4,9 +4,17 @@
   	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="location">
 	<select id="getRegions" parameterType="int" resultType="java.util.List">
-		SELECT region_id FROM pao_region_match WHERE coord_id=#{coord_id}
+		select region_id from pao_region_match where coord_id=#{coord_id}
 	</select>
-	
+	<select id="selectCountry" parameterType="int" resultType="Temp.CountryDataBean">	
+		select * from pao_country where country_id in(
+		select country_id from pao_coordinate where coord_id in(
+		select coord_id from pao_trip where pao_trip_id in(
+		select trip_id from pao_board where board_no=#{board_no})))
+	</select>
+	<select id="getTripIds" resultType="int">
+		select trip_id from pao_trip where board_no=#{board_no}
+	</select>
 	<!--/////////////////////////////////////////////////// start-line pao_coordinate table ///////////////////////////////////////////////////-->
 	<insert id="insertCoord" parameterType="db. CoordDataBean" keyProperty="coord_id">
 		INSERT INTO pao_coordinate 

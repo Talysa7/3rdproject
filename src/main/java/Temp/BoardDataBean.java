@@ -1,4 +1,4 @@
-package Temp;
+﻿package Temp;
 
 import java.sql.Date;
 import java.util.List;
@@ -26,38 +26,66 @@ public class BoardDataBean {
 	private List<TripDataBean> tripLists;	// 관련된 TripData들을 가져와 보관하기 위함.
 	
 
+	
+	public int getBoard_no() {
+		return board_no;
+	}
+	public void setBoard_no(int board_no) {
+		this.board_no = board_no;
+	}
+	public String getBoard_title() {
+		return board_title;
+	}
+	public void setBoard_title(String board_title) {
+		this.board_title = board_title;
+	}
+	public String getBoard_content() {
+		return board_content;
+	}
+	public void setBoard_content(String board_content) {
+		this.board_content = board_content;
+	}
+	public int getBoard_view_count() {
+		return board_view_count;
+	}
+	public void setBoard_view_count(int board_view_count) {
+		this.board_view_count = board_view_count;
+	}
+	public int getBoard_level() {
+		return board_level;
+	}
+	public void setBoard_level(int board_level) {
+		this.board_level = board_level;
+	}
+	public String getBoard_contact() {
+		return board_contact;
+	}
+	public void setBoard_contact(String board_contact) {
+		this.board_contact = board_contact;
+	}
+	public Date getBoard_reg_date() {
+		return board_reg_date;
+	}
+	public void setBoard_reg_date(Date board_reg_date) {
+		this.board_reg_date = board_reg_date;
+	}
 	public String getUser_id() {
 		return user_id;
 	}
 	public void setUser_id(String user_id) {
 		this.user_id = user_id;
 	}
-	public String setUser_name(String user_id) {
-		//This is a guest value, we can get it from pao_user
-		if (user_id!=null) {
-			UserDBBean userDao=new UserDBBean();
-			this.user_name=userDao.getUser_name(user_id);
-		} else {
-			this.user_name="Ex-User";
-		}
-		return user_name;
-	}
 	public String getUser_name() {
 		return user_name;
 	}
-	public String setThumbnail(int b_no) {
-		AlbumDBBean albumDao=new AlbumDBBean();
-		thumbnail=albumDao.getThumbnail(b_no);
-		if (thumbnail==null) {
-			thumbnail="";	//put the url of default image
-		}
-		return thumbnail;
+	public void setUser_name(String user_name) {
+		this.user_name = user_name;
 	}
 	public String getThumbnail() {
 		return thumbnail;
 	}
-	public int getBoard_no() {
-		return board_no;
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
 	}
 	public void setBoard_no(int board_no) {
 		this.board_no = board_no;
