@@ -3,11 +3,104 @@
   	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="user">
+<!-- User -->
+	<select id="getUser" parameterType="String"
+		resultType="UserDataBean">
+		select * from pao_user where user_id=#{user_id}
+	</select>
+<!-- Member -->
 	<select id="getUserName" parameterType="String" resultType="String">
 		select user_name from pao_user where user_id=#{user_id}
 	</select>
+	<select id="getCurrentMember" parameterType="int" resultType="db.MemberDataBean">
+		select * from pao_members where trip_id=#{trip_id}
+	</select>
+	<update id="addTripMember" parameterType="db.MemberDataBean">
+		insert into pao_members(user_id, trip_id) values(#{user_id}, #{trip_id})
+	</update>	
+	<delete id="delTripMember" parameterType="db.MemberDataBean">
+		delete from pao_members where user_id=#{user_id} and trip_id=#{trip_id}
+	</delete>
+	<select id="isMember" parameterType="db.MemberDataBean" resultType="int">
+		select count(*) from pao_members where user_id=#{user_id} and trip_id=#{trip_id}
+	</select>	
+	<select id="getMemberCount" parameterType="int" resultType="int">
+		select count(*) from pao_members where trip_id=#{trip_id}
+	</select>
+	
+<!-- Tag -->
 	<select id="getUserTags" parameterType="String" resultType="java.util.List">
 		select tag_value from pao_tag where tag_id in 
 		(select tag_id from pao_user_tag where user_id=#{user_id})
 	</select>
+	
+	<delete id="deleteUser" parameterType="String">
+	 	delete from pao_user where user_id=#{user_id}
+	 </delete>
+	 
+	 <select id="getUsers" parameterType="java.util.Map" resultType="db.UserDataBean">
+		select user_id,user_name,email,gender,reg_date,r
+		from (
+		select user_id,user_name,email,gender,reg_date,rownum r from (
+		select
+		user_id,user_name,email,gender,reg_date from pao_user where user_level!=9 order by
+		reg_date
+		desc)
+		order by reg_date desc)where r &gt;= #{start} and r &lt;=#{end}
+	</select>
+	
+	<select id="getUCount" resultType="int">
+		select count(*) from pao_user where user_level!=9
+	</select>
+	
+	<select id="getUserId" parameterType="String" resultType="String">
+		select user_id from pao_user where user_name=#{user_name}
+	</select>
+	
+	<insert id="insertUser" parameterType="db.UserDataBean">
+		insert into pao_user
+		values(#{user_id}, #{passwd},#{email, jdbcType=VARCHAR}, #{gender},
+		#{reg_date}, #{user_name} , 1 )
+	</insert>
+	
+	<select id="checkId" parameterType="String" resultType="int">
+		select
+		count(*) from pao_user where user_id=#{user_id}
+	</select>
+	
+	<select id="EmailCheck" parameterType="String" resultType="int">
+		select
+		count(*) from pao_user where email=#{email}
+	</select>
+	
+	<select id="getUserEmailId" parameterType="String" resultType="db.UserDataBean">
+		select user_id from pao_user where email=#{email} 
+	</select>
+	
+	<select id="getUserEmailPasswd" parameterType="String" resultType="db.UserDataBean">
+		select passwd from pao_user where email=#{email} 
+	</select>
+	
+	<update id="modifyUser" parameterType="db.UserDataBean">
+		update pao_user set
+		passwd=#{passwd}, user_name=#{user_name} where
+		user_id=#{user_id}
+	</update>
+	
+	<select id="getUser" parameterType="String" resultType="db.UserDataBean">
+		select * from pao_user where user_id=#{user_id}
+	</select>
+	
+	<select id="idCheck" parameterType="String" resultType="Integer">
+		select count(*) from pao_user where user_id=#{user_id}
+	</select>
+	
+	<select id="nameCheck" parameterType="String" resultType="Integer">
+		select count(*) from pao_user where user_name=#{user_name}
+	</select>
+	
+	<select id="getUserLevel" parameterType="String" resultType="Integer">
+		select user_level from pao_user where user_id=#{user_id}
+	</select>
+	
 </mapper>

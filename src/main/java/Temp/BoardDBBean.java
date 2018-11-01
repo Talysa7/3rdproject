@@ -88,7 +88,7 @@ public class BoardDBBean {
 		
 		if(trips.size()>0) {
 			for(TripDataBean tripDto:trips) {
-				/*Map<String, String> currentTrip=new HashMap<String, String>();
+				/*Map<String, String> currentTrip=new HashMap<String, String>();	사람수 가져오는건데 각 세부일정당으로 바뀌어서 보여줄수가 없음.
 				int memNum=session.selectOne("db.getMemberCount", trip_id);
 				String td_trip_id_string=""+trip_id;
 				String memNum_string=""+memNum;
@@ -103,33 +103,25 @@ public class BoardDBBean {
 	}
 	
 	
-	//얘는 연결되는 쿼리가 업서요
-	public List<TbDataBean> getNextTrips(int latest) {
-		//get 20 previous articles 
-		return session.selectList("db.getNextTrips", latest);
-	}
-	
-	
-	
-	
-	public List<TbDataBean> getTripList() {	//이거 처음 10개만 불러와요? 그 이후엔 안쓰나요?
+	public List<BoardDataBean> getTripList(int startVal , int endVal) {	//이거 처음 10개만 불러와요? 그 이후엔 안쓰나요?
 		//get 10 latest articles from db
-		int start=1;
-		int end=10;
+		int start=startVal;
+		int end=endVal;
 		
 		Map<String, Integer> tripReq=new HashMap<String, Integer>();
 		tripReq.put("start", start);
 		tripReq.put("end", end);
-		List<TbDataBean> tripList=session.selectList("db.getTrips2", tripReq);
+		List<BoardDataBean> BoardList=session.selectList("db.getTrips2", tripReq);
 		
-		for(TbDataBean tbDto:tripList) {
+		for(BoardDataBean boardDto:BoardList) {
 			//null exception
-			if(tbDto.getUser_id().equals("")||tbDto.getUser_id()==null) {
-				tbDto.setUser_id("Ex-User");
+			if(boardDto.getUser_id().equals("")||boardDto.getUser_id()==null) {
+				boardDto.setUser_id("Ex-User");
 			}
 			
 			//locations and tags 
-			List <Integer> tripIds=session.selectList("db.getTripIds", tbDto.getTb_no());
+			//뷰에서 끌어다 쓰게 수정. 나라 이름까지 받을 필요가있음.
+			/*List <Integer> tripIds=session.selectList("db.getTripIds", boardDto.getBoard_no());
 			String[] locs=new String[tripIds.size()];
 			for(int j=0; j<tripIds.size(); j++) {
 				String dest=session.selectOne("db.getDestination", tripIds.get(j));
@@ -152,50 +144,10 @@ public class BoardDBBean {
 			for(int k=0; k<originTags.size(); k++) {
 				tags[k]=originTags.get(k).getTag_value();
 			}
-			tbDto.setTags(tags);
+			tbDto.setTags(tags);*/
 		}
-		return tripList;
+		return null;
 	}
 	
-	//load more Trip articles from db
-	//Loading starts from last number of current page
-	public List<TbDataBean> loadMoreList(int last_row) {
-		int start=last_row;
-		int end=start+4;
-		
-		Map<String, Integer> tripReq=new HashMap<String, Integer>();
-		tripReq.put("start", start);
-		tripReq.put("end", end);
-		
-		List<TbDataBean> tripList=session.selectList("db.getTrips", tripReq);
-		for(TbDataBean tbDto:tripList) {
-			//set Nickname instead of id
-			String user_id=tbDto.getUser_id();
-			String user_name;
-			//if that user left
-			if(user_id==null||user_id.equals("")) {
-				user_name="Ex-User";
-			} else {
-				user_name=(String) session.selectOne("db.getUserName", user_id);
-			}
-			tbDto.setUser_id(user_name);
-			
-			//locations and tags 
-			List <Integer> tripIds=session.selectList("db.getTripIds", tbDto.getTb_no());
-			String[] locs=new String[tripIds.size()];
-			for(int j=0; j<tripIds.size(); j++) {
-				locs[j]=session.selectOne("db.getDestination", tripIds.get(j));
-			}
-			tbDto.setLocs(locs);
-			
-			List<TagDataBean> originTags=session.selectList("db.getTripTags", tbDto.getTb_no());
-			String[] tags=new String[originTags.size()];
-			for(int k=0; k<originTags.size(); k++) {
-				tags[k]=originTags.get(k).getTag_value();
-			}
-			tbDto.setTags(tags);
-		}
-		return tripList;
-	}
-	// 위에 두놈은 같은 기능하는거 같은데??
+
 }

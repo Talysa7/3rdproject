@@ -1,4 +1,4 @@
-package handler;
+﻿package handler;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,6 +46,8 @@ import db.CmtDBBean;
 import db.CmtDataBean;
 import db.LocDBBean;
 import db.LocDataBean;
+import db.MemberDBBean;
+import db.MemberDataBean;
 import db.TagDBBean;
 import db.TagDataBean;
 import db.TbDBBean;
@@ -97,10 +100,11 @@ public class SvcProHandler {
 		int gender = Integer.parseInt(request.getParameter("gender"));
 
 		userDto.setGender(gender);
+	
 		userDto.setReg_date(new Timestamp(System.currentTimeMillis()));
 
 		int result = userDao.insertUser(userDto);
-
+		
 		if(tag_id !=null) {
 			for(String tag:tag_id) {
         Map<String, String> map = new HashMap<>(); 
@@ -385,14 +389,14 @@ public class SvcProHandler {
 		LocDataBean locDto = new LocDataBean();
 		for (int i = 1; i <= schedulenum; i++) {
 			tbDao.insertTripDetail(tbDto);
-			int td_trip_id = tbDto.getTd_trip_id();
+			int trip_id = tbDto.getTd_trip_id();
 			
 			//set writer as a member of his trips
-			Map<String, String> addMember=new HashMap<String, String>();
-			String td_trip_id_string=""+td_trip_id;
-			addMember.put("user_id", (String) request.getSession().getAttribute("user_id"));
-			addMember.put("td_trip_id", td_trip_id_string);
-			userDao.addTripMember(addMember);
+			String user_id = (String) (request.getSession().getAttribute("user_id"));
+			MemberDataBean memberDto = new MemberDataBean();
+			memberDto.setUser_id(user_id);
+			memberDto.setTrip_id(trip_id);
+			memberDao.addTripMember(memberDto);
 
 			// gg_coordinate&location
 			String country_code = request.getParameter("country_code" + i + "");
@@ -412,7 +416,7 @@ public class SvcProHandler {
 
 				locDto.setCal_start_date(cal_start_date);
 				locDto.setCal_end_date(cal_end_date);
-				locDto.setTd_trip_id(td_trip_id);
+				locDto.setTd_trip_id(trip_id);
 
 				int calResult = locDao.insertCal(locDto);// 일정에 맞는 calendar table 레코드추가
 			}
@@ -721,7 +725,7 @@ public class SvcProHandler {
 				user_name = "Ex-User";
 				dto.setUser_name(user_name);
 			} else {
-				user_name = userDao.getUserName(user_id);
+				user_name = memberDao.getUserName(user_id);
 				dto.setUser_name(user_name);
 			}
 		}
@@ -755,44 +759,47 @@ public class SvcProHandler {
 
 	@RequestMapping(value = "/memberAttend.go", method = RequestMethod.POST)
 	@ResponseBody
-	private List<UserDataBean> memberAttendProcess(HttpServletRequest request, HttpServletResponse response)
+	private List<MemberDataBean> memberAttendProcess(HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		String td_trip_id = request.getParameter("td_trip_id");
+		String trip_id = request.getParameter("trip_id");
 		String user_id = request.getParameter("user_id");
-		Map<String, String> addMemberMap = new HashMap<String, String>();
-		addMemberMap.put("user_id", user_id);
-		addMemberMap.put("td_trip_id", td_trip_id);
+		int trip_id_int = Integer.parseInt(trip_id);
+		MemberDataBean memberDto = new MemberDataBean();		
+		memberDto.setTrip_id(trip_id_int);
+		memberDto.setUser_id(user_id);
 
-		int memberCheck = userDao.isMember(addMemberMap);
+		int memberCheck = memberDao.isMember(memberDto);
 
 		if (memberCheck == 0) {
-			int addMemberResult = userDao.addTripMember(addMemberMap);
+			int addMemberResult = memberDao.addTripMember(memberDto);
 			request.setAttribute("addMemberResult", addMemberResult);
 			request.setAttribute("isMember", true);
 		}
 
-		List<UserDataBean> memberList = userDao.getCurrentMember(td_trip_id);
+		List<MemberDataBean> memberList = memberDao.getMember(trip_id_int);
 		return memberList;
 	}
 
 	@RequestMapping(value = "/memberAbsent.go", method = RequestMethod.POST)
 	@ResponseBody
-	private List<UserDataBean> memberAbsentProcess(HttpServletRequest request, HttpServletResponse response)
+	private List<MemberDataBean> memberAbsentProcess(HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		String td_trip_id = request.getParameter("td_trip_id");
+		String trip_id = request.getParameter("trip_id");
 		String user_id = request.getParameter("user_id");
+	    int trip_id_int = Integer.parseInt(trip_id);
+	    
+	    MemberDataBean memberDto = new MemberDataBean();
+	    memberDto.setTrip_id(trip_id_int);
+	    memberDto.setUser_id(user_id);
 
-		Map<String, String> delMemberMap = new HashMap<String, String>();
-		delMemberMap.put("user_id", user_id);
-		delMemberMap.put("td_trip_id", td_trip_id);
-		int memberCheck = userDao.isMember(delMemberMap);
+		int memberCheck = memberDao.isMember(memberDto);
 
 		if (memberCheck != 0) {
-			int delMemberResult = userDao.delTripMember(delMemberMap);
+			int delMemberResult = memberDao.delTripMember(memberDto);
 			request.setAttribute("delMemberResult", delMemberResult);
 			request.setAttribute("isMember", false);
 		}
-		List<UserDataBean> memberList = userDao.getCurrentMember(td_trip_id);
+		List<MemberDataBean> memberList = memberDao.getCurrentMember(trip_id_int);
 		return memberList;
 	}
 
