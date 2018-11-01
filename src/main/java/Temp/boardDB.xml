@@ -24,10 +24,6 @@
 		select trip_id from pao_trip where board_no=#{board_no}
 	</select>
 
-
-
-	
-	
 	<!-- 요거도 셀렉트키 바꿔서 확인필요. -->
 	<insert id="insertBoard_no" parameterType="db.BoardDataBean" keyProperty="board_no">
        insert into pao_board (board_title, board_content, board_view_count, board_level, board_contact , board_reg_date, user_id )
@@ -53,7 +49,6 @@
 		select count(*) from pao_member where user_id=#{user_id} and trip_id in(
 			select trip_id from pao_trip where board_no=#{board_no})
 	</select>
-	
 	-->
 	<update id="addCount" parameterType="int">
 		update pao_board set board_view_count=board_view_count+1 where board_no=#{board_no}  
