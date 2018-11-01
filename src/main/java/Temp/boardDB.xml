@@ -20,6 +20,9 @@
 			order by board_level desc,board_reg_date desc)
 		where r &gt;= #{start} and r &lt;=#{end}
 	</select>
+	<select id="getTripIds" resultType="int">
+		select trip_id from pao_trip where board_no=#{board_no}
+	</select>
 
 
 
