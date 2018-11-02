@@ -35,7 +35,7 @@ import db.UserDataBean;
 
 @Controller
 public class SvcViewHandler {
-	private static final int PHOTOSIZE=6;//占쎈립 占쎌넅筌롫똻肉� �빊�뮆�젾占쎈┷占쎈뮉 占쎄텢筌욑옙 揶쏆뮇�땾
+	private static final int PHOTOSIZE=6;
 	
 	private static final String MAP="0";
 	

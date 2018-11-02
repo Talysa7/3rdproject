@@ -134,14 +134,14 @@ public class SvcFormHandler {
 		request.setAttribute("boardDto", boardDto);
 		
 		//trip details		//FIXME : 여기는 전체 다 수정 필요. trip id위치가 바뀜.
-		List<CoordDataBean> locDtoList=new ArrayList<CoordDataBean>();
+		List<CoordDataBean> coordDtoList=new ArrayList<CoordDataBean>();
 			//boardDto has td_trip_ids
 			if(boardDto.getTd_trip_ids().length>0) {
 				for(int trip_id:boardDto.getTd_trip_ids()) {
 					CoordDataBean coordDto=coordDao.getTripDetail(trip_id);
-					locDtoList.add(coordDto);
+					coordDtoList.add(coordDto);
 				}
-				request.setAttribute("locDtoList", locDtoList);
+				request.setAttribute("locDtoList", coordDtoList);
 			}
 		//get tag details & total list 
 		List<TagDataBean> tripTags=tagDao.getTripTags(board_no);
