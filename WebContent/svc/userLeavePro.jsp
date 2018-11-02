@@ -17,6 +17,7 @@
 	</c:if>
 	<c:if test="${result eq 1}">
 		${sessionScope.user_id = null}
+		${sessionScope.user_level = null}
 		<c:redirect url="login.go"/>
 	</c:if>		
 </c:if>		

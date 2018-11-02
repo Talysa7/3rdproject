@@ -52,10 +52,7 @@ public class TagDBBean {
 			return session.delete("tag.deleteTag",tag_id);
 		}
 		public List<TagDataBean> getUserTags(String user_id) {
-			List<TagDataBean> userTagList=session.selectList("db.getUserTags", user_id);
-			for(int i=0; i<userTagList.size(); i++) {
-				userTagList.get(i).setTag_value((String)session.selectOne("db.getTagValue", userTagList.get(i).getTag_id()));
-			}
+			List<TagDataBean> userTagList=session.selectList("tag.getUserTags", user_id);
 			return userTagList;
 		}
 		public List<TagDataBean> getTripTags(int tb_no) {
@@ -129,20 +126,14 @@ public class TagDBBean {
 			List<TagDataBean> oldUserTags=getUserTags(user_id);
 			//setter for query
 			Map<String, String> tagSetter;
-			
-			for(int i=0; i<oldUserTags.size(); i++) {
-				//put tag values by tag id
-				oldUserTags.get(i).setTag_value((String)session.selectOne("tag.getTagValue", oldUserTags.get(i).getTag_id()));
-			}
-			
 			//tester to check whether user already has that tag
 			boolean hasTag=false;
 			//Did user have this tag?
-			for(TagDataBean tb:userTags) {
+			for(TagDataBean tagDto:userTags) {
 				hasTag=false;
 				for(TagDataBean otb:oldUserTags) {
 					//if user didn't have such like a tag
-					if(otb.getTag_id()==(tb.getTag_id())) {
+					if(otb.getTag_id()==(tagDto.getTag_id())) {
 						hasTag=true;
 					}
 				}
@@ -150,8 +141,7 @@ public class TagDBBean {
 				if(!hasTag) {
 					tagSetter=new HashMap<String, String>();
 					tagSetter.put("user_id", user_id);
-					String tagId=""+tb.getTag_id();
-					tagSetter.put("tag_id", tagId);
+					tagSetter.put("tag_id", String.valueOf(tagDto.getTag_id()));
 					result=session.update("tag.updateUserTag", tagSetter);
 				}
 			}
@@ -167,8 +157,7 @@ public class TagDBBean {
 				if(!hasTag) {
 					tagSetter=new HashMap<String, String>();
 					tagSetter.put("user_id", user_id);
-					String tagId=""+otb.getTag_id();
-					tagSetter.put("tag_id", tagId);
+					tagSetter.put("tag_id", String.valueOf(otb.getTag_id()));
 					result=session.delete("tag.deleteUserTag", tagSetter);
 				}
 			}

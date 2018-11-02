@@ -98,9 +98,4 @@
 	<select id="nameCheck" parameterType="String" resultType="Integer">
 		select count(*) from pao_user where user_name=#{user_name}
 	</select>
-	
-	<select id="getUserLevel" parameterType="String" resultType="Integer">
-		select user_level from pao_user where user_id=#{user_id}
-	</select>
-	
 </mapper>
