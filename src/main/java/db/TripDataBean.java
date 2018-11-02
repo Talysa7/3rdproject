@@ -1,6 +1,8 @@
 package db;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 //database view(with user_name) : pao_view_trip
 //database table : pao_trip
@@ -10,10 +12,14 @@ public class TripDataBean {
 	private Date start_date;								//timestamp, not null
 	private Date end_date;								//timestamp, not null
 	//FK
-	private int board_no;											//int (10), not null
+	private int board_no;									//int (10), not null
 	private int coord_id;									//int (8), not null
-	//guest value from pao_user
-	private String user_name;							//varchar (20), not null
+	//guest value from pao_view_members
+	//We should set it once by trip_id when we need it.
+	private List<String> trip_members;			//varchar (20), not null
+	//guest value from pao_view_trip
+	//Be careful, when we get trip list from pao_trip, then we can't get this value!
+	private String coord_name;
 	
 	public int getTrip_id() {
 		return trip_id;
@@ -51,10 +57,25 @@ public class TripDataBean {
 	public void setBoard_no(int board_no) {
 		this.board_no = board_no;
 	}
-	public String getUser_name() {
-		return user_name;
+	public List<String> getTrip_members() {
+		return trip_members;
 	}
-	public void setUser_name(String user_name) {
-		this.user_name = user_name;
+	//for convenience
+	//by talysa7
+	public List<String> getTrip_members(int trip_id) {
+		this.setTrip_members(trip_id);
+		return trip_members;
+	}
+	//get a list of each trip member's user_name from pao_view_members
+	//by talysa7
+	public void setTrip_members(int trip_id) {
+		MemberDBBean memberDao=new MemberDBBean();
+		this.trip_members=memberDao.getMemberNames(trip_id);
+	}
+	public String getCoord_name() {
+		return coord_name;
+	}
+	public void setCoord_name(String coord_name) {
+		this.coord_name = coord_name;
 	}
 }

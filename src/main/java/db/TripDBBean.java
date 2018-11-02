@@ -11,7 +11,7 @@ public class TripDBBean {
 	private SqlSession session=SqlMapClient.getSession();
 	
 	//get trips of the article
-	public List<TripDataBean> getTripList(int board_no) {
+	public List<TripDataBean> getBoardTripList(int board_no) {		//modified method name to divide
 		return session.selectList("board.getTripList", board_no);
 	}
 	//get a specific trip
@@ -40,18 +40,15 @@ public class TripDBBean {
 		session.update("board.setBoardLevel", boardDto);
 	}
 	
-	//I removed 'deleteCal(from gg_calendar), that table merged into Trip!
-	
-	//I removed 'deleteTrip(from gg_tb)', because this is the TripDBBean!
-	
-	//I removed 'noticeX', we can set level with 'setBoardLevel' method.
-	
-	//Why is this here? Anyway I fixed it.
-		public void addViewCount(int board_no) {
-			session.update("board.addBoardViewCount", board_no);
+	/////////////////////////////////NEW-talysa7///////////////////////////////////
+	public List<TripDataBean> getUserTripList(String user_id) {
+		List<TripDataBean> userTripList=session.selectList("user.getUserTripList", user_id);
+		//set members user_name to each trip, for convenience
+		if(userTripList.size()>0) {
+			for(TripDataBean trip:userTripList) {
+				trip.setTrip_members(trip.getTrip_id());
+			}
 		}
-	
-	//Here was a method 'isOwner' testing 'Is this user the owner of this article?'
-	//This method should be moved to BoardDBBean or Handler, maybe we don't need this!
-	//Do we need this? I don't think so.
+		return userTripList;
+	}
 }

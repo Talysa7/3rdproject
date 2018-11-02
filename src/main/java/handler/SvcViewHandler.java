@@ -35,10 +35,6 @@ import db.UserDataBean;
 
 @Controller
 public class SvcViewHandler {
-	private static final int PHOTOSIZE=6;//占쎈립 占쎌넅筌롫똻肉� �빊�뮆�젾占쎈┷占쎈뮉 占쎄텢筌욑옙 揶쏆뮇�땾
-	
-	private static final String MAP="0";
-	
 	@Resource
 	private TripDBBean tripDao;
 	@Resource
@@ -55,6 +51,11 @@ public class SvcViewHandler {
 	private BoardDBBean boardDao;
 	@Resource
 	private MemberDBBean memberDao;
+	
+	//amount of displayed photos in a page
+	private static final int PHOTOSIZE=6;
+	//
+	private static final String MAP="0";
 	
 	/////////////////////////////////default pages/////////////////////////////////
 	
@@ -75,39 +76,31 @@ public class SvcViewHandler {
 	
 	@RequestMapping("/myPage")
 	public ModelAndView svcMyPageProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
-		//I don't know why but it fails to get userDto, so here I try to get it.
+		//To find which user is this?
 		String user_id=(String)request.getSession().getAttribute("user_id");
 		
 		if(user_id!=null) {
 			UserDataBean userDto=userDao.getUser(user_id);
+			//user_tags is a guest value, we should set it additionally
+			userDto.setUser_tags(userDto.getUser_id());
 			request.setAttribute("userDto", userDto);
-			
-			List<TagDataBean> userTags=tagDao.getUserTags(userDto.getUser_id());
-			request.setAttribute("userTags", userTags);
 		}
 		return new ModelAndView("svc/myPage");
 	}
 	
 	@RequestMapping("/myTrip")
 	public ModelAndView SvcMyTripProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
+		//To find which user is this?
 		String user_id=(String)request.getSession().getAttribute("user_id");
-		//get user's trip list
-		List<CoordDataBean> myTrips=coordDao.getMyTrips(user_id);
-		//put board_no... it was too much value...
-		if(myTrips.size()>0) {
-			for(CoordDataBean trip:myTrips) {
-				int board_no=boardDao.getTbNo(trip.getTd_trip_id()); //FIXME : Trip이 걸려있음.
-				trip.setBoard_no(board_no);
-			}
-		}
+		//get this user's trip list
+		List<TripDataBean> myTrips=tripDao.getUserTripList(user_id);
+		//set Trip List for display
 		request.setAttribute("myTrips", myTrips);
-		
 		return new ModelAndView("svc/myTrip");
 	}
 	
 	/////////////////////////////////board pages/////////////////////////////////
 	
-	@SuppressWarnings("null")
 	@RequestMapping("/tripList")
 	public ModelAndView svcListProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		UserDataBean userDto=(UserDataBean)request.getAttribute("userDto");

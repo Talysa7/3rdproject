@@ -57,13 +57,20 @@ public class MemberDBBean {
 		}
 		return memNumList;
 	}
-	public List<MemberDataBean> getMember(int board_no) {
-		return session.selectList("board.getMember", board_no);
+	//error fix - parameter should be trip_id, not board_id. 
+	//And I changed method name to getMember->getMembers
+	public List<MemberDataBean> getMembers(int trip_id) {
+		return session.selectList("user.getMembers", trip_id);
 	}
 	public int isMember(MemberDataBean memberDto) {
 		return session.selectOne("user.isMember", memberDto);
 	}
 	public int addTripMember(MemberDataBean memberDto) {
 		return session.selectOne("user.addTripMember", memberDto);
+	}
+	////////////////////////////////NEW! talysa7//////////////////////////////////
+	//get only user_name values from pao_view_members for TripDataBean
+	public List<String> getMemberNames(int trip_id) {
+		return session.selectList("user.getMemberNames", trip_id);
 	}
 }
