@@ -3,28 +3,19 @@
   	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="board">
-	<select id="getTrip" parameterType="int" resultType="db.BoardDataBean">
-		select * from pao_board where board_no=#{board_no}
+<!-- talysa7 -->
+	<select id="getBoard" parameterType="int" resultType="db.BoardDataBean">
+		select * from pao_view_board where board_no=#{board_no}
 	</select>
-	<select id="getCount" resultType="int">
+	<select id="getBoardCount" resultType="int">
 		select count(*) from pao_board
 	</select>
-<!-- talysa7 -->
-	<select id="getTripList" parameterType="int" resultType="db.TripDataBean">
+	<select id="getBoardList" parameterType="int" resultType="db.TripDataBean">
 		select *
 		from pao_view_board
 		order by board_level desc, board_no desc
 		limit #{startRowNumber},#{endRowNumber}
 	</select>
-	<!-- 
-	<select id="getTrips" parameterType="java.util.Map" resultType="db.BoardDataBean">
-		select board_no,board_title,board_content,board_view_count,board_level,board_contact,board_reg_date,user_id,r from (
-			select board_no,board_title,board_content,board_view_count,board_level,board_contact,board_reg_date,user_id,rownum r from (
-				select board_no,board_title,board_content,board_view_count,board_level,board_contact,board_reg_date,user_id from pao_board order by board_level desc,board_reg_date desc)
-			order by board_level desc,board_reg_date desc)
-		where r &gt;= #{start} and r &lt;=#{end}
-	</select>
-	 -->
 
 	<!-- 요거도 셀렉트키 바꿔서 확인필요. -->
 	<insert id="insertBoard_no" parameterType="db.BoardDataBean" keyProperty="board_no">
@@ -81,17 +72,7 @@
 			where b_no=#{b_no}
 		)
 	</select>
-<!-- talysa7 -->
-	<select id="getTripList" parameterType="java.util.Map" resultType="java.util.List">
-		select * 
-		from pao_trip 
-		where board_no=#{board_no}
-	</select>
-	<select id="getTrip" parameterType="int" resultType="db.TripDataBean">
-		select * 
-		from pao_trip 
-		where trip_id=#{trip_id}
-	</select>
+
 	<!-- trip insert -->
 	<insert id="addTrip" parameterType="db.TripDataBean">
 		insert into pao_trip 

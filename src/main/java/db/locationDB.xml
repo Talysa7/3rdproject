@@ -72,25 +72,26 @@
 		(SELECT country_id FROM pao_coordinate WHERE coord_id=
 		(SELECT coord_id FROM pao_calendar WHERE td_trip_id=#{td_trip_id}))
 	</select>
-	<select id="getMyTrips" parameterType="String" resultType="db. CoordDataBean">
-		SELECT ca.cal_start_date, ca.cal_end_date, ca.coord_id, ca.td_trip_id, co.coord_long, co.coord_lat, co.coord_order, co.coord_id, ctr.country_name 
-		FROM (
-			SELECT cal_start_date, cal_end_date, coord_id, td_trip_id 
-			FROM pao_calendar 
-			WHERE td_trip_id IN 
-				(
-				SELECT td_trip_id 
-				FROM pao_trip_detail 
-				WHERE tb_no IN 
-					(
-					SELECT tb_no 
-					FROM pao_trip_board 
-					WHERE user_id=#{user_id}
-					)
-				)
-			) ca, pao_coordinate co, pao_country ctr 
-		WHERE ca.coord_id = co.coord_id 
-		AND co.country_id = ctr.country_id
+<!-- talysa7 -->
+	<select id="getUserTripList" parameterType="String" resultType="db.TripDataBean">
+		select *
+		from pao_view_trip
+		where trip_id in
+			(
+				select trip_id
+				from pao_member
+				where user_id=#{user_id}
+			)
+	</select>
+	<select id="getBoardTripList" parameterType="int" resultType="db.TripDataBean">
+		select *
+		from pao_view_trip
+		where board_id=#{board_id}
+	</select>
+	<select id="getCoordinate" parameterType="int" resultType="db.CoordDataBean">
+		select *
+		from pao_coordinate
+		where coord_id=#{coord_id}
 	</select>
 	<!--/////////////////////////////////////////////////// end-line pao_coordinate table ///////////////////////////////////////////////////-->
 </mapper>

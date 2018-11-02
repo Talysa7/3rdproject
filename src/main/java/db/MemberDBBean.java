@@ -1,4 +1,4 @@
-﻿package db;
+package db;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,10 +67,5 @@ public class MemberDBBean {
 	}
 	public int addTripMember(MemberDataBean memberDto) {
 		return session.selectOne("user.addTripMember", memberDto);
-	}
-	////////////////////////////////NEW! talysa7//////////////////////////////////
-	//get only user_name values from pao_view_members for TripDataBean
-	public List<String> getMemberNames(int trip_id) {
-		return session.selectList("user.getMemberNames", trip_id);
 	}
 }

@@ -16,10 +16,13 @@ public class TripDataBean {
 	private int coord_id;									//int (8), not null
 	//guest value from pao_view_members
 	//We should set it once by trip_id when we need it.
-	private List<String> trip_members;			//varchar (20), not null
+	private List<MemberDataBean> trip_members;			//varchar (20), not null
 	//guest value from pao_view_trip
 	//Be careful, when we get trip list from pao_trip, then we can't get this value!
 	private String coord_name;
+	//guest value from pao_coordinate
+	//We should set it once by trip_id when we need it.
+	private CoordDataBean coordinate;			//varchar (20), not null
 	
 	public int getTrip_id() {
 		return trip_id;
@@ -57,25 +60,39 @@ public class TripDataBean {
 	public void setBoard_no(int board_no) {
 		this.board_no = board_no;
 	}
-	public List<String> getTrip_members() {
+	public List<MemberDataBean> getTrip_members() {
 		return trip_members;
 	}
 	//for convenience
 	//by talysa7
-	public List<String> getTrip_members(int trip_id) {
+	public List<MemberDataBean> getTrip_members(int trip_id) {
 		this.setTrip_members(trip_id);
 		return trip_members;
+	}
+	public void setTrip_members(List<MemberDataBean> trip_members) {
+		this.trip_members = trip_members;
 	}
 	//get a list of each trip member's user_name from pao_view_members
 	//by talysa7
 	public void setTrip_members(int trip_id) {
 		MemberDBBean memberDao=new MemberDBBean();
-		this.trip_members=memberDao.getMemberNames(trip_id);
+		this.trip_members=memberDao.getMembers(trip_id);
 	}
 	public String getCoord_name() {
 		return coord_name;
 	}
 	public void setCoord_name(String coord_name) {
 		this.coord_name = coord_name;
+	}
+	public CoordDataBean getCoordinate() {
+		return coordinate;
+	}
+	public void setCoordinate(CoordDataBean coordinate) {
+		this.coordinate = coordinate;
+	}
+	//get coordinate of this trip
+	public void setCoordinate(int trip_id) {
+		CoordDBBean coordDao=new CoordDBBean();
+		setCoordinate(coordDao.getCoordinate(trip_id));
 	}
 }

@@ -56,6 +56,8 @@ public class SvcViewHandler {
 	private static final int PHOTOSIZE=6;
 	//
 	private static final String MAP="0";
+	//How many articles do we need in a page, default is 10
+	private static final int articlePerPage=10;
 	
 	/////////////////////////////////default pages/////////////////////////////////
 	
@@ -104,8 +106,6 @@ public class SvcViewHandler {
 	//get board articles
 	@RequestMapping("/tripList")
 	public ModelAndView svcListProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
-		//How many articles do we need, default is 10
-		int articlePerPage=10;
 		//set row number of select request
 		//admin page needs this
 		int rowNumber;
@@ -131,87 +131,37 @@ public class SvcViewHandler {
 	//get one board article by board_no
 	@RequestMapping("/trip")
 	public ModelAndView svcTripProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
-		String user_id=(String)request.getSession().getAttribute("user_id");
-		request.setAttribute("user_id", user_id);
-		
-		//get board_no of the post
+		//Which article should we get?
 		int board_no=Integer.parseInt(request.getParameter("board_no"));
-		request.setAttribute("board_no", board_no);
+		//who is the current user?
+		String user_id=(String)request.getSession().getAttribute("user_id");
 		
-		//getTrip-게시물 정보 가져오기
+		//get all values of requested board article
 		BoardDataBean boardDto=boardDao.getBoard(board_no);
-		request.setAttribute("boardDto", boardDto);
-		
-		//trip details
-		List<CoordDataBean> coordDtoList=new ArrayList<CoordDataBean>();
-		//tbDto has td_trip_ids
-		if(boardDto.getTd_trip_ids().length>0) {		//FIXME : trip 이슈
-			for(int trip_id:boardDto.getTd_trip_ids()) {
-				CoordDataBean coordDto=coordDao.getTripDetail(trip_id);
-				coordDtoList.add(coordDto);
+		//article not found or was deleted exception
+		if(boardDto==null) {
+			request.setAttribute("articleNotFound", true);
+		} else {
+			//check, current user is the owner of this article?
+			if(boardDto.getUser_id()==user_id) {
+				//button display control
+				request.setAttribute("isOwner", true);
 			}
-			request.setAttribute("locDtoList", coordDtoList);
-		}
-		
-		boardDao.addCount(board_no);
-		
-		//authorization for deletion and modification-수정 삭제 권한 
-		TripDataBean tripDto=new TripDataBean();
-		tripDto.setBoard_no(board_no);
-		user_id=(user_id==null?"":user_id);
-		tripDto.setUser_id(user_id);		//데이터 빈에 userId X 네임만 있음.
-		int isOwner=tripDao.isOwner(tripDto);
-		request.setAttribute("isOwner", isOwner);
-		
-		//determine tab
-		String tab=request.getParameter("tab");
-		if(tab==null)tab=MAP;
-		request.setAttribute("tab", tab);
-		
-		//map data
-		//test
-		double lat=37.554690;
-		double lng=126.970702;
-		//
-		request.setAttribute("lat",lat);
-		request.setAttribute("lng", lng);
-		
-		//board album data	
-		String start=request.getParameter("start");
-		if(start==null)start="1";
-		request.setAttribute("start",start);
-		
-		//member Info of each trip
-		List<TripDataBean> memInfoList=memberDao.getMemInfoList(board_no);
-		TripDataBean tripDto1 = new TripDataBean();
-		boolean isMember=false;
-		for(TripDataBean trip1Dto : memInfoList) {
-			int trip_id=tripDto1.getTrip_id();
-			List<MemberDataBean> currendMember=memberDao.getMember(trip_id);
-			String members="";
-			if (currendMember.size()>0) {
-				for(int i=0; i<currendMember.size(); i++) {
-					if (currendMember.size()<=1) {
-						members=members+currendMember.get(i).getUser_name();
-					} else if(currendMember.size()>1 && i==currendMember.size()-1) {
-						members=members+currendMember.get(i).getUser_name();
-					} else {
-						members=members+currendMember.get(i).getUser_name()+" ";
-					}
-					String id=(String)request.getSession().getAttribute("user_id");
-					if(id!=null) {
-						String name=memberDao.getUserName(id);
-						if(name.equals(currendMember.get(i).getUser_name())) {
-							isMember=true;
-						}
+			//get trips of this article
+			for(TripDataBean trip:boardDto.getTripLists()) {
+				trip.setTrip_members(board_no);
+				//check, current user is a member of this article's trips?
+				boolean isMember=false;
+				for(MemberDataBean member:trip.getTrip_members()) {
+					if(member.getUser_id().equals(user_id)) {
+						isMember=true;
 					}
 				}
+				request.setAttribute("isMember", isMember);
 			}
-			
+			request.setAttribute("boardDto", boardDto);
+			boardDao.addCount(board_no);
 		}
-		
-		request.setAttribute("memInfoList", memInfoList);
-		request.setAttribute("isMember", isMember);
 
 		return new ModelAndView("svc/trip");
 	}
@@ -338,12 +288,11 @@ public class SvcViewHandler {
 	}
 	
 	/////////////////////////////////ajax method list/////////////////////////////////
-	@RequestMapping(value="/loadMoreList", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value="/loadMoreList", method=RequestMethod.GET, produces="application/json")
 	@ResponseBody
-	public List<BoardDataBean> loadMoreList(int last_row) {
-		//get more 5 trip articles when 'load more' button is pressed
-		List<BoardDataBean> additionalList=boardDao.loadMoreList(last_row);//FIXME: 이 메소드 삭제함. list메소드 하나로 쓰기로 하였으니 참고.
-		
+	public List<BoardDataBean> loadMoreList(int next_row) {
+		//get more 10 trip articles when 'load more' button is pressed
+		List<BoardDataBean> additionalList=boardDao.getTripList(next_row, articlePerPage);
 		return additionalList;
 	}
 }

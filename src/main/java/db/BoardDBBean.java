@@ -17,26 +17,21 @@ public class BoardDBBean {
 		return session.selectOne("db.getCount");
 	}
 	public void addCount(int board_no) {
-		session.update("db.addCount", board_no);
+		session.update("board.addCount", board_no);
 	}
 	
 	//get one trip post by tb_no, including location and tag list
 	public BoardDataBean getBoard(int board_no) {
-		//original trip data
-		BoardDataBean boardDto=session.selectOne("db.getTrip", board_no);
-		//set Nickname instead of id
-		String user_id=boardDto.getUser_id();
-		String user_name;
+		BoardDataBean boardDto=session.selectOne("board.getBoard", board_no);
 		//if that user left
-		if(user_id==null||user_id.equals("")) {
-			user_name="Ex-User";
-		} else {
-			user_name=(String) session.selectOne("db.getUserName", user_id);
+		if(boardDto.getUser_id()==null||boardDto.getUser_id().equals("")) {
+			boardDto.setUser_name("Ex-User");
 		}
-		boardDto.setUser_id(user_name);
-		
-		//trip detail	TODO:관련부분 JSP수정필요. 원래 ID만 줬지만 지금은 전체를 통째로 던져줌.
-		List<TripDataBean> tripLists=session.selectList("db.getTripList", board_no);
+		//set tags
+		List<String> board_tags=session.selectList("tag.getTripTags", board_no);
+		boardDto.setBoard_tags(board_tags);
+		//set trips
+		List<TripDataBean> tripLists=session.selectList("location.getBoardTripList", board_no);
 		boardDto.setTripLists(tripLists);
 		
 		return boardDto;
@@ -100,12 +95,13 @@ public class BoardDBBean {
 		return memNumList;
 	}
 	
+	//select from pao_view_board with rowNumber
 	//by talysa7
-	public List<BoardDataBean> getTripList(int rowNumber , int articlePerPage) {	//이거 처음 10개만 불러와요? 그 이후엔 안쓰나요?
+	public List<BoardDataBean> getTripList(int rowNumber, int articlePerPage) {
 		Map<String, Integer> tripReq=new HashMap<String, Integer>();
 		tripReq.put("startRowNumber", rowNumber);
 		tripReq.put("endRowNumber", rowNumber*articlePerPage);
-		List<BoardDataBean> BoardList=session.selectList("board.getTripList", tripReq);
+		List<BoardDataBean> BoardList=session.selectList("board.getBoardList", tripReq);
 		//user_name null exception
 		if(BoardList.size()>0) {
 			for(BoardDataBean boardDto:BoardList) {
