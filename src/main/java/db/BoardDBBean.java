@@ -100,52 +100,20 @@ public class BoardDBBean {
 		return memNumList;
 	}
 	
-	
-	public List<BoardDataBean> getTripList(int startVal , int endVal) {	//이거 처음 10개만 불러와요? 그 이후엔 안쓰나요?
-		//get 10 latest articles from db
-		int start=startVal;
-		int end=endVal;
-		
+	//by talysa7
+	public List<BoardDataBean> getTripList(int rowNumber , int articlePerPage) {	//이거 처음 10개만 불러와요? 그 이후엔 안쓰나요?
 		Map<String, Integer> tripReq=new HashMap<String, Integer>();
-		tripReq.put("start", start);
-		tripReq.put("end", end);
-		List<BoardDataBean> BoardList=session.selectList("db.getTrips2", tripReq);
-		
-		for(BoardDataBean boardDto:BoardList) {
-			//null exception
-			if(boardDto.getUser_id().equals("")||boardDto.getUser_id()==null) {
-				boardDto.setUser_id("Ex-User");
-			}
-			
-			//locations and tags 
-			//뷰에서 끌어다 쓰게 수정. 나라 이름까지 받을 필요가있음.
-			/*List <Integer> tripIds=session.selectList("db.getTripIds", boardDto.getBoard_no());
-			String[] locs=new String[tripIds.size()];
-			for(int j=0; j<tripIds.size(); j++) {
-				String dest=session.selectOne("db.getDestination", tripIds.get(j));
-				boolean addOrNot=true;
-				if (locs.length>0) {
-					for(int c=0; c<locs.length; c++) {
-						if(dest.equals(locs[c]) && locs[c]!=null) {
-							addOrNot=false;
-						}
-					}
-				}
-				if(addOrNot) {
-					locs[j]=dest;
+		tripReq.put("startRowNumber", rowNumber);
+		tripReq.put("endRowNumber", rowNumber*articlePerPage);
+		List<BoardDataBean> BoardList=session.selectList("board.getTripList", tripReq);
+		//user_name null exception
+		if(BoardList.size()>0) {
+			for(BoardDataBean boardDto:BoardList) {
+				if(boardDto.getUser_id().equals("")||boardDto.getUser_id()==null) {
+					boardDto.setUser_id("Ex-User");
 				}
 			}
-			tbDto.setLocs(locs);
-			
-			List<TagDataBean> originTags=session.selectList("db.getTripTags", tbDto.getTb_no());
-			String[] tags=new String[originTags.size()];
-			for(int k=0; k<originTags.size(); k++) {
-				tags[k]=originTags.get(k).getTag_value();
-			}
-			tbDto.setTags(tags);*/
 		}
-		return null;
+		return BoardList;
 	}
-	
-
 }

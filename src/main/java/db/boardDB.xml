@@ -9,9 +9,14 @@
 	<select id="getCount" resultType="int">
 		select count(*) from pao_board
 	</select>
+<!-- talysa7 -->
 	<select id="getTripList" parameterType="int" resultType="db.TripDataBean">
-		select * from pao_trip where board_no=#{board_no}
+		select *
+		from pao_view_board
+		order by board_level desc, board_no desc
+		limit #{startRowNumber},#{endRowNumber}
 	</select>
+	<!-- 
 	<select id="getTrips" parameterType="java.util.Map" resultType="db.BoardDataBean">
 		select board_no,board_title,board_content,board_view_count,board_level,board_contact,board_reg_date,user_id,r from (
 			select board_no,board_title,board_content,board_view_count,board_level,board_contact,board_reg_date,user_id,rownum r from (
@@ -19,6 +24,7 @@
 			order by board_level desc,board_reg_date desc)
 		where r &gt;= #{start} and r &lt;=#{end}
 	</select>
+	 -->
 
 	<!-- 요거도 셀렉트키 바꿔서 확인필요. -->
 	<insert id="insertBoard_no" parameterType="db.BoardDataBean" keyProperty="board_no">
@@ -75,7 +81,8 @@
 			where b_no=#{b_no}
 		)
 	</select>
-	<select id="getTripList" parameterType="int" resultType="java.util.List">
+<!-- talysa7 -->
+	<select id="getTripList" parameterType="java.util.Map" resultType="java.util.List">
 		select * 
 		from pao_trip 
 		where board_no=#{board_no}

@@ -1,4 +1,4 @@
-﻿package handler;
+package handler;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -101,27 +101,34 @@ public class SvcViewHandler {
 	
 	/////////////////////////////////board pages/////////////////////////////////
 	
+	//get board articles
 	@RequestMapping("/tripList")
 	public ModelAndView svcListProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
-		UserDataBean userDto=(UserDataBean)request.getAttribute("userDto");
-		List<BoardDataBean> tripList=boardDao.getTripList();//FIXME : start End 값 줄필요가 있음.
-		int startTrip=0;
-		int endTrip=0;
-		if(tripList.size()>=10) {
-			request.setAttribute("last_row", 11);
+		//How many articles do we need, default is 10
+		int articlePerPage=10;
+		//set row number of select request
+		//admin page needs this
+		int rowNumber;
+		int startPage=Integer.parseInt(request.getParameter("pageNum"));
+		if(startPage>0) {
+			rowNumber=startPage*articlePerPage;
 		} else {
-			request.setAttribute("last_row", tripList.size()+1);
+			rowNumber=1;
 		}
-		
-		int count=boardDao.getCount();
-		request.setAttribute("userDto", userDto);
+		List<BoardDataBean> tripList=boardDao.getTripList(rowNumber, articlePerPage);
+		//set count and next row info for 'load more list'
+		if(tripList.size()>=10) {
+			request.setAttribute("next_row", articlePerPage+1);
+		} else if(tripList.size()>0&&tripList.size()<10) {
+			request.setAttribute("next_row", tripList.size()+1);
+		} else {
+			request.setAttribute("next_row", 0);
+		}
 		request.setAttribute("tripList", tripList);
-		request.setAttribute("startTrip", startTrip);
-		request.setAttribute("endTrip", endTrip);
-		request.setAttribute("count", count);
 		return new ModelAndView("svc/tripList");
 	}
 	
+	//get one board article by board_no
 	@RequestMapping("/trip")
 	public ModelAndView svcTripProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		String user_id=(String)request.getSession().getAttribute("user_id");
