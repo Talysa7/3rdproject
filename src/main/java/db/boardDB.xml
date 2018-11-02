@@ -113,12 +113,11 @@
 		where trip_id=#{trip_id}
 	</delete>	
 	<!--/////////////////////////////////////////////////// start-line pao_comment table ///////////////////////////////////////////////////-->
-	<!-- FIXME : Temp 합치고 난 후에 parameterType 등의 Temp. 어쩌구 전부 교체 필요함 -->
-	<insert id="insertComment" parameterType="Temp.CmtDataBean">
+	<insert id="insertComment" parameterType="db.CmtDataBean">
 		INSERT INTO pao_comment(comment_content, comment_reg_date, board_no, user_id)
 		VALUES( #{comment_content, jdbcType=VARCHAR}, SYSDATE, #{board_no}, #{user_id} )
 	</insert>
-	<update id="updateComment" parameterType="Temp.CmtDataBean">
+	<update id="updateComment" parameterType="db.CmtDataBean">
 		UPDATE pao_comment 
 		SET	comment_content = #{comment_content} 
 		WHERE comment_id = #{comment_id}
@@ -131,13 +130,13 @@
 		SELECT count(*) 
 		FROM pao_comment
 	</select>
-	<select id="getComment" parameterType="int" resultType="Temp.CmtDataBean">
+	<select id="getComment" parameterType="int" resultType="db.CmtDataBean">
 		SELECT * 
 		FROM pao_comment 
 		WHERE board_no=#{board_no} 
 		ORDER BY comment_id DESC
 	</select>
-	<select id="getComments" parameterType="java.util.Map" resultType="Temp.CmtDataBean">
+	<select id="getComments" parameterType="java.util.Map" resultType="db.CmtDataBean">
 		SELECT comment_id,board_no,user_id,comment_content,comment_reg_date,r
 		FROM (
 			SELECT comment_id,board_no,user_id,comment_content,comment_reg_date,rownum r 
