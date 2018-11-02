@@ -4,20 +4,26 @@
   	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="board">
 	<select id="getTrip" parameterType="int" resultType="db.BoardDataBean">
-		select * from pao_board where board_no=#{board_no}
+		SELECT * FROM pao_board WHERE board_no=#{board_no}
 	</select>
-	<select id="getCount" resultType="int">
-		select count(*) from pao_board
+	<select id="getPostsCount" resultType="int">
+		SELECT count(*) FROM pao_board
 	</select>
+	<update id="addViewCount" parameterType="int">
+		UPDATE pao_board SET board_view_count=board_view_count+1 WHERE board_no=#{board_no}  
+	</update>
 	<select id="getTripList" parameterType="int" resultType="db.TripDataBean">
-		select * from pao_trip where board_no=#{board_no}
+		SELECT * FROM pao_trip WHERE board_no=#{board_no}
 	</select>
 	<select id="getTrips" parameterType="java.util.Map" resultType="db.BoardDataBean">
-		select board_no,board_title,board_content,board_view_count,board_level,board_contact,board_reg_date,user_id,r from (
-			select board_no,board_title,board_content,board_view_count,board_level,board_contact,board_reg_date,user_id,rownum r from (
-				select board_no,board_title,board_content,board_view_count,board_level,board_contact,board_reg_date,user_id from pao_board order by board_level desc,board_reg_date desc)
-			order by board_level desc,board_reg_date desc)
-		where r &gt;= #{start} and r &lt;=#{end}
+		SELECT board_no, board_title, board_content, board_view_count, board_level, board_contact, board_reg_date, user_id, user_name, r 
+		FROM (
+			SELECT board_no, board_title, board_content, board_view_count, board_level, board_contact, board_reg_date, user_id, user_name, rownum r 
+			FROM (
+				SELECT * FROM pao_view_board 
+				ORDER BY board_level DESC, board_reg_date DESC)
+			ORDER BY board_level DESC, board_reg_date DESC)
+		WHERE r &gt;= #{start} AND r &lt;= #{end}
 	</select>
 
 	<!-- 요거도 셀렉트키 바꿔서 확인필요. -->
@@ -25,92 +31,70 @@
        insert into pao_board (board_title, board_content, board_view_count, board_level, board_contact , board_reg_date, user_id )
       values(#{board_title}, #{board_content}, 0 , 0, #{board_contact}, sysdate, #{user_id})
       <selectKey keyProperty="board_no" resultType="int" order="AFTER">
-         select LAST_INSERT_ID()
+         SELECT LAST_INSERT_ID()
       </selectKey>
    	</insert>
    	<insert id="insertTrip" parameterType="db.BoardDataBean" keyProperty="trip_id">
-   		insert into pao_trip(board_no,trip_member_count,coord_id,start_date,end_date) values(#{board_no},#{trip_member_count},#{coord_id},#{start_date},#{end_date})
+   		insert into pao_trip(board_no, trip_member_count, coord_id, start_date, end_date) values(#{board_no},#{trip_member_count},#{coord_id},#{start_date},#{end_date})
 	   	<selectKey keyProperty="trip_id" resultType="int" order="AFTER">
-	       select LAST_INSERT_ID()
+	       SELECT LAST_INSERT_ID()
 	    </selectKey>
     </insert>
-	<!-- TODO: user관련. 나중에 체크후 user에 추가 
-	<select id="getUserName" parameterType="String" resultType="String">
-		select user_name from pao_user where user_id=#{user_id}
-	</select>
-	<select id="getUserId" parameterType="String" resultType="String">
-		select user_id from pao_user where user_name=#{user_name}
-	</select>
-	<select id="isMember" parameterType="db.boardDataBean" resultType="int">
-		select count(*) from pao_member where user_id=#{user_id} and trip_id in(
-			select trip_id from pao_trip where board_no=#{board_no})
-	</select>
-	<select id="getMember" parameterType="int" resultType="java.util.List">
-		select user_id from pao_members where trip_id=(select trip_id from pao_trip where board_no=#{board_no})
-	</select>
-	<select id="isTBMember" parameterType="db.BoardDataBean" resultType="int">
-		select count(*) from pao_members where user_id=#{user_id} and
-		trip_id in(
-		select trip_id from pao_trip where
-		board_no=#{board_no})
-	</select>
-	-->
-	<update id="addCount" parameterType="int">
-		update pao_board set board_view_count=board_view_count+1 where board_no=#{board_no}  
-	</update>
+
+	
 	<update id="updateBoard" parameterType="db.BoardDataBean">
-		update pao_board set board_title=#{board_title}, board_content=#{board_content},  board_level=#{board_level} where board_no=#{board_no}
+		UPDATE pao_board SET board_title=#{board_title}, board_content=#{board_content},  board_level=#{board_level} WHERE board_no=#{board_no}
 	</update>
 	<delete id="deleteTrip" parameterType="int">
-		delete from pao_board where board_no=#{board_no}
+		DELETE FROM pao_board WHERE board_no=#{board_no}
 	</delete>
 
 	<select id="getBoardTags" parameterType="int" resultType="java.util.List">
-		select tag_value 
-		from pao_tag 
-		where tag_id in
+		SELECT tag_value 
+		FROM pao_tag 
+		WHERE tag_id in
 		(
-			select tag_id 
-			from pao_trip_tag 
-			where b_no=#{b_no}
+			SELECT tag_id 
+			FROM pao_trip_tag 
+			WHERE b_no=#{b_no}
 		)
 	</select>
 	<select id="getTripList" parameterType="int" resultType="java.util.List">
-		select * 
-		from pao_trip 
-		where board_no=#{board_no}
+		SELECT * 
+		FROM pao_trip 
+		WHERE board_no=#{board_no}
 	</select>
 	<select id="getTrip" parameterType="int" resultType="db.TripDataBean">
-		select * 
-		from pao_trip 
-		where trip_id=#{trip_id}
+		SELECT * 
+		FROM pao_trip 
+		WHERE trip_id=#{trip_id}
 	</select>
 	<!-- trip insert -->
 	<insert id="addTrip" parameterType="db.TripDataBean">
 		insert into pao_trip 
 		values(#{board_no}, #{trip_id}, #{trip_member_count}, #{coord_id}, #{start_date}, #{end_date})
 	</insert>
-	<!-- trip update -->
+	<!-- trip UPDATE -->
 	<update id="addBoardViewCount" parameterType="int">
-		update pao_board 
-		set board_view_count=board_view_count+1 
-		where board_no=#{board_no}
+		UPDATE pao_board 
+		SET board_view_count=board_view_count+1 
+		WHERE board_no=#{board_no}
 	</update>
 	<update id="updateTrip" parameterType="db.BoardDataBean">
-		update pao_trip 
-		set trip_member_count=#{trip_member_count, coord_id=#{coord_id}, 
+		UPDATE pao_trip 
+		SET trip_member_count=#{trip_member_count, coord_id=#{coord_id}, 
 		start_date=#{start_date}, end_date=#{end_date}
-		where trip_id=#{trip_id}
+		WHERE trip_id=#{trip_id}
 	</update>
 	<update id="setBoardLevel" parameterType="db.BoardDataBean">
-		update pao_board 
-		set board_level=#{board_level} 
-		where board_no=#{board_no}
+		UPDATE pao_board 
+		SET board_level=#{board_level} 
+		WHERE board_no=#{board_no}
 	</update>
 	<!-- trip delete -->
 	<delete id="deleteTrip" parameterType="int">
-		delete from pao_trip 
-		where trip_id=#{trip_id}
+		delete FROM pao_trip 
+		WHERE trip_id=#{trip_id}
 	</delete>	
 	<!--/////////////////////////////////////////////////// start-line pao_comment table ///////////////////////////////////////////////////-->
 	<insert id="insertComment" parameterType="db.CmtDataBean">
@@ -137,11 +121,11 @@
 		ORDER BY comment_id DESC
 	</select>
 	<select id="getComments" parameterType="java.util.Map" resultType="db.CmtDataBean">
-		SELECT comment_id,board_no,user_id,comment_content,comment_reg_date,r
+		SELECT comment_id, board_no, user_id, comment_content, comment_reg_date, r
 		FROM (
-			SELECT comment_id,board_no,user_id,comment_content,comment_reg_date,rownum r 
+			SELECT comment_id, board_no, user_id, comment_content, comment_reg_date, rownum r 
 			FROM (
-				SELECT comment_id,board_no,user_id,comment_content,comment_reg_date 
+				SELECT comment_id, board_no, user_id, comment_content, comment_reg_date 
 				FROM pao_comment 
 				ORDER BY comment_reg_date DESC
 				)
