@@ -6,7 +6,7 @@
 	<select id="getRegions" parameterType="int" resultType="java.util.List">
 		select region_id from pao_region_match where coord_id=#{coord_id}
 	</select>
-	<select id="selectCountry" parameterType="int" resultType="Temp.CountryDataBean">	
+	<select id="selectCountry" parameterType="int" resultType="db.CountryDataBean">	
 		select * from pao_country where country_id in(
 		select country_id from pao_coordinate where coord_id in(
 		select coord_id from pao_trip where pao_trip_id in(
