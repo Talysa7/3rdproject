@@ -15,8 +15,9 @@
 	
 	
 	<select id="getAlbum" resultType="db.AlbumDataBean">
-		select * from pao_album order by
-		photo_reg_date desc
+		SELECT * 
+		FROM pao_album 
+		ORDER BY photo_reg_date DESC
 	</select>
 	<select id="getBoardAlbum" parameterType="java.util.Map"
 		resultType="db.AlbumDataBean">
