@@ -1,9 +1,12 @@
 package db;
 
+import java.sql.Timestamp;
+
 //database table : pao_album
 public class AlbumDataBean {
 	private int photo_id;			//int (10), PK
 	private String photo_url;		//varchar (200), not null
+	private Timestamp photo_reg_date;
 	//FK
 	private String user_id;			//varchar (20), on delete cascade
 	private int board_no;				//int (10), not null, on delete cascade
@@ -31,5 +34,11 @@ public class AlbumDataBean {
 	}
 	public void setBoard_no(int board_no) {
 		this.board_no = board_no;
+	}
+	public Timestamp getPhoto_reg_date() {
+		return photo_reg_date;
+	}
+	public void setPhoto_reg_date(Timestamp photo_reg_date) {
+		this.photo_reg_date = photo_reg_date;
 	}
 }

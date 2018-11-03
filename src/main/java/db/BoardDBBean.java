@@ -11,15 +11,15 @@ import bean.SqlMapClient;
 
 public class BoardDBBean {
 	private SqlSession session=SqlMapClient.getSession();
-	
+
 	//get count of all trip
-	public int getCount() {
-		return session.selectOne("db.getCount");
+	public int getPostsCount() {
+		return session.selectOne("board.getPostsCount");
 	}
-	public void addCount(int board_no) {
-		session.update("board.addCount", board_no);
+	public void addViewCount(int board_no) {
+		session.update("board.addViewCount", board_no);
 	}
-	
+
 	//get one trip post by tb_no, including location and tag list
 	public BoardDataBean getBoard(int board_no) {
 		BoardDataBean boardDto=session.selectOne("board.getBoard", board_no);
@@ -33,68 +33,68 @@ public class BoardDBBean {
 		//set trips
 		List<TripDataBean> tripLists=session.selectList("location.getBoardTripList", board_no);
 		boardDto.setTripLists(tripLists);
-		
+
 		return boardDto;
 	}
-	
+
 	public int insertBoard_no(BoardDataBean boardDto) {
 	      return session.insert("db.insertBoard_no",boardDto);
 	}
-	
+
 	public int insertTrip(BoardDataBean boardDto) {
 		return session.insert("db.insertTrip",boardDto);
 	}
-	
+
 	public String getUserId(String user_name) {
 		return session.selectOne("db.getUserId", user_name);
 	}
 	public int updateBoard(BoardDataBean boardDto) {
 		return session.update("db.updateBoard", boardDto);
 	}
-	
+
 	//trip board list
 	public List<BoardDataBean> getTrips(Map<String,Integer> map){
-		return session.selectList("db.getTrips",map);
+		return session.selectList("board.getTrips", map);
 	}
-	
+
 	public int deleteTrip(int board_no) {
 		return session.delete("db.deleteTrip", board_no);
 	}
-	
+
 	public boolean isMember(BoardDataBean boardDto) {
 		int count=session.selectOne("db.isMember",boardDto);
 		if(count>0)return true;
 		else return false;
 	}
-	
+
 	public List<BoardDataBean> findTripByKeyword(String keyword) {	//	수정필요.
 		return null;
 	}
-	
+
 	public List<BoardDataBean> findTripByUser(String keyword) {	// 수정필요.
 		return null;
 	}
-	
+
 	public List<Map<String, String>> getMemInfoList(int board_no) {	//	 얘도 수정필요.
 		List<Map<String, String>> memNumList=new ArrayList<Map<String, String>>();
 		List<TripDataBean> trips=session.selectList("db.getTripList", board_no);
-		
+
 		if(trips.size()>0) {
 			for(TripDataBean tripDto:trips) {
 				/*Map<String, String> currentTrip=new HashMap<String, String>();	사람수 가져오는건데 각 세부일정당으로 바뀌어서 보여줄수가 없음.
 				int memNum=session.selectOne("db.getMemberCount", trip_id);
 				String td_trip_id_string=""+trip_id;
 				String memNum_string=""+memNum;
-				
+
 				currentTrip.put("td_trip_id", td_trip_id_string);
 				currentTrip.put("memNum", memNum_string);
 				memNumList.add(currentTrip);*/
 			}
 		}
-		
+
 		return memNumList;
 	}
-	
+
 	//select from pao_view_board with rowNumber
 	//by talysa7
 	public List<BoardDataBean> getTripList(int rowNumber, int articlePerPage) {

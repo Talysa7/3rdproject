@@ -41,7 +41,7 @@ public class TripDBBean {
 	//I changed notice to setBoardLevel, that value has been changed to board_level
 	public void setBoardLevel(int board_no, int board_level) {
 		//Bean for parameter
-		BoardDataBean boardDto=new BoardDataBean();
+		BoardDataBean boardDto = new BoardDataBean();
 		boardDto.setBoard_no(board_no);
 		boardDto.setBoard_level(board_level);
 		session.update("board.setBoardLevel", boardDto);
