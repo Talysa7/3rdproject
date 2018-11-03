@@ -73,14 +73,18 @@
 	 </delete>
 	 
 	 <select id="getUsers" parameterType="java.util.Map" resultType="db.UserDataBean">
-		select user_id,user_name,email,gender,reg_date,r
-		from (
-		select user_id,user_name,email,gender,reg_date,rownum r from (
-		select
-		user_id,user_name,email,gender,reg_date from pao_user where user_level!=9 order by
-		reg_date
-		desc)
-		order by reg_date desc)where r &gt;= #{start} and r &lt;=#{end}
+		SELECT user_id, user_name, email, reg_date, gender, user_level, user_age, r
+		FROM (
+			SELECT user_id, user_name, email, reg_date, gender, user_level, user_age, rownum r 
+			FROM (
+				SELECT user_id, user_name, email, reg_date, gender, user_level, user_age 
+				FROM pao_user 
+				WHERE user_level != 9 
+				ORDER BY reg_date DESC
+				)
+			ORDER BY reg_date DESC
+			)
+		WHERE r &gt;= #{start} AND r &lt;=#{end}
 	</select>
 	
 	<!-- 총 유저 숫자를 세는거 같은데 어디다 쓰는 용도인지 모르겠네 -->
