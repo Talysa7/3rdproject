@@ -155,7 +155,7 @@ public class AdmListHandler {
 	@RequestMapping("/adminUser")
 	public ModelAndView adminUserHandler(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		request.setAttribute("page", userP);
-		int count=userDao.getCount();//list row num
+		int count = userDao.getAllUserCount();//list row num
 		
 		String pageNum=request.getParameter("pageNum");
 		if(pageNum==null || pageNum.equals("")){
