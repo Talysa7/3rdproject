@@ -56,8 +56,8 @@ public class SvcViewHandler {
 	private static final int PHOTOSIZE=6;
 	//
 	private static final String MAP="0";
-	//How many articles do we need in a page, default is 10
-	private static final int articlePerPage=10;
+	//How many posts do we need in a page, default is 10
+	private static final int postPerPage=10;
 
 	/////////////////////////////////default pages/////////////////////////////////
 
@@ -103,7 +103,7 @@ public class SvcViewHandler {
 
 	/////////////////////////////////board pages/////////////////////////////////
 
-	//get board articles
+	//get board posts
 	@RequestMapping("/tripList")
 	public ModelAndView svcListProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		//set row number of select request
@@ -111,14 +111,14 @@ public class SvcViewHandler {
 		int rowNumber;
 		int startPage=Integer.parseInt(request.getParameter("pageNum"));
 		if(startPage>0) {
-			rowNumber=startPage*articlePerPage;
+			rowNumber=startPage*postPerPage;
 		} else {
 			rowNumber=1;
 		}
-		List<BoardDataBean> tripList=boardDao.getTripList(rowNumber, articlePerPage);
+		List<BoardDataBean> tripList=boardDao.getPostList(rowNumber, postPerPage);
 		//set count and next row info for 'load more list'
 		if(tripList.size()>=10) {
-			request.setAttribute("next_row", articlePerPage+1);
+			request.setAttribute("next_row", postPerPage+1);
 		} else if(tripList.size()>0&&tripList.size()<10) {
 			request.setAttribute("next_row", tripList.size()+1);
 		} else {
@@ -128,29 +128,29 @@ public class SvcViewHandler {
 		return new ModelAndView("svc/tripList");
 	}
 
-	//get one board article by board_no
+	//get one board post by board_no
 	@RequestMapping("/trip")
 	public ModelAndView svcTripProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
-		//Which article should we get?
+		//Which post should we get?
 		int board_no=Integer.parseInt(request.getParameter("board_no"));
 		//who is the current user?
 		String user_id=(String)request.getSession().getAttribute("user_id");
 
-		//get all values of requested board article
-		BoardDataBean boardDto=boardDao.getBoard(board_no);
-		//article not found or was deleted exception
+		//get all values of requested board post
+		BoardDataBean boardDto=boardDao.getPost(board_no);
+		//post not found or was deleted exception
 		if(boardDto==null) {
-			request.setAttribute("articleNotFound", true);
+			request.setAttribute("postNotFound", true);
 		} else {
-			//check, current user is the owner of this article?
+			//check, current user is the owner of this post?
 			if(boardDto.getUser_id()==user_id) {
 				//button display control
 				request.setAttribute("isOwner", true);
 			}
-			//get trips of this article
+			//get trips of this post
 			for(TripDataBean trip:boardDto.getTripLists()) {
 				trip.setTrip_members(board_no);
-				//check, current user is a member of this article's trips?
+				//check, current user is a member of this post's trips?
 				boolean isMember=false;
 				for(MemberDataBean member:trip.getTrip_members()) {
 					if(member.getUser_id().equals(user_id)) {
@@ -160,12 +160,13 @@ public class SvcViewHandler {
 				request.setAttribute("isMember", isMember);
 			}
 			request.setAttribute("boardDto", boardDto);
-			boardDao.addCount(board_no);
+			boardDao.addViewCount(board_no);
 		}
 
 		return new ModelAndView("svc/trip");
 	}
-
+	
+	//basic search by keyword, in title, content, or writer user_name
 	@RequestMapping("/searchTrip")
 	public ModelAndView svcSearchProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException, UnsupportedEncodingException {
 		try {
@@ -184,9 +185,9 @@ public class SvcViewHandler {
 
 		//find trips for each type
 		if(selectedType.equals("schedule")) {
-			foundList=boardDao.findTripByKeyword(keyword);
+			foundList=boardDao.findPostByKeyword(keyword);
 		} else {
-			foundList=boardDao.findTripByUser(keyword);
+			foundList=boardDao.findPostByUser(keyword);
 		}
 
 		//count check
@@ -291,8 +292,8 @@ public class SvcViewHandler {
 	@RequestMapping(value="/loadMoreList", method=RequestMethod.GET, produces="application/json")
 	@ResponseBody
 	public List<BoardDataBean> loadMoreList(int next_row) {
-		//get more 10 trip articles when 'load more' button is pressed
-		List<BoardDataBean> additionalList=boardDao.getTripList(next_row, articlePerPage);
+		//get more 10 trip posts when 'load more' button is pressed
+		List<BoardDataBean> additionalList=boardDao.getPostList(next_row, postPerPage);
 		return additionalList;
 	}
 }

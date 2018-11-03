@@ -21,7 +21,7 @@ public class BoardDBBean {
 	}
 
 	//get one trip post by tb_no, including location and tag list
-	public BoardDataBean getBoard(int board_no) {
+	public BoardDataBean getPost(int board_no) {
 		BoardDataBean boardDto=session.selectOne("board.getBoard", board_no);
 		//if that user left
 		if(boardDto.getUser_id()==null||boardDto.getUser_id().equals("")) {
@@ -52,11 +52,6 @@ public class BoardDBBean {
 		return session.update("db.updateBoard", boardDto);
 	}
 
-	//trip board list
-	public List<BoardDataBean> getTrips(Map<String,Integer> map){
-		return session.selectList("board.getTrips", map);
-	}
-
 	public int deleteTrip(int board_no) {
 		return session.delete("db.deleteTrip", board_no);
 	}
@@ -67,12 +62,12 @@ public class BoardDBBean {
 		else return false;
 	}
 
-	public List<BoardDataBean> findTripByKeyword(String keyword) {	//	수정필요.
-		return null;
+	public List<BoardDataBean> findPostByKeyword(String keyword) {	//	수정필요.
+		return session.selectList("board.getPostByKeyword", keyword);
 	}
 
-	public List<BoardDataBean> findTripByUser(String keyword) {	// 수정필요.
-		return null;
+	public List<BoardDataBean> findPostByUser(String keyword) {	// 수정필요.
+		return session.selectList("board.getPostByUserName", keyword);
 	}
 
 	public List<Map<String, String>> getMemInfoList(int board_no) {	//	 얘도 수정필요.
@@ -97,11 +92,11 @@ public class BoardDBBean {
 
 	//select from pao_view_board with rowNumber
 	//by talysa7
-	public List<BoardDataBean> getTripList(int rowNumber, int articlePerPage) {
+	public List<BoardDataBean> getPostList(int rowNumber, int postPerPage) {
 		Map<String, Integer> tripReq=new HashMap<String, Integer>();
 		tripReq.put("startRowNumber", rowNumber);
-		tripReq.put("endRowNumber", rowNumber*articlePerPage);
-		List<BoardDataBean> BoardList=session.selectList("board.getBoardList", tripReq);
+		tripReq.put("endRowNumber", rowNumber*postPerPage);
+		List<BoardDataBean> BoardList=session.selectList("board.getPostList", tripReq);
 		//user_name null exception
 		if(BoardList.size()>0) {
 			for(BoardDataBean boardDto:BoardList) {
