@@ -21,8 +21,10 @@
 			SELECT board_no, board_title, board_content, board_view_count, board_level, board_contact, board_reg_date, user_id, user_name, rownum r 
 			FROM (
 				SELECT * FROM pao_view_board 
-				ORDER BY board_level DESC, board_reg_date DESC)
-			ORDER BY board_level DESC, board_reg_date DESC)
+				ORDER BY board_level DESC, board_reg_date DESC
+				)
+			ORDER BY board_level DESC, board_reg_date DESC
+			)
 		WHERE r &gt;= #{start} AND r &lt;= #{end}
 	</select>
 
@@ -121,17 +123,17 @@
 		ORDER BY comment_id DESC
 	</select>
 	<select id="getComments" parameterType="java.util.Map" resultType="db.CmtDataBean">
-		SELECT comment_id, board_no, user_id, comment_content, comment_reg_date, r
+		SELECT comment_id, comment_content, comment_reg_date, board_no, user_id, r
 		FROM (
-			SELECT comment_id, board_no, user_id, comment_content, comment_reg_date, rownum r 
+			SELECT comment_id, comment_content, comment_reg_date, board_no, user_id, rownum r 
 			FROM (
-				SELECT comment_id, board_no, user_id, comment_content, comment_reg_date 
+				SELECT comment_id, comment_content, comment_reg_date, board_no, user_id
 				FROM pao_comment 
 				ORDER BY comment_reg_date DESC
 				)
-			ORDER BY comment_reg_date DESC)
-		WHERE r &gt;= #{start} 
-		AND r &lt;= #{end}
+			ORDER BY comment_reg_date DESC
+			)
+		WHERE r &gt;= #{start} AND r &lt;= #{end}
 	</select>
 	<!--/////////////////////////////////////////////////// end-line pao_comment table ///////////////////////////////////////////////////-->
 </mapper>
