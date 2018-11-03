@@ -84,7 +84,8 @@
 	</select>
 	
 	<!-- 총 유저 숫자를 세는거 같은데 어디다 쓰는 용도인지 모르겠네 -->
-	<select id="getUserCount" resultType="int">
+	<!-- Re : admin에서 user list 게시판을 부르기 위해 총 인원수를 세는 용도였음, AdmListHandler.java 의 adminUserHandler() -->
+	<select id="getAllUserCount" resultType="int">
 		select count(*) from pao_user where user_level!=9
 	</select>
 	
