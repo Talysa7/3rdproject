@@ -67,7 +67,7 @@
 	 -->
 	 
 	<select id="getUserTags" resultType="db.TagDataBean">
-		select * from pao_user_tag where user_id=#{user_id}
+		select * from pao_view_user_tags where user_id=#{user_id}
 	</select>
 
 	<select id="getStyleTags" resultType="db.TagDataBean">

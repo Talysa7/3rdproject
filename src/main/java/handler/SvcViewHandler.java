@@ -51,36 +51,36 @@ public class SvcViewHandler {
 	private BoardDBBean boardDao;
 	@Resource
 	private MemberDBBean memberDao;
-	
+
 	//amount of displayed photos in a page
 	private static final int PHOTOSIZE=6;
 	//
 	private static final String MAP="0";
 	//How many articles do we need in a page, default is 10
 	private static final int articlePerPage=10;
-	
+
 	/////////////////////////////////default pages/////////////////////////////////
-	
+
 	@RequestMapping("/*")
 	public ModelAndView svcDefaultProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		return new ModelAndView("svc/default");
 	}
-	
+
 	/////////////////////////////////main page/////////////////////////////////
-	
+
 	//temporary go to login
 	@RequestMapping("/main")
 	public ModelAndView svcMainProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		return new ModelAndView("svc/login");
 	}
-	
+
 	/////////////////////////////////user pages/////////////////////////////////
-	
+
 	@RequestMapping("/myPage")
 	public ModelAndView svcMyPageProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		//To find which user is this?
 		String user_id=(String)request.getSession().getAttribute("user_id");
-		
+
 		if(user_id!=null) {
 			UserDataBean userDto=userDao.getUser(user_id);
 			//user_tags is a guest value, we should set it additionally
@@ -89,7 +89,7 @@ public class SvcViewHandler {
 		}
 		return new ModelAndView("svc/myPage");
 	}
-	
+
 	@RequestMapping("/myTrip")
 	public ModelAndView SvcMyTripProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		//To find which user is this?
@@ -100,9 +100,9 @@ public class SvcViewHandler {
 		request.setAttribute("myTrips", myTrips);
 		return new ModelAndView("svc/myTrip");
 	}
-	
+
 	/////////////////////////////////board pages/////////////////////////////////
-	
+
 	//get board articles
 	@RequestMapping("/tripList")
 	public ModelAndView svcListProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
@@ -127,7 +127,7 @@ public class SvcViewHandler {
 		request.setAttribute("tripList", tripList);
 		return new ModelAndView("svc/tripList");
 	}
-	
+
 	//get one board article by board_no
 	@RequestMapping("/trip")
 	public ModelAndView svcTripProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
@@ -135,7 +135,7 @@ public class SvcViewHandler {
 		int board_no=Integer.parseInt(request.getParameter("board_no"));
 		//who is the current user?
 		String user_id=(String)request.getSession().getAttribute("user_id");
-		
+
 		//get all values of requested board article
 		BoardDataBean boardDto=boardDao.getBoard(board_no);
 		//article not found or was deleted exception
@@ -165,7 +165,7 @@ public class SvcViewHandler {
 
 		return new ModelAndView("svc/trip");
 	}
-	
+
 	@RequestMapping("/searchTrip")
 	public ModelAndView svcSearchProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException, UnsupportedEncodingException {
 		try {
@@ -173,45 +173,45 @@ public class SvcViewHandler {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		
+
 		//get the type and keyword of searching
 		String selectedType=request.getParameter("search_type");
 		String keyword=request.getParameter("keyword");
 		request.setAttribute("keyword", keyword);
-		
+
 		//set List
 		List<BoardDataBean> foundList;
-		
+
 		//find trips for each type
 		if(selectedType.equals("schedule")) {
 			foundList=boardDao.findTripByKeyword(keyword);
 		} else {
 			foundList=boardDao.findTripByUser(keyword);
 		}
-		
+
 		//count check
 		int count=0;
 		if(foundList.size()>0) {
 			count=foundList.size();
 		}
-		
+
 		request.setAttribute("foundList", foundList);
 		request.setAttribute("count", count);
-		
+
 		return new ModelAndView("svc/foundList");
 	}
-	
+
 	/////////////////////////////////album pages/////////////////////////////////
-	
+
 	@RequestMapping("/album")
-	public ModelAndView svcAlbumProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {	
+	public ModelAndView svcAlbumProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		int count=albumDao.getCount();
 		request.setAttribute("count", count);
 		if(count>0) {
 			//select album
 			List<AlbumDataBean>album=albumDao.getAlbum();
-			request.setAttribute("album", album);			
-			
+			request.setAttribute("album", album);
+
 			//send photo countries and tags
 			List<Map<String, String>> photoInfos=new ArrayList<Map<String, String>>();
 			List<Map<String, String>> photoTags=new ArrayList<Map<String, String>>();
@@ -222,13 +222,13 @@ public class SvcViewHandler {
 						//board_no of this photo, if it has same with previous one, then pass
 						board_no=album.get(i).getBoard_no();
 						String this_board_no=""+board_no;
-						
+
 						//send photo countries
 						Map<String, String> photoInfo=new HashMap<String, String>();
 						photoInfo.put("this_board_no", this_board_no);
 						photoInfo.put("photoLoc", coordDao.getPhotoLoc(album.get(i).getBoard_no()));
 						photoInfos.add(photoInfo);
-						
+
 						//send photo tags
 						List<TagDataBean> photoTag=tagDao.getTripTags(board_no);
 						for(TagDataBean tb:photoTag) {
@@ -238,7 +238,7 @@ public class SvcViewHandler {
 							photoTags.add(tempTags);
 						}
 					}
-					
+
 				}
 			}
 			request.setAttribute("photoInfos", photoInfos);
@@ -246,18 +246,18 @@ public class SvcViewHandler {
 		}
 		return new ModelAndView("svc/album");
 	}
-	
+
 	@RequestMapping("/svc/boardAlbum")//svc/boardAlbum
 	public ModelAndView svcBoardAlbumProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		int board_no=Integer.parseInt(request.getParameter("board_no"));
 		request.setAttribute("board_no", board_no);
-		
+
 		String user_id=(String) request.getSession().getAttribute( "user_id" );
 		if(user_id==null)user_id="";
-		
+
 		int count=albumDao.getBoardCount(board_no);
 		request.setAttribute("count", count);
-		
+
 		if(count>0) {
 			//page
 			int start=Integer.parseInt(request.getParameter("start"));
@@ -276,7 +276,7 @@ public class SvcViewHandler {
 			List<AlbumDataBean>album=albumDao.getBoardAlbum(map);
 			request.setAttribute("album", album);
 		}
-		
+
 		//check user whether user is member or not
 		BoardDataBean tbDto=new BoardDataBean();
 		user_id=(user_id==null?"":user_id);
@@ -286,7 +286,7 @@ public class SvcViewHandler {
 		request.setAttribute("isMember", isMember);
 		return new ModelAndView("svc/boardAlbum");
 	}
-	
+
 	/////////////////////////////////ajax method list/////////////////////////////////
 	@RequestMapping(value="/loadMoreList", method=RequestMethod.GET, produces="application/json")
 	@ResponseBody

@@ -109,10 +109,10 @@ public class SvcProHandler {
 		
 		if(tag_id !=null) {
 			for(String tag:tag_id) {
-        Map<String, String> map = new HashMap<>(); 
-        map.put("user_id", request.getParameter("user_id"));
-        map.put("tag_id", tag);
-        userDao.insertUser_tag(map);
+		        Map<String, String> map = new HashMap<>(); 
+		        map.put("user_id", request.getParameter("user_id"));
+		        map.put("tag_id", tag);
+		        userDao.insertUser_tag(map);
 			}
 		}
 		
@@ -126,8 +126,11 @@ public class SvcProHandler {
 	@RequestMapping("/userModPro")
 	public ModelAndView UserModifyprocess(HttpServletRequest request, HttpServletResponse response)
 			throws HandlerException {
+		
+		UserDataBean userDto = new UserDataBean();
 		String user_id = (String) request.getSession().getAttribute("user_id");
-		UserDataBean userDto = userDao.getUser(user_id);
+		
+		userDto.setUser_id(user_id);
 		userDto.setPasswd(request.getParameter("passwd"));
 		userDto.setUser_name(request.getParameter("user_name"));
 		String[] tagValues = request.getParameterValues("tags");
@@ -137,7 +140,7 @@ public class SvcProHandler {
 			TagDataBean tempTagBean = new TagDataBean();
 			tempTagBean.setTag_id(Integer.parseInt(tagValues[i]));
 			tempTagBean.setTag_value(tagDao.getTagValue(tempTagBean.getTag_id()));
-			userTags.add(i, tempTagBean);
+			userTags.add(tempTagBean);
 		}
 
 		int result = userDao.modifyUser(userDto);
@@ -155,30 +158,44 @@ public class SvcProHandler {
 		String id = request.getParameter("user_id");
 		String passwd = request.getParameter("passwd");
 		UserDataBean userDto = userDao.getUser(id);
+		int result = 0;
 
-		int result = userDao.check(id, passwd);
+		try {
+			if(passwd.equals(userDto.getPasswd())){
+				result = 1;
+			} else {
+				if(userDto.getUser_id().equals(id)) {				//	nullpoint가 안날경우를 대비한 방어용 코드.
+					result =-1;
+				} 
+			}
+			
+			if (result == 1) {
+				int user_level = userDto.getUser_level();
+				if (user_level == ADMIN) {
+					userType = 1;									
+					request.setAttribute("user_level", user_level);
+				}
+				request.setAttribute("userType", userType);
+			}
+			if (result != -1) {
+				request.setAttribute("userDto", userDto);
+			}
+		} catch(NullPointerException e) {	//만약 아이디가 없을경우 바로 이쪽으로 이동.
+			
+		} 
+		
 		request.setAttribute("result", result);
 		request.setAttribute("id", id);
-
-		if (result == 1) {
-			int user_level = userDao.getUserLevel(id);
-			if (user_level == ADMIN) {
-				userType = 1;
-				request.setAttribute("user_level", user_level);
-			}
-			request.setAttribute("userType", userType);
-		}
-		if (result != -1) {
-			request.setAttribute("userDto", userDto);
-		}
-
+		
 		return new ModelAndView("svc/loginPro");
+		
 	}
 
-	@RequestMapping("/logout") // logout �엫
+	@RequestMapping("/logout") // logout 
 	public ModelAndView LogoutProcess(HttpServletRequest request, HttpServletResponse response)
 			throws HandlerException {
 		request.getSession().removeAttribute("user_id");
+		request.getSession().removeAttribute("user_level");
 		// send user to main page
 		// but we don't have a main page yet, so send him to board list, temporary
 		return new ModelAndView("svc/login");
@@ -189,7 +206,11 @@ public class SvcProHandler {
 			throws HandlerException {
 		String id = (String) request.getSession().getAttribute("user_id");
 		String passwd = request.getParameter("passwd");
-		int resultCheck = userDao.check(id, passwd);
+		UserDataBean userDto = userDao.getUser(id);
+		int resultCheck = 0;
+		if(userDto.getPasswd().equals(passwd)) {
+			resultCheck = 1;
+		}
 		request.setAttribute("resultCheck", resultCheck);
 
 		if (resultCheck == 1) {
@@ -201,53 +222,71 @@ public class SvcProHandler {
 	}
 
 	//// Email
-	@RequestMapping("/emailCheck")
+	@RequestMapping("/email")
 	public ModelAndView EmailCheckProcess(HttpServletRequest request, HttpServletResponse response) {
 		String host = "smtp.gmail.com"; // smtp 서버
 		String subject = "EmailCheck"; // 보내는 제목 설정
 		String fromName = "Admin"; // 보내는 이름 설정
-		String from = "dlagurgur@gmail.com"; // 보내는 사람(구글계정)
-		String authNum = SvcProHandler.authNum(); // 인증번호 위한 난수 발생부분
-		String content = "Number [" + authNum + "]"; // 이메일 내용 설정
-
+		String from = "show112924@gmail.com"; // 보내는 사람(구글계정)
+		int etype = Integer.parseInt(request.getParameter("etype"));
+		String content ="";
 		String email = request.getParameter("email1");
 		int result = userDao.EmailCheck(email);
-
-		request.setAttribute("authNum", authNum);
-		request.setAttribute("email", email);
+		
 		request.setAttribute("result", result);
-
-		try {
-			Properties props = new Properties();
-			props.put("mail.smtp.starttls.enable", "true");
-			props.put("mail.transport.protocol", "smtp");
-			props.put("mail.smtp.host", host);
-			props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-			props.put("mail.smtp.port", "465");
-			props.put("mail.smtp.user", from);
-			props.put("mail.smtp.auth", "true");
-
-			Session mailSession = Session.getInstance(props, new javax.mail.Authenticator() {
-				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication("dlagurgur@gmail.com", "tkdgur0713!@");
-				}
-			});
-
-			Message msg = new MimeMessage(mailSession);
-			InternetAddress[] address = { new InternetAddress(email) };
-			msg.setFrom(new InternetAddress(from, MimeUtility.encodeText(fromName, "utf-8", "B")));
-			msg.setRecipients(Message.RecipientType.TO, address);
-			msg.setSubject(subject);
-			msg.setSentDate(new java.util.Date());
-			msg.setContent(content, "text/html; charset=utf-8");
-
-			Transport.send(msg);
-		} catch (MessagingException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
+		request.setAttribute("email", email);
+		
+		if(result == 1 ) {
+			if(etype == 0) {
+				String authNum = authNum(); // 인증번호 위한 난수 발생부분
+				content = "Travlers : 당신의 인증번호는 [" + authNum + "] 입니다"; 
+				request.setAttribute("authNum", authNum);
+			} else if(etype==1) {	//	아이디 찾기 일 경우
+				UserDataBean userDto = userDao.getUserEmailId(email);
+				content = "당신의 아이디는 [" + userDto.getUser_id() + "]입니다"; 
+			} else if(etype==2) {	//비밀번호 찾기 일 경우
+				UserDataBean userDto = userDao.getUserEmailPasswd(email);
+				content = "당신의 비밀번호는 [" + userDto.getPasswd() + "]입니다"; 
+			}
+	
+			try {
+				Properties props = new Properties();
+				props.put("mail.smtp.starttls.enable", "true");
+				props.put("mail.transport.protocol", "smtp");
+				props.put("mail.smtp.host", host);
+				props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+				props.put("mail.smtp.port", "465");
+				props.put("mail.smtp.user", from);
+				props.put("mail.smtp.auth", "true");
+	
+				Session mailSession = Session.getInstance(props, new javax.mail.Authenticator() {
+					protected PasswordAuthentication getPasswordAuthentication() {
+						return new PasswordAuthentication("show112924@gmail.com", "208795a!");
+					}
+				});
+	
+				Message msg = new MimeMessage(mailSession);
+				InternetAddress[] address = { new InternetAddress(email) };
+				msg.setFrom(new InternetAddress(from, MimeUtility.encodeText(fromName, "utf-8", "B")));
+				msg.setRecipients(Message.RecipientType.TO, address);
+				msg.setSubject(subject);
+				msg.setSentDate(new java.util.Date());
+				msg.setContent(content, "text/html; charset=utf-8");
+	
+				Transport.send(msg);
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			if(etype==1) { //형태에 따른 리턴 위치 처리.
+				return new ModelAndView("svc/EmailIdPro");	
+			} else if (etype==2) {
+				return new ModelAndView("svc/EmailPasswdPro"); 
+			} else {
+				return new ModelAndView("svc/emailCheck");
+			}
 		}
-
 		return new ModelAndView("svc/emailCheck");
 	}
 	
@@ -259,109 +298,6 @@ public class SvcProHandler {
 		}
 		return buffer.toString();
 	}
-	
-	//// 아이디 찾기
-	@RequestMapping("/EmailIdd")
-	public ModelAndView EmailIdCheckProcess(HttpServletRequest request, HttpServletResponse response) {
-		String host = "smtp.gmail.com"; // smtp 서버
-		String subject = "EmailCheck"; // 보내는 제목 설정
-		String fromName = "Admin"; // 보내는 이름 설정
-		String from = "dlagurgur@gmail.com"; // 보내는 사람(구글계정)
-		String email = request.getParameter("email2");
-		int result = userDao.EmailCheck(email);
-		if(result == 1) {
-		UserDataBean userDto = userDao.getUserEmailId(email);
-		String user_id = userDto.getUser_id();
-		String content = "당신의 아이디는 [" + user_id + "]입니다"; // 이메일 내용 설정
-		
-		request.setAttribute("email", email);
-
-		try {
-			Properties props = new Properties();
-			props.put("mail.smtp.starttls.enable", "true");
-			props.put("mail.transport.protocol", "smtp");
-			props.put("mail.smtp.host", host);
-			props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-			props.put("mail.smtp.port", "465");
-			props.put("mail.smtp.user", from);
-			props.put("mail.smtp.auth", "true");
-
-			Session mailSession = Session.getInstance(props, new javax.mail.Authenticator() {
-				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication("dlagurgur@gmail.com", "tkdgur0713!@");
-				}
-			});
-
-			Message msg = new MimeMessage(mailSession);
-			InternetAddress[] address = { new InternetAddress(email) };
-			msg.setFrom(new InternetAddress(from, MimeUtility.encodeText(fromName, "utf-8", "B")));
-			msg.setRecipients(Message.RecipientType.TO, address);
-			msg.setSubject(subject);
-			msg.setSentDate(new java.util.Date());
-			msg.setContent(content, "text/html; charset=utf-8");
-
-			Transport.send(msg);
-		} catch (MessagingException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		}
-		request.setAttribute("result", result);
-		return new ModelAndView("svc/EmailIdd");
-	}
-	
-	/////비밀번호찾기
-	@RequestMapping("/EmailPasswdd")
-	public ModelAndView EmailPasswdCheckProcess(HttpServletRequest request, HttpServletResponse response) {
-		String host = "smtp.gmail.com"; // smtp 서버
-		String subject = "EmailCheck"; // 보내는 제목 설정
-		String fromName = "Admin"; // 보내는 이름 설정
-		String from = "dlagurgur@gmail.com"; // 보내는 사람(구글계정)
-		String email = request.getParameter("email2");
-		int result = userDao.EmailCheck(email);
-		if(result == 1) {
-		UserDataBean userDto = userDao.getUserEmailPasswd(email);
-		String user_passwd = userDto.getPasswd();
-		String content = "당신의 비밀번호는 [" + user_passwd + "]입니다"; // 이메일 내용 설정
-	
-		request.setAttribute("email", email);
-
-		try {
-			Properties props = new Properties();
-			props.put("mail.smtp.starttls.enable", "true");
-			props.put("mail.transport.protocol", "smtp");
-			props.put("mail.smtp.host", host);
-			props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-			props.put("mail.smtp.port", "465");
-			props.put("mail.smtp.user", from);
-			props.put("mail.smtp.auth", "true");
-
-			Session mailSession = Session.getInstance(props, new javax.mail.Authenticator() {
-				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication("dlagurgur@gmail.com", "tkdgur0713!@");
-				}
-			});
-
-			Message msg = new MimeMessage(mailSession);
-			InternetAddress[] address = { new InternetAddress(email) };
-			msg.setFrom(new InternetAddress(from, MimeUtility.encodeText(fromName, "utf-8", "B")));
-			msg.setRecipients(Message.RecipientType.TO, address);
-			msg.setSubject(subject);
-			msg.setSentDate(new java.util.Date());
-			msg.setContent(content, "text/html; charset=utf-8");
-
-			Transport.send(msg);
-		} catch (MessagingException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		}
-		request.setAttribute("result", result);
-		return new ModelAndView("svc/EmailPasswdd");
-	}
-	
 
 	///////////////////////////////// board pages/////////////////////////////////
 	@RequestMapping("/tripWritePro")
