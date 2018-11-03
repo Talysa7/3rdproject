@@ -29,10 +29,10 @@ public class UserDBBean {
 			return session.selectOne( "db.idCheck", user_id);
 		}
 		public List<UserDataBean> getUsers(Map<String, Integer> map) {
-			return session.selectList("db.getUsers",map);
+			return session.selectList("user.getUsers",map);
 		}
-		public int getCount() {
-			return session.selectOne("db.getUCount");
+		public int getAllUserCount() {
+			return session.selectOne("user.getAllUserCount");
 		}
 		public int insertUser( UserDataBean UserDto ) {
 			return session.insert("db.insertUser", UserDto);
