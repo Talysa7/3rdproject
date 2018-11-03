@@ -4,10 +4,44 @@
   	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="user">
 <!-- User -->
-	<select id="getUser" parameterType="String"
-		resultType="UserDataBean">
+	<select id="getUser" parameterType="String" resultType="UserDataBean">
 		select * from pao_user where user_id=#{user_id}
 	</select>
+	<select id="getUserId" parameterType="String" resultType="String">
+		select user_id from pao_user where user_name=#{user_name}
+	</select>
+	<select id="getUserEmailId" parameterType="String" resultType="db.UserDataBean">
+		select user_id from pao_user where email=#{email} 
+	</select>
+	
+	<select id="getUserEmailPasswd" parameterType="String" resultType="db.UserDataBean">
+		select passwd from pao_user where email=#{email} 
+	</select>
+
+	<select id="getUserLevel" parameterType="String" resultType="Integer">
+		select user_level from pao_user where user_id=#{user_id}
+	</select>
+<!-- TODO: boardDB.xml 에서 옮겨옴 
+	<select id="getUserName" parameterType="String" resultType="String">
+		select user_name from pao_user where user_id=#{user_id}
+	</select>
+	<select id="getUserId" parameterType="String" resultType="String">
+		select user_id from pao_user where user_name=#{user_name}
+	</select>
+	<select id="isMember" parameterType="db.boardDataBean" resultType="int">
+		select count(*) from pao_member where user_id=#{user_id} and trip_id in(
+			select trip_id from pao_trip where board_no=#{board_no})
+	</select>
+	<select id="getMember" parameterType="int" resultType="java.util.List">
+		select user_id from pao_members where trip_id=(select trip_id from pao_trip where board_no=#{board_no})
+	</select>
+	<select id="isTBMember" parameterType="db.BoardDataBean" resultType="int">
+		select count(*) from pao_members where user_id=#{user_id} and
+		trip_id in(
+		select trip_id from pao_trip where
+		board_no=#{board_no})
+	</select>
+-->
 <!-- Member -->
 	<select id="getUserName" parameterType="String" resultType="String">
 		select user_name from pao_user where user_id=#{user_id}
@@ -39,23 +73,27 @@
 	 </delete>
 	 
 	 <select id="getUsers" parameterType="java.util.Map" resultType="db.UserDataBean">
-		select user_id,user_name,email,gender,reg_date,r
-		from (
-		select user_id,user_name,email,gender,reg_date,rownum r from (
-		select
-		user_id,user_name,email,gender,reg_date from pao_user where user_level!=9 order by
-		reg_date
-		desc)
-		order by reg_date desc)where r &gt;= #{start} and r &lt;=#{end}
+		SELECT user_id, user_name, email, reg_date, gender, user_level, user_age, r
+		FROM (
+			SELECT user_id, user_name, email, reg_date, gender, user_level, user_age, rownum r 
+			FROM (
+				SELECT user_id, user_name, email, reg_date, gender, user_level, user_age 
+				FROM pao_user 
+				WHERE user_level != 9 
+				ORDER BY reg_date DESC
+				)
+			ORDER BY reg_date DESC
+			)
+		WHERE r &gt;= #{start} AND r &lt;=#{end}
 	</select>
 	
-	<select id="getUCount" resultType="int">
+	<!-- 총 유저 숫자를 세는거 같은데 어디다 쓰는 용도인지 모르겠네 -->
+	<!-- Re : admin에서 user list 게시판을 부르기 위해 총 인원수를 세는 용도였음, AdmListHandler.java 의 adminUserHandler() -->
+	<select id="getAllUserCount" resultType="int">
 		select count(*) from pao_user where user_level!=9
 	</select>
 	
-	<select id="getUserId" parameterType="String" resultType="String">
-		select user_id from pao_user where user_name=#{user_name}
-	</select>
+
 	
 	<insert id="insertUser" parameterType="db.UserDataBean">
 		insert into pao_user
@@ -68,18 +106,20 @@
 		count(*) from pao_user where user_id=#{user_id}
 	</select>
 	
-	<select id="EmailCheck" parameterType="String" resultType="int">
+	<select id="emailCheck" parameterType="String" resultType="int">
 		select
 		count(*) from pao_user where email=#{email}
 	</select>
-	
-	<select id="getUserEmailId" parameterType="String" resultType="db.UserDataBean">
-		select user_id from pao_user where email=#{email} 
+<!-- FIXME : 위의 checkId와 같은 쿼리인 듯 / 분간 후 추후 삭제 처리 예정
+	<select id="idCheck" parameterType="String" resultType="Integer">
+		select count(*) from pao_user where user_id=#{user_id}
 	</select>
-	
-	<select id="getUserEmailPasswd" parameterType="String" resultType="db.UserDataBean">
-		select passwd from pao_user where email=#{email} 
+-->
+	<select id="nameCheck" parameterType="String" resultType="Integer">
+		select count(*) from pao_user where user_name=#{user_name}
 	</select>
+
+
 	
 	<update id="modifyUser" parameterType="db.UserDataBean">
 		update pao_user set
@@ -87,20 +127,6 @@
 		user_id=#{user_id}
 	</update>
 	
-	<select id="getUser" parameterType="String" resultType="db.UserDataBean">
-		select * from pao_user where user_id=#{user_id}
-	</select>
-	
-	<select id="idCheck" parameterType="String" resultType="Integer">
-		select count(*) from pao_user where user_id=#{user_id}
-	</select>
-	
-	<select id="nameCheck" parameterType="String" resultType="Integer">
-		select count(*) from pao_user where user_name=#{user_name}
-	</select>
-	
-	<select id="getUserLevel" parameterType="String" resultType="Integer">
-		select user_level from pao_user where user_id=#{user_id}
-	</select>
+
 	
 </mapper>

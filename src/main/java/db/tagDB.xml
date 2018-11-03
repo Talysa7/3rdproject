@@ -8,12 +8,12 @@
 	</select>
 
 	<insert id="insertTag" parameterType="String">
-		insert into pao_tag(tag_id,tag_value) values(
+		insert into pao_tag(tag_id, tag_value) values(
 			(select max(tag_id) from pao_tag where tag_id &lt;=100)+1,#{tag_value}) 
 	</insert>
 	
 	<insert id="insertCityTag" parameterType="String">
-		insert into pao_tag(tag_id,tag_value) values(
+		insert into pao_tag(tag_id, tag_value) values(
 			(select max(tag_id) from pao_tag where tag_id >100 and tag_id &lt;=1000)+1,#{tag_value})
 	</insert>
 	
@@ -22,14 +22,21 @@
 	</select>
 
 	<select id="getTags" parameterType="java.util.Map" resultType="db.TagDataBean">
-		select tag_id,tag_value,r
-		from (
-		select
-		tag_id,tag_value,rownum r from (
-		select tag_id,tag_value from pao_tag where tag_id &lt;=1000
-		order by tag_id ) where tag_id &lt;=1000
-		order by tag_id)where r &gt;= #{start} and r
-		&lt;=#{end} and tag_id &lt;=1000
+		SELECT tag_id, tag_value, tag_type, r
+		FROM (
+			SELECT tag_id, tag_value, tag_type, rownum r 
+			FROM (
+				SELECT * 
+				FROM pao_tag 
+				WHERE tag_id &lt;= 1000
+				ORDER BY tag_id
+				) 
+			WHERE tag_id &lt;= 1000
+			ORDER BY tag_id
+			)
+		WHERE r &gt;= #{start} 
+		AND r &lt;= #{end} 
+		AND tag_id &lt;= 1000
 	</select>
 
 	<select id="checkTag" parameterType="String" resultType="int">
