@@ -34,9 +34,12 @@ public class UserDBBean {
 		public List<UserDataBean> getUsers(Map<String, Integer> map) {
 			return session.selectList("user.getUsers",map);
 		}
-		
-		public int getCount() {
-			return session.selectOne("user.getUCount");
+
+		public int getAllUserCount() {
+			return session.selectOne("user.getAllUserCount");
+		}
+		public int insertUser( UserDataBean UserDto ) {
+			return session.insert("db.insertUser", UserDto);
 		}
 		
 		public int insertUser( UserDataBean UserDto ) {
