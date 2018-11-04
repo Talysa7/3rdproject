@@ -12,14 +12,17 @@ import db.TagDataBean;
 public class TagDBBean {
 		private SqlSession session=SqlMapClient.getSession();
 		
-		public List<String> getB_tags(int b_no) {
-			return session.selectList("board.getBoardTags", b_no);
+		public List<String> getB_tags(int board_no) {
+			return session.selectList("board.getBoardTags", board_no);
 		}
 		public List<String> getUser_tags(String user_id) {
 			return session.selectList("user.getUserTags", user_id);
 		}
-	
-		//add tag
+		
+		public int insertUser_tag(Map<String, String> map) {
+			return session.update("tag.insertUser_tag", map);		
+		}
+		
 		public int insertTag(String tag_value) {
 			return session.insert("tag.insertTag",tag_value);
 		}
@@ -58,8 +61,8 @@ public class TagDBBean {
 			}
 			return userTagList;
 		}
-		public List<TagDataBean> getTripTags(int tb_no) {
-			return session.selectList("board.getTripTags", tb_no);	// need to check after making boardDB.xml
+		public List<TagDataBean> getTripTags(int board_no) {
+			return session.selectList("board.getTripTags", board_no);	// need to check after making boardDB.xml
 		}
 		public List<TagDataBean> getStyleTags() {
 			return session.selectList("tag.getStyleTags");
@@ -73,10 +76,10 @@ public class TagDBBean {
 		public int getTagId(String tag_value) {
 			return session.selectOne("tag.getTagId", tag_value);
 		}
-		public int updateTripTags(int tb_no, List<TagDataBean> tripTags) {
+		public int updateTripTags(int board_no, List<TagDataBean> tripTags) {
 			int result=1;
 			//set old Trip Tags
-			List<TagDataBean> oldTripTags=getTripTags(tb_no);
+			List<TagDataBean> oldTripTags=getTripTags(board_no);
 			//setter for query
 			Map<String, Integer> tagSetter;
 			for(int i=0; i<oldTripTags.size(); i++) {
@@ -86,19 +89,19 @@ public class TagDBBean {
 			//tester to check whether trip already has that tag
 					boolean hasTag=false;
 					//Check if the trip had these tags 
-					for(TagDataBean tb:tripTags) {
+					for(TagDataBean board:tripTags) {
 						hasTag=false;
 						for(TagDataBean otb:oldTripTags) {
 							//if user didn't have such like a tag
-							if(otb.getTag_id()==(tb.getTag_id())) {
+							if(otb.getTag_id()==(board.getTag_id())) {
 								hasTag=true;
 							}
 						}
 						//if user didn't have this tag, insert it!
 						if(!hasTag) {
 							tagSetter=new HashMap<String, Integer>();
-							tagSetter.put("tb_no", tb_no);
-							int tagId= tb.getTag_id();
+							tagSetter.put("board_no", board_no);
+							int tagId= board.getTag_id();
 							tagSetter.put("tag_id", tagId);
 							result=session.update("db.updateTripTags", tagSetter);
 						}
@@ -107,14 +110,14 @@ public class TagDBBean {
 					for(TagDataBean otb:oldTripTags) {
 						hasTag=false;
 						for(TagDataBean tb:tripTags) {
-							if(otb.getTag_id()==(tb.getTag_id())) {
+							if(otb.getTag_id()==(board.getTag_id())) {
 								hasTag=true;
 							}
 						}
 						//there is no such tag what was in old tag list! So delete it!
 						if(!hasTag) {
 							tagSetter=new HashMap<String, Integer>();
-							tagSetter.put("tb_no", tb_no);
+							tagSetter.put("board_no", board_no);
 							int tagId=otb.getTag_id();
 							tagSetter.put("tag_id", tagId);
 							result=session.delete("db.deleteTripTag", tagSetter);
@@ -159,7 +162,7 @@ public class TagDBBean {
 			for(TagDataBean otb:oldUserTags) {
 				hasTag=false;
 				for(TagDataBean tb:userTags) {
-					if(otb.getTag_id()==(tb.getTag_id())) {
+					if(otb.getTag_id()==(tb.getTag_id())) { //여기서 tb는 board를 말하는지 위에 선언한 tb인지
 						hasTag=true;
 					}
 				}
@@ -177,8 +180,9 @@ public class TagDBBean {
 		public String getTagValue(int tag_id) {
 			return session.selectOne("tag.getTagValue", tag_id);
 		}
-		//public int setTripTag(Map<String, Integer> tagSetter) {
-		//	return session.update("db.insertTripTags", tagSetter);
-		//}	
-		//		need to find 'insertTripTags'
+		
+		public int setTripTag(Map<String, Integer> tagSetter) {
+			return session.update("tag.insertTripTags", tagSetter);
+		}	
+	
 }
