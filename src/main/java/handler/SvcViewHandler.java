@@ -53,8 +53,8 @@ public class SvcViewHandler {
 	private MemberDBBean memberDao;
 
 	//amount of displayed photos in a page
-	private static final int PHOTOSIZE=6;
-	//
+	private static final int photoPerPage=6;
+	//??? -talysa7
 	private static final String MAP="0";
 	//How many posts do we need in a page, default is 10
 	private static final int postPerPage=10;
@@ -133,9 +133,9 @@ public class SvcViewHandler {
 	public ModelAndView svcTripProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		//Which post should we get?
 		int board_no=Integer.parseInt(request.getParameter("board_no"));
+		request.setAttribute("board_no", board_no);
 		//who is the current user?
 		String user_id=(String)request.getSession().getAttribute("user_id");
-
 		//get all values of requested board post
 		BoardDataBean boardDto=boardDao.getPost(board_no);
 		//post not found or was deleted exception
@@ -174,31 +174,25 @@ public class SvcViewHandler {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-
 		//get the type and keyword of searching
 		String selectedType=request.getParameter("search_type");
 		String keyword=request.getParameter("keyword");
 		request.setAttribute("keyword", keyword);
-
 		//set List
 		List<BoardDataBean> foundList;
-
 		//find trips for each type
 		if(selectedType.equals("schedule")) {
 			foundList=boardDao.findPostByKeyword(keyword);
 		} else {
 			foundList=boardDao.findPostByUser(keyword);
 		}
-
 		//count check
 		int count=0;
 		if(foundList.size()>0) {
 			count=foundList.size();
 		}
-
 		request.setAttribute("foundList", foundList);
 		request.setAttribute("count", count);
-
 		return new ModelAndView("svc/foundList");
 	}
 
@@ -206,44 +200,12 @@ public class SvcViewHandler {
 
 	@RequestMapping("/album")
 	public ModelAndView svcAlbumProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
-		int count=albumDao.getCount();
-		request.setAttribute("count", count);
-		if(count>0) {
-			//select album
-			List<AlbumDataBean>album=albumDao.getAlbum();
+		//get all photos and its amount from pao_album
+		List<AlbumDataBean>album=albumDao.getAllPhotos();
+		int photoCount=album.size();
+		request.setAttribute("photoCount", photoCount);
+		if(photoCount>0) {
 			request.setAttribute("album", album);
-
-			//send photo countries and tags
-			List<Map<String, String>> photoInfos=new ArrayList<Map<String, String>>();
-			List<Map<String, String>> photoTags=new ArrayList<Map<String, String>>();
-			if(count>0) {
-				int board_no=0;
-				for(int i=0; i<album.size(); i++) {
-					if(board_no!=album.get(i).getBoard_no()) {
-						//board_no of this photo, if it has same with previous one, then pass
-						board_no=album.get(i).getBoard_no();
-						String this_board_no=""+board_no;
-
-						//send photo countries
-						Map<String, String> photoInfo=new HashMap<String, String>();
-						photoInfo.put("this_board_no", this_board_no);
-						photoInfo.put("photoLoc", coordDao.getPhotoLoc(album.get(i).getBoard_no()));
-						photoInfos.add(photoInfo);
-
-						//send photo tags
-						List<TagDataBean> photoTag=tagDao.getTripTags(board_no);
-						for(TagDataBean tb:photoTag) {
-							Map<String, String> tempTags=new HashMap<String, String>();
-							tempTags.put("this_board_no", this_board_no);
-							tempTags.put("tag_value", tb.getTag_value());
-							photoTags.add(tempTags);
-						}
-					}
-
-				}
-			}
-			request.setAttribute("photoInfos", photoInfos);
-			request.setAttribute("photoTags", photoTags);
 		}
 		return new ModelAndView("svc/album");
 	}
@@ -252,39 +214,13 @@ public class SvcViewHandler {
 	public ModelAndView svcBoardAlbumProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		int board_no=Integer.parseInt(request.getParameter("board_no"));
 		request.setAttribute("board_no", board_no);
-
-		String user_id=(String) request.getSession().getAttribute( "user_id" );
-		if(user_id==null)user_id="";
-
-		int count=albumDao.getBoardCount(board_no);
-		request.setAttribute("count", count);
-
-		if(count>0) {
-			//page
-			int start=Integer.parseInt(request.getParameter("start"));
-			int end=start+PHOTOSIZE-1;
-			int last=(count%PHOTOSIZE==0?count-PHOTOSIZE:(count/PHOTOSIZE)*PHOTOSIZE);//+(count%PHOTOSIZE==0?0:1));
-
-			request.setAttribute("start",start);
-			request.setAttribute("size", PHOTOSIZE);
-			request.setAttribute("last",last);
-
-			//select board album
-			Map<String, Integer>map=new HashMap<String,Integer>();
-			map.put("start",start);
-			map.put("end", end);
-			map.put("board_no", board_no);
-			List<AlbumDataBean>album=albumDao.getBoardAlbum(map);
-			request.setAttribute("album", album);
+		//always first page, load next page by ajax
+		List<AlbumDataBean> photoList=albumDao.getPhotosByBoardNo(board_no, 0, 6);
+		
+		if(photoList.size()>0) {
+			int photoPages=photoList.size()/photoPerPage;
+			request.setAttribute("photoPages", photoPages);
 		}
-
-		//check user whether user is member or not
-		BoardDataBean tbDto=new BoardDataBean();
-		user_id=(user_id==null?"":user_id);
-		tbDto.setUser_id(user_id);
-		tbDto.setBoard_no(board_no);
-		boolean isMember=memberDao.isTBMember(tbDto);
-		request.setAttribute("isMember", isMember);
 		return new ModelAndView("svc/boardAlbum");
 	}
 
