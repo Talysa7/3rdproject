@@ -93,4 +93,7 @@
 		AND co.country_id = ctr.country_id
 	</select>
 	<!--/////////////////////////////////////////////////// end-line pao_coordinate table ///////////////////////////////////////////////////-->
+	<select id="autoComplete" parameterType="String" resultType="db.CoordDataBean">
+		SELECT coord_name FROM pao_coordinate WHERE coord_name LIKE '${coord_name}%'
+	</select>
 </mapper>

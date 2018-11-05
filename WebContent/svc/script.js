@@ -128,7 +128,7 @@ function searchMap() {
     });
     var geocoder = new google.maps.Geocoder();
     
-    document.getElementById('submit').addEventListener('click', function() {
+    document.getElementById('addSubmit').addEventListener('click', function() {
       geocodeAddress(geocoder, map);
     });
   }
@@ -842,3 +842,34 @@ function absent(td_trip_id) {
 		});
 	}
 }
+
+///////////////////////////////////////////////////////이민재//////////////////////////////////////////////////////
+	//자동완성
+	$(function(){
+		$("#addSubmit").autocomplete({
+			 source : function( request, response ) {
+				$.ajax({
+						type: 'post',
+						url : 'addAuto.go',
+						dataType: "json",
+						data: { coord_name : request.term },
+						success: function(data) {
+						 response(
+                            $.map(data, function(item) {
+                                return {
+                                    label: item.coord_name,
+                                    value: item.coord_name
+                                }
+                            })
+                       	 );
+						},
+						minLength: 2,
+				})
+			 }
+		})
+	})
+
+
+
+
+///////////////////////////////////////////////////////이민재//////////////////////////////////////////////////////

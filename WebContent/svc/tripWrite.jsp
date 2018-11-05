@@ -52,7 +52,7 @@
                  <label for="trip_location" class="col-2 col-form-label">${trip_location}</label>
                <div id="floating-panel" class="col-10">
                   <input id="address" type="text"/>
-                  <input id="submit" type="button" class="btn btn-dark btn-sm"  value="${btn_search}"/>
+                  <input id="addSubmit" type="button" class="btn btn-dark btn-sm"  value="${btn_search}"/>
                </div>
                <div id="searchmap" class="col-12"></div>
             </div>

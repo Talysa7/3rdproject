@@ -40,6 +40,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import db.AlbumDBBean;
 import db.AlbumDataBean;
 import db.CmtDBBean;
@@ -53,6 +55,7 @@ import db.TagDataBean;
 import db.BoardDBBean;
 import db.BoardDataBean;
 import db.TripDBBean;
+import db.TripDataBean;
 import db.UserDBBean;
 import db.UserDataBean;
 
@@ -71,7 +74,7 @@ public class SvcProHandler {
 	@Resource
 	private CmtDBBean cmtDao;
 	@Resource
-	private CoordDBBean locDao;
+	private CoordDBBean coordDao;
 	@Resource
 	private TagDBBean tagDao;
 	@Resource
@@ -311,29 +314,30 @@ public class SvcProHandler {
 
 		int schedulenum=Integer.parseInt(request.getParameter("schedulenum"));//일정개수
 		//insert gg_trip_board 
-
+		String user_id = (String) (request.getSession().getAttribute("user_id"));
+		
 		BoardDataBean boardDto = new BoardDataBean();
 
-		boardDto.setUser_id((String) request.getSession().getAttribute("user_id"));
+		boardDto.setUser_id(user_id);
 		boardDto.setBoard_title(request.getParameter("trip_title"));
-		boardDto.setBoard_member_num(Integer.parseInt(request.getParameter("trip_m_num"))); // FIXME: 얘도 TRIP DB로 빠져있음.
-		boardDto.setBoard_talk(request.getParameter("tb_talk"));
 		boardDto.setBoard_content(request.getParameter("content"));
-
 		boardDao.insertBoard_no(boardDto);
+		
 		int board_no = boardDto.getBoard_no();// board_no
 		request.setAttribute("board_no", board_no);
 
 		CoordDataBean coordDto = new CoordDataBean();
 		for (int i = 1; i <= schedulenum; i++) {
-			boardDao.insertTrip(boardDto);
-			int trip_id = boardDto.getTrip_id();//FIXME : 얘도 빠져있음.
+			TripDataBean tripDto = new TripDataBean();
+			String place = request.getParameter("place"+i);
 			
-			//set writer as a member of his trips
-			String user_id = (String) (request.getSession().getAttribute("user_id"));
+			tripDto.setBoard_no(board_no);
+			request.getParameter("start"+i);
+			request.getParameter("end"+i);
+			//trip_member_count, coord_id , start_date, end_date
+			
 			MemberDataBean memberDto = new MemberDataBean();
 			memberDto.setUser_id(user_id);
-			memberDto.setTrip_id(trip_id);
 			memberDao.addTripMember(memberDto);
 
 			// gg_coordinate&location
@@ -347,7 +351,7 @@ public class SvcProHandler {
 				coordDto.setCoord_long(coord_long);
 				coordDto.setCoord_order(coord_order);
 
-				int coordResult = locDao.insertCoord(coordDto);// locDto의 coord_id에 좌표값 저장한 후 생성된 coord_id저장 됨
+				int coordResult = coordDao.insertCoord(coordDto);// locDto의 coord_id에 좌표값 저장한 후 생성된 coord_id저장 됨
 
 				String cal_start_date = request.getParameter("start" + i + "");
 				String cal_end_date = request.getParameter("end" + i + "");
@@ -356,8 +360,10 @@ public class SvcProHandler {
 				coordDto.setCal_end_date(cal_end_date);
 				coordDto.setTd_trip_id(trip_id);
 
-				int calResult = locDao.insertCal(coordDto);// 일정에 맞는 calendar table 레코드추가
+				int calResult = coordDao.insertCal(coordDto);// 일정에 맞는 calendar table 레코드추가
 			}
+			
+
 		}
 
 		// get tags
@@ -740,7 +746,27 @@ public class SvcProHandler {
 		List<MemberDataBean> memberList = memberDao.getCurrentMember(trip_id_int);
 		return memberList;
 	}
-
+	//////////////////////////////////////ajax추가분 이민재 2018.11.05 /////////////////////////////////////
+	@RequestMapping(value = "addAuto", produces="application/json") 
+	@ResponseBody
+	private String addAuto(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String coord_name = request.getParameter("coord_name");
+		List<CoordDataBean> coords = coordDao.autoComplete(coord_name);
+		
+		ObjectMapper mapper = new ObjectMapper(); 
+		
+		String citys=""; 
+		try { 
+			citys = mapper.writeValueAsString(coords);
+			
+		} catch (IOException e) { 
+			e.printStackTrace(); 
+		}
+		return citys;
+	}
+	
+	
+	//////////////////////////////////////ajax추가분 이민재 2018.11.05 /////////////////////////////////////
 	///////////////////////////////// etc/////////////////////////////////
 	public static String getRandomString() {
 		return UUID.randomUUID().toString().replaceAll("-", "");

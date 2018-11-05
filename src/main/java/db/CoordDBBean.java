@@ -68,4 +68,10 @@ public class CoordDBBean {
 	public List<CoordDataBean> getMyTrips(String user_id) {
 		return session.selectList("db.getMyTrips", user_id);
 	}
+	
+	///////////////////////////////////////////////////////자동완성 관련 메소드 추가 , 이민재, 2018-11-05///////////////////////////////////
+	public List<CoordDataBean> autoComplete(String coord_name){
+		return session.selectList("loaction.autoComplete", coord_name);
+	}
+	///////////////////////////////////////////////////////자동완성 관련 메소드 추가 , 이민재, 2018-11-05///////////////////////////////////
 }
