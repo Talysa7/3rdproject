@@ -33,7 +33,7 @@
 			(SELECT country_id FROM pao_country WHERE country_code=#{country_code}), 
 			#{coord_long}, #{coord_lat}, #{coord_order}, SEQ_pao_coordinate_coord_id.NEXTVAL
 			)
->>>>>>> develop
+
 		<selectKey keyProperty="coord_id" resultType="int" order="AFTER">
 			LAST_INSERT_ID()
 		</selectKey>
