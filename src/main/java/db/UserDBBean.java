@@ -42,10 +42,6 @@ public class UserDBBean {
 			return session.insert("db.insertUser", UserDto);
 		}
 		
-		public int insertUser( UserDataBean UserDto ) {
-			return session.insert("user.insertUser", UserDto);
-		}
-		
 		public int check( String user_id ) {
 			return session.selectOne( "user.checkId", user_id);
 		}
@@ -78,7 +74,7 @@ public class UserDBBean {
 			}
 			return result;
 		}
-		
+
 		public int deleteUser( String user_id ) {
 			return session.delete("user.deleteUser", user_id);
 		}
@@ -94,4 +90,4 @@ public class UserDBBean {
 		public String getUserId(String user_name) { 
 			return session.selectOne("user.getUserId", user_name); 
 		} 
-	
+}

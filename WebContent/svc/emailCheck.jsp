@@ -29,7 +29,7 @@
 			<div class="form-group row">
 				<label for="inputPassword" class="col-sm-2 col-form-label">${email_auth_guide}</label>
 				<div class="col-sm-8">
-					<input name="input" class="form-control" type="text" name="emailconfirm" id="EmailVlaue" maxlength="5">
+					<input name="input" class="form-control" type="text" name="emailconfirm" id="EmailValue" maxlength="5">
 				</div>
 				<div class="col-sm-2">
 					<input name="inputbutton" class="btn btn-md btn-secondary" type="button" value="${btn_auth}" 

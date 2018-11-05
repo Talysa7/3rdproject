@@ -11,17 +11,17 @@
 		select user_id from pao_user where user_name=#{user_name}
 	</select>
 	<select id="getUserEmailId" parameterType="String" resultType="db.UserDataBean">
-		select user_id from pao_user where email=#{email} 
+		select user_id from pao_user where email=#{email}
 	</select>
-	
+
 	<select id="getUserEmailPasswd" parameterType="String" resultType="db.UserDataBean">
-		select passwd from pao_user where email=#{email} 
+		select passwd from pao_user where email=#{email}
 	</select>
 
 	<select id="getUserLevel" parameterType="String" resultType="Integer">
 		select user_level from pao_user where user_id=#{user_id}
 	</select>
-<!-- TODO: boardDB.xml 에서 옮겨옴 
+<!-- TODO: boardDB.xml 에서 옮겨옴
 	<select id="getUserName" parameterType="String" resultType="String">
 		select user_name from pao_user where user_id=#{user_id}
 	</select>
@@ -51,61 +51,67 @@
 	</select>
 	<update id="addTripMember" parameterType="db.MemberDataBean">
 		insert into pao_members(user_id, trip_id) values(#{user_id}, #{trip_id})
-	</update>	
+	</update>
 	<delete id="delTripMember" parameterType="db.MemberDataBean">
 		delete from pao_members where user_id=#{user_id} and trip_id=#{trip_id}
 	</delete>
 	<select id="isMember" parameterType="db.MemberDataBean" resultType="int">
 		select count(*) from pao_members where user_id=#{user_id} and trip_id=#{trip_id}
-	</select>	
+	</select>
 	<select id="getMemberCount" parameterType="int" resultType="int">
 		select count(*) from pao_members where trip_id=#{trip_id}
 	</select>
-	
+<!-- by talysa7 -->
+	<select id="getMembers" parameterType="int" resultType="java.util.List">
+		select *
+		from pao_view_members
+		where trip_id=#{trip_id}
+	</select>
+
 <!-- Tag -->
 	<select id="getUserTags" parameterType="String" resultType="java.util.List">
-		select tag_value from pao_tag where tag_id in 
+		select tag_value from pao_tag where tag_id in
 		(select tag_id from pao_user_tag where user_id=#{user_id})
 	</select>
-	
+
 	<delete id="deleteUser" parameterType="String">
 	 	delete from pao_user where user_id=#{user_id}
 	 </delete>
-	 
+
 	 <select id="getUsers" parameterType="java.util.Map" resultType="db.UserDataBean">
 		SELECT user_id, user_name, email, reg_date, gender, user_level, user_age, r
 		FROM (
-			SELECT user_id, user_name, email, reg_date, gender, user_level, user_age, rownum r 
+			SELECT user_id, user_name, email, reg_date, gender, user_level, user_age, rownum r
 			FROM (
-				SELECT user_id, user_name, email, reg_date, gender, user_level, user_age 
-				FROM pao_user 
-				WHERE user_level != 9 
+				SELECT user_id, user_name, email, reg_date, gender, user_level, user_age
+				FROM pao_user
+				WHERE user_level != 9
 				ORDER BY reg_date DESC
 				)
 			ORDER BY reg_date DESC
 			)
 		WHERE r &gt;= #{start} AND r &lt;=#{end}
 	</select>
-	
+
 	<!-- 총 유저 숫자를 세는거 같은데 어디다 쓰는 용도인지 모르겠네 -->
 	<!-- Re : admin에서 user list 게시판을 부르기 위해 총 인원수를 세는 용도였음, AdmListHandler.java 의 adminUserHandler() -->
 	<select id="getAllUserCount" resultType="int">
 		select count(*) from pao_user where user_level!=9
 	</select>
-	
 
-	
+
+
 	<insert id="insertUser" parameterType="db.UserDataBean">
 		insert into pao_user
 		values(#{user_id}, #{passwd},#{email, jdbcType=VARCHAR}, #{gender},
 		#{reg_date}, #{user_name} , 1 )
 	</insert>
-	
+
 	<select id="checkId" parameterType="String" resultType="int">
 		select
 		count(*) from pao_user where user_id=#{user_id}
 	</select>
-	
+
 	<select id="emailCheck" parameterType="String" resultType="int">
 		select
 		count(*) from pao_user where email=#{email}
@@ -120,13 +126,26 @@
 	</select>
 
 
-	
+
 	<update id="modifyUser" parameterType="db.UserDataBean">
 		update pao_user set
 		passwd=#{passwd}, user_name=#{user_name} where
 		user_id=#{user_id}
 	</update>
-	
-
-	
+<!-- Trip -->
+<!-- by talysa7 -->
+	<select id="getUserTripList" parameterType="String" resultType="java.util.List">
+		select *
+		from pao_view_trip
+		where trip_id in (
+				select trip_id
+				from pao_members
+				where user_id=#{user_id}
+			)
+	</select>
+	<select id="getMemberNames" parameterType="int" resultType="java.util.List">
+		select user_name
+		from pao_view_trip
+		where trip_id=#{trip_id}
+	</select>
 </mapper>

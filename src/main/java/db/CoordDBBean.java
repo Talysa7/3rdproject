@@ -67,8 +67,12 @@ public class CoordDBBean {
 		}
 		return locs;
 	}
-	
+	//instead of this, getUserTripList
 	public List<CoordDataBean> getMyTrips(String user_id) {
 		return session.selectList("db.getMyTrips", user_id);
+	}
+	////////////////////////////////////////talysa7/////////////////////////////////////////////////
+	public CoordDataBean getCoordinate(int coord_id) {
+		return session.selectOne("location.getCoordinate", coord_id);
 	}
 }

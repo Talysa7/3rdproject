@@ -13,25 +13,18 @@
 		photo_id=#{photo_id}
 	</delete>
 	
-	
-	<select id="getAlbum" resultType="db.AlbumDataBean">
+<!-- talysa7 -->
+	<select id="getAllPhotos" resultType="db.AlbumDataBean">
 		SELECT * 
-		FROM pao_album 
+		FROM pao_view_album 
 		ORDER BY photo_reg_date DESC
 	</select>
-	<select id="getBoardAlbum" parameterType="java.util.Map"
-		resultType="db.AlbumDataBean">
-		select photo_id,photo_url,photo_reg_date,board_no,user_id,r from (
-			select photo_id,photo_url,photo_reg_date,board_no,user_id,rownum r from (
-				select photo_id,photo_url,photo_reg_date,board_no,user_id from pao_album where board_no=#{board_no} order by photo_reg_date desc) 
-			order by photo_reg_date desc)
-		where r &gt;= #{start} and r &lt;=#{end}
-	</select>
-	<select id="getPCount" resultType="int">
-		select count(*) from pao_album
-	</select>
-	<select id="getBoardPCount" parameterType="int" resultType="int">
-		select count(*) from pao_album where board_no=#{board_no}
+	<select id="getPhotosByBoardNo" parameterType="java.util.Map" resultType="db.AlumDataBean">
+		select *
+		from pao_view_album
+		where board_no=#{board_no}
+		order by photo_reg_date DESC
+		limit #{pageStart}, #{pageEnd}
 	</select>
 	<select id="getPhoto_urls" parameterType="int" resultType="String">
 		select photo_url from pao_album where board_no=#{board_no}
