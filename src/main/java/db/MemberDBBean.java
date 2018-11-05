@@ -12,14 +12,6 @@ import db.BoardDataBean;
 
 public class MemberDBBean {
 	private SqlSession session=SqlMapClient.getSession();
-
-	public List<MemberDataBean> getCurrentMember(int trip_id) {
-		List<MemberDataBean> memberList=session.selectList("user.getCurrentMember", trip_id);
-		for(MemberDataBean user:memberList) {
-			user.setUser_name((String)session.selectOne("user.getUserName", user.getUser_id()));
-		}
-		return memberList;
-	}
 	
 	public String getUserName(String user_id) {
 		return session.selectOne("user.getUserName", user_id);
@@ -68,4 +60,5 @@ public class MemberDBBean {
 	public int addTripMember(MemberDataBean memberDto) {
 		return session.selectOne("user.addTripMember", memberDto);
 	}
+	
 }
