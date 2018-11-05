@@ -128,6 +128,10 @@ public class SvcFormHandler {
 	public ModelAndView svcTripModFormProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		//get the origin;
 		//basic contents(essential 'var' for tripMod.jsp: board_no, user_id, board_content, board_m_num, board_talk, td_trip_id, locs[], tags[])
+		//get user_name from pao_user
+		String user_id = (String) request.getSession().getAttribute("user_id");
+		String user_name = userDao.getUserName(user_id);
+		request.setAttribute("user_name", user_name);
 		int board_no=Integer.parseInt(request.getParameter("board_no"));
 		request.setAttribute("board_no", board_no);	
 		BoardDataBean boardDto=boardDao.getBoard(board_no);
@@ -135,7 +139,7 @@ public class SvcFormHandler {
 		
 		//trip details		//FIXME : 여기는 전체 다 수정 필요. trip id위치가 바뀜.
 		List<CoordDataBean> locDtoList=new ArrayList<CoordDataBean>();
-			//boardDto has td_trip_ids
+			//boardDto do not have trip_id anymore
 			if(boardDto.getTd_trip_ids().length>0) {
 				for(int trip_id:boardDto.getTd_trip_ids()) {
 					CoordDataBean coordDto=coordDao.getTripDetail(trip_id);

@@ -45,6 +45,10 @@
 		SELECT coord_id FROM pao_calendar WHERE td_trip_id IN(
 		SELECT td_trip_id FROM pao_trip_detail WHERE tb_no=#{tb_no})))
 	</select>
+	<select id="getCalender" parameterType="int" resultType="db.CoordDataBean">
+		select * from pao_coordinate where coord_id=
+		(select coord_id from pao_trip where trip_id=#{trip_id})
+	</select>
 	
 	<!-- getTripDetail 에서 쓰는 쿼리 모음  -->
 	<!-- FIXME : getTripDetail 자체가 join 이나 서브쿼리로 해결 될 수 없는지 연구해봐야겠다 -->
