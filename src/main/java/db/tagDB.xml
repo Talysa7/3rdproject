@@ -61,7 +61,8 @@
 	<select id="getTbTag" parameterType="int" resultType="java.util.List">
 		select tag_value from pao_trip_tag where board_no=#{board_no}
 	</select>
-	
+
+
 	 
 	<select id="getUserTags" resultType="db.TagDataBean">
 		select * from pao_view_user_tags where user_id=#{user_id}
@@ -122,5 +123,11 @@
 		from pao_view_trip_tags
 		where board_no=#{board_no}
 	</select>
-	
+	<!--//////////////////////////////////////////////////2018-11-05 이민재  게시물별 트립검색 추가 ///////////////////////////////// -->
+	<select id="getPostTags" parameterType="int" resultType="db.TagDataBean">
+		select * from pao_view_board_tags where board_id=#{board_id}
+	</select>
+
+	<!--//////////////////////////////////////////////////2018-11-05 이민재  게시물별 트립검색 추가 ///////////////////////////////// -->
+
 </mapper>

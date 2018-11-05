@@ -116,24 +116,19 @@
 		select
 		count(*) from pao_user where email=#{email}
 	</select>
-<!-- FIXME : 위의 checkId와 같은 쿼리인 듯 / 분간 후 추후 삭제 처리 예정
-	<select id="idCheck" parameterType="String" resultType="Integer">
-		select count(*) from pao_user where user_id=#{user_id}
-	</select>
--->
-	<select id="nameCheck" parameterType="String" resultType="Integer">
-		select count(*) from pao_user where user_name=#{user_name}
-	</select>
-
-
-
+	
 	<update id="modifyUser" parameterType="db.UserDataBean">
 		update pao_user set
 		passwd=#{passwd}, user_name=#{user_name} where
 		user_id=#{user_id}
 	</update>
+	<select id="getUser" parameterType="String" resultType="db.UserDataBean">
+		select * from pao_user where user_id=#{user_id}
+	</select>
+	<select id="nameCheck" parameterType="String" resultType="Integer">
+		select count(*) from pao_user where user_name=#{user_name}
+	</select>
 <!-- Trip -->
-<!-- by talysa7 -->
 	<select id="getUserTripList" parameterType="String" resultType="java.util.List">
 		select *
 		from pao_view_trip
@@ -149,3 +144,4 @@
 		where trip_id=#{trip_id}
 	</select>
 </mapper>
+

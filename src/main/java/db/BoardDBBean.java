@@ -38,11 +38,7 @@ public class BoardDBBean {
 	}
 
 	public int insertBoard_no(BoardDataBean boardDto) {
-	      return session.insert("db.insertBoard_no",boardDto);
-	}
-
-	public int insertTrip(BoardDataBean boardDto) {
-		return session.insert("db.insertTrip",boardDto);
+		return session.insert("board.insertBoard_no",boardDto);
 	}
 
 	public String getUserId(String user_name) {
