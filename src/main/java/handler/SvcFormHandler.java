@@ -153,7 +153,8 @@ public class SvcFormHandler {
   		for(int trip_id : trip_ids ) {
 				CoordDataBean coordDto=coordDao.getTripDetail(trip_id);
 				int coord_id = tripDao.getCoordId(trip_id);
-				String countryname = countryDao.getCountryName(coord_id);
+				String country_name = countryDao.getCountryName(coord_id);
+				request.setAttribute("country_name", country_name);
 				locDtoList.add(coordDto);
   		}	
 		request.setAttribute("locDtoList", locDtoList);

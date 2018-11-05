@@ -43,8 +43,8 @@
 							~
 						<input type="text" name="end${i}" id="end${i}" class="col-3" value="${i.cal_end_date}" readonly="readonly"/>						
 						<input type="hidden" value="${i.coord_long}~${i.coord_lat}"/>
-						<input type="hidden" value="${i.country_name}"/>
-						<input name="place${i}" type="text" class="col-3" value="${i.country_name}" readonly="readonly"/>		
+						<input type="hidden" value="${country_name}"/>
+						<input name="place${i}" type="text" class="col-3" value="${country_name}" readonly="readonly"/>		
 					</div>
 				</c:forEach>
 				<div id="coordinfo${i}"></div>
