@@ -1,4 +1,4 @@
-﻿package handler;
+package handler;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -35,10 +35,6 @@ import db.UserDataBean;
 
 @Controller
 public class SvcViewHandler {
-	private static final int PHOTOSIZE=6;//占쎈립 占쎌넅筌롫똻肉� �빊�뮆�젾占쎈┷占쎈뮉 占쎄텢筌욑옙 揶쏆뮇�땾
-	
-	private static final String MAP="0";
-	
 	@Resource
 	private TripDBBean tripDao;
 	@Resource
@@ -55,167 +51,122 @@ public class SvcViewHandler {
 	private BoardDBBean boardDao;
 	@Resource
 	private MemberDBBean memberDao;
-	
+
+	//amount of displayed photos in a page
+	private static final int photoPerPage=6;
+	//??? -talysa7
+	private static final String MAP="0";
+	//How many posts do we need in a page, default is 10
+	private static final int postPerPage=10;
+
 	/////////////////////////////////default pages/////////////////////////////////
-	
+
 	@RequestMapping("/*")
 	public ModelAndView svcDefaultProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		return new ModelAndView("svc/default");
 	}
-	
+
 	/////////////////////////////////main page/////////////////////////////////
-	
+
 	//temporary go to login
 	@RequestMapping("/main")
 	public ModelAndView svcMainProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		return new ModelAndView("svc/login");
 	}
-	
+
 	/////////////////////////////////user pages/////////////////////////////////
-	
+
 	@RequestMapping("/myPage")
 	public ModelAndView svcMyPageProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
-		//I don't know why but it fails to get userDto, so here I try to get it.
+		//To find which user is this?
 		String user_id=(String)request.getSession().getAttribute("user_id");
-		
+
 		if(user_id!=null) {
 			UserDataBean userDto=userDao.getUser(user_id);
+			//user_tags is a guest value, we should set it additionally
+			userDto.setUser_tags(userDto.getUser_id());
 			request.setAttribute("userDto", userDto);
-			
-			List<TagDataBean> userTags=tagDao.getUserTags(userDto.getUser_id());
-			request.setAttribute("userTags", userTags);
 		}
 		return new ModelAndView("svc/myPage");
 	}
-	
+
 	@RequestMapping("/myTrip")
 	public ModelAndView SvcMyTripProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
+		//To find which user is this?
 		String user_id=(String)request.getSession().getAttribute("user_id");
-		//get user's trip list
-		List<CoordDataBean> myTrips=coordDao.getMyTrips(user_id);
-		//put board_no... it was too much value...
-		if(myTrips.size()>0) {
-			for(CoordDataBean trip:myTrips) {
-				int board_no=boardDao.getTbNo(trip.getTd_trip_id()); //FIXME : Trip이 걸려있음.
-				trip.setBoard_no(board_no);
-			}
-		}
+		//get this user's trip list
+		List<TripDataBean> myTrips=tripDao.getUserTripList(user_id);
+		//set Trip List for display
 		request.setAttribute("myTrips", myTrips);
-		
 		return new ModelAndView("svc/myTrip");
 	}
-	
+
 	/////////////////////////////////board pages/////////////////////////////////
-	
-	@SuppressWarnings("null")
+
+	//get board posts
 	@RequestMapping("/tripList")
 	public ModelAndView svcListProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
-		UserDataBean userDto=(UserDataBean)request.getAttribute("userDto");
-		List<BoardDataBean> tripList=boardDao.getTripList();//FIXME : start End 값 줄필요가 있음.
-		int startTrip=0;
-		int endTrip=0;
-		if(tripList.size()>=10) {
-			request.setAttribute("last_row", 11);
+		//set row number of select request
+		//admin page needs this
+		int rowNumber;
+		int startPage=Integer.parseInt(request.getParameter("pageNum"));
+		if(startPage>0) {
+			rowNumber=startPage*postPerPage;
 		} else {
-			request.setAttribute("last_row", tripList.size()+1);
+			rowNumber=1;
 		}
-		
-		int count=boardDao.getCount();
-		request.setAttribute("userDto", userDto);
+		List<BoardDataBean> tripList=boardDao.getPostList(rowNumber, postPerPage);
+		//set count and next row info for 'load more list'
+		if(tripList.size()>=10) {
+			request.setAttribute("next_row", postPerPage+1);
+		} else if(tripList.size()>0&&tripList.size()<10) {
+			request.setAttribute("next_row", tripList.size()+1);
+		} else {
+			request.setAttribute("next_row", 0);
+		}
 		request.setAttribute("tripList", tripList);
-		request.setAttribute("startTrip", startTrip);
-		request.setAttribute("endTrip", endTrip);
-		request.setAttribute("count", count);
 		return new ModelAndView("svc/tripList");
 	}
-	
+
+	//get one board post by board_no
 	@RequestMapping("/trip")
 	public ModelAndView svcTripProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
-		String user_id=(String)request.getSession().getAttribute("user_id");
-		request.setAttribute("user_id", user_id);
-		
-		//get board_no of the post
+		//Which post should we get?
 		int board_no=Integer.parseInt(request.getParameter("board_no"));
 		request.setAttribute("board_no", board_no);
-		
-		//getTrip-게시물 정보 가져오기
-		BoardDataBean boardDto=boardDao.getBoard(board_no);
-		request.setAttribute("boardDto", boardDto);
-		
-		//trip details
-		List<CoordDataBean> coordDtoList=new ArrayList<CoordDataBean>();
-		//tbDto has td_trip_ids
-		if(boardDto.getTd_trip_ids().length>0) {		//FIXME : trip 이슈
-			for(int trip_id:boardDto.getTd_trip_ids()) {
-				CoordDataBean coordDto=coordDao.getTripDetail(trip_id);
-				coordDtoList.add(coordDto);
+		//who is the current user?
+		String user_id=(String)request.getSession().getAttribute("user_id");
+		//get all values of requested board post
+		BoardDataBean boardDto=boardDao.getPost(board_no);
+		//post not found or was deleted exception
+		if(boardDto==null) {
+			request.setAttribute("postNotFound", true);
+		} else {
+			//check, current user is the owner of this post?
+			if(boardDto.getUser_id()==user_id) {
+				//button display control
+				request.setAttribute("isOwner", true);
 			}
-			request.setAttribute("locDtoList", coordDtoList);
-		}
-		
-		boardDao.addCount(board_no);
-		
-		//authorization for deletion and modification-수정 삭제 권한 
-		TripDataBean tripDto=new TripDataBean();
-		tripDto.setBoard_no(board_no);
-		user_id=(user_id==null?"":user_id);
-		tripDto.setUser_id(user_id);		//데이터 빈에 userId X 네임만 있음.
-		int isOwner=tripDao.isOwner(tripDto);
-		request.setAttribute("isOwner", isOwner);
-		
-		//determine tab
-		String tab=request.getParameter("tab");
-		if(tab==null)tab=MAP;
-		request.setAttribute("tab", tab);
-		
-		//map data
-		//test
-		double lat=37.554690;
-		double lng=126.970702;
-		//
-		request.setAttribute("lat",lat);
-		request.setAttribute("lng", lng);
-		
-		//board album data	
-		String start=request.getParameter("start");
-		if(start==null)start="1";
-		request.setAttribute("start",start);
-		
-		//member Info of each trip
-		List<TripDataBean> memInfoList=memberDao.getMemInfoList(board_no);
-		TripDataBean tripDto1 = new TripDataBean();
-		boolean isMember=false;
-		for(TripDataBean trip1Dto : memInfoList) {
-			int trip_id=tripDto1.getTrip_id();
-			List<MemberDataBean> currendMember=memberDao.getMember(trip_id);
-			String members="";
-			if (currendMember.size()>0) {
-				for(int i=0; i<currendMember.size(); i++) {
-					if (currendMember.size()<=1) {
-						members=members+currendMember.get(i).getUser_name();
-					} else if(currendMember.size()>1 && i==currendMember.size()-1) {
-						members=members+currendMember.get(i).getUser_name();
-					} else {
-						members=members+currendMember.get(i).getUser_name()+" ";
-					}
-					String id=(String)request.getSession().getAttribute("user_id");
-					if(id!=null) {
-						String name=memberDao.getUserName(id);
-						if(name.equals(currendMember.get(i).getUser_name())) {
-							isMember=true;
-						}
+			//get trips of this post
+			for(TripDataBean trip:boardDto.getTripLists()) {
+				trip.setTrip_members(board_no);
+				//check, current user is a member of this post's trips?
+				boolean isMember=false;
+				for(MemberDataBean member:trip.getTrip_members()) {
+					if(member.getUser_id().equals(user_id)) {
+						isMember=true;
 					}
 				}
+				request.setAttribute("isMember", isMember);
 			}
-			
+			request.setAttribute("boardDto", boardDto);
+			boardDao.addViewCount(board_no);
 		}
-		
-		request.setAttribute("memInfoList", memInfoList);
-		request.setAttribute("isMember", isMember);
 
 		return new ModelAndView("svc/trip");
 	}
 	
+	//basic search by keyword, in title, content, or writer user_name
 	@RequestMapping("/searchTrip")
 	public ModelAndView svcSearchProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException, UnsupportedEncodingException {
 		try {
@@ -223,127 +174,62 @@ public class SvcViewHandler {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		
 		//get the type and keyword of searching
 		String selectedType=request.getParameter("search_type");
 		String keyword=request.getParameter("keyword");
 		request.setAttribute("keyword", keyword);
-		
 		//set List
 		List<BoardDataBean> foundList;
-		
 		//find trips for each type
 		if(selectedType.equals("schedule")) {
-			foundList=boardDao.findTripByKeyword(keyword);
+			foundList=boardDao.findPostByKeyword(keyword);
 		} else {
-			foundList=boardDao.findTripByUser(keyword);
+			foundList=boardDao.findPostByUser(keyword);
 		}
-		
 		//count check
 		int count=0;
 		if(foundList.size()>0) {
 			count=foundList.size();
 		}
-		
 		request.setAttribute("foundList", foundList);
 		request.setAttribute("count", count);
-		
 		return new ModelAndView("svc/foundList");
 	}
-	
+
 	/////////////////////////////////album pages/////////////////////////////////
-	
+
 	@RequestMapping("/album")
-	public ModelAndView svcAlbumProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {	
-		int count=albumDao.getCount();
-		request.setAttribute("count", count);
-		if(count>0) {
-			//select album
-			List<AlbumDataBean>album=albumDao.getAlbum();
-			request.setAttribute("album", album);			
-			
-			//send photo countries and tags
-			List<Map<String, String>> photoInfos=new ArrayList<Map<String, String>>();
-			List<Map<String, String>> photoTags=new ArrayList<Map<String, String>>();
-			if(count>0) {
-				int board_no=0;
-				for(int i=0; i<album.size(); i++) {
-					if(board_no!=album.get(i).getBoard_no()) {
-						//board_no of this photo, if it has same with previous one, then pass
-						board_no=album.get(i).getBoard_no();
-						String this_board_no=""+board_no;
-						
-						//send photo countries
-						Map<String, String> photoInfo=new HashMap<String, String>();
-						photoInfo.put("this_board_no", this_board_no);
-						photoInfo.put("photoLoc", coordDao.getPhotoLoc(album.get(i).getBoard_no()));
-						photoInfos.add(photoInfo);
-						
-						//send photo tags
-						List<TagDataBean> photoTag=tagDao.getTripTags(board_no);
-						for(TagDataBean tb:photoTag) {
-							Map<String, String> tempTags=new HashMap<String, String>();
-							tempTags.put("this_board_no", this_board_no);
-							tempTags.put("tag_value", tb.getTag_value());
-							photoTags.add(tempTags);
-						}
-					}
-					
-				}
-			}
-			request.setAttribute("photoInfos", photoInfos);
-			request.setAttribute("photoTags", photoTags);
+	public ModelAndView svcAlbumProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
+		//get all photos and its amount from pao_album
+		List<AlbumDataBean>album=albumDao.getAllPhotos();
+		int photoCount=album.size();
+		request.setAttribute("photoCount", photoCount);
+		if(photoCount>0) {
+			request.setAttribute("album", album);
 		}
 		return new ModelAndView("svc/album");
 	}
-	
+
 	@RequestMapping("/svc/boardAlbum")//svc/boardAlbum
 	public ModelAndView svcBoardAlbumProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		int board_no=Integer.parseInt(request.getParameter("board_no"));
 		request.setAttribute("board_no", board_no);
+		//always first page, load next page by ajax
+		List<AlbumDataBean> photoList=albumDao.getPhotosByBoardNo(board_no, 0, 6);
 		
-		String user_id=(String) request.getSession().getAttribute( "user_id" );
-		if(user_id==null)user_id="";
-		
-		int count=albumDao.getBoardCount(board_no);
-		request.setAttribute("count", count);
-		
-		if(count>0) {
-			//page
-			int start=Integer.parseInt(request.getParameter("start"));
-			int end=start+PHOTOSIZE-1;
-			int last=(count%PHOTOSIZE==0?count-PHOTOSIZE:(count/PHOTOSIZE)*PHOTOSIZE);//+(count%PHOTOSIZE==0?0:1));
-
-			request.setAttribute("start",start);
-			request.setAttribute("size", PHOTOSIZE);
-			request.setAttribute("last",last);
-
-			//select board album
-			Map<String, Integer>map=new HashMap<String,Integer>();
-			map.put("start",start);
-			map.put("end", end);
-			map.put("board_no", board_no);
-			List<AlbumDataBean>album=albumDao.getBoardAlbum(map);
-			request.setAttribute("album", album);
+		if(photoList.size()>0) {
+			int photoPages=photoList.size()/photoPerPage;
+			request.setAttribute("photoPages", photoPages);
 		}
-		
-		//check user whether user is member or not
-		BoardDataBean tbDto=new BoardDataBean();
-		user_id=(user_id==null?"":user_id);
-		tbDto.setUser_id(user_id);
-		tbDto.setBoard_no(board_no);
-		boolean isMember=memberDao.isTBMember(tbDto);
-		request.setAttribute("isMember", isMember);
 		return new ModelAndView("svc/boardAlbum");
 	}
-	
+
 	/////////////////////////////////ajax method list/////////////////////////////////
-	@RequestMapping(value="/loadMoreList", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value="/loadMoreList", method=RequestMethod.GET, produces="application/json")
 	@ResponseBody
-	public List<BoardDataBean> loadMoreList(int last_row) {
-		//get more 5 trip articles when 'load more' button is pressed
-		List<BoardDataBean> additionalList=boardDao.loadMoreList(last_row);//FIXME: 이 메소드 삭제함. list메소드 하나로 쓰기로 하였으니 참고.
-		
+	public List<BoardDataBean> loadMoreList(int next_row) {
+		//get more 10 trip posts when 'load more' button is pressed
+		List<BoardDataBean> additionalList=boardDao.getPostList(next_row, postPerPage);
 		return additionalList;
 	}
 }

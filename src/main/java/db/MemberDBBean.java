@@ -1,4 +1,4 @@
-﻿package db;
+package db;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,8 +57,10 @@ public class MemberDBBean {
 		}
 		return memNumList;
 	}
-	public List<MemberDataBean> getMember(int board_no) {
-		return session.selectList("board.getMember", board_no);
+	//error fix - parameter should be trip_id, not board_id. 
+	//And I changed method name to getMember->getMembers
+	public List<MemberDataBean> getMembers(int trip_id) {
+		return session.selectList("user.getMembers", trip_id);
 	}
 	public int isMember(MemberDataBean memberDto) {
 		return session.selectOne("user.isMember", memberDto);

@@ -27,5 +27,6 @@
 		${sessionScope.user_level = user_level}
 		<c:redirect url="adminTrip.go"/>
 	</c:if>
+	${sessionScope.user_level = 0}
 	<c:redirect url="tripList.go"/>
 </c:if>

@@ -29,13 +29,14 @@
 					<label for="email" class="control-label col-sm-2">${str_email}
 					</label>
 					<div class="col-sm-8">
-						<input type="email" name="email2" class="form-control" id="email2"
+						<input type="email" name="email1" class="form-control" id="email1"
 							placeholder="Enter email" required>
 					</div>
 					<div class="col-sm-2">
 						<button type="button" class="btn btn-md btn-secondary" 
-						onclick="EmailIdCheck(inputform.email2.value)">${btn_confirm_smtp}</button>
+						onclick="EmailCheck(inputform.email1.value)">${btn_confirm_smtp}</button>
 						<input type="hidden" name="confirm" value="0">
+						<input type="hidden" name="eType" value="1">
 					</div>
 				</div>
 			</div>

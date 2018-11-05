@@ -10,6 +10,8 @@ public class AlbumDataBean {
 	//FK
 	private String user_id;			//varchar (20), on delete cascade
 	private int board_no;				//int (10), not null, on delete cascade
+	//guest value from pao_view_album
+	private String user_name;
 	
 	public int getPhoto_id() {
 		return photo_id;
@@ -41,4 +43,11 @@ public class AlbumDataBean {
 	public void setPhoto_reg_date(Timestamp photo_reg_date) {
 		this.photo_reg_date = photo_reg_date;
 	}
+	public String getUser_name() {
+		return user_name;
+	}
+	public void setUser_name(String user_name) {
+		this.user_name = user_name;
+	}
+	
 }
