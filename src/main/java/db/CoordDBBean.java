@@ -37,11 +37,6 @@ public class CoordDBBean {
 	public CoordDataBean getTripDetail(int trip_id) {
 		// TODO : return 이 
 		CoordDataBean coordDto = session.selectOne("location.getCalendar", trip_id);
-		CountryDataBean countryDto = new CountryDataBean();
-		coordDto.setCoord_long((double)session.selectOne("db.getCoordLong", coordDto.getCoord_id()));
-		coordDto.setCoord_lat((double)session.selectOne("db.getCoordLat", coordDto.getCoord_id()));
-		coordDto.setCoord_order((int)session.selectOne("db.getCoordOrder", coordDto.getCoord_id()));
-		countryDto.setCountry_name((String)session.selectOne("db.getCountryName", coordDto.getCoord_id()));
 		return coordDto;
 	}
 	
@@ -67,5 +62,8 @@ public class CoordDBBean {
 	
 	public List<CoordDataBean> getMyTrips(String user_id) {
 		return session.selectList("db.getMyTrips", user_id);
+	}
+	public List<CoordDataBean> getCoordDetail(int trip_id) {
+		return session.selectList("location.getCoordDetail", trip_id);
 	}
 }
