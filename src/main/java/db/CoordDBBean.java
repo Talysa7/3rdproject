@@ -71,8 +71,21 @@ public class CoordDBBean {
 	public List<CoordDataBean> getMyTrips(String user_id) {
 		return session.selectList("db.getMyTrips", user_id);
 	}
-	////////////////////////////////////////talysa7/////////////////////////////////////////////////
 	public CoordDataBean getCoordinate(int coord_id) {
 		return session.selectOne("location.getCoordinate", coord_id);
 	}
+	
+	///////////////////////////////////////////////////////자동완성 관련 메소드 추가 및 추가 기능  , 이민재, 2018-11-05///////////////////////////////////
+	public List<CoordDataBean> autoComplete(String coord_name){
+		return session.selectList("loaction.autoComplete", coord_name);
+	}
+	
+	public List<CoordDataBean> checkCoordName(String coord_name){
+		return session.selectList("loaction.checkCoordName", coord_name);
+	}
+	///////////////////////////////////////////////////////자동완성 관련 메소드 추가 , 이민재, 2018-11-05///////////////////////////////////
+
+	////////////////////////////////////////talysa7/////////////////////////////////////////////////
+
+
 }
