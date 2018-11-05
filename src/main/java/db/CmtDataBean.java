@@ -11,6 +11,7 @@ public class CmtDataBean {
 	private int board_no;					//int (10), not null, on delete cascade
 	private String user_id;				//varchar (20), not null
 	
+	
 	public int getC_id() {
 		return c_id;
 	}
@@ -41,4 +42,15 @@ public class CmtDataBean {
 	public void setUser_id(String user_id) {
 		this.user_id = user_id;
 	}
+	
+	/////////////////////////////////////////////////////////// 2018-11-05 이민재 user_name 추가 ///////////////////////////////////
+	
+	private String user_name;
+	public String getUser_name() {
+		return user_name;
+	}
+	public void setUser_name(String user_name) {
+		this.user_name = user_name;
+	}
+	/////////////////////////////////////////////////////////// 2018-11-05 이민재 user_name 추가 ///////////////////////////////////
 }

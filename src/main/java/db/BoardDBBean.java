@@ -49,7 +49,7 @@ public class BoardDBBean {
 	}
 
 	public int deleteTrip(int board_no) {
-		return session.delete("db.deleteTrip", board_no);
+		return session.delete("board.deleteTrip", board_no);
 	}
 
 	public boolean isMember(BoardDataBean boardDto) {
