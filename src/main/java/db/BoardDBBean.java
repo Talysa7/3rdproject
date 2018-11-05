@@ -96,15 +96,21 @@ public class BoardDBBean {
 		Map<String, Integer> tripReq=new HashMap<String, Integer>();
 		tripReq.put("startRowNumber", rowNumber);
 		tripReq.put("endRowNumber", rowNumber*postPerPage);
-		List<BoardDataBean> BoardList=session.selectList("board.getPostList", tripReq);
+		List<BoardDataBean> boardList=session.selectList("board.getPostList", tripReq);
 		//user_name null exception
-		if(BoardList.size()>0) {
-			for(BoardDataBean boardDto:BoardList) {
+		if(boardList.size()>0) {
+			for(BoardDataBean boardDto:boardList) {
 				if(boardDto.getUser_id().equals("")||boardDto.getUser_id()==null) {
-					boardDto.setUser_id("Ex-User");
+					boardDto.setUser_name("Ex-User");
 				}
+				//set Trips
+				List<TripDataBean> tripLists=session.selectList("location.getTripListByBoardNo", boardDto.getBoard_no());
+				boardDto.setTripLists(tripLists);
+				//set Tags
+				List<TagDataBean> board_tags=session.selectList("tag.getPostTags", boardDto.getBoard_no());
+				boardDto.setBoard_tags(board_tags);
 			}
 		}
-		return BoardList;
+		return boardList;
 	}
 }

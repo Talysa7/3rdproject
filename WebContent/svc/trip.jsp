@@ -30,12 +30,12 @@
 						onclick="location='tripList.go'" class="btn btn-sm">&nbsp;
 				</div>
 				<!--수정/삭제 button -->
-				<c:if test="${isOwner eq 1}">
+				<c:if test="${boardDto.user_id eq user_id}">
 					<div>
 						<input type="button" value="${btn_mod}"
-							onclick="modifyBoard(${board_no})" class="btn btn-sm"> <input
+							onclick="modifyBoard(${boardDto.board_no})" class="btn btn-sm"> <input
 							type="button" value="${btn_delete}"
-							onclick="deleteBoard(${board_no})" class="btn btn-sm">
+							onclick="deleteBoard(${boardDto.board_no})" class="btn btn-sm">
 					</div>
 				</c:if>
 				<c:if test="${user_level eq 9}">
@@ -49,11 +49,11 @@
 			</div>
 			<!--  -->
 			<br>
-			<input type="hidden" value="${tbDto.board_notice}" id="notice" />
+			<input type="hidden" id="board_level" value="${boardDto.board_level}"/>
 			<!----- 공지 ----->
 			<article>
 				<section>
-					<c:if test="${tbDto.tb_notice == 1}">
+					<c:if test="${boardDto.board_level == 0}">
 						<div style="font-size:32px;">
 							<img class="mb-4" src="${project}img/logo_c.png" alt="" width="40" height="40"> <b>${trip_notice_2}</b>
 						</div>
@@ -61,17 +61,17 @@
 					<div id="trip_title">
 						<div class="row">
 							<input type="text" name="trip_title" class="col-12 form-control form-control-lg"
-								value="${tbDto.tb_title}" readonly="readonly">
+								value="${boardDto.board_title}" readonly="readonly">
 						</div>
 						<div class="row">
 							<div class="text-muted">
-								<i><b>With</b></i>&nbsp; ${tbDto.user_id}
+								<i><b>With</b></i>&nbsp; ${boardDto.user_id}
 							</div>
 						</div>
-						<c:forEach var="i" items="${locDtoList}">
-							<c:set var="order" value="${i.coord_order}" />
+						<c:forEach var="trip" items="${boardDto.tripLists}">
+							<c:set var="order" value="${trip.trip_order}" />
 							<form name="orderInfo">
-								<input type="hidden" name="order_of_${i.td_trip_id}" value="${i.coord_order}">
+								<input type="hidden" name="order_of_${trip.td_trip_id}" value="${trip.coord_order}">
 							</form>
 							<div class="container" style="width: 100%" onmouseover="focusMarker(${order},${i.coord_long},${i.coord_lat})">
 								<div class="row">

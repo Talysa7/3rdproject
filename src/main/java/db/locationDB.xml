@@ -93,5 +93,10 @@
 		from pao_coordinate
 		where coord_id=#{coord_id}
 	</select>
+	<select id="getTripListByBoardNo" parameterType="int" resultType="db.TripDataBean">
+		select *
+		from pao_view_trip
+		where board_id=#{board_id}
+	</select>
 	<!--/////////////////////////////////////////////////// end-line pao_coordinate table ///////////////////////////////////////////////////-->
 </mapper>
