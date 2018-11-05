@@ -15,11 +15,15 @@ import db.AlbumDBBean;
 import db.CmtDBBean;
 import db.CoordDBBean;
 import db.CoordDataBean;
+import db.CountryDBBean;
+import db.CountryDataBean;
+import db.MemberDBBean;
 import db.TagDBBean;
 import db.TagDataBean;
 import db.BoardDBBean;
 import db.BoardDataBean;
 import db.TripDBBean;
+import db.TripDataBean;
 import db.UserDBBean;
 import db.UserDataBean;
 
@@ -39,6 +43,10 @@ public class SvcFormHandler {
 	private BoardDBBean boardDao;
 	@Resource
 	private UserDBBean userDao;
+	@Resource
+	private CountryDBBean countryDao;
+	@Resource
+	private MemberDBBean memberDao;
 	
 	/////////////////////////////////user pages/////////////////////////////////
 	@RequestMapping("/EmailId")
@@ -136,17 +144,20 @@ public class SvcFormHandler {
 		request.setAttribute("board_no", board_no);	
 		BoardDataBean boardDto=boardDao.getBoard(board_no);
 		request.setAttribute("boardDto", boardDto);
-		
+		List<TripDataBean> tripDto = tripDao.getTripList(board_no);
+		request.setAttribute("tripDto", tripDto);
 		//trip details		//FIXME : 여기는 전체 다 수정 필요. trip id위치가 바뀜.
 		List<CoordDataBean> locDtoList=new ArrayList<CoordDataBean>();
 			//boardDto do not have trip_id anymore
-			if(boardDto.getTd_trip_ids().length>0) {
-				for(int trip_id:boardDto.getTd_trip_ids()) {
-					CoordDataBean coordDto=coordDao.getTripDetail(trip_id);
-					locDtoList.add(coordDto);
-				}
-				request.setAttribute("locDtoList", locDtoList);
-			}
+	  	List<Integer>trip_ids = tripDao.getTripIds(board_no);
+  		for(int trip_id : trip_ids ) {
+				CoordDataBean coordDto=coordDao.getTripDetail(trip_id);
+				int coord_id = tripDao.getCoordId(trip_id);
+				String countryname = countryDao.getCountryName(coord_id);
+				locDtoList.add(coordDto);
+  		}	
+		request.setAttribute("locDtoList", locDtoList);
+		
 		//get tag details & total list 
 		List<TagDataBean> tripTags=tagDao.getTripTags(board_no);
 		List<TagDataBean> tagList=tagDao.getStyleTags();

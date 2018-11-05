@@ -1,4 +1,4 @@
-﻿package db;
+package db;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,4 +66,6 @@ public class MemberDBBean {
 	public int addTripMember(MemberDataBean memberDto) {
 		return session.selectOne("user.addTripMember", memberDto);
 	}
+
+	
 }
