@@ -62,16 +62,12 @@ public class UserDBBean {
 		public int EmailCheck( String email ) {
 			return session.selectOne( "user.EmailCheck", email);
 		}
-		
 		public int deleteUser( String user_id ) {
 			return session.delete("user.deleteUser", user_id);
 		}
-		
 		public int modifyUser( UserDataBean UserDto ) {
 			return session.update( "user.modifyUser", UserDto );
 		}
-
-		
 		public int getUserLevel(String user_id) {
 			return session.selectOne("user.getUserLevel",user_id);
 		}
