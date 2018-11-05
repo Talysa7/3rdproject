@@ -1,4 +1,4 @@
-﻿package db;
+package db;
 
 import java.util.List;
 import java.util.Map;
@@ -38,10 +38,7 @@ public class UserDBBean {
 		public int getAllUserCount() {
 			return session.selectOne("user.getAllUserCount");
 		}
-		public int insertUser( UserDataBean UserDto ) {
-			return session.insert("db.insertUser", UserDto);
-		}
-		
+				
 		public int insertUser( UserDataBean UserDto ) {
 			return session.insert("user.insertUser", UserDto);
 		}
