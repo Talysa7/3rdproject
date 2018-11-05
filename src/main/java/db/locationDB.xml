@@ -12,6 +12,10 @@
 		select coord_id from pao_trip where pao_trip_id in(
 		select trip_id from pao_board where board_no=#{board_no})))
 	</select>
+	<select id="getCountryName" parameterType="int" resultType="String">
+		select country_name from pao_country where country_id=
+		(select country_id from pao_coordinate where coord_id=#{coord_id})
+	</select>
 	<select id="getTripIds" resultType="int">
 		select trip_id from pao_trip where board_no=#{board_no}
 	</select>

@@ -43,6 +43,9 @@
 	</select>
 -->
 <!-- Member -->
+	<select id="getTripId" parameterType="String" resultType="int">
+		select trip_id from pao_members where user_id=#{user_id}
+	</select>
 	<select id="getUserName" parameterType="String" resultType="String">
 		select user_name from pao_user where user_id=#{user_id}
 	</select>

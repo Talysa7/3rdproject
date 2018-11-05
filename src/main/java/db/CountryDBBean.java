@@ -1,4 +1,4 @@
-﻿package db;
+package db;
 
 import java.util.List;
 
@@ -12,5 +12,8 @@ public class CountryDBBean {
 	
 	public List<BoardDataBean> selectCountry(int board_no) {
 		return session.selectList("location.selectCountry",board_no);
+	}
+	public String getCountryName(int coord_id) {
+		return session.selectOne("location.getCountryName", coord_id);		
 	}
 }

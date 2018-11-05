@@ -66,6 +66,9 @@
 		FROM pao_trip 
 		WHERE board_no=#{board_no}
 	</select>
+	<select id="getTripIds" parameterType="int" resultType="java.util.List">
+		select trip_id from pao_trip where board_no=#{board_no}
+	</select>
 	<select id="getTrip" parameterType="int" resultType="db.TripDataBean">
 		SELECT * 
 		FROM pao_trip 
@@ -98,6 +101,9 @@
 		delete FROM pao_trip 
 		WHERE trip_id=#{trip_id}
 	</delete>	
+	<select id="getCoordId" parameterType="int" resultType="int">
+		select coord_id from pao_trip where trip_id=#{trip_id}
+	</select>
 	<!--/////////////////////////////////////////////////// start-line pao_comment table ///////////////////////////////////////////////////-->
 	<insert id="insertComment" parameterType="db.CmtDataBean">
 		INSERT INTO pao_comment(comment_content, comment_reg_date, board_no, user_id)

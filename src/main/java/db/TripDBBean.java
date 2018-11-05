@@ -47,9 +47,15 @@ public class TripDBBean {
 	//I removed 'noticeX', we can set level with 'setBoardLevel' method.
 	
 	//Why is this here? Anyway I fixed it.
-		public void addViewCount(int board_no) {
-			session.update("board.addBoardViewCount", board_no);
-		}
+	public void addViewCount(int board_no) {
+		session.update("board.addBoardViewCount", board_no);
+	}
+	public int getCoordId(int trip_id) {
+		return session.selectOne("board.getCoordId", trip_id);
+	}
+	public List<Integer> getTripIds(int board_no) {
+		return session.selectList("board.getTripIds", board_no);
+	}
 	
 	//Here was a method 'isOwner' testing 'Is this user the owner of this article?'
 	//This method should be moved to BoardDBBean or Handler, maybe we don't need this!
