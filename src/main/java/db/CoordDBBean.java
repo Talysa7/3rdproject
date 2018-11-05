@@ -36,7 +36,7 @@ public class CoordDBBean {
 	}
 	public CoordDataBean getTripDetail(int trip_id) {
 		// TODO : return 이 
-		CoordDataBean coordDto = session.selectOne("db.getCalendar", trip_id);
+		CoordDataBean coordDto = session.selectOne("location.getCalendar", trip_id);
 		CountryDataBean countryDto = new CountryDataBean();
 		coordDto.setCoord_long((double)session.selectOne("db.getCoordLong", coordDto.getCoord_id()));
 		coordDto.setCoord_lat((double)session.selectOne("db.getCoordLat", coordDto.getCoord_id()));
