@@ -104,6 +104,9 @@
 	<!-- FIXME : 여기까지 getTripDetail -->
 	
 	<!-- getPhotoLoc 에서 쓰는 쿼리 모음 -->
+	<select id="getTripIds" resultType="int">
+		SELECT td_trip_id FROM pao_trip_detail WHERE tb_no=#{tb_no}
+	</select>
 	<select id="getTripCountry" parameterType="int" resultType="String">
 		SELECT country_name 
 		FROM pao_country 
@@ -117,6 +120,7 @@
 				)
 			)
 	</select>
+<!-- talysa7 -->
 	<select id="getUserTripList" parameterType="String" resultType="db.TripDataBean">
 		select *
 		from pao_view_trip

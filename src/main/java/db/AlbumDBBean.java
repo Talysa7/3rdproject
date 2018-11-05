@@ -33,9 +33,9 @@ public class AlbumDBBean {
 	}
 	
 	
-	public String getThumbnail (int noard_no) {
+	public String getThumbnail (int board_no) {
 		//get an url from view 'pao_thumbnail'
-		return session.selectOne("album.getThumbail", noard_no);
+		return session.selectOne("album.getThumbnail", board_no);
 	}
 	////////////////////////////////NEW - talysa7////////////////////////////////////
 	public List<AlbumDataBean> getAllPhotos() {
