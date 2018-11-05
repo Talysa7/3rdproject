@@ -72,13 +72,13 @@ public class AdmTagHandler {
 		}
 		request.setAttribute( "result", result );
 		request.setAttribute( "state", state );
-		return new ModelAndView("adm/tagMng");
+		return new ModelAndView("admin/tagMng");
 	}
 	@RequestMapping("/adminTagAdd")
 	public ModelAndView admTagAddProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		int state=tagadd;
 		request.setAttribute("state", state);
-		return new ModelAndView("adm/tagAdd");
+		return new ModelAndView("admin/tagAdd");
 	}
 	@RequestMapping("adminTagMod")
 	public ModelAndView admTagModProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
@@ -99,7 +99,7 @@ public class AdmTagHandler {
 		}
 		request.setAttribute("tags", tags);
 		request.setAttribute("state", state);
-		return new ModelAndView("adm/tagMod");
+		return new ModelAndView("admin/tagMod");
 	}
 	
 }

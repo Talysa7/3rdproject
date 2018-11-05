@@ -81,7 +81,7 @@ public class TagDBBean {
 			Map<String, Integer> tagSetter;
 			for(int i=0; i<oldTripTags.size(); i++) {
 				//put tag values by tag id
-				oldTripTags.get(i).setTag_value((String)session.selectOne("db.getTagValue", oldTripTags.get(i).getTag_id()));			
+				oldTripTags.get(i).setTag_value((String)session.selectOne("tag.getTagValue", oldTripTags.get(i).getTag_id()));			
 			}
 			//tester to check whether trip already has that tag
 					boolean hasTag=false;
@@ -100,7 +100,7 @@ public class TagDBBean {
 							tagSetter.put("board_no", board_no);
 							int tagId= board.getTag_id();
 							tagSetter.put("tag_id", tagId);
-							result=session.update("db.updateTripTags", tagSetter);
+							result=session.update("tag.updateTripTags", tagSetter);
 						}
 					}
 					//user had that tag, but not anymore! 
@@ -117,7 +117,7 @@ public class TagDBBean {
 							tagSetter.put("board_no", board_no);
 							int tagId=otb.getTag_id();
 							tagSetter.put("tag_id", tagId);
-							result=session.delete("db.deleteTripTag", tagSetter);
+							result=session.delete("tag.deleteTripTag", tagSetter);
 						}
 					}
 			return result;
