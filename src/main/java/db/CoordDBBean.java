@@ -18,32 +18,35 @@ public class CoordDBBean {
 	}
 	//when knowing country code, insert coordinate and if inserting data succeed, return coord_id
 	public int insertCoord(CoordDataBean coordDto) {
-		 return session.insert("db.insertCoord",coordDto);
+		 return session.insert("location.insertCoord",coordDto);
 	}
 	public int insertCal(CoordDataBean coordDto) {
-		return session.insert("db.insertCal",coordDto);
+		return session.insert("location.insertCal",coordDto);
 	}
-	public List<CoordDataBean> selectDetail(int board_no) {
-		return session.selectList("db.selectDetail",board_no);
-	}
+//	FIXME : calendar 테이블이 없어짐 / 기능 여부 따져봐야함
+//	public List<CoordDataBean> selectDetail(int board_no) {
+//		return session.selectList("location.selectDetail",board_no);
+//	}
+//	public List<CoordDataBean> selectCoordinate(int board_no) {
+//		return session.selectList("location.selectCoordinate",board_no);
+//	}
+
+//	테이블 교체로 인해 쿼리와 DB 맞지 않음
+//	public List<CoordDataBean> selectCountry(int board_no) {
+//		return session.selectList("db.selectCountry",board_no);
+//	}
 	
-	public List<CoordDataBean> selectCoordinate(int board_no) {
-		return session.selectList("db.selectCoordinate",board_no);
-	}
-	
-	public List<CoordDataBean> selectCountry(int board_no) {
-		return session.selectList("db.selectCountry",board_no);
-	}
-	public CoordDataBean getTripDetail(int trip_id) {
-		// TODO : return 이 
-		CoordDataBean coordDto = session.selectOne("db.getCalendar", trip_id);
-		CountryDataBean countryDto = new CountryDataBean();
-		coordDto.setCoord_long((double)session.selectOne("db.getCoordLong", coordDto.getCoord_id()));
-		coordDto.setCoord_lat((double)session.selectOne("db.getCoordLat", coordDto.getCoord_id()));
-		coordDto.setCoord_order((int)session.selectOne("db.getCoordOrder", coordDto.getCoord_id()));
-		countryDto.setCountry_name((String)session.selectOne("db.getCountryName", coordDto.getCoord_id()));
-		return coordDto;
-	}
+//	calendar 테이블이 없음
+//	public CoordDataBean getTripDetail(int trip_id) {
+//		// TODO : return 이 
+//		CoordDataBean coordDto = session.selectOne("db.getCalendar", trip_id);
+//		CountryDataBean countryDto = new CountryDataBean();
+//		coordDto.setCoord_long((double)session.selectOne("db.getCoordLong", coordDto.getCoord_id()));
+//		coordDto.setCoord_lat((double)session.selectOne("db.getCoordLat", coordDto.getCoord_id()));
+//		coordDto.setCoord_order((int)session.selectOne("db.getCoordOrder", coordDto.getCoord_id()));
+//		countryDto.setCountry_name((String)session.selectOne("db.getCountryName", coordDto.getCoord_id()));
+//		return coordDto;
+//	}
 	
 	//get destination countriy's name of some trip
 	public String getPhotoLoc(int board_no) {

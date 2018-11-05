@@ -6,49 +6,89 @@
 	<select id="getRegions" parameterType="int" resultType="java.util.List">
 		select region_id from pao_region_match where coord_id=#{coord_id}
 	</select>
+<!--
+	FIXME : pao_board 에서 trip_id 를 select 하는 가장 안쪽 서브쿼리 
+	pao_board 테이블에 trip_id 가 없다
 	<select id="selectCountry" parameterType="int" resultType="db.CountryDataBean">	
-		select * from pao_country where country_id in(
-		select country_id from pao_coordinate where coord_id in(
-		select coord_id from pao_trip where pao_trip_id in(
-		select trip_id from pao_board where board_no=#{board_no})))
-	</select>
-	<select id="getTripIds" resultType="int">
-		select trip_id from pao_trip where board_no=#{board_no}
-	</select>
+		SELECT * FROM pao_country 
+		WHERE country_id IN (
+			SELECT country_id FROM pao_coordinate 
+			WHERE coord_id IN (
+				SELECT coord_id FROM pao_trip 
+				WHERE pao_trip_id IN (
+					SELECT trip_id FROM pao_board 
+					WHERE board_no=#{board_no}
+				)
+			)
+		)
+	</select> 
+-->
+
 	<!--/////////////////////////////////////////////////// start-line pao_coordinate table ///////////////////////////////////////////////////-->
-	<insert id="insertCoord" parameterType="db. CoordDataBean" keyProperty="coord_id">
+<!-- FIXME : country_code DB에 없음 	
+	<insert id="insertCoord" parameterType="db.CoordDataBean" keyProperty="coord_id">
 		INSERT INTO pao_coordinate 
 		VALUES(
-			(
-			SELECT country_id
-			FROM pao_country 
-			WHERE country_code=#{country_code}
-			), 
+			(SELECT country_id FROM pao_country WHERE country_code=#{country_code}), 
 			#{coord_long}, #{coord_lat}, #{coord_order}, SEQ_pao_coordinate_coord_id.NEXTVAL
-		)
+			)
 		<selectKey keyProperty="coord_id" resultType="int" order="AFTER">
 			SELECT SEQ_pao_coordinate_coord_id.currval FROM dual
 		</selectKey>
-	</insert>
- 	<insert id="insertCal" parameterType="db. CoordDataBean">
-		INSERT INTO pao_calendar VALUES(TO_DATE(#{cal_start_date},'MM/DD/YYYY'), TO_DATE(#{cal_end_date},'MM/DD/YYYY'),#{coord_id},#{td_trip_id})
-	</insert>
-	<select id="selectDetail" parameterType="int" resultType="db. CoordDataBean">
+	</insert> 
+-->
+<!-- FIXME : pao_calendar 테이블 없음 / 기능 따져봐야함
+	<insert id="insertCal" parameterType="db.CoordDataBean">
+		INSERT INTO pao_calendar 
+		VALUES(
+			TO_DATE(#{cal_start_date},'MM/DD/YYYY'), 
+			TO_DATE(#{cal_end_date},'MM/DD/YYYY'),
+			#{coord_id},#{td_trip_id}
+			)
+	</insert> -->
+<!-- FIXME : pao_calendar 테이블 없음 / 기능 따져봐야함
+	<select id="selectDetail" parameterType="int" resultType="db.CoordDataBean">
 		SELECT * FROM pao_calendar WHERE td_trip_id IN(SELECT td_trip_id FROM pao_trip_detail WHERE tb_no=#{tb_no})
 	</select>
-	<select id="selectCoordinate" parameterType="int" resultType="db. CoordDataBean">
-		SELECT * FROM pao_coordinate WHERE coord_id IN(SELECT coord_id FROM pao_calendar WHERE td_trip_id IN(SELECT td_trip_id FROM pao_trip_detail WHERE tb_no=#{tb})) 
+
+	<select id="selectCoordinate" parameterType="int" resultType="db.CoordDataBean">
+		SELECT * FROM pao_coordinate 
+		WHERE coord_id 
+		IN (
+			SELECT coord_id FROM pao_calendar 
+			WHERE td_trip_id IN 
+				(SELECT td_trip_id 
+				FROM pao_trip_detail 
+				WHERE tb_no=#{tb}
+				)
+			) 
 	</select>
-	<select id="selectCountry" parameterType="int" resultType="db. CoordDataBean">	
-		SELECT * FROM pao_country WHERE country_id IN(
-		SELECT country_id FROM pao_coordinate WHERE coord_id IN(
-		SELECT coord_id FROM pao_calendar WHERE td_trip_id IN(
-		SELECT td_trip_id FROM pao_trip_detail WHERE tb_no=#{tb_no})))
-	</select>
+-->
+<!-- FIXME : trip_detail 테이블 없음 / 기능 따져봐야 함 	
+	<select id="selectCountry" parameterType="int" resultType="db.CoordDataBean">	
+		SELECT * 
+		FROM pao_country 
+		WHERE country_id IN
+			(SELECT country_id 
+			FROM pao_coordinate 
+			WHERE coord_id IN
+				(SELECT coord_id 
+				FROM pao_calendar 
+				WHERE td_trip_id IN
+					(SELECT td_trip_id 
+					FROM pao_trip_detail 
+					WHERE tb_no=#{tb_no}
+					)
+				)
+			)
+	</select> -->
 	
 	<!-- getTripDetail 에서 쓰는 쿼리 모음  -->
 	<!-- FIXME : getTripDetail 자체가 join 이나 서브쿼리로 해결 될 수 없는지 연구해봐야겠다 -->
-	<select id="getCalendar" parameterType="int" resultType="db. CoordDataBean">
+	<select id="getTripIds" resultType="int">
+		select trip_id from pao_trip where board_no=#{board_no}
+	</select>
+	<select id="getCalendar" parameterType="int" resultType="db.CoordDataBean">
 		SELECT * FROM pao_calendar WHERE td_trip_id=#{td_trip_id}
 	</select>
 	<select id="getCoordLong" parameterType="int" resultType="double">
@@ -64,15 +104,19 @@
 	<!-- FIXME : 여기까지 getTripDetail -->
 	
 	<!-- getPhotoLoc 에서 쓰는 쿼리 모음 -->
-	<select id="getTripIds" resultType="int">
-		SELECT td_trip_id FROM pao_trip_detail WHERE tb_no=#{tb_no}
-	</select>
 	<select id="getTripCountry" parameterType="int" resultType="String">
-		SELECT country_name FROM pao_country WHERE country_id=
-		(SELECT country_id FROM pao_coordinate WHERE coord_id=
-		(SELECT coord_id FROM pao_calendar WHERE td_trip_id=#{td_trip_id}))
+		SELECT country_name 
+		FROM pao_country 
+		WHERE country_id =
+			(SELECT country_id 
+			FROM pao_coordinate 
+			WHERE coord_id =
+				(SELECT coord_id 
+				FROM pao_calendar 
+				WHERE td_trip_id = #{td_trip_id}
+				)
+			)
 	</select>
-<!-- talysa7 -->
 	<select id="getUserTripList" parameterType="String" resultType="db.TripDataBean">
 		select *
 		from pao_view_trip
