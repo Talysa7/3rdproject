@@ -91,4 +91,5 @@ public class UserDBBean {
 		public String getUserId(String user_name) { 
 			return session.selectOne("user.getUserId", user_name); 
 		} 
+}
 	

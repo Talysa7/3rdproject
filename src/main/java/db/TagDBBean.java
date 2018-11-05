@@ -110,7 +110,7 @@ public class TagDBBean {
 					for(TagDataBean otb:oldTripTags) {
 						hasTag=false;
 						for(TagDataBean tb:tripTags) {
-							if(otb.getTag_id()==(board.getTag_id())) {
+							if(otb.getTag_id()==(tb.getTag_id())) {
 								hasTag=true;
 							}
 						}
