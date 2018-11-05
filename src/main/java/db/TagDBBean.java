@@ -59,7 +59,7 @@ public class TagDBBean {
 			return userTagList;
 		}
 		public List<TagDataBean> getTripTags(int board_no) {
-			return session.selectList("board.getTripTags", board_no);	// need to check after making boardDB.xml
+			return session.selectList("tag.getPostTags", board_no);	// need to check after making boardDB.xml
 		}
 		public List<TagDataBean> getStyleTags() {
 			return session.selectList("tag.getStyleTags");
@@ -79,47 +79,43 @@ public class TagDBBean {
 			List<TagDataBean> oldTripTags=getTripTags(board_no);
 			//setter for query
 			Map<String, Integer> tagSetter;
-			for(int i=0; i<oldTripTags.size(); i++) {
-				//put tag values by tag id
-				oldTripTags.get(i).setTag_value((String)session.selectOne("db.getTagValue", oldTripTags.get(i).getTag_id()));			
-			}
 			//tester to check whether trip already has that tag
-					boolean hasTag=false;
-					//Check if the trip had these tags 
-					for(TagDataBean board:tripTags) {
-						hasTag=false;
-						for(TagDataBean otb:oldTripTags) {
-							//if user didn't have such like a tag
-							if(otb.getTag_id()==(board.getTag_id())) {
-								hasTag=true;
-							}
-						}
-						//if user didn't have this tag, insert it!
-						if(!hasTag) {
-							tagSetter=new HashMap<String, Integer>();
-							tagSetter.put("board_no", board_no);
-							int tagId= board.getTag_id();
-							tagSetter.put("tag_id", tagId);
-							result=session.update("db.updateTripTags", tagSetter);
-						}
+			boolean hasTag=false;
+			//Check if the trip had these tags 
+			for(TagDataBean tagDto:tripTags) {
+				hasTag=false;
+				for(TagDataBean otb:oldTripTags) {
+					//if user didn't have such like a tag
+					if(otb.getTag_id()==(tagDto.getTag_id())) {
+						hasTag=true;
 					}
-					//user had that tag, but not anymore! 
-					for(TagDataBean otb:oldTripTags) {
-						hasTag=false;
-						for(TagDataBean tb:tripTags) {
-							if(otb.getTag_id()==(board.getTag_id())) {
-								hasTag=true;
-							}
-						}
-						//there is no such tag what was in old tag list! So delete it!
-						if(!hasTag) {
-							tagSetter=new HashMap<String, Integer>();
-							tagSetter.put("board_no", board_no);
-							int tagId=otb.getTag_id();
-							tagSetter.put("tag_id", tagId);
-							result=session.delete("db.deleteTripTag", tagSetter);
-						}
+				}
+				//if user didn't have this tag, insert it!
+				if(!hasTag) {
+					tagSetter=new HashMap<String, Integer>();
+					tagSetter.put("board_no", board_no);
+					int tagId= tagDto.getTag_id();
+					tagSetter.put("tag_id", tagId);
+					result=session.update("tag.updateTripTags", tagSetter);
+				}
+			}
+			//user had that tag, but not anymore! 
+			for(TagDataBean otb:oldTripTags) {
+				hasTag=false;
+				for(TagDataBean tagDto:tripTags) {
+					if(otb.getTag_id()==(tagDto.getTag_id())) {
+						hasTag=true;
 					}
+				}
+				//there is no such tag what was in old tag list! So delete it!
+				if(!hasTag) {
+					tagSetter=new HashMap<String, Integer>();
+					tagSetter.put("board_no", board_no);
+					int tagId=otb.getTag_id();
+					tagSetter.put("tag_id", tagId);
+					result=session.delete("tag.deleteTripTag", tagSetter);
+				}
+			}
 			return result;
 		}
 		

@@ -29,7 +29,7 @@
          SELECT LAST_INSERT_ID()
       </selectKey>
    	</insert>
-   	<insert id="insertTrip" parameterType="db.BoardDataBean" keyProperty="trip_id">
+   	<insert id="insertTrip" parameterType="db.TripDataBean" keyProperty="trip_id">
    		insert into pao_trip(board_no, trip_member_count, coord_id, start_date, end_date) values(#{board_no},#{trip_member_count},#{coord_id},#{start_date},#{end_date})
 	   	<selectKey keyProperty="trip_id" resultType="int" order="AFTER">
 	       SELECT LAST_INSERT_ID()
@@ -38,7 +38,7 @@
 
 
 	<update id="updateBoard" parameterType="db.BoardDataBean">
-		UPDATE pao_board SET board_title=#{board_title}, board_content=#{board_content},  board_level=#{board_level} WHERE board_no=#{board_no}
+		UPDATE pao_board SET board_title=#{board_title}, board_content=#{board_content},  board_level=#{board_level}, board_contact=#{board_contact} WHERE board_no=#{board_no}
 	</update>
 	<delete id="deleteTrip" parameterType="int">
 		DELETE FROM pao_board WHERE board_no=#{board_no}
