@@ -14,7 +14,6 @@ public class CmtDBBean {
 	
 	//total comment
 	public int insertComment(CmtDataBean cmtDto) {
-		// TODO : CmtDBBean comment_id 시퀀스 없는지?
 		return session.insert("board.insertComment", cmtDto);
 	}
 	

@@ -25,6 +25,7 @@
 -->
 
 	<!--/////////////////////////////////////////////////// start-line pao_coordinate table ///////////////////////////////////////////////////-->
+
 <!-- FIXME : country_code DB에 없음 	
 	<insert id="insertCoord" parameterType="db.CoordDataBean" keyProperty="coord_id">
 		INSERT INTO pao_coordinate 
@@ -32,9 +33,27 @@
 			(SELECT country_id FROM pao_country WHERE country_code=#{country_code}), 
 			#{coord_long}, #{coord_lat}, #{coord_order}, SEQ_pao_coordinate_coord_id.NEXTVAL
 			)
+
 		<selectKey keyProperty="coord_id" resultType="int" order="AFTER">
-			SELECT SEQ_pao_coordinate_coord_id.currval FROM dual
+			LAST_INSERT_ID()
 		</selectKey>
+<<<<<<< HEAD
+	</insert>
+ 	<insert id="insertCal" parameterType="db.CoordDataBean">
+		INSERT INTO pao_calendar VALUES(TO_DATE(#{cal_start_date},'MM/DD/YYYY'), TO_DATE(#{cal_end_date},'MM/DD/YYYY'),#{coord_id},#{td_trip_id})
+	</insert>
+	<select id="selectDetail" parameterType="int" resultType="db.CoordDataBean">
+		SELECT * FROM pao_calendar WHERE td_trip_id IN(SELECT td_trip_id FROM pao_trip_detail WHERE tb_no=#{tb_no})
+	</select>
+	<select id="selectCoordinate" parameterType="int" resultType="db.CoordDataBean">
+		SELECT * FROM pao_coordinate WHERE coord_id IN(SELECT coord_id FROM pao_calendar WHERE td_trip_id IN(SELECT td_trip_id FROM pao_trip_detail WHERE tb_no=#{tb})) 
+	</select>
+	<select id="selectCountry" parameterType="int" resultType="db.CoordDataBean">	
+		SELECT * FROM pao_country WHERE country_id IN(
+		SELECT country_id FROM pao_coordinate WHERE coord_id IN(
+		SELECT coord_id FROM pao_calendar WHERE td_trip_id IN(
+		SELECT td_trip_id FROM pao_trip_detail WHERE tb_no=#{tb_no})))
+
 	</insert> 
 -->
 <!-- FIXME : pao_calendar 테이블 없음 / 기능 따져봐야함
@@ -62,6 +81,7 @@
 				WHERE tb_no=#{tb}
 				)
 			) 
+
 	</select>
 -->
 <!-- FIXME : trip_detail 테이블 없음 / 기능 따져봐야 함 	
@@ -85,6 +105,10 @@
 	
 	<!-- getTripDetail 에서 쓰는 쿼리 모음  -->
 	<!-- FIXME : getTripDetail 자체가 join 이나 서브쿼리로 해결 될 수 없는지 연구해봐야겠다 -->
+	<insert id="insertCoord" parameterType="db. CoordDataBean" keyProperty="coord_id">
+		INSERT INTO pao_coordinate(coord_name,country_id,coord_long,coord_lat,coord_order) 
+			VALUES( #{coord_name},(SELECT country_id FROM pao_country WHERE country_code=#{country_code}), #{coord_long}, #{coord_lat}, #{coord_order} )
+	</insert>
 	<select id="getTripIds" resultType="int">
 		select trip_id from pao_trip where board_no=#{board_no}
 	</select>
@@ -142,4 +166,12 @@
 		where coord_id=#{coord_id}
 	</select>
 	<!--/////////////////////////////////////////////////// end-line pao_coordinate table ///////////////////////////////////////////////////-->
+	<!-- ////////////////////////////////////2018.11.05 자동완성  및 Coord서치용 추가 /////////////////////////////////////////////////////////////////////////-->
+	<select id="autoComplete" parameterType="String" resultType="db.CoordDataBean">
+		SELECT coord_name FROM pao_coordinate WHERE coord_name LIKE '${coord_name}%'
+	</select>
+	<select id="checkCoordName" parameterType="String" resultType="db.CoordDataBean">
+		SELECT * FROM pao_coordinate WHERE coord_name = ${coord_name}
+	</select>
+	<!-- ////////////////////////////////////2018.11.05 자동완성  및 Coord서치용 추가 /////////////////////////////////////////////////////////////////////////-->
 </mapper>
