@@ -13,11 +13,11 @@ public class BoardDBBean {
 	private SqlSession session=SqlMapClient.getSession();
 	
 	//get count of all trip
-	public int getCount() {
-		return session.selectOne("db.getCount");
+	public int getPostsCount() {
+		return session.selectOne("board.getPostsCount");
 	}
-	public void addCount(int board_no) {
-		session.update("db.addCount", board_no);
+	public void addViewCount(int board_no) {
+		session.update("board.addViewCount", board_no);
 	}
 	
 	//get one trip post by tb_no, including location and tag list
@@ -59,7 +59,7 @@ public class BoardDBBean {
 	
 	//trip board list
 	public List<BoardDataBean> getTrips(Map<String,Integer> map){
-		return session.selectList("db.getTrips",map);
+		return session.selectList("board.getTrips", map);
 	}
 	
 	public int deleteTrip(int board_no) {
