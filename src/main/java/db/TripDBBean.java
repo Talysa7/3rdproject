@@ -10,6 +10,7 @@ import db.TripDataBean;
 public class TripDBBean {
 	private SqlSession session=SqlMapClient.getSession();
 	
+	
 	//get trips of the article
 	public List<TripDataBean> getTripList(int board_no) {
 		return session.selectList("board.getTripList", board_no);
@@ -54,4 +55,10 @@ public class TripDBBean {
 	//Here was a method 'isOwner' testing 'Is this user the owner of this article?'
 	//This method should be moved to BoardDBBean or Handler, maybe we don't need this!
 	//Do we need this? I don't think so.
+		
+	//////////////////////////////////////////////////////2018-11-05 이민재 트립 insert 추가 //////////////////////////////////////////////
+		public int insertTrip(TripDataBean tripDto) {
+			return session.insert("board.insertTrip",tripDto);
+		}
+//////////////////////////////////////////////////////2018-11-05 이민재 트립 insert 추가 //////////////////////////////////////////////
 }

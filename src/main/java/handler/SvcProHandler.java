@@ -8,6 +8,8 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -83,6 +85,7 @@ public class SvcProHandler {
 	private BoardDBBean boardDao;
 	@Resource
 	private MemberDBBean memberDao; 
+
 
 	///////////////////////////////// user pages/////////////////////////////////
 
@@ -321,6 +324,7 @@ public class SvcProHandler {
 		boardDto.setUser_id(user_id);
 		boardDto.setBoard_title(request.getParameter("trip_title"));
 		boardDto.setBoard_content(request.getParameter("content"));
+		boardDto.setBoard_contact(request.getParameter("board_contact"));
 		boardDao.insertBoard_no(boardDto);
 		
 		int board_no = boardDto.getBoard_no();// board_no
@@ -329,42 +333,55 @@ public class SvcProHandler {
 		CoordDataBean coordDto = new CoordDataBean();
 		for (int i = 1; i <= schedulenum; i++) {
 			TripDataBean tripDto = new TripDataBean();
-			String place = request.getParameter("place"+i);
+			String coord_name = request.getParameter("place"+i);
 			
-			tripDto.setBoard_no(board_no);
-			request.getParameter("start"+i);
-			request.getParameter("end"+i);
-			//trip_member_count, coord_id , start_date, end_date
+			List<CoordDataBean> coords = coordDao.checkCoordName(coord_name);	//	 같은이름의 coord가 있나 체크.
+			int coord_id=-1;	//	coord_id 초기값.
 			
-			MemberDataBean memberDto = new MemberDataBean();
-			memberDto.setUser_id(user_id);
-			memberDao.addTripMember(memberDto);
-
-			// gg_coordinate&location
-			String country_code = request.getParameter("country_code" + i + "");
-			double coord_lat = Double.parseDouble(request.getParameter("lat" + i + ""));
-			double coord_long = Double.parseDouble(request.getParameter("lng" + i + ""));
-			if (country_code != null) {
+			if(coords.size() > 0) {	//검색했는데 같은이름의 검색경로가 있으면 이미 있는 놈의 coord_id를 씀.
+				coord_id = coords.get(0).getCoord_id();
+				tripDto.setCoord_id(coord_id);//	tripDto에 대입
+			} else {		// 없으면!
+				String country_code = request.getParameter("country_code" + i + "");
+				double coord_lat = Double.parseDouble(request.getParameter("lat" + i + ""));
+				double coord_long = Double.parseDouble(request.getParameter("lng" + i + ""));
 				int coord_order = i;
+				
+				coordDto.setCoord_name(coord_name);
 				coordDto.setCountry_id(country_code);
 				coordDto.setCoord_lat(coord_lat);
 				coordDto.setCoord_long(coord_long);
 				coordDto.setCoord_order(coord_order);
-
-				int coordResult = coordDao.insertCoord(coordDto);// locDto의 coord_id에 좌표값 저장한 후 생성된 coord_id저장 됨
-
-				String cal_start_date = request.getParameter("start" + i + "");
-				String cal_end_date = request.getParameter("end" + i + "");
-
-				coordDto.setCal_start_date(cal_start_date);//FIXME: 여기도 Trip으로 옮겨간 부분.정리필요.
-				coordDto.setCal_end_date(cal_end_date);
-				coordDto.setTd_trip_id(trip_id);
-
-				int calResult = coordDao.insertCal(coordDto);// 일정에 맞는 calendar table 레코드추가
+				
+				coordDao.insertCoord(coordDto);// locDto의 coord_id에 좌표값 저장한 후 생성된 coord_id저장 됨
+				coord_id = coordDto.getCoord_id();
 			}
 			
+			tripDto.setCoord_id(coord_id);
+			tripDto.setBoard_no(board_no);
+			
+			String [] start = request.getParameter("start"+i).split("/");
+			LocalDate ldt = LocalDate.of(Integer.parseInt(start[0]), Integer.parseInt(start[1]), Integer.parseInt(start[2]));
+			Date start_date = new Date(ldt.toEpochDay());
+		
+			String [] end = request.getParameter("end"+i).split("/");
+			ldt = LocalDate.of(Integer.parseInt(end[0]), Integer.parseInt(end[1]), Integer.parseInt(end[2]));
+			Date end_date = new Date(ldt.toEpochDay());
+			//start , end Date타입으로 변환. 확인 필수!
+			
+			tripDto.setStart_date(start_date);
+			tripDto.setEnd_date(end_date);
+			tripDto.setTrip_member_count(Integer.parseInt(request.getParameter("trip_member_count"+i)));
 
-		}
+			tripDao.insertTrip(tripDto);
+			int trip_id = tripDto.getTrip_id();
+			
+			MemberDataBean memberDto = new MemberDataBean();
+			memberDto.setUser_id(user_id);
+			memberDto.setTrip_id(trip_id);
+			memberDao.addTripMember(memberDto);
+
+			}
 
 		// get tags
 		String[] tags = request.getParameterValues("tag");
@@ -389,33 +406,28 @@ public class SvcProHandler {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		System.out.println(request.getParameter("board_no"));
 		int board_no = Integer.parseInt(request.getParameter("board_no"));
-		// update gg_trip_board
 		BoardDataBean boardDto = new BoardDataBean();
 		boardDto.setBoard_no(board_no);
-		boardDto.setUser_id((String) request.getSession().getAttribute("user_id"));
 		boardDto.setBoard_title(request.getParameter("trip_title"));
-		boardDto.setBoard_member_num(Integer.parseInt(request.getParameter("trip_m_num")));//FIXME :얘도 trip DB로 이동
-		boardDto.setTb_talk(request.getParameter("tb_talk"));
 		boardDto.setBoard_content(request.getParameter("content"));
-
-		String[] tagValues=request.getParameterValues("tags");
+		boardDto.setBoard_contact(request.getParameter("board_contact"));
 		
+		
+		String[] tagValues=request.getParameterValues("tags");
 		//match tag_id & tag_value 
 		List<TagDataBean> tripTags=new ArrayList<TagDataBean>();	
 		for(int i=0; i<tagValues.length; i++) {
 			TagDataBean tempTagBean=new TagDataBean();
 			tempTagBean.setTag_id(Integer.parseInt(tagValues[i]));
-			tempTagBean.setTag_value(tagDao.getTagValue(tempTagBean.getTag_id()));
-			tripTags.add(i, tempTagBean);
+			tripTags.add(tempTagBean);
 		}
 		
 		//update modified "tripMod" in DB
 		int result = boardDao.updateBoard(boardDto);
 		request.setAttribute("result", result);
 		request.setAttribute("board_no", board_no);
-		result=tagDao.updateTripTags(board_no, tripTags);
+		tagDao.updateTripTags(board_no, tripTags);
 		
 		return new ModelAndView("svc/tripModPro");
 	}

@@ -46,10 +46,6 @@ public class BoardDBBean {
 	      return session.insert("board.insertBoard_no",boardDto);
 	}
 	
-	public int insertTrip(BoardDataBean boardDto) {
-		return session.insert("board.insertTrip",boardDto);
-	}
-	
 	public String getUserId(String user_name) {
 		return session.selectOne("db.getUserId", user_name);
 	}
