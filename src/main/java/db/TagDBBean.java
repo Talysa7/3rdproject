@@ -35,8 +35,8 @@ public class TagDBBean {
 			return session.selectList("tag.getTags",map);	
 		}
 		//total tag
-		public int getCount() {
-			return session.selectOne("tag.getTCount");
+		public int getTagCount() {
+			return session.selectOne("tag.getTagCount");
 		}
 		//check tag
 		public int checkTag(String tag_value) {
