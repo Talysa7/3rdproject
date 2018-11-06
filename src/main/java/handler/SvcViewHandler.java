@@ -115,16 +115,16 @@ public class SvcViewHandler {
 		} else {
 			rowNumber=1;
 		}
-		List<BoardDataBean> tripList=boardDao.getPostList(rowNumber, postPerPage);
+		List<BoardDataBean> postList=boardDao.getPostList(rowNumber, postPerPage);
 		//set count and next row info for 'load more list'
-		if(tripList.size()>=10) {
+		if(postList.size()>=10) {
 			request.setAttribute("next_row", postPerPage+1);
-		} else if(tripList.size()>0&&tripList.size()<10) {
-			request.setAttribute("next_row", tripList.size()+1);
+		} else if(postList.size()>0&&postList.size()<10) {
+			request.setAttribute("next_row", postList.size()+1);
 		} else {
 			request.setAttribute("next_row", 0);
 		}
-		request.setAttribute("tripList", tripList);
+		request.setAttribute("postList", postList);
 		return new ModelAndView("svc/tripList");
 	}
 

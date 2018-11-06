@@ -22,7 +22,7 @@ public class BoardDataBean {
 	private String thumbnail;			//varchar (10)
 										//Thumnail image of this article
 										//If there is no thumbnail, set it to default image's url
-	private List<String> board_tags;		//article's tag value list
+	private List<TagDataBean> board_tags;		//article's tag value list
 	private List<TripDataBean> tripLists;	// 관련된 TripData들을 가져와 보관하기 위함.
 
 	public int getBoard_no() {
@@ -85,10 +85,10 @@ public class BoardDataBean {
 	public void setThumbnail(String thumbnail) {
 		this.thumbnail = thumbnail;
 	}
-	public List<String> getBoard_tags() {
+	public List<TagDataBean> getBoard_tags() {
 		return board_tags;
 	}
-	public void setBoard_tags(List<String> board_tags) {
+	public void setBoard_tags(List<TagDataBean> board_tags) {
 		this.board_tags = board_tags;
 	}
 	public List<TripDataBean> getTripLists() {

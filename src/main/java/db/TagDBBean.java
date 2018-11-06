@@ -58,8 +58,8 @@ public class TagDBBean {
 			List<TagDataBean> userTagList=session.selectList("tag.getUserTags", user_id);
 			return userTagList;
 		}
-		public List<TagDataBean> getTripTags(int board_no) {
-			return session.selectList("tag.getPostTags", board_no);	// need to check after making boardDB.xml
+		public List<TagDataBean> getPostTags(int board_no) {
+			return session.selectList("board.getPostTags", board_no);	// need to check after making boardDB.xml
 		}
 		public List<TagDataBean> getStyleTags() {
 			return session.selectList("tag.getStyleTags");
@@ -76,7 +76,7 @@ public class TagDBBean {
 		public int updateTripTags(int board_no, List<TagDataBean> tripTags) {
 			int result=1;
 			//set old Trip Tags
-			List<TagDataBean> oldTripTags=getTripTags(board_no);
+			List<TagDataBean> oldTripTags=getPostTags(board_no);
 			//setter for query
 			Map<String, Integer> tagSetter;
 			//tester to check whether trip already has that tag

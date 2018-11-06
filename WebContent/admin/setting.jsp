@@ -16,7 +16,7 @@
 	</script>
 </c:if>
 
-<c:set var="project" value="/Travelers/adm/"/>
+<c:set var="project" value="/3rdProject/adm/"/>
 
 <c:set var="str_logout" value="로그아웃"/>
 

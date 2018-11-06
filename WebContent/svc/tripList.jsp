@@ -34,39 +34,37 @@
 			</c:if>
 		</div>
 		<div class="board-list" id="board-list">
-			<c:if test="${count ne 0}">
-				<c:forEach var="i" items="${tripList}">
+			<c:if test="${postList.size() ne 0}">
+				<c:forEach var="post" items="${postList}">
 					<div class="row">
 						<div class="col-md-12">
 							<div class="card flex-md-row mb-3 shadow-sm h-md-250">
 								<div class="card-body d-flex flex-column align-items-start">
 									<strong class="d-inline-block mb-2"> <c:forEach
-											var="j" items="${i.locs}">
-					              		${j}
+											var="trip" items="${post.tripLists}">
+					              		${trip.coord_name}
 					              	</c:forEach>
 									</strong>
 									<h3 class="mb-0">
-										<a class="text-dark" href="trip.go?board_no=${i.board_no}">
-										<c:if test="${i.board_level eq 1}">
+										<a class="text-dark" href="trip.go?board_no=${post.board_no}">
+										<c:if test="${post.board_level eq 1}">
 											 ${trip_notice_1}
 										</c:if>
-										${i.tb_title}
+										${post.board_title}
 										</a>
 									</h3>
 									<div class="mb-1 text-muted text-right">
-										<i><b>With</b></i>&nbsp; ${i.user_id}
+										<i><b>With</b></i>&nbsp; ${post.user_name}
 									</div>
 									<hr size="1px" color="black" noshade>
-									<p class="card-text mb-auto">${i.tb_content}</p>
+									<p class="card-text mb-auto">${post.board_content}</p>
 									<hr style="width: 100%">
 									<div class="d-flex justify-content-center">
-										<div class="p-2">인원:${i.tb_m_num}</div>
-										&nbsp;
-										<div class="p-2">조회수:${i.tb_v_count}</div>
+										<div class="p-2">조회수:${post.board_view_count}</div>
 										&nbsp;
 										<div class="p-2">
-											<c:forEach var="j" items="${i.tags}">
-												<label class="btn btn-sm taglist"> # ${j} </label>
+											<c:forEach var="tag" items="${post.board_tags}">
+												<label class="btn btn-sm taglist"> # ${tag.tag_value} </label>
 											</c:forEach>
 										</div>
 									</div>
@@ -83,11 +81,11 @@
 		</div>
 		<!-- board list -->
 		<form name="tripListInfo">
-			<input type="hidden" name="last_row" value="${last_row}">
+			<input type="hidden" name="next_row" value="${next_row}">
 		</form>
 		<div id="loading-button">
 			<button type="button" class="btn btn-dark col-md-12"
-				onclick="loadMoreList(${last_row})">Load more...</button>
+				onclick="loadMoreList(${next_row})">Load more...</button>
 		</div>
 	</div>
 	<!-- body box -->

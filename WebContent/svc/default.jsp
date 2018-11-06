@@ -1,3 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<h2>Out of order</h2>
+<%@include file="setting.jsp" %>
+<%@include file="header.jsp" %>
+<!DOCTYPE html>
+<body>
+	
+<html>
+<center>
+		<h2>${page_not_found}</h2>
+		<img src="${project}img/paori.png">
+	</center>
+</body>
+
+</html>
