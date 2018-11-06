@@ -65,7 +65,7 @@ public class AdmListHandler {
 			
 		int startPage = (currentPage / pageBlock) * pageBlock+1;  		
 		if(currentPage % pageBlock == 0) startPage -= pageBlock;
-		int endPage = startPage + pageBlock - 1;							
+		int endPage = startPage + pageBlock - 1;
 		if(endPage > pageCount ) endPage = pageCount;
 	
 		request.setAttribute( "count", count );
@@ -166,7 +166,7 @@ public class AdmListHandler {
 	@RequestMapping("adminTag")
 	public ModelAndView adminTagHandler(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		request.setAttribute("page", tagP);
-		int count=tagDao.getCount();//list row num
+		int count=tagDao.getTagCount();//list row num
 		
 		String pageNum=request.getParameter("pageNum");
 		if(pageNum==null || pageNum.equals("")){
@@ -188,7 +188,7 @@ public class AdmListHandler {
 	@RequestMapping("adminAlbum")
 	public ModelAndView adminPhotoHandler(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		request.setAttribute("page", albumP);
-		int count=albumDao.getCount();//list row num
+		int count = albumDao.getAlbumCount();//list row num
 		if(count>0) {
 			List<AlbumDataBean> album = albumDao.getAlbum();
 			request.setAttribute("album", album);

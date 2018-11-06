@@ -17,7 +17,7 @@
 			(select max(tag_id) from pao_tag where tag_id >100 and tag_id &lt;=1000)+1,#{tag_value})
 	</insert>
 	
-	<select id="getTCount" resultType="int">
+	<select id="getTagCount" resultType="int">
 		select count(*) from pao_tag where tag_id &lt;=1000
 	</select>
 
