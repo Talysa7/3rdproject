@@ -344,13 +344,11 @@ public class SvcProHandler {
 				String country_code = request.getParameter("country_code" + i + "");
 				double coord_lat = Double.parseDouble(request.getParameter("lat" + i + ""));
 				double coord_long = Double.parseDouble(request.getParameter("lng" + i + ""));
-				int coord_order = i;
 				
 				coordDto.setCoord_name(coord_name);
 				coordDto.setCountry_id(country_code);
 				coordDto.setCoord_lat(coord_lat);
 				coordDto.setCoord_long(coord_long);
-				coordDto.setCoord_order(coord_order);
 				
 				coordDao.insertCoord(coordDto);// locDto의 coord_id에 좌표값 저장한 후 생성된 coord_id저장 됨
 				coord_id = coordDto.getCoord_id();

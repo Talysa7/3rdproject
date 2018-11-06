@@ -7,7 +7,7 @@
 	<select id="getPost" parameterType="int" resultType="db.BoardDataBean">
 		select * from pao_view_board where board_no=#{board_no}
 	</select>
-	<select id="getPostList" parameterType="int" resultType="db.TripDataBean">
+	<select id="getPostList" parameterType="int" resultType="db.BoardDataBean">
 		select *
 		from pao_view_board
 		order by board_level desc, board_no desc
@@ -46,6 +46,7 @@
 		DELETE FROM pao_board WHERE board_no=#{board_no}
 	</delete>
 
+<!-- not used
 	<select id="getBoardTags" parameterType="int" resultType="java.util.List">
 		SELECT tag_value
 		FROM pao_tag
@@ -56,7 +57,7 @@
 			WHERE b_no=#{b_no}
 		)
 	</select>
-
+ -->
 	<select id="getTripList" parameterType="int" resultType="java.util.List">
 		SELECT * 
 		FROM pao_trip 

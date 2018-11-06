@@ -117,12 +117,6 @@
 	<insert id="insertUser_tag" parameterType="java.util.Map">
 		insert into pao_user_tag values(#{user_id}, #{tag_id}) 
 	</insert>
-<!-- talysa7 -->
-	<select id="getPostTags" parameterType="int" resultType="db.TagDataBean">
-		select *
-		from pao_view_trip_tags
-		where board_no=#{board_no}
-	</select>
 	<!--//////////////////////////////////////////////////2018-11-05 이민재  게시물별 트립검색 추가 ///////////////////////////////// -->
 	<select id="getPostTags" parameterType="int" resultType="db.TagDataBean">
 		select * from pao_view_board_tags where board_id=#{board_id}

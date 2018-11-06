@@ -9,7 +9,6 @@ public class CoordDataBean {
 	private String country_id;			// FK / smallint (4), not null, on delete cascade
 	private double coord_long;			// double (10, 6), not null
 	private double coord_lat;			// double (10, 6), not null
-	private int coord_order;			// tinyint (1) / 장소들의 순서를 정해줌
 	// guest parameter from pao_region_match
 	private List<String> region_types;			// Array of region_type, varchar (30)
 												// region types of this coordinate
@@ -48,12 +47,6 @@ public class CoordDataBean {
 		RegionDBBean regionDao = new RegionDBBean();
 		region_types = regionDao.getRegions(coord_id);
 		return region_types;
-	}
-	public int getCoord_order() {
-		return coord_order;
-	}
-	public void setCoord_order(int coord_order) {
-		this.coord_order = coord_order;
 	}
 	public List<String> getRegion_types() {
 		return region_types;
