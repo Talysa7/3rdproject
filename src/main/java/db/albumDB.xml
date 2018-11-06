@@ -12,7 +12,10 @@
 		delete from pao_album where
 		photo_id=#{photo_id}
 	</delete>
-	
+	<select id="getAlbumCount" resultType="int">
+		SELECT count(*)
+		FROM pao_album
+	</select>
 <!-- talysa7 -->
 	<select id="getAllPhotos" resultType="db.AlbumDataBean">
 		SELECT * 
