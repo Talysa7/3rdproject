@@ -9,7 +9,6 @@ import java.io.UnsupportedEncodingException;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -498,7 +497,7 @@ public class SvcProHandler {
 		return new ModelAndView("/svc/boardAlbumPro");
 	}
 
-	@RequestMapping("/photoDel")
+	@RequestMapping("/photoDel")	
 	public ModelAndView svcPhotoDelProcess(HttpServletRequest request, HttpServletResponse response)
 			throws HandlerException {
 		int board_no = Integer.parseInt(request.getParameter("board_no"));
@@ -624,7 +623,7 @@ public class SvcProHandler {
 	@RequestMapping(value = "/idCheck.go", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
 	public Map<Object, Object> idCheck(@RequestBody String user_id) {
-		user_id = user_id.split("=")[0];
+		user_id = user_id.split("=")[0];	//TODO: 체크필요 파싱안해도 될거같은디?;
 		int countId = 0;
 		Map<Object, Object> map = new HashMap<Object, Object>();
 
@@ -732,7 +731,7 @@ public class SvcProHandler {
 			request.setAttribute("isMember", true);
 		}
 
-		List<MemberDataBean> memberList = memberDao.getMember(trip_id_int);
+		List<MemberDataBean> memberList = memberDao.getMembers(trip_id_int);
 		return memberList;
 	}
 
@@ -755,7 +754,7 @@ public class SvcProHandler {
 			request.setAttribute("delMemberResult", delMemberResult);
 			request.setAttribute("isMember", false);
 		}
-		List<MemberDataBean> memberList = memberDao.getCurrentMember(trip_id_int);
+		List<MemberDataBean> memberList = memberDao.getMembers(trip_id_int);
 		return memberList;
 	}
 	//////////////////////////////////////ajax추가분 이민재 2018.11.05 /////////////////////////////////////
@@ -776,8 +775,6 @@ public class SvcProHandler {
 		}
 		return citys;
 	}
-	
-	
 	//////////////////////////////////////ajax추가분 이민재 2018.11.05 /////////////////////////////////////
 	///////////////////////////////// etc/////////////////////////////////
 	public static String getRandomString() {

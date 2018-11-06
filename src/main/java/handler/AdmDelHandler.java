@@ -53,7 +53,7 @@ public class AdmDelHandler {
 			e.printStackTrace();
 		}
 		
-		return new ModelAndView("adm/userDel");
+		return new ModelAndView("admin/userDel");
 	}
 	@RequestMapping("/adminTripDel")
 	public ModelAndView tripDelProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
@@ -77,7 +77,7 @@ public class AdmDelHandler {
 		}
 		
 		
-		return new ModelAndView("adm/tripDel");
+		return new ModelAndView("admin/tripDel");
 	}
 	@RequestMapping("/adminCommentDel")
 	public ModelAndView cmtDelProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
@@ -99,7 +99,7 @@ public class AdmDelHandler {
 		}catch(NumberFormatException e) {
 			e.printStackTrace();
 		}
-		return new ModelAndView("adm/commentDel");
+		return new ModelAndView("admin/commentDel");
 	}
 	@RequestMapping("/adminTagDel")
 	public ModelAndView tagDelProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
@@ -121,7 +121,7 @@ public class AdmDelHandler {
 		}catch(NumberFormatException e) {
 			e.printStackTrace();
 		}
-		return new ModelAndView("adm/tagDel");
+		return new ModelAndView("admin/tagDel");
 	}
 	@RequestMapping("/adminAlbumDel")
 	public ModelAndView albumDelProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {

@@ -33,7 +33,7 @@
 			<tr>
 				<td colspan="3">
 						<button onclick="addRow()">
-							<img  class="btn_img" src="/Travelers/adm/images/addbutton.png"> 
+							<img  class="btn_img" src="/Travelers/admin/images/addbutton.png"> 
 						</button>
 				</td>
 			</tr>
