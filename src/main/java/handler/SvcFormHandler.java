@@ -148,7 +148,7 @@ public class SvcFormHandler {
 		
 		//get tag details & total list
 		//we don't need getStyleTag, we will use tag_type
-		List<TagDataBean> tripTags=tagDao.getTripTags(board_no);
+		List<TagDataBean> tripTags=tagDao.getPostTags(board_no);
 		//List<TagDataBean> tagList=tagDao.getStyleTags();
 		//request.setAttribute("tagList", tagList);	
 		request.setAttribute("tripTags", tripTags); 
