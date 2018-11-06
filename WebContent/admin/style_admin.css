@@ -1,4 +1,4 @@
-<!--admin style -->
+
 
 h1,h2,h3,h4,h5,h6
 {
@@ -196,11 +196,9 @@ td {
 	max-height:40px;
 	max-width: 250px;
 	overflow:hidden;
-	text-overflow;
-	ellipsis;
 }
 
-.check{
+.check {
 	width:10px;
 }
 
@@ -213,7 +211,7 @@ td {
 
 .photo{
 	display:inline-block;
-	border::1px solid gray;
+	border:1px solid gray;
 	height:100px;
 	width:100px;
 	padding-left:12px;
