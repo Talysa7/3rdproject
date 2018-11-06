@@ -5,7 +5,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
-<c:set var="project" value="/Travelers/svc/"/> 
+<c:set var="project" value="/3rdProject/svc/"/> 
 
 <c:set var="page_main" value="메인 페이지"/>
 <c:set var="page_input" value="회원가입"/> 
@@ -39,6 +39,7 @@
 <c:set var="userMod_updateError" value="사용자 정보 수정에 실패했습니다."/>
 <c:set var="email_auth_guide" value="메일로 전송된 인증번호를 입력하세요."/>
 <c:set var="email_used" value="이미 사용 중입니다. "/>
+<c:set var="page_not_found" value="페이지를 찾을 수 없습니다."/>
 
 <c:set var="str_id" value="아이디"/> <!-- o -->
 <c:set var="str_passwd" value="비밀번호"/> <!-- o -->
