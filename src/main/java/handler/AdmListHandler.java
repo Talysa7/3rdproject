@@ -188,7 +188,7 @@ public class AdmListHandler {
 	@RequestMapping("adminAlbum")
 	public ModelAndView adminPhotoHandler(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		request.setAttribute("page", albumP);
-		int count=albumDao.getCount();//list row num
+		int count=albumDao.;//list row num
 		if(count>0) {
 			List<AlbumDataBean> album = albumDao.getAlbum();
 			request.setAttribute("album", album);
