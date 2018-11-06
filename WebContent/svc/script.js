@@ -128,7 +128,7 @@ function searchMap() {
     });
     var geocoder = new google.maps.Geocoder();
     
-    document.getElementById('submit').addEventListener('click', function() {
+    document.getElementById('addSubmit').addEventListener('click', function() {
       geocodeAddress(geocoder, map);
     });
   }
@@ -325,25 +325,14 @@ function EmailClose(){
 
 function EmailCheck(email1){
     // 인증을 위해 새창으로 이동
-	var url="emailCheck.go?email1="+email1
-	open(url,"emailwindow", "statusbar=no, scrollbar=no, menubar=no,width=500, height=200" );
-}
-
-
-function EmailIdCheck(email2){
-	var url="EmailIdd.go?email2="+email2
-	open(url,"emailwindow", "statusbar=no, scrollbar=no, menubar=no,width=500, height=200" );
-}
-
-function EmailIdPasswd(email2){
-	var url="EmailPasswdd.go?email2="+email2
+	var url="email.go?email1="+email1
 	open(url,"emailwindow", "statusbar=no, scrollbar=no, menubar=no,width=500, height=200" );
 }
 
 
 
 function confirmeMail(authNum){
-	var Email = $('#EmailVlaue').val(); //이메일 인증 창에서 내가 입력한 인증번호 값가져옴
+	var Email = $('#EmailValue').val(); //이메일 인증 창에서 내가 입력한 인증번호 값가져옴
     // 입력한 값이 없거나, 인증코드가 일지하지 않을 경우
 	if(!Email || Email!= authNum){
 		alert(emailconfirmerror);
@@ -853,3 +842,34 @@ function absent(td_trip_id) {
 		});
 	}
 }
+
+///////////////////////////////////////////////////////이민재//////////////////////////////////////////////////////
+	//자동완성
+	$(function(){
+		$("#addSubmit").autocomplete({
+			 source : function( request, response ) {
+				$.ajax({
+						type: 'post',
+						url : 'addAuto.go',
+						dataType: "json",
+						data: { coord_name : request.term },
+						success: function(data) {
+						 response(
+                            $.map(data, function(item) {
+                                return {
+                                    label: item.coord_name,
+                                    value: item.coord_name
+                                }
+                            })
+                       	 );
+						},
+						minLength: 2,
+				})
+			 }
+		})
+	})
+
+
+
+
+///////////////////////////////////////////////////////이민재//////////////////////////////////////////////////////

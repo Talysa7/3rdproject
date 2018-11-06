@@ -100,8 +100,8 @@ public class AdmListHandler {
 			Map<String, Integer> map=new HashMap<String,Integer>();
 			map.put("start", start);
 			map.put("end", end);
-			
-			List<BoardDataBean>trips = boardDao.getTrips(map);
+			//method has been changed, it doesn't need end now, plz see that in BoardDBBean
+			List<BoardDataBean>trips = boardDao.getPostList(map.get(start), map.get(end));
 			request.setAttribute("trips", trips);
 		}
 //		FIXME : 다음 하단 주석에 대한 변 (준호)

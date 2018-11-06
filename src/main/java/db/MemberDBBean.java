@@ -12,14 +12,6 @@ import db.BoardDataBean;
 
 public class MemberDBBean {
 	private SqlSession session=SqlMapClient.getSession();
-
-	public List<MemberDataBean> getCurrentMember(int trip_id) {
-		List<MemberDataBean> memberList=session.selectList("user.getCurrentMember", trip_id);
-		for(MemberDataBean user:memberList) {
-			user.setUser_name((String)session.selectOne("user.getUserName", user.getUser_id()));
-		}
-		return memberList;
-	}
 	
 	public String getUserName(String user_id) {
 		return session.selectOne("user.getUserName", user_id);
@@ -57,8 +49,10 @@ public class MemberDBBean {
 		}
 		return memNumList;
 	}
-	public List<MemberDataBean> getMember(int board_no) {
-		return session.selectList("board.getMember", board_no);
+	//error fix - parameter should be trip_id, not board_id. 
+	//And I changed method name to getMember->getMembers
+	public List<MemberDataBean> getMembers(int trip_id) {
+		return session.selectList("user.getMembers", trip_id);
 	}
 	public int isMember(MemberDataBean memberDto) {
 		return session.selectOne("user.isMember", memberDto);
@@ -66,6 +60,4 @@ public class MemberDBBean {
 	public int addTripMember(MemberDataBean memberDto) {
 		return session.selectOne("user.addTripMember", memberDto);
 	}
-
-	
 }

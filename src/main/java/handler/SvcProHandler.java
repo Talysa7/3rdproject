@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +41,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import db.AlbumDBBean;
 import db.AlbumDataBean;
 import db.CmtDBBean;
@@ -53,6 +56,7 @@ import db.TagDataBean;
 import db.BoardDBBean;
 import db.BoardDataBean;
 import db.TripDBBean;
+import db.TripDataBean;
 import db.UserDBBean;
 import db.UserDataBean;
 
@@ -71,7 +75,7 @@ public class SvcProHandler {
 	@Resource
 	private CmtDBBean cmtDao;
 	@Resource
-	private CoordDBBean locDao;
+	private CoordDBBean coordDao;
 	@Resource
 	private TagDBBean tagDao;
 	@Resource
@@ -80,6 +84,7 @@ public class SvcProHandler {
 	private BoardDBBean boardDao;
 	@Resource
 	private MemberDBBean memberDao; 
+
 
 	///////////////////////////////// user pages/////////////////////////////////
 
@@ -109,10 +114,10 @@ public class SvcProHandler {
 		
 		if(tag_id !=null) {
 			for(String tag:tag_id) {
-        Map<String, String> map = new HashMap<>(); 
-        map.put("user_id", request.getParameter("user_id"));
-        map.put("tag_id", tag);
-        userDao.insertUser_tag(map);
+		        Map<String, String> map = new HashMap<>(); 
+		        map.put("user_id", request.getParameter("user_id"));
+		        map.put("tag_id", tag);
+		        userDao.insertUser_tag(map);
 			}
 		}
 		
@@ -126,8 +131,11 @@ public class SvcProHandler {
 	@RequestMapping("/userModPro")
 	public ModelAndView UserModifyprocess(HttpServletRequest request, HttpServletResponse response)
 			throws HandlerException {
+		
+		UserDataBean userDto = new UserDataBean();
 		String user_id = (String) request.getSession().getAttribute("user_id");
-		UserDataBean userDto = userDao.getUser(user_id);
+		
+		userDto.setUser_id(user_id);
 		userDto.setPasswd(request.getParameter("passwd"));
 		userDto.setUser_name(request.getParameter("user_name"));
 		String[] tagValues = request.getParameterValues("tags");
@@ -137,7 +145,7 @@ public class SvcProHandler {
 			TagDataBean tempTagBean = new TagDataBean();
 			tempTagBean.setTag_id(Integer.parseInt(tagValues[i]));
 			tempTagBean.setTag_value(tagDao.getTagValue(tempTagBean.getTag_id()));
-			userTags.add(i, tempTagBean);
+			userTags.add(tempTagBean);
 		}
 
 		int result = userDao.modifyUser(userDto);
@@ -155,30 +163,44 @@ public class SvcProHandler {
 		String id = request.getParameter("user_id");
 		String passwd = request.getParameter("passwd");
 		UserDataBean userDto = userDao.getUser(id);
+		int result = 0;
 
-		int result = userDao.check(id, passwd);
+		try {
+			if(passwd.equals(userDto.getPasswd())){
+				result = 1;
+			} else {
+				if(userDto.getUser_id().equals(id)) {				//	nullpoint가 안날경우를 대비한 방어용 코드.
+					result =-1;
+				} 
+			}
+			
+			if (result == 1) {
+				int user_level = userDto.getUser_level();
+				if (user_level == ADMIN) {
+					userType = 1;									
+					request.setAttribute("user_level", user_level);
+				}
+				request.setAttribute("userType", userType);
+			}
+			if (result != -1) {
+				request.setAttribute("userDto", userDto);
+			}
+		} catch(NullPointerException e) {	//만약 아이디가 없을경우 바로 이쪽으로 이동.
+			
+		} 
+		
 		request.setAttribute("result", result);
 		request.setAttribute("id", id);
-
-		if (result == 1) {
-			int user_level = userDao.getUserLevel(id);
-			if (user_level == ADMIN) {
-				userType = 1;
-				request.setAttribute("user_level", user_level);
-			}
-			request.setAttribute("userType", userType);
-		}
-		if (result != -1) {
-			request.setAttribute("userDto", userDto);
-		}
-
+		
 		return new ModelAndView("svc/loginPro");
+		
 	}
 
-	@RequestMapping("/logout") // logout �엫
+	@RequestMapping("/logout") // logout 
 	public ModelAndView LogoutProcess(HttpServletRequest request, HttpServletResponse response)
 			throws HandlerException {
 		request.getSession().removeAttribute("user_id");
+		request.getSession().removeAttribute("user_level");
 		// send user to main page
 		// but we don't have a main page yet, so send him to board list, temporary
 		return new ModelAndView("svc/login");
@@ -189,7 +211,11 @@ public class SvcProHandler {
 			throws HandlerException {
 		String id = (String) request.getSession().getAttribute("user_id");
 		String passwd = request.getParameter("passwd");
-		int resultCheck = userDao.check(id, passwd);
+		UserDataBean userDto = userDao.getUser(id);
+		int resultCheck = 0;
+		if(userDto.getPasswd().equals(passwd)) {
+			resultCheck = 1;
+		}
 		request.setAttribute("resultCheck", resultCheck);
 
 		if (resultCheck == 1) {
@@ -201,53 +227,71 @@ public class SvcProHandler {
 	}
 
 	//// Email
-	@RequestMapping("/emailCheck")
+	@RequestMapping("/email")
 	public ModelAndView EmailCheckProcess(HttpServletRequest request, HttpServletResponse response) {
 		String host = "smtp.gmail.com"; // smtp 서버
 		String subject = "EmailCheck"; // 보내는 제목 설정
 		String fromName = "Admin"; // 보내는 이름 설정
-		String from = "dlagurgur@gmail.com"; // 보내는 사람(구글계정)
-		String authNum = SvcProHandler.authNum(); // 인증번호 위한 난수 발생부분
-		String content = "Number [" + authNum + "]"; // 이메일 내용 설정
-
+		String from = "show112924@gmail.com"; // 보내는 사람(구글계정)
+		int etype = Integer.parseInt(request.getParameter("etype"));
+		String content ="";
 		String email = request.getParameter("email1");
 		int result = userDao.EmailCheck(email);
-
-		request.setAttribute("authNum", authNum);
-		request.setAttribute("email", email);
+		
 		request.setAttribute("result", result);
-
-		try {
-			Properties props = new Properties();
-			props.put("mail.smtp.starttls.enable", "true");
-			props.put("mail.transport.protocol", "smtp");
-			props.put("mail.smtp.host", host);
-			props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-			props.put("mail.smtp.port", "465");
-			props.put("mail.smtp.user", from);
-			props.put("mail.smtp.auth", "true");
-
-			Session mailSession = Session.getInstance(props, new javax.mail.Authenticator() {
-				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication("dlagurgur@gmail.com", "tkdgur0713!@");
-				}
-			});
-
-			Message msg = new MimeMessage(mailSession);
-			InternetAddress[] address = { new InternetAddress(email) };
-			msg.setFrom(new InternetAddress(from, MimeUtility.encodeText(fromName, "utf-8", "B")));
-			msg.setRecipients(Message.RecipientType.TO, address);
-			msg.setSubject(subject);
-			msg.setSentDate(new java.util.Date());
-			msg.setContent(content, "text/html; charset=utf-8");
-
-			Transport.send(msg);
-		} catch (MessagingException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
+		request.setAttribute("email", email);
+		
+		if(result == 1 ) {
+			if(etype == 0) {
+				String authNum = authNum(); // 인증번호 위한 난수 발생부분
+				content = "Travlers : 당신의 인증번호는 [" + authNum + "] 입니다"; 
+				request.setAttribute("authNum", authNum);
+			} else if(etype==1) {	//	아이디 찾기 일 경우
+				UserDataBean userDto = userDao.getUserEmailId(email);
+				content = "당신의 아이디는 [" + userDto.getUser_id() + "]입니다"; 
+			} else if(etype==2) {	//비밀번호 찾기 일 경우
+				UserDataBean userDto = userDao.getUserEmailPasswd(email);
+				content = "당신의 비밀번호는 [" + userDto.getPasswd() + "]입니다"; 
+			}
+	
+			try {
+				Properties props = new Properties();
+				props.put("mail.smtp.starttls.enable", "true");
+				props.put("mail.transport.protocol", "smtp");
+				props.put("mail.smtp.host", host);
+				props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+				props.put("mail.smtp.port", "465");
+				props.put("mail.smtp.user", from);
+				props.put("mail.smtp.auth", "true");
+	
+				Session mailSession = Session.getInstance(props, new javax.mail.Authenticator() {
+					protected PasswordAuthentication getPasswordAuthentication() {
+						return new PasswordAuthentication("show112924@gmail.com", "208795a!");
+					}
+				});
+	
+				Message msg = new MimeMessage(mailSession);
+				InternetAddress[] address = { new InternetAddress(email) };
+				msg.setFrom(new InternetAddress(from, MimeUtility.encodeText(fromName, "utf-8", "B")));
+				msg.setRecipients(Message.RecipientType.TO, address);
+				msg.setSubject(subject);
+				msg.setSentDate(new java.util.Date());
+				msg.setContent(content, "text/html; charset=utf-8");
+	
+				Transport.send(msg);
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			if(etype==1) { //형태에 따른 리턴 위치 처리.
+				return new ModelAndView("svc/EmailIdPro");	
+			} else if (etype==2) {
+				return new ModelAndView("svc/EmailPasswdPro"); 
+			} else {
+				return new ModelAndView("svc/emailCheck");
+			}
 		}
-
 		return new ModelAndView("svc/emailCheck");
 	}
 	
@@ -259,109 +303,6 @@ public class SvcProHandler {
 		}
 		return buffer.toString();
 	}
-	
-	//// 아이디 찾기
-	@RequestMapping("/EmailIdd")
-	public ModelAndView EmailIdCheckProcess(HttpServletRequest request, HttpServletResponse response) {
-		String host = "smtp.gmail.com"; // smtp 서버
-		String subject = "EmailCheck"; // 보내는 제목 설정
-		String fromName = "Admin"; // 보내는 이름 설정
-		String from = "dlagurgur@gmail.com"; // 보내는 사람(구글계정)
-		String email = request.getParameter("email2");
-		int result = userDao.EmailCheck(email);
-		if(result == 1) {
-		UserDataBean userDto = userDao.getUserEmailId(email);
-		String user_id = userDto.getUser_id();
-		String content = "당신의 아이디는 [" + user_id + "]입니다"; // 이메일 내용 설정
-		
-		request.setAttribute("email", email);
-
-		try {
-			Properties props = new Properties();
-			props.put("mail.smtp.starttls.enable", "true");
-			props.put("mail.transport.protocol", "smtp");
-			props.put("mail.smtp.host", host);
-			props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-			props.put("mail.smtp.port", "465");
-			props.put("mail.smtp.user", from);
-			props.put("mail.smtp.auth", "true");
-
-			Session mailSession = Session.getInstance(props, new javax.mail.Authenticator() {
-				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication("dlagurgur@gmail.com", "tkdgur0713!@");
-				}
-			});
-
-			Message msg = new MimeMessage(mailSession);
-			InternetAddress[] address = { new InternetAddress(email) };
-			msg.setFrom(new InternetAddress(from, MimeUtility.encodeText(fromName, "utf-8", "B")));
-			msg.setRecipients(Message.RecipientType.TO, address);
-			msg.setSubject(subject);
-			msg.setSentDate(new java.util.Date());
-			msg.setContent(content, "text/html; charset=utf-8");
-
-			Transport.send(msg);
-		} catch (MessagingException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		}
-		request.setAttribute("result", result);
-		return new ModelAndView("svc/EmailIdd");
-	}
-	
-	/////비밀번호찾기
-	@RequestMapping("/EmailPasswdd")
-	public ModelAndView EmailPasswdCheckProcess(HttpServletRequest request, HttpServletResponse response) {
-		String host = "smtp.gmail.com"; // smtp 서버
-		String subject = "EmailCheck"; // 보내는 제목 설정
-		String fromName = "Admin"; // 보내는 이름 설정
-		String from = "dlagurgur@gmail.com"; // 보내는 사람(구글계정)
-		String email = request.getParameter("email2");
-		int result = userDao.EmailCheck(email);
-		if(result == 1) {
-		UserDataBean userDto = userDao.getUserEmailPasswd(email);
-		String user_passwd = userDto.getPasswd();
-		String content = "당신의 비밀번호는 [" + user_passwd + "]입니다"; // 이메일 내용 설정
-	
-		request.setAttribute("email", email);
-
-		try {
-			Properties props = new Properties();
-			props.put("mail.smtp.starttls.enable", "true");
-			props.put("mail.transport.protocol", "smtp");
-			props.put("mail.smtp.host", host);
-			props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-			props.put("mail.smtp.port", "465");
-			props.put("mail.smtp.user", from);
-			props.put("mail.smtp.auth", "true");
-
-			Session mailSession = Session.getInstance(props, new javax.mail.Authenticator() {
-				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication("dlagurgur@gmail.com", "tkdgur0713!@");
-				}
-			});
-
-			Message msg = new MimeMessage(mailSession);
-			InternetAddress[] address = { new InternetAddress(email) };
-			msg.setFrom(new InternetAddress(from, MimeUtility.encodeText(fromName, "utf-8", "B")));
-			msg.setRecipients(Message.RecipientType.TO, address);
-			msg.setSubject(subject);
-			msg.setSentDate(new java.util.Date());
-			msg.setContent(content, "text/html; charset=utf-8");
-
-			Transport.send(msg);
-		} catch (MessagingException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		}
-		request.setAttribute("result", result);
-		return new ModelAndView("svc/EmailPasswdd");
-	}
-	
 
 	///////////////////////////////// board pages/////////////////////////////////
 	@RequestMapping("/tripWritePro")
@@ -375,54 +316,71 @@ public class SvcProHandler {
 
 		int schedulenum=Integer.parseInt(request.getParameter("schedulenum"));//일정개수
 		//insert gg_trip_board 
-
+		String user_id = (String) (request.getSession().getAttribute("user_id"));
+		
 		BoardDataBean boardDto = new BoardDataBean();
 
-		boardDto.setUser_id((String) request.getSession().getAttribute("user_id"));
+		boardDto.setUser_id(user_id);
 		boardDto.setBoard_title(request.getParameter("trip_title"));
-		boardDto.setBoard_member_num(Integer.parseInt(request.getParameter("trip_m_num"))); // FIXME: 얘도 TRIP DB로 빠져있음.
-		boardDto.setBoard_talk(request.getParameter("tb_talk"));
 		boardDto.setBoard_content(request.getParameter("content"));
-
+		boardDto.setBoard_contact(request.getParameter("board_contact"));
 		boardDao.insertBoard_no(boardDto);
+		
 		int board_no = boardDto.getBoard_no();// board_no
 		request.setAttribute("board_no", board_no);
 
 		CoordDataBean coordDto = new CoordDataBean();
 		for (int i = 1; i <= schedulenum; i++) {
-			boardDao.insertTrip(boardDto);
-			int trip_id = boardDto.getTrip_id();//FIXME : 얘도 빠져있음.
+			TripDataBean tripDto = new TripDataBean();
+			String coord_name = request.getParameter("place"+i);
 			
-			//set writer as a member of his trips
-			String user_id = (String) (request.getSession().getAttribute("user_id"));
+			List<CoordDataBean> coords = coordDao.checkCoordName(coord_name);	//	 같은이름의 coord가 있나 체크.
+			int coord_id=-1;	//	coord_id 초기값.
+			
+			if(coords.size() > 0) {	//검색했는데 같은이름의 검색경로가 있으면 이미 있는 놈의 coord_id를 씀.
+				coord_id = coords.get(0).getCoord_id();
+				tripDto.setCoord_id(coord_id);//	tripDto에 대입
+			} else {		// 없으면!
+				String country_code = request.getParameter("country_code" + i + "");
+				double coord_lat = Double.parseDouble(request.getParameter("lat" + i + ""));
+				double coord_long = Double.parseDouble(request.getParameter("lng" + i + ""));
+				int coord_order = i;
+				
+				coordDto.setCoord_name(coord_name);
+				coordDto.setCountry_id(country_code);
+				coordDto.setCoord_lat(coord_lat);
+				coordDto.setCoord_long(coord_long);
+				coordDto.setCoord_order(coord_order);
+				
+				coordDao.insertCoord(coordDto);// locDto의 coord_id에 좌표값 저장한 후 생성된 coord_id저장 됨
+				coord_id = coordDto.getCoord_id();
+			}
+			
+			tripDto.setCoord_id(coord_id);
+			tripDto.setBoard_no(board_no);
+			
+			String [] start = request.getParameter("start"+i).split("/");
+			LocalDate ldt = LocalDate.of(Integer.parseInt(start[0]), Integer.parseInt(start[1]), Integer.parseInt(start[2]));
+			Date start_date = new Date(ldt.toEpochDay());
+		
+			String [] end = request.getParameter("end"+i).split("/");
+			ldt = LocalDate.of(Integer.parseInt(end[0]), Integer.parseInt(end[1]), Integer.parseInt(end[2]));
+			Date end_date = new Date(ldt.toEpochDay());
+			//start , end Date타입으로 변환. 확인 필수!
+			
+			tripDto.setStart_date(start_date);
+			tripDto.setEnd_date(end_date);
+			tripDto.setTrip_member_count(Integer.parseInt(request.getParameter("trip_member_count"+i)));
+
+			tripDao.insertTrip(tripDto);
+			int trip_id = tripDto.getTrip_id();
+			
 			MemberDataBean memberDto = new MemberDataBean();
 			memberDto.setUser_id(user_id);
 			memberDto.setTrip_id(trip_id);
 			memberDao.addTripMember(memberDto);
 
-			// gg_coordinate&location
-			String country_code = request.getParameter("country_code" + i + "");
-			double coord_lat = Double.parseDouble(request.getParameter("lat" + i + ""));
-			double coord_long = Double.parseDouble(request.getParameter("lng" + i + ""));
-			if (country_code != null) {
-				int coord_order = i;
-				coordDto.setCountry_id(country_code);
-				coordDto.setCoord_lat(coord_lat);
-				coordDto.setCoord_long(coord_long);
-				coordDto.setCoord_order(coord_order);
-
-				int coordResult = locDao.insertCoord(coordDto);// locDto의 coord_id에 좌표값 저장한 후 생성된 coord_id저장 됨
-
-				String cal_start_date = request.getParameter("start" + i + "");
-				String cal_end_date = request.getParameter("end" + i + "");
-
-				coordDto.setCal_start_date(cal_start_date);//FIXME: 여기도 Trip으로 옮겨간 부분.정리필요.
-				coordDto.setCal_end_date(cal_end_date);
-				coordDto.setTd_trip_id(trip_id);
-
-				int calResult = locDao.insertCal(coordDto);// 일정에 맞는 calendar table 레코드추가
 			}
-		}
 
 		// get tags
 		String[] tags = request.getParameterValues("tag");
@@ -447,33 +405,28 @@ public class SvcProHandler {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		System.out.println(request.getParameter("board_no"));
 		int board_no = Integer.parseInt(request.getParameter("board_no"));
-		// update gg_trip_board
 		BoardDataBean boardDto = new BoardDataBean();
 		boardDto.setBoard_no(board_no);
-		boardDto.setUser_id((String) request.getSession().getAttribute("user_id"));
 		boardDto.setBoard_title(request.getParameter("trip_title"));
-		boardDto.setBoard_member_num(Integer.parseInt(request.getParameter("trip_m_num")));//FIXME :얘도 trip DB로 이동
-		boardDto.setTb_talk(request.getParameter("tb_talk"));
 		boardDto.setBoard_content(request.getParameter("content"));
-
-		String[] tagValues=request.getParameterValues("tags");
+		boardDto.setBoard_contact(request.getParameter("board_contact"));
 		
+		
+		String[] tagValues=request.getParameterValues("tags");
 		//match tag_id & tag_value 
 		List<TagDataBean> tripTags=new ArrayList<TagDataBean>();	
 		for(int i=0; i<tagValues.length; i++) {
 			TagDataBean tempTagBean=new TagDataBean();
 			tempTagBean.setTag_id(Integer.parseInt(tagValues[i]));
-			tempTagBean.setTag_value(tagDao.getTagValue(tempTagBean.getTag_id()));
-			tripTags.add(i, tempTagBean);
+			tripTags.add(tempTagBean);
 		}
 		
 		//update modified "tripMod" in DB
 		int result = boardDao.updateBoard(boardDto);
 		request.setAttribute("result", result);
 		request.setAttribute("board_no", board_no);
-		result=tagDao.updateTripTags(board_no, tripTags);
+		tagDao.updateTripTags(board_no, tripTags);
 		
 		return new ModelAndView("svc/tripModPro");
 	}
@@ -544,7 +497,7 @@ public class SvcProHandler {
 		return new ModelAndView("/svc/boardAlbumPro");
 	}
 
-	@RequestMapping("/photoDel")
+	@RequestMapping("/photoDel")	
 	public ModelAndView svcPhotoDelProcess(HttpServletRequest request, HttpServletResponse response)
 			throws HandlerException {
 		int board_no = Integer.parseInt(request.getParameter("board_no"));
@@ -670,7 +623,7 @@ public class SvcProHandler {
 	@RequestMapping(value = "/idCheck.go", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
 	public Map<Object, Object> idCheck(@RequestBody String user_id) {
-		user_id = user_id.split("=")[0];
+		user_id = user_id.split("=")[0];	//TODO: 체크필요 파싱안해도 될거같은디?;
 		int countId = 0;
 		Map<Object, Object> map = new HashMap<Object, Object>();
 
@@ -778,7 +731,7 @@ public class SvcProHandler {
 			request.setAttribute("isMember", true);
 		}
 
-		List<MemberDataBean> memberList = memberDao.getMember(trip_id_int);
+		List<MemberDataBean> memberList = memberDao.getMembers(trip_id_int);
 		return memberList;
 	}
 
@@ -801,10 +754,28 @@ public class SvcProHandler {
 			request.setAttribute("delMemberResult", delMemberResult);
 			request.setAttribute("isMember", false);
 		}
-		List<MemberDataBean> memberList = memberDao.getCurrentMember(trip_id_int);
+		List<MemberDataBean> memberList = memberDao.getMembers(trip_id_int);
 		return memberList;
 	}
-
+	//////////////////////////////////////ajax추가분 이민재 2018.11.05 /////////////////////////////////////
+	@RequestMapping(value = "addAuto", produces="application/json") 
+	@ResponseBody
+	private String addAuto(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String coord_name = request.getParameter("coord_name");
+		List<CoordDataBean> coords = coordDao.autoComplete(coord_name);
+		
+		ObjectMapper mapper = new ObjectMapper(); 
+		
+		String citys=""; 
+		try { 
+			citys = mapper.writeValueAsString(coords);
+			
+		} catch (IOException e) { 
+			e.printStackTrace(); 
+		}
+		return citys;
+	}
+	//////////////////////////////////////ajax추가분 이민재 2018.11.05 /////////////////////////////////////
 	///////////////////////////////// etc/////////////////////////////////
 	public static String getRandomString() {
 		return UUID.randomUUID().toString().replaceAll("-", "");

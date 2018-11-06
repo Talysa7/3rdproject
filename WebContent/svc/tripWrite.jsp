@@ -24,12 +24,13 @@
             <div class="form-group row">
                  <input type="text" name="trip_title" class="col-12 form-control form-control-lg" maxlength="30" placeholder="${trip_title}" autofocus required>
             </div>
+
                <input type="hidden" name="user_name" value="${user_name}">
             <div class="form-group row">
+<%--             <div class="form-group row">
             	<label for="trip_m_num" class="col-2 col-form-label">${trip_m_num}</label>
-                	<input type="number" name="trip_m_num" class="col-2" min="1" autofocus required>
             </div>
-            
+             --%>
             <c:set var="i" value="1"/>  
             <div id="schedule" class="form-group row">	  
                 <label for="cal_date" name="schedule" class="col-2 col-form-label">${trip_schedule} ${i}</label> 
@@ -38,6 +39,7 @@
                  	<input type="text" name="end${i}" id="end${i}" maxlength="10" value="yyyy-MM-dd" class="col-2" autofocus autocomplete="off"/>
                  	&nbsp;&nbsp;
                 	<input name="place${i}" id="place${i}" type="text" readonly="readonly" placeholder="${trip_location}">
+                	<input type="number" name="trip_member_num${i}" class="col-2" min="1">
                 	<button id="btn${i}" class="btn_plus" type="button" onclick="addSchedule(${i})">
 						<img  class="btn_img" src="${project}img/addbutton.png">${btn_add_trip}
 					</button>
@@ -52,7 +54,7 @@
                  <label for="trip_location" class="col-2 col-form-label">${trip_location}</label>
                <div id="floating-panel" class="col-10">
                   <input id="address" type="text"/>
-                  <input id="submit" type="button" class="btn btn-dark btn-sm"  value="${btn_search}"/>
+                  <input id="addSubmit" type="button" class="btn btn-dark btn-sm"  value="${btn_search}"/>
                </div>
                <div id="searchmap" class="col-12"></div>
             </div>
@@ -86,6 +88,6 @@
 
 <!-- Map Search API -->
    <script async defer
-       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBnBlipOjNesyFkAIAlXO9WkkIhfiqUIi4&callback=searchMap">
+       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTHrzKi3xuXtFRo_fm9dGO2cC--hrLBpo&callback=searchMap">
    </script>
 </html>

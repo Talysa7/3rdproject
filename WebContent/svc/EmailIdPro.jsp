@@ -21,12 +21,12 @@
 <script src="//code.jquery.com/jquery.js"></script>
 <script src="${project}script.js"></script>
 </head>
-<body class="registration">
-<c:if test="${result eq 1}">
-아이디를 해당 ${email}로 보냈습니다.
-</c:if>
-<c:if test="${result eq 0}">
- <h2>존재하지 않는 이메일입니다.</h2>
-</c:if>
-</body>
+	<body class="registration">
+		<c:if test="${result eq 1}">
+			아이디를 해당 ${email}로 보냈습니다.
+		</c:if>
+		<c:if test="${result eq 0}">
+			 <h2>존재하지 않는 이메일입니다.</h2>
+		</c:if>
+	</body>
 </html>

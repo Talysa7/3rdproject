@@ -18,19 +18,25 @@ public class CoordDBBean {
 	}
 	//when knowing country code, insert coordinate and if inserting data succeed, return coord_id
 	public int insertCoord(CoordDataBean coordDto) {
-		 return session.insert("db.insertCoord",coordDto);
+		 return session.insert("location.insertCoord",coordDto);
 	}
 	public int insertCal(CoordDataBean coordDto) {
-		return session.insert("db.insertCal",coordDto);
+		return session.insert("location.insertCal",coordDto);
 	}
-	public List<CoordDataBean> selectDetail(int board_no) {
-		return session.selectList("db.selectDetail",board_no);
-	}
+//	FIXME : calendar 테이블이 없어짐 / 기능 여부 따져봐야함
+//	public List<CoordDataBean> selectDetail(int board_no) {
+//		return session.selectList("location.selectDetail",board_no);
+//	}
+//	public List<CoordDataBean> selectCoordinate(int board_no) {
+//		return session.selectList("location.selectCoordinate",board_no);
+//	}
+
+//	테이블 교체로 인해 쿼리와 DB 맞지 않음
+//	public List<CoordDataBean> selectCountry(int board_no) {
+//		return session.selectList("db.selectCountry",board_no);
+//	}
 	
-	public List<CoordDataBean> selectCoordinate(int board_no) {
-		return session.selectList("db.selectCoordinate",board_no);
-	}
-	
+
 	public List<CoordDataBean> selectCountry(int board_no) {
 		return session.selectList("db.selectCountry",board_no);
 	}
@@ -39,6 +45,7 @@ public class CoordDBBean {
 		CoordDataBean coordDto = session.selectOne("location.getCalendar", trip_id);
 		return coordDto;
 	}
+
 	
 	//get destination countriy's name of some trip
 	public String getPhotoLoc(int board_no) {
@@ -59,11 +66,31 @@ public class CoordDBBean {
 		}
 		return locs;
 	}
-	
+	//instead of this, getUserTripList
 	public List<CoordDataBean> getMyTrips(String user_id) {
 		return session.selectList("db.getMyTrips", user_id);
 	}
+
 	public List<CoordDataBean> getCoordDetail(int trip_id) {
 		return session.selectList("location.getCoordDetail", trip_id);
 	}
+
+	public CoordDataBean getCoordinate(int coord_id) {
+		return session.selectOne("location.getCoordinate", coord_id);
+	}
+	
+	///////////////////////////////////////////////////////자동완성 관련 메소드 추가 및 추가 기능  , 이민재, 2018-11-05///////////////////////////////////
+	public List<CoordDataBean> autoComplete(String coord_name){
+		return session.selectList("loaction.autoComplete", coord_name);
+	}
+	
+	public List<CoordDataBean> checkCoordName(String coord_name){
+		return session.selectList("loaction.checkCoordName", coord_name);
+	}
+	///////////////////////////////////////////////////////자동완성 관련 메소드 추가 , 이민재, 2018-11-05///////////////////////////////////
+
+	////////////////////////////////////////talysa7/////////////////////////////////////////////////
+
+
+
 }

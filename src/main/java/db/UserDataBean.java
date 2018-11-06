@@ -71,3 +71,8 @@ public class UserDataBean {
 		return user_tags;
 	}
 }
+
+
+////////////////////////////////NOTE-talysa7/////////////////////////////////
+//user_tags is a guest value from pao_user_tags
+//notice it on that line!

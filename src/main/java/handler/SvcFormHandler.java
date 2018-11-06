@@ -159,6 +159,7 @@ public class SvcFormHandler {
   		}	
 		request.setAttribute("locDtoList", locDtoList);
 		
+
 		//get tag details & total list 
 		List<TagDataBean> tripTags=tagDao.getTripTags(board_no);
 		List<TagDataBean> tagList=tagDao.getStyleTags();

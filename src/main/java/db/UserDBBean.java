@@ -38,7 +38,13 @@ public class UserDBBean {
 		public int getAllUserCount() {
 			return session.selectOne("user.getAllUserCount");
 		}
-				
+
+
+		public int insertUser_tag(Map<String, String> map) {
+			return session.update("tag.insertUser_tag", map);		
+		}
+		
+
 		public int insertUser( UserDataBean UserDto ) {
 			return session.insert("user.insertUser", UserDto);
 		}
@@ -58,32 +64,12 @@ public class UserDBBean {
 		public int EmailCheck( String email ) {
 			return session.selectOne( "user.EmailCheck", email);
 		}
-		
-		public int check( String user_id, String passwd ) {
-			int result = 0;		
-			if( check( user_id ) > 0 ) {
-				// 아이디가 있다
-				UserDataBean UserDto = getUser( user_id );
-				if( passwd.equals( UserDto.getPasswd() ) ) {
-					result = 1;
-				} else {
-					result = -1;
-				}				
-			} else {
-				// 아이디가 없다
-				result = 0;				
-			}
-			return result;
-		}
-		
 		public int deleteUser( String user_id ) {
 			return session.delete("user.deleteUser", user_id);
 		}
-		
 		public int modifyUser( UserDataBean UserDto ) {
 			return session.update( "user.modifyUser", UserDto );
 		}
-		
 		public int getUserLevel(String user_id) {
 			return session.selectOne("user.getUserLevel",user_id);
 		}
@@ -92,4 +78,4 @@ public class UserDBBean {
 			return session.selectOne("user.getUserId", user_name); 
 		} 
 }
-	
+
