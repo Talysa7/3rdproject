@@ -31,7 +31,7 @@
                <input type="hidden" name="tb_no" value="${boardDto.board_no}">
             <div class="form-group row">
             	<label for="trip_m_num" class="col-2 col-form-label">${tripDto.trip_m_count}</label>
-                	<input type="number" name="trip_m_num" class="col-2" min="0" value="${boardDto.board_view-count}">
+                	<input type="number" name="trip_m_num" class="col-2" min="0" value="${boardDto.board_view_count}">
             </div>
             
             <c:set var="i" value="1"/>  
