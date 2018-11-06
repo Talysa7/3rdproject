@@ -15,11 +15,15 @@ import db.AlbumDBBean;
 import db.CmtDBBean;
 import db.CoordDBBean;
 import db.CoordDataBean;
+import db.CountryDBBean;
+import db.CountryDataBean;
+import db.MemberDBBean;
 import db.TagDBBean;
 import db.TagDataBean;
 import db.BoardDBBean;
 import db.BoardDataBean;
 import db.TripDBBean;
+import db.TripDataBean;
 import db.UserDBBean;
 import db.UserDataBean;
 
@@ -39,6 +43,10 @@ public class SvcFormHandler {
 	private BoardDBBean boardDao;
 	@Resource
 	private UserDBBean userDao;
+	@Resource
+	private CountryDBBean countryDao;
+	@Resource
+	private MemberDBBean memberDao;
 	
 	/////////////////////////////////user pages/////////////////////////////////
 	@RequestMapping("/EmailId")
@@ -112,7 +120,7 @@ public class SvcFormHandler {
 	public ModelAndView svcTripWriteFormProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		//Need to know the writer: Bring user_id from session & user_name(nickname)
 		String user_id=(String)request.getSession().getAttribute("user_id");
-		String user_name= userDao.getUserName(user_id);//user_id �޾Ƽ� db�� �ִ� name ���� �ҷ�����
+		String user_name= userDao.getUserName(user_id);//put user_id from userDB and get user_name
 		
 		List<TagDataBean> styleTags=tagDao.getStyleTags();
 		
@@ -128,25 +136,21 @@ public class SvcFormHandler {
 	public ModelAndView svcTripModFormProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		//get the origin;
 		//basic contents(essential 'var' for tripMod.jsp: board_no, user_id, board_content, board_m_num, board_talk, td_trip_id, locs[], tags[])
+		//get user_name from pao_user
+		String user_id = (String) request.getSession().getAttribute("user_id");
+		request.setAttribute("user_name", userDao.getUserName(user_id));
 		int board_no=Integer.parseInt(request.getParameter("board_no"));
-		request.setAttribute("board_no", board_no);	
 		BoardDataBean boardDto=boardDao.getBoard(board_no);
 		request.setAttribute("boardDto", boardDto);
 		
-		//trip details		//FIXME : 여기는 전체 다 수정 필요. trip id위치가 바뀜.
-		List<CoordDataBean> coordDtoList=new ArrayList<CoordDataBean>();
-			//boardDto has td_trip_ids
-			if(boardDto.getTd_trip_ids().length>0) {
-				for(int trip_id:boardDto.getTd_trip_ids()) {
-					CoordDataBean coordDto=coordDao.getTripDetail(trip_id);
-					coordDtoList.add(coordDto);
-				}
-				request.setAttribute("locDtoList", coordDtoList);
-			}
-		//get tag details & total list 
+		List<TripDataBean> tripList = tripDao.getBoardTripList(board_no);
+		request.setAttribute("tripList", tripList);
+		
+		//get tag details & total list
+		//we don't need getStyleTag, we will use tag_type
 		List<TagDataBean> tripTags=tagDao.getTripTags(board_no);
-		List<TagDataBean> tagList=tagDao.getStyleTags();
-		request.setAttribute("tagList", tagList);	
+		//List<TagDataBean> tagList=tagDao.getStyleTags();
+		//request.setAttribute("tagList", tagList);	
 		request.setAttribute("tripTags", tripTags); 
 		
 		return new ModelAndView("svc/tripMod");

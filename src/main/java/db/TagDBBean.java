@@ -99,23 +99,6 @@ public class TagDBBean {
 					result=session.update("tag.updateTripTags", tagSetter);
 				}
 			}
-			//user had that tag, but not anymore! 
-			for(TagDataBean otb:oldTripTags) {
-				hasTag=false;
-				for(TagDataBean tagDto:tripTags) {
-					if(otb.getTag_id()==(tagDto.getTag_id())) {
-						hasTag=true;
-					}
-				}
-				//there is no such tag what was in old tag list! So delete it!
-				if(!hasTag) {
-					tagSetter=new HashMap<String, Integer>();
-					tagSetter.put("board_no", board_no);
-					int tagId=otb.getTag_id();
-					tagSetter.put("tag_id", tagId);
-					result=session.delete("tag.deleteTripTag", tagSetter);
-				}
-			}
 			return result;
 		}
 		

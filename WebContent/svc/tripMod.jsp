@@ -27,24 +27,24 @@
             <div class="form-group row">
                  <input type="text" name="trip_title" class="col-12 form-control form-control-lg" maxlength="30" value="${tbDto.tb_title}" autofocus required>
             </div>
-               <input type="hidden" name="user_name" value="${userDto.user_name}">
-               <input type="hidden" name="tb_no" value="${tbDto.tb_no}">
+               <input type="hidden" name="user_name" value="${user_name}">
+               <input type="hidden" name="tb_no" value="${boardDto.board_no}">
             <div class="form-group row">
-            	<label for="trip_m_num" class="col-2 col-form-label">${trip_m_num}</label>
-                	<input type="number" name="trip_m_num" class="col-2" min="0" value="${tbDto.tb_m_num}">
+            	<label for="trip_m_num" class="col-2 col-form-label">${tripDto.trip_m_count}</label>
+                	<input type="number" name="trip_m_num" class="col-2" min="0" value="${boardDto.board_view_count}">
             </div>
             
             <c:set var="i" value="1"/>  
             <div id="schedule" class="form-group row">	            
-	            <c:forEach var="i" items="${locDtoList}">
+	            <c:forEach var="i" items="${coordDto}">
 	            	<label for="cal_date" name="schedule" class="col-2 col-form-label">${trip_schedule}</label> 
 	            	<div class="row col-10">
 						<input type="text" name="start${i}" id="start${i}" class="col-3" value="${i.cal_start_date}" readonly="readonly"/> 
 							~
 						<input type="text" name="end${i}" id="end${i}" class="col-3" value="${i.cal_end_date}" readonly="readonly"/>						
 						<input type="hidden" value="${i.coord_long}~${i.coord_lat}"/>
-						<input type="hidden" value="${i.country_name}"/>
-						<input name="place${i}" type="text" class="col-3" value="${i.country_name}" readonly="readonly"/>		
+						<input type="hidden" value="${country_name}"/>
+						<input name="place${i}" type="text" class="col-3" value="${country_name}" readonly="readonly"/>		
 					</div>
 				</c:forEach>
 				<div id="coordinfo${i}"></div>

@@ -36,17 +36,16 @@ public class CoordDBBean {
 //		return session.selectList("db.selectCountry",board_no);
 //	}
 	
-//	calendar 테이블이 없음
-//	public CoordDataBean getTripDetail(int trip_id) {
-//		// TODO : return 이 
-//		CoordDataBean coordDto = session.selectOne("db.getCalendar", trip_id);
-//		CountryDataBean countryDto = new CountryDataBean();
-//		coordDto.setCoord_long((double)session.selectOne("db.getCoordLong", coordDto.getCoord_id()));
-//		coordDto.setCoord_lat((double)session.selectOne("db.getCoordLat", coordDto.getCoord_id()));
-//		coordDto.setCoord_order((int)session.selectOne("db.getCoordOrder", coordDto.getCoord_id()));
-//		countryDto.setCountry_name((String)session.selectOne("db.getCountryName", coordDto.getCoord_id()));
-//		return coordDto;
-//	}
+
+	public List<CoordDataBean> selectCountry(int board_no) {
+		return session.selectList("db.selectCountry",board_no);
+	}
+	public CoordDataBean getTripDetail(int trip_id) {
+		// TODO : return 이 
+		CoordDataBean coordDto = session.selectOne("location.getCalendar", trip_id);
+		return coordDto;
+	}
+
 	
 	//get destination countriy's name of some trip
 	public String getPhotoLoc(int board_no) {
@@ -71,6 +70,11 @@ public class CoordDBBean {
 	public List<CoordDataBean> getMyTrips(String user_id) {
 		return session.selectList("db.getMyTrips", user_id);
 	}
+
+	public List<CoordDataBean> getCoordDetail(int trip_id) {
+		return session.selectList("location.getCoordDetail", trip_id);
+	}
+
 	public CoordDataBean getCoordinate(int coord_id) {
 		return session.selectOne("location.getCoordinate", coord_id);
 	}
@@ -86,6 +90,7 @@ public class CoordDBBean {
 	///////////////////////////////////////////////////////자동완성 관련 메소드 추가 , 이민재, 2018-11-05///////////////////////////////////
 
 	////////////////////////////////////////talysa7/////////////////////////////////////////////////
+
 
 
 }

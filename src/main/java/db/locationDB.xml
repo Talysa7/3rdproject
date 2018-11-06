@@ -10,6 +10,18 @@
 	FIXME : pao_board 에서 trip_id 를 select 하는 가장 안쪽 서브쿼리 
 	pao_board 테이블에 trip_id 가 없다
 	<select id="selectCountry" parameterType="int" resultType="db.CountryDataBean">	
+		select * from pao_country where country_id in(
+		select country_id from pao_coordinate where coord_id in(
+		select coord_id from pao_trip where pao_trip_id in(
+		select trip_id from pao_board where board_no=#{board_no})))
+	</select>
+	<select id="getCountryName" parameterType="int" resultType="String">
+		select country_name from pao_country where country_id=
+		(select country_id from pao_coordinate where coord_id=#{coord_id})
+	</select>
+	<select id="getTripIds" resultType="int">
+		select trip_id from pao_trip where board_no=#{board_no}
+	</select>
 		SELECT * FROM pao_country 
 		WHERE country_id IN (
 			SELECT country_id FROM pao_coordinate 
@@ -24,6 +36,7 @@
 	</select> 
 -->
 
+
 	<!--/////////////////////////////////////////////////// start-line pao_coordinate table ///////////////////////////////////////////////////-->
 
 <!-- FIXME : country_code DB에 없음 	
@@ -37,7 +50,7 @@
 		<selectKey keyProperty="coord_id" resultType="int" order="AFTER">
 			LAST_INSERT_ID()
 		</selectKey>
-<<<<<<< HEAD
+
 	</insert>
  	<insert id="insertCal" parameterType="db.CoordDataBean">
 		INSERT INTO pao_calendar VALUES(TO_DATE(#{cal_start_date},'MM/DD/YYYY'), TO_DATE(#{cal_end_date},'MM/DD/YYYY'),#{coord_id},#{td_trip_id})
@@ -83,6 +96,12 @@
 			) 
 
 	</select>
+
+	<select id="getCalender" parameterType="int" resultType="db.CoordDataBean">
+		select * from pao_coordinate where coord_id=
+		(select coord_id from pao_trip where trip_id=#{trip_id})
+	</select>
+
 -->
 <!-- FIXME : trip_detail 테이블 없음 / 기능 따져봐야 함 	
 	<select id="selectCountry" parameterType="int" resultType="db.CoordDataBean">	
@@ -112,8 +131,8 @@
 	<select id="getTripIds" resultType="int">
 		select trip_id from pao_trip where board_no=#{board_no}
 	</select>
-	<select id="getCalendar" parameterType="int" resultType="db.CoordDataBean">
-		SELECT * FROM pao_calendar WHERE td_trip_id=#{td_trip_id}
+	<select id="getTrips" parameterType="int" resultType="db.TripDataBean">
+		SELECT * FROM pao_view_trip WHERE trip_id=#{trip_id}
 	</select>
 	<select id="getCoordLong" parameterType="int" resultType="double">
 		SELECT coord_long FROM pao_coordinate WHERE coord_id=#{coord_id}

@@ -1,4 +1,4 @@
-﻿package db;
+package db;
 
 import java.util.List;
 import java.util.Map;
@@ -39,10 +39,12 @@ public class UserDBBean {
 			return session.selectOne("user.getAllUserCount");
 		}
 
+
 		public int insertUser_tag(Map<String, String> map) {
 			return session.update("tag.insertUser_tag", map);		
 		}
 		
+
 		public int insertUser( UserDataBean UserDto ) {
 			return session.insert("user.insertUser", UserDto);
 		}
@@ -76,3 +78,4 @@ public class UserDBBean {
 			return session.selectOne("user.getUserId", user_name); 
 		} 
 }
+

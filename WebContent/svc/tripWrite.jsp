@@ -24,7 +24,9 @@
             <div class="form-group row">
                  <input type="text" name="trip_title" class="col-12 form-control form-control-lg" maxlength="30" placeholder="${trip_title}" autofocus required>
             </div>
-               <input type="hidden" name="user_name" value="${userDto.user_name}">
+
+               <input type="hidden" name="user_name" value="${user_name}">
+            <div class="form-group row">
 <%--             <div class="form-group row">
             	<label for="trip_m_num" class="col-2 col-form-label">${trip_m_num}</label>
             </div>
