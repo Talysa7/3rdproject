@@ -102,7 +102,8 @@
 		(select coord_id from pao_trip where trip_id=#{trip_id})
 	</select>
 
- FIXME : trip_detail 테이블 없음 / 기능 따져봐야 함 	
+-->
+<!-- FIXME : trip_detail 테이블 없음 / 기능 따져봐야 함 	
 	<select id="selectCountry" parameterType="int" resultType="db.CoordDataBean">	
 		SELECT * 
 		FROM pao_country 
@@ -130,8 +131,8 @@
 	<select id="getTripIds" resultType="int">
 		select trip_id from pao_trip where board_no=#{board_no}
 	</select>
-	<select id="getCalendar" parameterType="int" resultType="db.CoordDataBean">
-		SELECT * FROM pao_calendar WHERE td_trip_id=#{td_trip_id}
+	<select id="getTrips" parameterType="int" resultType="db.TripDataBean">
+		SELECT * FROM pao_view_trip WHERE trip_id=#{trip_id}
 	</select>
 	<select id="getCoordLong" parameterType="int" resultType="double">
 		SELECT coord_long FROM pao_coordinate WHERE coord_id=#{coord_id}

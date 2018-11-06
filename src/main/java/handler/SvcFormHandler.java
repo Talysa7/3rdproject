@@ -138,32 +138,19 @@ public class SvcFormHandler {
 		//basic contents(essential 'var' for tripMod.jsp: board_no, user_id, board_content, board_m_num, board_talk, td_trip_id, locs[], tags[])
 		//get user_name from pao_user
 		String user_id = (String) request.getSession().getAttribute("user_id");
-		String user_name = userDao.getUserName(user_id);
-		request.setAttribute("user_name", user_name);
+		request.setAttribute("user_name", userDao.getUserName(user_id));
 		int board_no=Integer.parseInt(request.getParameter("board_no"));
-		request.setAttribute("board_no", board_no);	
 		BoardDataBean boardDto=boardDao.getBoard(board_no);
 		request.setAttribute("boardDto", boardDto);
-		List<TripDataBean> tripDto = tripDao.getTripList(board_no);
-		request.setAttribute("tripDto", tripDto);
-		//trip details		//FIXME : 여기는 전체 다 수정 필요. trip id위치가 바뀜.
-		List<CoordDataBean> locDtoList=new ArrayList<CoordDataBean>();
-			//boardDto do not have trip_id anymore
-	  	List<Integer>trip_ids = tripDao.getTripIds(board_no);
-  		for(int trip_id : trip_ids ) {
-				CoordDataBean coordDto=coordDao.getTripDetail(trip_id);
-				int coord_id = tripDao.getCoordId(trip_id);
-				String country_name = countryDao.getCountryName(coord_id);
-				request.setAttribute("country_name", country_name);
-				locDtoList.add(coordDto);
-  		}	
-		request.setAttribute("locDtoList", locDtoList);
 		
-
-		//get tag details & total list 
+		List<TripDataBean> tripList = tripDao.getBoardTripList(board_no);
+		request.setAttribute("tripList", tripList);
+		
+		//get tag details & total list
+		//we don't need getStyleTag, we will use tag_type
 		List<TagDataBean> tripTags=tagDao.getTripTags(board_no);
-		List<TagDataBean> tagList=tagDao.getStyleTags();
-		request.setAttribute("tagList", tagList);	
+		//List<TagDataBean> tagList=tagDao.getStyleTags();
+		//request.setAttribute("tagList", tagList);	
 		request.setAttribute("tripTags", tripTags); 
 		
 		return new ModelAndView("svc/tripMod");

@@ -103,4 +103,7 @@ public class BoardDBBean {
 		}
 		return BoardList;
 	}
+	public BoardDataBean getBoard(int board_no) {
+		return session.selectOne("board.getBoard", board_no);
+	}
 }

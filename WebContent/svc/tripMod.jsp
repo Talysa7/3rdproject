@@ -36,7 +36,7 @@
             
             <c:set var="i" value="1"/>  
             <div id="schedule" class="form-group row">	            
-	            <c:forEach var="i" items="${locDtoList}">
+	            <c:forEach var="i" items="${coordDto}">
 	            	<label for="cal_date" name="schedule" class="col-2 col-form-label">${trip_schedule}</label> 
 	            	<div class="row col-10">
 						<input type="text" name="start${i}" id="start${i}" class="col-3" value="${i.cal_start_date}" readonly="readonly"/> 

@@ -10,7 +10,7 @@ import db.TripDataBean;
 public class TripDBBean {
 	private SqlSession session=SqlMapClient.getSession();
 	
-	
+	//please make getBoardTripList sql statement
 	//get trips of the article
 	public List<TripDataBean> getBoardTripList(int board_no) {		//modified method name to divide
 		List<TripDataBean> boardTripList=session.selectList("user.getBoardTripList", board_no);
