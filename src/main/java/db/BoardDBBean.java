@@ -28,7 +28,7 @@ public class BoardDBBean {
 			boardDto.setUser_name("Ex-User");
 		}
 		//set tags
-		List<String> board_tags=session.selectList("tag.getTripTags", board_no);
+		List<TagDataBean> board_tags=session.selectList("tag.getTripTags", board_no);
 		boardDto.setBoard_tags(board_tags);
 		//set trips
 		List<TripDataBean> tripLists=session.selectList("location.getBoardTripList", board_no);

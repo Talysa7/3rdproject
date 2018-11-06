@@ -76,7 +76,7 @@ public class TagDBBean {
 		public int updateTripTags(int board_no, List<TagDataBean> tripTags) {
 			int result=1;
 			//set old Trip Tags
-			List<TagDataBean> oldTripTags=getTripTags(board_no);
+			List<TagDataBean> oldTripTags=getPostTags(board_no);
 			//setter for query
 			Map<String, Integer> tagSetter;
 			//tester to check whether trip already has that tag
