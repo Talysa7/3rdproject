@@ -11,6 +11,7 @@ public class TripDataBean {
 	private int trip_member_count;					//smallint (4), not null
 	private Date start_date;								//timestamp, not null
 	private Date end_date;								//timestamp, not null
+	private int coord_order;								// tinyint (1) 
 	//FK
 	private int board_no;									//int (10), not null
 	private int coord_id;									//int (8), not null
@@ -95,4 +96,11 @@ public class TripDataBean {
 		CoordDBBean coordDao=new CoordDBBean();
 		setCoordinate(coordDao.getCoordinate(trip_id));
 	}
+	public int getCoord_order() {
+		return coord_order;
+	}
+	public void setCoord_order(int coord_order) {
+		this.coord_order = coord_order;
+	}
+	
 }

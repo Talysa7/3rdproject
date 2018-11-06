@@ -13,7 +13,7 @@ public class TripDBBean {
 	//please make getBoardTripList sql statement
 	//get trips of the article
 	public List<TripDataBean> getBoardTripList(int board_no) {		//modified method name to divide
-		List<TripDataBean> boardTripList=session.selectList("user.getBoardTripList", board_no);
+		List<TripDataBean> boardTripList=session.selectList("location.getBoardTripList", board_no);
 		//set members user_name to each trip, for convenience
 		if(boardTripList.size()>0) {
 			for(TripDataBean trip:boardTripList) {
