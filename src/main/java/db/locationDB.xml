@@ -102,8 +102,7 @@
 		(select coord_id from pao_trip where trip_id=#{trip_id})
 	</select>
 
-
-<!-- FIXME : trip_detail 테이블 없음 / 기능 따져봐야 함 	
+ FIXME : trip_detail 테이블 없음 / 기능 따져봐야 함 	
 	<select id="selectCountry" parameterType="int" resultType="db.CoordDataBean">	
 		SELECT * 
 		FROM pao_country 

@@ -64,7 +64,7 @@ public class TripDBBean {
 	}
 	public List<Integer> getTripIds(int board_no) {
 		return session.selectList("board.getTripIds", board_no);
-
+	}
 	public List<TripDataBean> getUserTripList(String user_id) {
 		List<TripDataBean> userTripList=session.selectList("user.getUserTripList", user_id);
 		//set members user_name to each trip, for convenience
