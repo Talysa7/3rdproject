@@ -22,12 +22,16 @@ public class AlbumDBBean {
 	public List<AlbumDataBean> getBoardAlbum(Map<String,Integer>map){
 		return session.selectList("album.getBoardAlbum",map);
 	}
-	public int getPhotoCount() {
-		return session.selectOne("album.getPhotoCount");
+	public int getAlbumCount() {
+		return session.selectOne("album.getAlbumCount");
 	}
-	public int getBoardCount(int board_no) {
-		return session.selectOne("album.getBoardPCount",board_no);
-	}
+//	쓰이는 위치가  없는 메서드
+//	public int getPhotoCount() {
+//		return session.selectOne("album.getPhotoCount");
+//	}
+//	public int getBoardCount(int board_no) {
+//		return session.selectOne("album.getBoardPCount",board_no);
+//	}
 	public List<String> getPhoto_urls(int board_no){
 		return session.selectList("album.getPhoto_urls",board_no);
 	}
