@@ -16,7 +16,6 @@
 		SELECT count(*)
 		FROM pao_album
 	</select>
-<!-- talysa7 -->
 	<select id="getAllPhotos" resultType="db.AlbumDataBean">
 		SELECT * 
 		FROM pao_view_album 

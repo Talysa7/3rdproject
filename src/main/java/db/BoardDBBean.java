@@ -48,8 +48,8 @@ public class BoardDBBean {
 		return session.update("db.updateBoard", boardDto);
 	}
 
-	public int deleteTrip(int board_no) {
-		return session.delete("board.deleteTrip", board_no);
+	public int deletePost(int board_no) {
+		return session.delete("board.deletePost", board_no);
 	}
 
 	public boolean isMember(BoardDataBean boardDto) {

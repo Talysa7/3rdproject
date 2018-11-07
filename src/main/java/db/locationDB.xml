@@ -124,7 +124,7 @@
 	
 	<!-- getTripDetail 에서 쓰는 쿼리 모음  -->
 	<!-- FIXME : getTripDetail 자체가 join 이나 서브쿼리로 해결 될 수 없는지 연구해봐야겠다 -->
-	<insert id="insertCoord" parameterType="db. CoordDataBean" keyProperty="coord_id">
+	<insert id="insertCoord" parameterType="db.CoordDataBean" keyProperty="coord_id">
 		INSERT INTO pao_coordinate(coord_name,country_id,coord_long,coord_lat,coord_order) 
 			VALUES( #{coord_name},(SELECT country_id FROM pao_country WHERE country_code=#{country_code}), #{coord_long}, #{coord_lat}, #{coord_order} )
 	</insert>
@@ -147,9 +147,6 @@
 	<!-- FIXME : 여기까지 getTripDetail -->
 	
 	<!-- getPhotoLoc 에서 쓰는 쿼리 모음 -->
-	<select id="getTripIds" resultType="int">
-		SELECT td_trip_id FROM pao_trip_detail WHERE tb_no=#{tb_no}
-	</select>
 	<select id="getTripCountry" parameterType="int" resultType="String">
 		SELECT country_name 
 		FROM pao_country 
@@ -163,7 +160,6 @@
 				)
 			)
 	</select>
-<!-- talysa7 -->
 	<select id="getUserTripList" parameterType="String" resultType="db.TripDataBean">
 		select *
 		from pao_view_trip
@@ -189,13 +185,10 @@
 		from pao_view_trip
 		where board_id=#{board_id}
 	</select>
-	<!--/////////////////////////////////////////////////// end-line pao_coordinate table ///////////////////////////////////////////////////-->
-	<!-- ////////////////////////////////////2018.11.05 자동완성  및 Coord서치용 추가 /////////////////////////////////////////////////////////////////////////-->
 	<select id="autoComplete" parameterType="String" resultType="db.CoordDataBean">
 		SELECT coord_name FROM pao_coordinate WHERE coord_name LIKE '${coord_name}%'
 	</select>
 	<select id="checkCoordName" parameterType="String" resultType="db.CoordDataBean">
 		SELECT * FROM pao_coordinate WHERE coord_name = ${coord_name}
 	</select>
-	<!-- ////////////////////////////////////2018.11.05 자동완성  및 Coord서치용 추가 /////////////////////////////////////////////////////////////////////////-->
 </mapper>
