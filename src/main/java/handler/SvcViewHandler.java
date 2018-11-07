@@ -86,6 +86,9 @@ public class SvcViewHandler {
 			//user_tags is a guest value, we should set it additionally
 			userDto.setUser_tags(tagDao.getUserTags(user_id));	//태그 가져오는거 수정.
 			request.setAttribute("userDto", userDto);
+			List<String> tags = tagDao.getUser_tags(user_id);
+			request.setAttribute("tags", tags);
+			
 		}
 		return new ModelAndView("svc/myPage");
 	}
