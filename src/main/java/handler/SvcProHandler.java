@@ -340,7 +340,7 @@ public class SvcProHandler {
 		for (int i = 1; i <= schedulenum; i++) {
 			TripDataBean tripDto = new TripDataBean();
 			String coord_name = request.getParameter("place"+i);
-			
+			System.out.println(coord_name);
 			List<CoordDataBean> coords = coordDao.checkCoordName(coord_name);	//	 같은이름의 coord가 있나 체크.
 			int coord_id=-1;	//	coord_id 초기값.
 			

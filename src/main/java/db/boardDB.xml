@@ -24,7 +24,7 @@
 	<!-- 요거도 셀렉트키 바꿔서 확인필요. -->
 	<insert id="insertBoard_no" parameterType="db.BoardDataBean" keyProperty="board_no">
        insert into pao_board (board_title, board_content, board_view_count, board_level, board_contact , board_reg_date, user_id )
-      values(#{board_title}, #{board_content}, 0 , 0, #{board_contact}, sysdate, #{user_id})
+      values(#{board_title}, #{board_content}, 0 , 0, #{board_contact}, current_timestamp, #{user_id})
       <selectKey keyProperty="board_no" resultType="int" order="AFTER">
          SELECT LAST_INSERT_ID()
       </selectKey>
@@ -104,7 +104,7 @@
 	<!--/////////////////////////////////////////////////// start-line pao_comment table ///////////////////////////////////////////////////-->
 	<insert id="insertComment" parameterType="db.CmtDataBean">
 		INSERT INTO pao_comment(comment_content, comment_reg_date, board_no, user_id)
-		VALUES( #{comment_content, jdbcType=VARCHAR}, SYSDATE, #{board_no}, #{user_id} )
+		VALUES( #{comment_content, jdbcType=VARCHAR}, current_timestamp, #{board_no}, #{user_id} )
 	</insert>
 	<update id="updateComment" parameterType="db.CmtDataBean">
 		UPDATE pao_comment
