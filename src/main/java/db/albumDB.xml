@@ -22,7 +22,7 @@
 		FROM pao_view_album 
 		ORDER BY photo_reg_date DESC
 	</select>
-	<select id="getPhotosByBoardNo" parameterType="java.util.Map" resultType="db.AlumDataBean">
+	<select id="getPhotosByBoardNo" parameterType="java.util.Map" resultType="db.AlbumDataBean">
 		select *
 		from pao_view_album
 		where board_no=#{board_no}
