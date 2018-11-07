@@ -99,7 +99,7 @@
 					<div class="col-sm-8">
 						<input type="email" name="email1" class="form-control" id="email1"
 							placeholder="Enter email" required>
-						<input type="hidden" name="eType" value="0">
+						<input type="hidden" name="eType" id="eType" value="0">
 					</div>
 					<div class="col-sm-2">
 						<button type="button" class="btn btn-md btn-secondary" 

@@ -271,7 +271,7 @@ function IdCheck() {
 			async : true,
 			type : 'POST',
 			data : user_id,
-			url : "idCheck.go",
+			url : "checkId.go",
 			dataType : "json",
 			success : function(data) {
 				if (data.countId > 0) {
@@ -324,8 +324,9 @@ function EmailClose(){
 }
 
 function EmailCheck(email1){
-    // 인증을 위해 새창으로 이동
-	var url="email.go?email1="+email1
+	// 인증을 위해 새창으로 이동
+	var etype = $("#eType").val();
+	var url="email.go?email1="+email1+"&eType="+etype
 	open(url,"emailwindow", "statusbar=no, scrollbar=no, menubar=no,width=500, height=200" );
 }
 
@@ -336,7 +337,6 @@ function confirmeMail(authNum){
     // 입력한 값이 없거나, 인증코드가 일지하지 않을 경우
 	if(!Email || Email!= authNum){
 		alert(emailconfirmerror);
-		self.close();
     // 인증코드가 일치하는 경우
 	}else if(Email==authNum){
 		alert("인증완료");
@@ -843,29 +843,7 @@ function absent(td_trip_id) {
 
 ///////////////////////////////////////////////////////이민재//////////////////////////////////////////////////////
 	//자동완성
-	$(function(){
-		$("#addSubmit").autocomplete({
-			 source : function( request, response ) {
-				$.ajax({
-						type: 'post',
-						url : 'addAuto.go',
-						dataType: "json",
-						data: { coord_name : request.term },
-						success: function(data) {
-						 response(
-                            $.map(data, function(item) {
-                                return {
-                                    label: item.coord_name,
-                                    value: item.coord_name
-                                }
-                            })
-                       	 );
-						},
-						minLength: 2,
-				})
-			 }
-		})
-	})
+
 
 
 
