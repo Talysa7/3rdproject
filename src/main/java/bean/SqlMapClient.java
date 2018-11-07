@@ -12,7 +12,7 @@ public class SqlMapClient {
 	private static SqlSession session;
 	static {
 		try {
-			Reader reader = Resources.getResourceAsReader("src/bean/SqlMapConfig.xml");
+			Reader reader = Resources.getResourceAsReader("bean/SqlMapConfig.xml");
 			SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(reader);
 			session = factory.openSession(true); // Auto Commit
 		} catch (IOException e) {

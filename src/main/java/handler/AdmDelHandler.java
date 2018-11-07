@@ -64,7 +64,7 @@ public class AdmDelHandler {
 			num=Integer.parseInt(request.getParameter("num"));
 			for(int i=0;i<num;i++) {
 				String board_no=request.getParameter("key"+i+"").trim();
-				result=boardDao.deleteTrip(Integer.parseInt(board_no));
+				result=boardDao.deletePost(Integer.parseInt(board_no));
 				results.add(result);
 			}
 			if(results.contains(0)) {

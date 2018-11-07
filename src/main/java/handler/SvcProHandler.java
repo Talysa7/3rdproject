@@ -435,7 +435,7 @@ public class SvcProHandler {
 	public ModelAndView svcTripDelProProcess(HttpServletRequest request, HttpServletResponse response)
 			throws HandlerException {
 		int board_no = Integer.parseInt(request.getParameter("board_no"));
-		int result = boardDao.deleteTrip(board_no);
+		int result = boardDao.deletePost(board_no);
 		request.setAttribute("result", result);
 		return new ModelAndView("svc/tripDel");
 	}

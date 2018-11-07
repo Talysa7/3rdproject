@@ -4,7 +4,7 @@
   	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="user">
 <!-- User -->
-	<select id="getUser" parameterType="String" resultType="UserDataBean">
+	<select id="getUser" parameterType="String" resultType="db.UserDataBean">
 		select * from pao_user where user_id=#{user_id}
 	</select>
 	<select id="getUserId" parameterType="String" resultType="String">
@@ -64,13 +64,11 @@
 	<select id="getMemberCount" parameterType="int" resultType="int">
 		select count(*) from pao_members where trip_id=#{trip_id}
 	</select>
-<!-- by talysa7 -->
 	<select id="getMembers" parameterType="int" resultType="java.util.List">
 		select *
 		from pao_view_members
 		where trip_id=#{trip_id}
 	</select>
-
 <!-- Tag -->
 	<select id="getUserTags" parameterType="String" resultType="java.util.List">
 		select tag_value from pao_tag where tag_id in
@@ -125,9 +123,6 @@
 		passwd=#{passwd}, user_name=#{user_name} where
 		user_id=#{user_id}
 	</update>
-	<select id="getUser" parameterType="String" resultType="db.UserDataBean">
-		select * from pao_user where user_id=#{user_id}
-	</select>
 	<select id="nameCheck" parameterType="String" resultType="Integer">
 		select count(*) from pao_user where user_name=#{user_name}
 	</select>
