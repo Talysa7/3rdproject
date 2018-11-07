@@ -42,7 +42,7 @@
 	<update id="updateBoard" parameterType="db.BoardDataBean">
 		UPDATE pao_board SET board_title=#{board_title}, board_content=#{board_content},  board_level=#{board_level}, board_contact=#{board_contact} WHERE board_no=#{board_no}
 	</update>
-	<delete id="deleteTrip" parameterType="int">
+	<delete id="deletePost" parameterType="int">
 		DELETE FROM pao_board WHERE board_no=#{board_no}
 	</delete>
 
@@ -84,7 +84,7 @@
 	</update>
 	<update id="updateTrip" parameterType="db.BoardDataBean">
 		UPDATE pao_trip
-		SET trip_member_count=#{trip_member_count, coord_id=#{coord_id},
+		SET trip_member_count=#{trip_member_count}, coord_id=#{coord_id},
 		start_date=#{start_date}, end_date=#{end_date}
 		WHERE trip_id=#{trip_id}
 	</update>
@@ -138,7 +138,6 @@
 			)
 		WHERE r &gt;= #{start} AND r &lt;= #{end}
 	</select>
-<!-- talysa7 -->
 	<select id="getPostByKeyword">
 		select *
 		from pao_view_board
