@@ -110,11 +110,11 @@ public class SvcViewHandler {
 		//admin page needs this
 		int rowNumber;
 		int startPage=0;
-		try {	//	NULLPoint 처리.
+		try {	//	exception 처리.
 			startPage=Integer.parseInt(request.getParameter("pageNum"));
-		} catch (NullPointerException e) {
+		} catch (Exception e) {
 			
-		}
+		} 
 		if(startPage>0) {
 			rowNumber=startPage*postPerPage;
 		} else {
