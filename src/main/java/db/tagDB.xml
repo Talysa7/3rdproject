@@ -69,9 +69,7 @@
 	</select>
 
 	<select id="getStyleTags" resultType="db.TagDataBean">
-		<![CDATA[
-		select * from pao_tag where tag_id>=1 and tag_id<=100
-		]]>
+		select * from pao_tag where tag_type=1
 	</select>
 	
 	<select id="getCityTags" resultType="db.TagDataBean">
