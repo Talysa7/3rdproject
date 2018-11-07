@@ -1,4 +1,4 @@
-﻿package handler;
+package handler;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -142,9 +142,7 @@ public class SvcProHandler {
 		List<TagDataBean> userTags = new ArrayList<TagDataBean>();
 
 		for (int i = 0; i < tagValues.length; i++) {
-			TagDataBean tempTagBean = new TagDataBean();
-			tempTagBean.setTag_id(Integer.parseInt(tagValues[i]));
-			tempTagBean.setTag_value(tagDao.getTagValue(tempTagBean.getTag_id()));
+			TagDataBean tempTagBean = tagDao.getTag(Integer.parseInt(tagValues[i]));
 			userTags.add(tempTagBean);
 		}
 
