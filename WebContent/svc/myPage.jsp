@@ -65,7 +65,7 @@
 		    	<label for="tag" class="control-label col-sm-2" >${str_tag} </label>
 		    	<div class="col-sm-8">
 		    		<div class="btn-group btn-group-sm disabled" role="group" aria-label="...">
-		    			<c:forEach var="tag" items="${tags}">
+		    			<c:forEach var="tag" items="${userDto.user_tags}">
 		    				<button type="button" class="btn btn-default">#${tag.tag_value}&nbsp; </button>
 		    			</c:forEach>
 					</div>

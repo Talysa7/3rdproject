@@ -84,11 +84,8 @@ public class SvcViewHandler {
 		if(user_id!=null) {
 			UserDataBean userDto=userDao.getUser(user_id);
 			//user_tags is a guest value, we should set it additionally
-			userDto.setUser_tags(userDto.getUser_id());
+			userDto.setUser_tags(tagDao.getUserTags(user_id));	//태그 가져오는거 수정.
 			request.setAttribute("userDto", userDto);
-			List<String> tags = tagDao.getUser_tags(user_id);
-			request.setAttribute("tags", tags);
-			
 		}
 		return new ModelAndView("svc/myPage");
 	}
@@ -112,7 +109,12 @@ public class SvcViewHandler {
 		//set row number of select request
 		//admin page needs this
 		int rowNumber;
-		int startPage=Integer.parseInt(request.getParameter("pageNum"));
+		int startPage=0;
+		try {	//	NULLPoint 처리.
+			startPage=Integer.parseInt(request.getParameter("pageNum"));
+		} catch (NullPointerException e) {
+			
+		}
 		if(startPage>0) {
 			rowNumber=startPage*postPerPage;
 		} else {

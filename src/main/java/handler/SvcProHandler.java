@@ -62,7 +62,7 @@ import db.UserDataBean;
 
 @Controller
 public class SvcProHandler {
-	private static final int ADMIN = 9;
+	private static final int ADMIN = 1;
 	private static final int EXTENSION_ERROR = -1;
 	private static final int SIZE_ERROR = -2;
 	private static final int SUCCESS = 1;
@@ -178,7 +178,6 @@ public class SvcProHandler {
 				int user_level = userDto.getUser_level();
 				if (user_level == ADMIN) {
 					userType = 1;									
-					request.setAttribute("user_level", user_level);
 				}
 				request.setAttribute("userType", userType);
 			}
@@ -233,65 +232,73 @@ public class SvcProHandler {
 		String subject = "EmailCheck"; // 보내는 제목 설정
 		String fromName = "Admin"; // 보내는 이름 설정
 		String from = "show112924@gmail.com"; // 보내는 사람(구글계정)
-		int etype = Integer.parseInt(request.getParameter("etype"));
+		int etype = Integer.parseInt(request.getParameter("eType"));
 		String content ="";
 		String email = request.getParameter("email1");
-		int result = userDao.EmailCheck(email);
-		
-		request.setAttribute("result", result);
-		request.setAttribute("email", email);
-		
-		if(result == 1 ) {
+		boolean sendCk = false;
+		int result = -1;
 			if(etype == 0) {
 				String authNum = authNum(); // 인증번호 위한 난수 발생부분
 				content = "Travlers : 당신의 인증번호는 [" + authNum + "] 입니다"; 
 				request.setAttribute("authNum", authNum);
-			} else if(etype==1) {	//	아이디 찾기 일 경우
-				UserDataBean userDto = userDao.getUserEmailId(email);
-				content = "당신의 아이디는 [" + userDto.getUser_id() + "]입니다"; 
-			} else if(etype==2) {	//비밀번호 찾기 일 경우
-				UserDataBean userDto = userDao.getUserEmailPasswd(email);
-				content = "당신의 비밀번호는 [" + userDto.getPasswd() + "]입니다"; 
-			}
-	
-			try {
-				Properties props = new Properties();
-				props.put("mail.smtp.starttls.enable", "true");
-				props.put("mail.transport.protocol", "smtp");
-				props.put("mail.smtp.host", host);
-				props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-				props.put("mail.smtp.port", "465");
-				props.put("mail.smtp.user", from);
-				props.put("mail.smtp.auth", "true");
-	
-				Session mailSession = Session.getInstance(props, new javax.mail.Authenticator() {
-					protected PasswordAuthentication getPasswordAuthentication() {
-						return new PasswordAuthentication("show112924@gmail.com", "208795a!");
-					}
-				});
-	
-				Message msg = new MimeMessage(mailSession);
-				InternetAddress[] address = { new InternetAddress(email) };
-				msg.setFrom(new InternetAddress(from, MimeUtility.encodeText(fromName, "utf-8", "B")));
-				msg.setRecipients(Message.RecipientType.TO, address);
-				msg.setSubject(subject);
-				msg.setSentDate(new java.util.Date());
-				msg.setContent(content, "text/html; charset=utf-8");
-	
-				Transport.send(msg);
-			} catch (MessagingException e) {
-				e.printStackTrace();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			if(etype==1) { //형태에 따른 리턴 위치 처리.
-				return new ModelAndView("svc/EmailIdPro");	
-			} else if (etype==2) {
-				return new ModelAndView("svc/EmailPasswdPro"); 
+				sendCk = true;
+				result = 0;
 			} else {
-				return new ModelAndView("svc/emailCheck");
+				result = userDao.EmailCheck(email);
+				request.setAttribute("email", email);
+				sendCk = true;
+				if(result == 1 ) {
+					if(etype==1) {	//	아이디 찾기 일 경우
+						UserDataBean userDto = userDao.getUserEmailId(email);
+						content = "당신의 아이디는 [" + userDto.getUser_id() + "]입니다"; 
+					} else if(etype==2) {	//비밀번호 찾기 일 경우
+						UserDataBean userDto = userDao.getUserEmailPasswd(email);
+						content = "당신의 비밀번호는 [" + userDto.getPasswd() + "]입니다"; 
+					}
+				} 
 			}
+			if(sendCk = true) {
+				request.setAttribute("result", result);
+				try {
+					Properties props = new Properties();
+					props.put("mail.smtp.starttls.enable", "true");
+					props.put("mail.transport.protocol", "smtp");
+					props.put("mail.smtp.host", host);
+					props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+					props.put("mail.smtp.port", "465");
+					props.put("mail.smtp.user", from);
+					props.put("mail.smtp.auth", "true");
+		
+					Session mailSession = Session.getInstance(props, new javax.mail.Authenticator() {
+						protected PasswordAuthentication getPasswordAuthentication() {
+							return new PasswordAuthentication("show112924@gmail.com", "208795a!");
+						}
+					});
+		
+					Message msg = new MimeMessage(mailSession);
+					InternetAddress[] address = { new InternetAddress(email) };
+					msg.setFrom(new InternetAddress(from, MimeUtility.encodeText(fromName, "utf-8", "B")));
+					msg.setRecipients(Message.RecipientType.TO, address);
+					msg.setSubject(subject);
+					msg.setSentDate(new java.util.Date());
+					msg.setContent(content, "text/html; charset=utf-8");
+		
+					Transport.send(msg);
+				} catch (MessagingException e) {
+					e.printStackTrace();
+				} catch (Exception e) {
+					e.printStackTrace();
+				} 
+				
+				if(etype==1) { //형태에 따른 리턴 위치 처리.
+					return new ModelAndView("svc/EmailIdPro");	
+				} else if (etype==2) {
+					return new ModelAndView("svc/EmailPasswdPro"); 
+				} else {
+					return new ModelAndView("svc/emailCheck");
+				}
 		}
+		
 		return new ModelAndView("svc/emailCheck");
 	}
 	
@@ -618,14 +625,14 @@ public class SvcProHandler {
 
 	///////////////////////////////// ajax list/////////////////////////////////
 
-	@RequestMapping(value = "/idCheck.go", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(value = "/checkId.go", method = RequestMethod.POST, produces = "application/json")
 	@ResponseBody
 	public Map<Object, Object> idCheck(@RequestBody String user_id) {
 		user_id = user_id.split("=")[0];	//TODO: 체크필요 파싱안해도 될거같은디?;
 		int countId = 0;
 		Map<Object, Object> map = new HashMap<Object, Object>();
 
-		countId = userDao.idCheck(user_id);
+		countId = userDao.checkId(user_id);
 		map.put("countId", countId);
 
 		return map;

@@ -64,7 +64,7 @@
 
 
 	 
-	<select id="getUserTags" resultType="db.TagDataBean">
+	<select id="getUserTags"  parameterType="String" resultType="db.TagDataBean">
 		select * from pao_view_user_tags where user_id=#{user_id}
 	</select>
 
@@ -84,7 +84,7 @@
 		]]>
 	</select>
 	
-	<select id="getTagValue" resultType="String">
+	<select id="getTagValue" parameterType="String" resultType="String">
 		select tag_value from pao_tag where tag_id=#{tag_id}
 	</select>
 	

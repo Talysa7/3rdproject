@@ -13,7 +13,7 @@ public class UserDataBean {
 	private int gender;				//smallint (1)
 	private int user_level;			//smallint (1)
 	private int user_age;			//smallint (3)
-	private List<String> user_tags;	//user's tag value list
+	private List<TagDataBean> user_tags;	//user's tag value list
 	
 	public String getUser_id() {
 		return user_id;
@@ -63,11 +63,10 @@ public class UserDataBean {
 	public void setUser_age(int user_age) {
 		this.user_age = user_age;
 	}
-	public void setUser_tags(String user_id) {
-		TagDBBean tagDao=new TagDBBean();
-		this.user_tags=tagDao.getUser_tags(user_id);
+	public void setUser_tags(List<TagDataBean> user_tags) {
+		this.user_tags=user_tags;
 	}
-	public List<String> getUser_tags(String user_id) {
+	public List<TagDataBean> getUser_tags() {
 		return user_tags;
 	}
 }

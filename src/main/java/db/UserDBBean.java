@@ -27,8 +27,8 @@ public class UserDBBean {
 			return session.selectOne( "user.nameCheck", user_name);
 		}
 		
-		public int idCheck( String user_id ) {
-			return session.selectOne( "user.idCheck", user_id);
+		public int checkId( String user_id ) {
+			return session.selectOne( "user.checkId", user_id);
 		}
 		
 		public List<UserDataBean> getUsers(Map<String, Integer> map) {
@@ -49,9 +49,6 @@ public class UserDBBean {
 			return session.insert("user.insertUser", UserDto);
 		}
 		
-		public int check( String user_id ) {
-			return session.selectOne( "user.checkId", user_id);
-		}
 		
 		public UserDataBean getUserEmailId(String email) { 
 			return session.selectOne("user.getUserEmailId", email); 
@@ -62,7 +59,7 @@ public class UserDBBean {
 		} 
 		
 		public int EmailCheck( String email ) {
-			return session.selectOne( "user.EmailCheck", email);
+			return session.selectOne( "user.emailCheck", email);
 		}
 		public int deleteUser( String user_id ) {
 			return session.delete("user.deleteUser", user_id);

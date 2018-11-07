@@ -15,9 +15,6 @@ public class TagDBBean {
 		public List<String> getB_tags(int board_no) {
 			return session.selectList("board.getBoardTags", board_no);
 		}
-		public List<String> getUser_tags(String user_id) {
-			return session.selectList("user.getUserTags", user_id);
-		}
 		
 		public int insertUser_tag(Map<String, String> map) {
 			return session.update("tag.insertUser_tag", map);		
@@ -55,8 +52,7 @@ public class TagDBBean {
 			return session.delete("tag.deleteTag",tag_id);
 		}
 		public List<TagDataBean> getUserTags(String user_id) {
-			List<TagDataBean> userTagList=session.selectList("tag.getUserTags", user_id);
-			return userTagList;
+			return session.selectList("tag.getUserTags", user_id);
 		}
 		public List<TagDataBean> getPostTags(int board_no) {
 			return session.selectList("board.getPostTags", board_no);	// need to check after making boardDB.xml
