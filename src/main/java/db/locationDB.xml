@@ -125,8 +125,8 @@
 	<!-- getTripDetail 에서 쓰는 쿼리 모음  -->
 	<!-- FIXME : getTripDetail 자체가 join 이나 서브쿼리로 해결 될 수 없는지 연구해봐야겠다 -->
 	<insert id="insertCoord" parameterType="db.CoordDataBean" keyProperty="coord_id">
-		INSERT INTO pao_coordinate(coord_name,country_id,coord_long,coord_lat,coord_order) 
-			VALUES( #{coord_name},(SELECT country_id FROM pao_country WHERE country_code=#{country_code}), #{coord_long}, #{coord_lat}, #{coord_order} )
+		INSERT INTO pao_coordinate(coord_name,country_id,coord_long,coord_lat) 
+			VALUES( #{coord_name},(SELECT country_id FROM pao_country WHERE country_id=#{country_id}), #{coord_long}, #{coord_lat} )
 	</insert>
 	<select id="getTripIds" resultType="int">
 		select trip_id from pao_trip where board_no=#{board_no}
@@ -186,9 +186,9 @@
 		where board_id=#{board_id}
 	</select>
 	<select id="autoComplete" parameterType="String" resultType="db.CoordDataBean">
-		SELECT coord_name FROM pao_coordinate WHERE coord_name LIKE '${coord_name}%'
+		SELECT coord_name FROM pao_coordinate WHERE coord_name LIKE '#{coord_name}%'
 	</select>
 	<select id="checkCoordName" parameterType="String" resultType="db.CoordDataBean">
-		SELECT * FROM pao_coordinate WHERE coord_name = ${coord_name}
+		SELECT * FROM pao_coordinate WHERE coord_name = #{coord_name}
 	</select>
 </mapper>

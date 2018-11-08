@@ -38,7 +38,7 @@
 							onclick="deleteBoard(${boardDto.board_no})" class="btn btn-sm">
 					</div>
 				</c:if>
-				<c:if test="${user_level eq 9}">
+				<c:if test="${user_level eq 1}">
 					<div>
 						<input type="button" value="${btn_delete}" class="btn btn-sm"
 							onclick="deleteBoard(${board_no})"> <input type="button"

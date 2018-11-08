@@ -81,11 +81,11 @@ public class CoordDBBean {
 	
 	///////////////////////////////////////////////////////자동완성 관련 메소드 추가 및 추가 기능  , 이민재, 2018-11-05///////////////////////////////////
 	public List<CoordDataBean> autoComplete(String coord_name){
-		return session.selectList("loaction.autoComplete", coord_name);
+		return session.selectList("location.autoComplete", coord_name);
 	}
 	
 	public List<CoordDataBean> checkCoordName(String coord_name){
-		return session.selectList("loaction.checkCoordName", coord_name);
+		return session.selectList("location.checkCoordName", coord_name);
 	}
 	///////////////////////////////////////////////////////자동완성 관련 메소드 추가 , 이민재, 2018-11-05///////////////////////////////////
 
