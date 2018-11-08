@@ -29,7 +29,7 @@
 				<h4>${page_modify}</h4>
 				<br>
 			</div>
-			<form class="form-horizontal" action="userModPro.go" name="userMod">
+			<form class="form-horizontal" method="post" action="userModPro.go" name="userMod">
 				<div class="form-group row">
 					<label for="nickname" class="col-sm-2 col-form-label">${str_id}</label>
 					<div class="col-sm-8">&nbsp; ${userDto.user_id}</div>
