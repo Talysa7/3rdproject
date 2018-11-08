@@ -35,7 +35,7 @@
 	       SELECT LAST_INSERT_ID()
 	    </selectKey>
     </insert>
-
+<!-- svc 단에서는 이 쿼리 안 씀. -->
 	<select id="getBoard" parameterType="int">
 		select * from pao_board where board_no=#{board_no}
 	</select>
@@ -138,15 +138,15 @@
 			)
 		WHERE r &gt;= #{start} AND r &lt;= #{end}
 	</select>
-	<select id="getPostByKeyword">
+	<select id="getPostByKeyword" parameterType="String" resultType="db.BoardDataBean">
 		select *
 		from pao_view_board
-		where board_title like %#{keyword}% or board_content like %#{keyword}%
+		where board_title like #{keyword} or board_content like #{keyword}
 	</select>
-	<select id="getPostByUserName">
+	<select id="getPostByUserName" parameterType="String" resultType="db.BoardDataBean">
 		select *
 		from pao_view_board
-		where user_name=#{keyword}
+		where user_name like #{keyword} or user_id like #{keyword}
 	</select>
 	<!--/////////////////////////////////////////////////// end-line pao_comment table ///////////////////////////////////////////////////-->
 </mapper>
