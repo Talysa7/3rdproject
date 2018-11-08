@@ -116,7 +116,7 @@
 		insert into pao_user_tag values(#{user_id}, #{tag_id}) 
 	</insert>
 	<select id="getPostTags" parameterType="int" resultType="db.TagDataBean">
-		select * from pao_view_board_tags where board_id=#{board_id}
+		select * from pao_view_board_tags where board_no=#{board_no}
 	</select>
 
 
