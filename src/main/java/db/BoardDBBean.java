@@ -22,13 +22,13 @@ public class BoardDBBean {
 
 	//get one trip post by tb_no, including location and tag list
 	public BoardDataBean getPost(int board_no) {
-		BoardDataBean boardDto=session.selectOne("board.getBoard", board_no);
+		BoardDataBean boardDto=session.selectOne("board.getPost", board_no);
 		//if that user left
 		if(boardDto.getUser_id()==null||boardDto.getUser_id().equals("")) {
 			boardDto.setUser_name("Ex-User");
 		}
 		//set tags
-		List<TagDataBean> board_tags=session.selectList("tag.getTripTags", board_no);
+		List<TagDataBean> board_tags=session.selectList("tag.getBoardTags", board_no);
 		boardDto.setBoard_tags(board_tags);
 		//set trips
 		List<TripDataBean> tripLists=session.selectList("location.getBoardTripList", board_no);
@@ -58,12 +58,34 @@ public class BoardDBBean {
 		else return false;
 	}
 
-	public List<BoardDataBean> findPostByKeyword(String keyword) {	//	수정필요.
-		return session.selectList("board.getPostByKeyword", keyword);
+	public List<BoardDataBean> findPostByKeyword(String keyword) {	
+		//for where~like searching 
+		keyword="%"+keyword+"%";
+		List<BoardDataBean> postList=session.selectList("board.getPostByKeyword", keyword);
+		for(BoardDataBean boardDto:postList) {
+			//set Trips
+			List<TripDataBean> tripLists=session.selectList("location.getTripListByBoardNo", boardDto.getBoard_no());
+			boardDto.setTripLists(tripLists);
+			//set Tags
+			List<TagDataBean> board_tags=session.selectList("tag.getPostTags", boardDto.getBoard_no());
+			boardDto.setBoard_tags(board_tags);
+		}
+		return postList;
 	}
 
-	public List<BoardDataBean> findPostByUser(String keyword) {	// 수정필요.
-		return session.selectList("board.getPostByUserName", keyword);
+	public List<BoardDataBean> findPostByUser(String keyword) {
+		//for where~like searching 
+		keyword="%"+keyword+"%";
+		List<BoardDataBean> postList=session.selectList("board.getPostByUserName", keyword);
+		for(BoardDataBean boardDto:postList) {
+			//set Trips
+			List<TripDataBean> tripLists=session.selectList("location.getTripListByBoardNo", boardDto.getBoard_no());
+			boardDto.setTripLists(tripLists);
+			//set Tags
+			List<TagDataBean> board_tags=session.selectList("tag.getPostTags", boardDto.getBoard_no());
+			boardDto.setBoard_tags(board_tags);
+		}
+		return postList;
 	}
 
 	public List<Map<String, String>> getMemInfoList(int board_no) {	//	 얘도 수정필요.
