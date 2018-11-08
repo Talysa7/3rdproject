@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -644,9 +645,10 @@ public class SvcProHandler {
 		return map;
 	}
 
-	@RequestMapping(value = "/nameCheck.go", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(value = "/nameCheck.go", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
 	@ResponseBody
-	public Map<Object, Object> nameCheck(@RequestBody String user_name) {
+	public Map<Object, Object> nameCheck(@RequestBody String user_name) throws UnsupportedEncodingException {
+		user_name = URLDecoder.decode(user_name,"UTF-8");
 		user_name = user_name.split("=")[0];
 		int countName = 0;
 		Map<Object, Object> map = new HashMap<Object, Object>();

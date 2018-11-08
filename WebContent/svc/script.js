@@ -139,6 +139,9 @@ function geocodeAddress(geocoder, resultsMap) {
   var address = document.getElementById('address').value;
   geocoder.geocode({'address': address}, function(results, status) {
     if (status === 'OK') {
+		for(var i =0; i<results.length; i++){
+		alert(results[i]);
+		}
       resultsMap.setCenter(results[0].geometry.location);
 
       //국가-jason 값 가져오기
@@ -292,12 +295,12 @@ function IdCheck() {
 // 닉네임
 var genck = 0;
 function NameCheck() {
-	var name_val = $("#name_val").val();
-	if (name_val) {
+	var user_name = $("#name_val").val();
+	if (user_name) {
 		$.ajax({
 			async : true,
 			type : 'POST',
-			data : name_val,
+			data : user_name,
 			url : "nameCheck.go",
 			dataType : "json",
 			/* contentType : "application/json", */
