@@ -3,6 +3,7 @@
 
 <%@ include file="setting.jsp"%>
 <%@include file="header.jsp" %>
+<% request.setCharacterEncoding("utf-8"); %>
 
 <!DOCTYPE html>
 <html lang="ko">
