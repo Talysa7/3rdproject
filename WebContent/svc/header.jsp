@@ -113,7 +113,7 @@
 					<li class="nav-item"><a class="nav-link" href="myTrip.go">${page_calendar_eng}</a>
 					</li>
 				</ul>
-				<c:if test="${user_level ne 9}">
+				<c:if test="${user_level ne 1}">
 					<form class="form-inline mt-2 mt-md-0 login-section" name="serch_trip" method="post" action="searchTrip.go" >
 						<select name="search_type">
 						<option value="schedule">${search_trip_schedule}</option>
@@ -124,7 +124,7 @@
 						<a href="myPage.go" class="nav-item">${page_mypage2}</a> &nbsp;
 					</form>
 				</c:if>
-				<c:if test="${user_level eq 9}">
+				<c:if test="${user_level eq 1}">
 					<form class="form-inline mt-2 mt-md-0 login-section" name="serch_trip" method="post" action="searchTrip.go" >
 						<select name="search_type">
 							<option value="schedule">${search_trip_schedule}</option>

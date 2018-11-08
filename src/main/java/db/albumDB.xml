@@ -6,7 +6,7 @@
 
 	<insert id="addPhoto" parameterType="db.AlbumDataBean">
 		insert into pao_album(photo_url,user_id,board_no,photo_reg_date)
-		values(#{photo_url},#{user_id},#{board_no},sysdate)
+		values(#{photo_url},#{user_id},#{board_no},current_timestamp)
 	</insert>
 	<delete id="delPhoto" parameterType="int">
 		delete from pao_album where
