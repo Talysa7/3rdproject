@@ -292,12 +292,12 @@ function IdCheck() {
 // 닉네임
 var genck = 0;
 function NameCheck() {
-	var name_val = $("#name_val").val();
-	if (name_val) {
+	var user_name = $("#name_val").val();
+	if (user_name) {
 		$.ajax({
 			async : true,
 			type : 'POST',
-			data : name_val,
+			data : user_name,
 			url : "nameCheck.go",
 			dataType : "json",
 			/* contentType : "application/json", */

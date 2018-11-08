@@ -123,7 +123,7 @@
 		passwd=#{passwd}, user_name=#{user_name} where
 		user_id=#{user_id}
 	</update>
-	<select id="nameCheck" parameterType="String" resultType="Integer">
+	<select id="nameCheck" parameterType="String" resultType="int">
 		select count(*) from pao_user where user_name=#{user_name}
 	</select>
 <!-- Trip -->
