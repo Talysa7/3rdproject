@@ -131,27 +131,35 @@ public class SvcProHandler {
 	@RequestMapping("/userModPro")
 	public ModelAndView UserModifyprocess(HttpServletRequest request, HttpServletResponse response)
 			throws HandlerException {
-		
+		try {
+			request.setCharacterEncoding("utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		UserDataBean userDto = new UserDataBean();
 		String user_id = (String) request.getSession().getAttribute("user_id");
-		
 		userDto.setUser_id(user_id);
 		userDto.setPasswd(request.getParameter("passwd"));
 		userDto.setUser_name(request.getParameter("user_name"));
-		String[] tagValues = request.getParameterValues("tags");
 		List<TagDataBean> userTags = new ArrayList<TagDataBean>();
-
-		for (int i = 0; i < tagValues.length; i++) {
-			TagDataBean tempTagBean = tagDao.getTag(Integer.parseInt(tagValues[i]));
-			userTags.add(tempTagBean);
-		}
-
-		int result = userDao.modifyUser(userDto);
-		if (result == 1) {
-			request.setAttribute("result", result);
-			result = tagDao.updateUserTags(user_id, userTags);
-		}
-    
+		
+		try {
+			String[] tagValues = request.getParameterValues("tags");		
+			for(int i=0; i<tagValues.length; i++) {
+				TagDataBean tempTagBean = tagDao.getTag(Integer.parseInt(tagValues[i]));
+				userTags.add(tempTagBean);		
+			}
+			int result = userDao.modifyUser(userDto);
+			if (result == 1) {
+				request.setAttribute("result", result);
+				result = tagDao.updateUserTags(user_id, userTags);
+			}			
+		}catch(NullPointerException e) {
+			int result = userDao.modifyUser(userDto);
+			if (result == 1) {
+				request.setAttribute("result", result);
+			}			
+		}		
 		return new ModelAndView("svc/userModPro");
 	}
 
