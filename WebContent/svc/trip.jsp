@@ -148,30 +148,20 @@
 					<button class="btn" onclick="showAlbum()">${trip_photo}</button>
 				</section>
 
-				<!--boardAlbum영역  -->
-				<c:if test="${tab eq 0}">
-					<section id="albumTab" style="display: none">
-				</c:if>
-				<c:if test="${tab eq 1}">
-					<section id="albumTab">
+				<section id="albumTab" style="display: none">
+					<!-- boardAlbum -->
 					<div class="row" id="album">
 						<jsp:include
 							page='boardAlbum.go?board_no=${boardDto.board_no}&start=${start}&tab=${tab}'
 							flush='false' />
 					</div>
-				</c:if>
-				</section>
-
-				<!--ㅡMap영역  -->
-				<c:if test="${tab eq 0}">
-					<div id="mapTab">
-				</c:if>
-				<c:if test="${tab eq 1}">
-				<div id="mapTab" style="display: none">
+					<!--- Map -->
 					<div id="map">${trip_map}</div>
-					<input type="hidden" value="${lat}" id="lat" /> <input type="hidden" value="${lng}" id="lng" />
-				</div>
-			</c:if>
+						<input type="hidden" value="${lat}" id="lat" /> <input type="hidden" value="${lng}" id="lng" />
+					</div>
+				</section>
+				
+		<!-- End of Post -->
 		</article>
 
 		<!-- comment -->
