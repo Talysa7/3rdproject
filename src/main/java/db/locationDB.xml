@@ -173,7 +173,7 @@
 	<select id="getBoardTripList" parameterType="int" resultType="db.TripDataBean">
 		select *
 		from pao_view_trip
-		where board_id=#{board_id}
+		where board_no=#{board_no}
 	</select>
 	<select id="getCoordinate" parameterType="int" resultType="db.CoordDataBean">
 		select *
@@ -183,7 +183,7 @@
 	<select id="getTripListByBoardNo" parameterType="int" resultType="db.TripDataBean">
 		select *
 		from pao_view_trip
-		where board_id=#{board_id}
+		where board_no=#{board_no}
 	</select>
 	<select id="autoComplete" parameterType="String" resultType="db.CoordDataBean">
 		SELECT coord_name FROM pao_coordinate WHERE coord_name LIKE '#{coord_name}%'

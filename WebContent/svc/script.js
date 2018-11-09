@@ -139,6 +139,9 @@ function geocodeAddress(geocoder, resultsMap) {
   var address = document.getElementById('address').value;
   geocoder.geocode({'address': address}, function(results, status) {
     if (status === 'OK') {
+		for(var i =0; i<results.length; i++){
+		alert(results[i]);
+		}
       resultsMap.setCenter(results[0].geometry.location);
 
       //국가-jason 값 가져오기

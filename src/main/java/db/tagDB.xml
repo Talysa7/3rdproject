@@ -57,9 +57,9 @@
 		delete from pao_tag where
 		tag_id=#{tag_id}
 	</delete>
-	
-	<select id="getTbTag" parameterType="int" resultType="java.util.List">
-		select tag_value from pao_trip_tag where board_no=#{board_no}
+<!-- talysa7 fixed -->
+	<select id="getBoardTags" parameterType="int" resultType="db.TagDataBean">
+		select * from pao_view_board_tags where board_no=#{board_no}
 	</select>
 
 
@@ -116,7 +116,7 @@
 		insert into pao_user_tag values(#{user_id}, #{tag_id}) 
 	</insert>
 	<select id="getPostTags" parameterType="int" resultType="db.TagDataBean">
-		select * from pao_view_board_tags where board_id=#{board_id}
+		select * from pao_view_board_tags where board_no=#{board_no}
 	</select>
 
 

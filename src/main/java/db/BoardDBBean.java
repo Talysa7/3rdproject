@@ -22,13 +22,13 @@ public class BoardDBBean {
 
 	//get one trip post by tb_no, including location and tag list
 	public BoardDataBean getPost(int board_no) {
-		BoardDataBean boardDto=session.selectOne("board.getBoard", board_no);
+		BoardDataBean boardDto=session.selectOne("board.getPost", board_no);
 		//if that user left
 		if(boardDto.getUser_id()==null||boardDto.getUser_id().equals("")) {
 			boardDto.setUser_name("Ex-User");
 		}
 		//set tags
-		List<TagDataBean> board_tags=session.selectList("tag.getTripTags", board_no);
+		List<TagDataBean> board_tags=session.selectList("tag.getBoardTags", board_no);
 		boardDto.setBoard_tags(board_tags);
 		//set trips
 		List<TripDataBean> tripLists=session.selectList("location.getBoardTripList", board_no);
@@ -58,12 +58,34 @@ public class BoardDBBean {
 		else return false;
 	}
 
-	public List<BoardDataBean> findPostByKeyword(String keyword) {	//	수정필요.
-		return session.selectList("board.getPostByKeyword", keyword);
+	public List<BoardDataBean> findPostByKeyword(String keyword) {	
+		//for where~like searching 
+		keyword="%"+keyword+"%";
+		List<BoardDataBean> postList=session.selectList("board.getPostByKeyword", keyword);
+		for(BoardDataBean boardDto:postList) {
+			//set Trips
+			List<TripDataBean> tripLists=session.selectList("location.getTripListByBoardNo", boardDto.getBoard_no());
+			boardDto.setTripLists(tripLists);
+			//set Tags
+			List<TagDataBean> board_tags=session.selectList("tag.getPostTags", boardDto.getBoard_no());
+			boardDto.setBoard_tags(board_tags);
+		}
+		return postList;
 	}
 
-	public List<BoardDataBean> findPostByUser(String keyword) {	// 수정필요.
-		return session.selectList("board.getPostByUserName", keyword);
+	public List<BoardDataBean> findPostByUser(String keyword) {
+		//for where~like searching 
+		keyword="%"+keyword+"%";
+		List<BoardDataBean> postList=session.selectList("board.getPostByUserName", keyword);
+		for(BoardDataBean boardDto:postList) {
+			//set Trips
+			List<TripDataBean> tripLists=session.selectList("location.getTripListByBoardNo", boardDto.getBoard_no());
+			boardDto.setTripLists(tripLists);
+			//set Tags
+			List<TagDataBean> board_tags=session.selectList("tag.getPostTags", boardDto.getBoard_no());
+			boardDto.setBoard_tags(board_tags);
+		}
+		return postList;
 	}
 
 	public List<Map<String, String>> getMemInfoList(int board_no) {	//	 얘도 수정필요.
@@ -92,10 +114,10 @@ public class BoardDBBean {
 		Map<String, Integer> tripReq=new HashMap<String, Integer>();
 		tripReq.put("startRowNumber", rowNumber);
 		tripReq.put("endRowNumber", rowNumber*postPerPage);
-		List<BoardDataBean> boardList=session.selectList("board.getPostList", tripReq);
+		List<BoardDataBean> postList=session.selectList("board.getPostList", tripReq);
 		//user_name null exception
-		if(boardList.size()>0) {
-			for(BoardDataBean boardDto:boardList) {
+		if(postList.size()>0) {
+			for(BoardDataBean boardDto:postList) {
 				if(boardDto.getUser_id().equals("")||boardDto.getUser_id()==null) {
 					boardDto.setUser_name("Ex-User");
 				}
@@ -107,7 +129,7 @@ public class BoardDBBean {
 				boardDto.setBoard_tags(board_tags);
 			}
 		}
-		return boardList;
+		return postList;
 	}
 	public BoardDataBean getBoard(int board_no) {
 		return session.selectOne("board.getBoard", board_no);

@@ -8,6 +8,7 @@
 <html>
 <center>
 		<h2>${page_not_found}</h2>
+		<br>
 		<img src="${project}img/paori.png">
 	</center>
 </body>
