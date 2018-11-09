@@ -105,7 +105,7 @@
 	<insert id="insertUser" parameterType="db.UserDataBean">
 		insert into pao_user
 		values(#{user_id}, #{passwd}, #{user_name}, #{email, jdbcType=VARCHAR},#{reg_date}, #{gender},
-		 0,25 ) <!-- 나이임시처리, jsp에 나이 추가 필 요-->
+		 1,25 ) <!-- 나이임시처리, jsp에 나이 추가 필 요-->
 	</insert>
 
 	<select id="checkId" parameterType="String" resultType="int">
