@@ -49,15 +49,15 @@
 			</div>
 			<!--  -->
 			<br>
-			<input type="hidden" id="board_level" value="${boardDto.board_level}"/>
 			<!----- 공지 ----->
 			<article>
 				<section>
-					<c:if test="${boardDto.board_level == 0}">
+					<c:if test="${boardDto.board_level eq 1}">
 						<div style="font-size:32px;">
 							<img class="mb-4" src="${project}img/logo_c.png" alt="" width="40" height="40"> <b>${trip_notice_2}</b>
 						</div>
 					</c:if>
+					<!-- Post -->
 					<div id="trip_title">
 						<div class="row">
 							<input type="text" name="trip_title" class="col-12 form-control form-control-lg"
@@ -65,29 +65,30 @@
 						</div>
 						<div class="row">
 							<div class="text-muted">
-								<i><b>With</b></i>&nbsp; ${boardDto.user_id}
+								<i><b>With</b></i>&nbsp; ${boardDto.user_name}
 							</div>
 						</div>
 						<c:forEach var="trip" items="${boardDto.tripLists}">
-							<c:set var="order" value="${trip.trip_order}" />
+							<c:set var="order" value="${trip.coord_order}" />
 							<form name="orderInfo">
 								<input type="hidden" name="order_of_${trip.td_trip_id}" value="${trip.coord_order}">
+								<input type="hidden" name="member_count_${trip.td_trip_id}" value="${trip.trip_member_count}">
 							</form>
-							<div class="container" style="width: 100%" onmouseover="focusMarker(${order},${i.coord_long},${i.coord_lat})">
+							<div class="container" style="width: 100%" onmouseover="focusMarker(${order},${trip.coord_long},${trip.coord_lat})">
 								<div class="row">
 									<label class="col-2">${trip_schedule}</label> <input
-										type="text" class="col-3" value="${i.cal_start_date}"
+										type="text" class="col-3" value="${trip.start_date}"
 										readonly="readonly" /> ~ <input type="text" class="col-3"
-										value="${i.cal_end_date}" readonly="readonly" />
+										value="${trip.end_date}" readonly="readonly" />
 								</div>
 								<!-- 날짜 일정 -->
 								<div class="row">
 									<div class="col-12 offset-2">
 										<div class="loc" name="coord">
 											<input type="text" name="trip_location${order}" id="address${order}" class="col-8 pt-3" readonly="readonly">
-											<input type="hidden" name="coord_long" value="${i.coord_long}"> 
-											<input type="hidden" name="coord_lat" value="${i.coord_lat}"> 
-											<input type="hidden" id="country${order}" value="${i.country_name}">
+											<input type="hidden" name="coord_long" value="${trip.coord_long}"> 
+											<input type="hidden" name="coord_lat" value="${trip.coord_lat}"> 
+											<input type="hidden" id="country${order}" value="${trip.country_name}">
 										</div>
 										<!-- 장소 -->
 									</div>
@@ -95,15 +96,15 @@
 								</div>
 								<!-- row -->
 								<div class="row">
-									<label class="col-2">${trip_m_num}</label>
-									<div id="trip_button_${i.td_trip_id}">
+									<label class="col-2">${trip_member_count}</label>
+									<div id="trip_button_${trip.trip_id}">
 										<c:if test="${sessionScope.user_id ne null}">
 											<c:choose>
 												<c:when test="${isOwner eq 1}">
 													&nbsp; 
 												</c:when>
 												<c:when test="${isMember eq true}">
-													<button onclick="absent(${i.td_trip_id})" class="btn btn-sm">불참</button>
+													<button onclick="absent(${trip.trip_id})" class="btn btn-sm">불참</button>
 												</c:when>
 												<c:otherwise>
 													<button onclick="attend(${i.td_trip_id})" class="btn btn-sm">참석</button>
@@ -113,31 +114,26 @@
 									</div>
 									 &nbsp; 
 									<div>
-										<c:forEach var="memInfoList" items="${memInfoList}">
-											<c:if test="${i.td_trip_id eq memInfoList.td_trip_id}">
-												<div id="trip_member_list_${order}">
-													${memInfoList.memNum}/${tbDto.tb_m_num}, ${memInfoList.members}</div>
-											</c:if>
-										</c:forEach>
+										<div id="trip_member_list_${order}">
+											${member.size}/${trip.trip_member_count}, &nbsp; 
+											<c:forEach var="member" items="${trip.trip_members}">
+												${member.user_name}
+											</c:forEach>
+										</div>
 									</div>
 								</div>
 							</div>
 						</c:forEach>
 							<!-- 일정 Container box-->
-						
-						<form name="trip_detail">
-							<input type="hidden" name="user_id" value="${user_id}"> 
-							<input type="hidden" name="m_num" value="${tbDto.tb_m_num}">
-						</form>
 
 						<div class="row pt-3 pb-1">
-							<label class="col-2">${tb_talk}</label> <a
-								href="${tbDto.tb_talk}" target="_blank">${tbDto.tb_talk}</a>
+							<label class="col-2">${boardDto.board_contact}</label>
+							<a href="${boardDto.board_contact}" target="_blank">${boardDto.board_contact}</a>
 						</div>
 						<div id="trip_content">
 							<div class="row px-3">
 								<textarea class="col-12" rows="8"
-									style="border: dotted 1px grey" readonly>${tbDto.tb_content}</textarea>
+									style="border: dotted 1px grey" readonly>${boardDto.board_content}</textarea>
 							</div>
 						</div>
 						<!-- id: trip_content -->
@@ -148,22 +144,22 @@
 				<br>
 				<!--button 영역 -->
 				<section>
-					<button class="btn" onclick="showMap()">지도</button>
-					<button class="btn" onclick="showAlbum()">사진</button>
+					<button class="btn" onclick="showMap()">${trip_map}</button>
+					<button class="btn" onclick="showAlbum()">${trip_photo}</button>
 				</section>
 
 				<!--boardAlbum영역  -->
-				<c:if test="${tab eq '0'}">
+				<c:if test="${tab eq 0}">
 					<section id="albumTab" style="display: none">
 				</c:if>
-				<c:if test="${tab eq '1'}">
+				<c:if test="${tab eq 1}">
 					<section id="albumTab">
-				</c:if>
 					<div class="row" id="album">
 						<jsp:include
-							page='boardAlbum.go?board_no=${board_no}&start=${start}&tab=${tab}'
+							page='boardAlbum.go?board_no=${boardDto.board_no}&start=${start}&tab=${tab}'
 							flush='false' />
 					</div>
+				</c:if>
 				</section>
 
 				<!--ㅡMap영역  -->
@@ -171,12 +167,11 @@
 					<div id="mapTab">
 				</c:if>
 				<c:if test="${tab eq 1}">
-					<div id="mapTab" style="display: none">
-				</c:if>
-				<div id="map">지도</div>
-				<input type="hidden" value="${lat}" id="lat" /> <input
-					type="hidden" value="${lng}" id="lng" />
-		</div>
+				<div id="mapTab" style="display: none">
+					<div id="map">${trip_map}</div>
+					<input type="hidden" value="${lat}" id="lat" /> <input type="hidden" value="${lng}" id="lng" />
+				</div>
+			</c:if>
 		</article>
 
 		<!-- comment -->
@@ -185,13 +180,11 @@
 				<label for="content">comment</label>
 				<form name="commentInsertForm" method="post">
 					<div class="input-group">
-						<input type="hidden" name="board_no" value="${board_no}" /> <input
-							type="hidden" name="session" value="${user_id}" /> <input
-							type="text" class="input col-11" id="c_content" name="c_content"
-							placeholder="${trip_entercontent}"> <span
-							class="input-group-btn">
-							<button class="btn btn-default" type="button"
-								onclick="commentInsert()">등록</button>
+						<input type="hidden" name="board_no" value="${boardDto.board_no}" /> 
+						<input type="hidden" name="session" value="${boardDto.user_id}" />
+						<input type="text" class="input col-11" id="c_content" name="c_content" placeholder="${trip_entercontent}">
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button" onclick="commentInsert()">${trip_write}</button>
 						</span>
 					</div>
 				</form>
