@@ -166,7 +166,7 @@ public class SvcProHandler {
 
 	@RequestMapping("/loginPro")
 	public ModelAndView Loginprocess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
-		int userType = 0;
+		int userType = 1;
 		String id = request.getParameter("user_id");
 		String passwd = request.getParameter("passwd");
 		UserDataBean userDto = userDao.getUser(id);
@@ -184,7 +184,7 @@ public class SvcProHandler {
 			if (result == 1) {
 				int user_level = userDto.getUser_level();
 				if (user_level == ADMIN) {
-					userType = 1;									
+					userType = 9;									
 				}
 				request.setAttribute("userType", userType);
 			}

@@ -75,7 +75,7 @@
 				<div class="col-sm-2"></div>
 				<div class="col-sm-8">
 					<button type="button" class="btn btn-lg btn-secondary btn-block" onclick="location='userModPassCheck.go'">${btn_modify}</button>
-					<c:if test="${userDto.user_level ne 1}">
+					<c:if test="${userDto.user_level ne 9}">
 					<button type="button" class="btn btn-lg btn-secondary btn-block" onclick="location='userLeave.go'">${btn_user_delete}</button>
 					</c:if>
 					<button type="button" class="btn btn-lg btn-secondary btn-block" onclick="location='logout.go'">${btn_logout}</button>

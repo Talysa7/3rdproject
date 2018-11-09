@@ -84,7 +84,7 @@ public class AdmListHandler {
 		return new ModelAndView("admin/default");
 	}
 
-	@RequestMapping("adminTrip")
+	@RequestMapping("/adminTrip")
 	public ModelAndView adminTripHandler(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		request.setAttribute("page", tripP);
 		int count = boardDao.getPostsCount();//list row num
@@ -119,7 +119,7 @@ public class AdmListHandler {
 //		}
 		return new ModelAndView("admin/trip");
 	}
-	@RequestMapping("adminComment")
+	@RequestMapping("/adminComment")
 	public ModelAndView adminContentHandler(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		request.setAttribute("page", commentP);
 		int count = cmtDao.getCmtCount();//list row num
@@ -163,7 +163,7 @@ public class AdmListHandler {
 
 		return new ModelAndView("admin/user");
 	}
-	@RequestMapping("adminTag")
+	@RequestMapping("/adminTag")
 	public ModelAndView adminTagHandler(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		request.setAttribute("page", tagP);
 		int count=tagDao.getTagCount();//list row num
@@ -185,7 +185,7 @@ public class AdmListHandler {
 		return new ModelAndView("admin/tag");
 	}
 	
-	@RequestMapping("adminAlbum")
+	@RequestMapping("/adminAlbum")
 	public ModelAndView adminPhotoHandler(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		request.setAttribute("page", albumP);
 		int count = albumDao.getAlbumCount();//list row num
@@ -195,7 +195,7 @@ public class AdmListHandler {
 		}
 		return new ModelAndView("admin/album");
 	}
-	@RequestMapping("adminLogout")
+	@RequestMapping("/adminLogout")
 	public ModelAndView adminLogoutHandler(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		request.getSession().removeAttribute( "user_id" );
 		request.getSession().removeAttribute( "user_level" );
