@@ -13,3 +13,4 @@
 		<h4><a href="adminLogout.go">${str_logout}</a></h4>
 	</div>
 </header>
+<!-- FIXME : 이거 용도 확인 후 삭제 예정 -->
