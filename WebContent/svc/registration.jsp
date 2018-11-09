@@ -49,8 +49,7 @@
 				<label for="inputPassword" class="col-sm-2 col-form-label">${str_passwd}</label>
 				<div class="col-sm-8">
 					<input type="password" class="form-control" id="userPassword1"
-						name="passwd" placeholder="비밀번호" maxlength="30" required
-						onkeyup="passwordCheckFunction()">
+						name="passwd" placeholder="비밀번호" maxlength="30" required">
 				</div>
 			</div>
 			<div class="form-group row">
