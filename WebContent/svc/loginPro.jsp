@@ -23,10 +23,10 @@
 </c:if>
 <c:if test="${result eq 1}">
 	${sessionScope.user_id = id}
-	<c:if test="${userType eq 1}">
-		${sessionScope.user_level = 1}
+	<c:if test="${userType eq 9}">
+		${sessionScope.user_level = 9}
 		<c:redirect url="adminTrip.go"/>
 	</c:if>
-	${sessionScope.user_level = 0}
+	${sessionScope.user_level = 1}
 	<c:redirect url="tripList.go"/>
 </c:if>
