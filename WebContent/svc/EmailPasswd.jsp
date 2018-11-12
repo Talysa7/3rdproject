@@ -36,7 +36,7 @@
 						<button type="button" class="btn btn-md btn-secondary" 
 						onclick="EmailCheck(inputform.email1.value)">${btn_confirm_smtp}</button>
 						<input type="hidden" name="confirm" value="0">
-						<input type="hidden" name="eType" value="2">
+						<input type="hidden" name="eType" id="eType" value="2">
 					</div>
 				</div>
 			</div>

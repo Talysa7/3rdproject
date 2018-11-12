@@ -63,7 +63,7 @@ import db.UserDataBean;
 
 @Controller
 public class SvcProHandler {
-	private static final int ADMIN = 1;
+	private static final int ADMIN = 9;
 	private static final int EXTENSION_ERROR = -1;
 	private static final int SIZE_ERROR = -2;
 	private static final int SUCCESS = 1;
