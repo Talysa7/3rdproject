@@ -846,7 +846,35 @@ function absent(td_trip_id) {
 
 ///////////////////////////////////////////////////////이민재//////////////////////////////////////////////////////
 	//자동완성
-
+		$(function(){
+			$("#searchTag").autocomplete({
+				source : function( request, response ) {
+					$.ajax({
+							type: 'post',
+							url : 'searchTag.go',
+							dataType: "json",
+							data: { tag_value : request.term + "%" },
+							success: function(data) {
+								response(
+									$.map(data, function(item) {
+										return {
+											label: item[0].tag_value,
+											value: item[0].tag_value
+										}
+									})
+								);
+							}
+							
+					})
+				},
+				minLength: 2,
+				select: function(event, ui){
+					alert(ui.item.value);
+					var tagStr = "<button type='button' class='btn btn-default'><input type='checkbox' name='user_tag' value='"+ui.item.value+"'>"+ui.item.value+"</button>"
+					$("#tagArea").append(tagStr)
+				}
+			});
+		}) 
 
 
 

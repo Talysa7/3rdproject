@@ -118,6 +118,8 @@
 	<select id="getPostTags" parameterType="int" resultType="db.TagDataBean">
 		select * from pao_view_board_tags where board_no=#{board_no}
 	</select>
-
+	<select id="tagAutoComplete" parameterType="String" resultType="db.TagDataBean">
+		SELECT tag_value FROM pao_tag WHERE tag_value LIKE #{tag_value}
+	</select>
 
 </mapper>

@@ -5,6 +5,7 @@
 <%@include file="header.jsp" %>
 <% request.setCharacterEncoding("utf-8"); %>
 
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -20,6 +21,9 @@
 <link rel="stylesheet" href="${project}travelers_style.css">
 <!-- jQuery (부트스트랩의 자바스크립트 플러그인을 위해 필요한) -->
 <script src="//code.jquery.com/jquery.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="${project}script.js"></script>
 </head>
 <body class="registration">
@@ -111,14 +115,15 @@
 			
 			<div class="form-group row">
 				<label for="tag" class="control-label col-sm-2" >${str_tag} </label>
-				<div class="col-sm-8">				
-				<c:forEach var="i" items="${styleTags}">
-                	<div class="btn-group btn-group-sm" role="group" aria-label="...">
-                		<button type="button" class="btn btn-default"><input type="checkbox" name="user_tag" value="${i.tag_id}">${i.tag_value}</button>
-                	</div>
-                </c:forEach>
-            </div>
-                
+				<div id="tagArea" class="col-sm-8">				
+					<c:forEach var="i" items="${styleTags}">
+	                	<div class="btn-group btn-group-sm" role="group" aria-label="...">
+	                		<button type="button" class="btn btn-default"><input type="checkbox" name="user_tag" value="${i.tag_id}">${i.tag_value}</button>
+	                	</div>
+	                </c:forEach>
+	                
+           		</div>
+           		<input type="text" id="searchTag" value="검색하세요">
             </div>
             
 			<div class="form-group row">

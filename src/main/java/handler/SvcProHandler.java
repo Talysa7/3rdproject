@@ -771,22 +771,23 @@ public class SvcProHandler {
 		return memberList;
 	}
 	//////////////////////////////////////ajax추가분 이민재 2018.11.05 /////////////////////////////////////
-	@RequestMapping(value = "addAuto", produces="application/json") 
+	@RequestMapping(value = "searchTag", produces="application/json") 
 	@ResponseBody
 	private String addAuto(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String coord_name = request.getParameter("coord_name");
-		List<CoordDataBean> coords = coordDao.autoComplete(coord_name);
+		String tag_value = request.getParameter("tag_value");
+		List<TagDataBean> tags = tagDao.tagAutoComplete(tag_value);
 		
 		ObjectMapper mapper = new ObjectMapper(); 
 		
-		String citys=""; 
+		String tagstr=""; 
 		try { 
-			citys = mapper.writeValueAsString(coords);
+			tagstr = mapper.writeValueAsString(tags);
 			
 		} catch (IOException e) { 
 			e.printStackTrace(); 
 		}
-		return citys;
+		System.out.println(tags);
+		return tagstr;
 	}
 	//////////////////////////////////////ajax추가분 이민재 2018.11.05 /////////////////////////////////////
 	///////////////////////////////// etc/////////////////////////////////

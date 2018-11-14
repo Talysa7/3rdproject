@@ -148,5 +148,9 @@ public class TagDBBean {
 		public int setTripTag(Map<String, Integer> tagSetter) {
 			return session.update("tag.insertTripTags", tagSetter);
 		}	
+		
+		public List<TagDataBean> tagAutoComplete(String tag_value){
+			return session.selectList("tag.tagAutoComplete", tag_value);
+		}
 	
 }
