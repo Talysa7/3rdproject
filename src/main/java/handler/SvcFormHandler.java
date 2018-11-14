@@ -18,6 +18,7 @@ import db.CoordDataBean;
 import db.CountryDBBean;
 import db.CountryDataBean;
 import db.MemberDBBean;
+import db.MemberDataBean;
 import db.TagDBBean;
 import db.TagDataBean;
 import db.BoardDBBean;
@@ -154,5 +155,18 @@ public class SvcFormHandler {
 		request.setAttribute("tripTags", tripTags); 
 		
 		return new ModelAndView("svc/tripMod");
+	}
+	
+	@RequestMapping("/evaluation")
+	public ModelAndView svcEvaluationProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
+		String user_id = (String) request.getSession().getAttribute("user_id");
+		List<TripDataBean> tripDto = tripDao.getUserTripList(user_id);
+		request.setAttribute("tripDto", tripDto);
+		for(int i=0; i<tripDto.size(); i++) {
+			int trip_id =tripDto.get(i).getTrip_id();
+			List<MemberDataBean> memberList= memberDao.getMembers(trip_id);
+			request.setAttribute("memberList", memberList);
+		}
+		return new ModelAndView("svc/evaluaion");		
 	}
 }

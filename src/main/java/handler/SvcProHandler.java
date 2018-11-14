@@ -50,6 +50,7 @@ import db.CmtDBBean;
 import db.CmtDataBean;
 import db.CoordDBBean;
 import db.CoordDataBean;
+import db.EvaluationDataBean;
 import db.MemberDBBean;
 import db.MemberDataBean;
 import db.TagDBBean;
@@ -629,7 +630,25 @@ public class SvcProHandler {
 		response.getOutputStream().flush();
 		response.getOutputStream().close();
 	}
-
+	/////////////////////////evaluation ////////////////////
+	public ModelAndView evaluationProcess(HttpServletRequest request, HttpServletResponse response)
+	 		throws HandlerException, IOException{
+		String user_name = request.getParameter("sel1");
+		String evaluation = request.getParameter("textarea");
+		int grade = Integer.parseInt(request.getParameter("grade"));
+		String user_id = (String) request.getSession().getAttribute("user_id");
+		String name = userDao.getUserName("user_id");
+		
+		EvaluationDataBean evalDto = new EvaluationDataBean();
+		evalDto.setEvaluation(evaluation);
+		evalDto.setGrade(grade);
+		evalDto.setUser_name(user_name);
+		evalDto.setWriter_name(name);
+		request.setAttribute("evalDto", evalDto);
+		
+		return new ModelAndView("/svc/evaluationPro");		
+	}
+	
 	///////////////////////////////// ajax list/////////////////////////////////
 
 	@RequestMapping(value = "/checkId.go", method = RequestMethod.POST, produces = "application/json")

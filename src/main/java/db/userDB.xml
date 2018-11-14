@@ -141,5 +141,12 @@
 		from pao_view_trip
 		where trip_id=#{trip_id}
 	</select>
+<!-- evaluation -->
+	<select id="getEvaluation" parameterType="String" resultType="java.util.List">
+		select * from pao_evaluation where user_id=#{user_id}
+	</select>
+	<insert id="insertEvaluation" parameterType="db.EvaluationDataBean">
+		insert into pao_evaluation values(#{user_name}, #{evaluation}, #{grade}, #{writer_name})
+	</insert>
 </mapper>
 
