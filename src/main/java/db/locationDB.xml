@@ -125,7 +125,7 @@
 	<!-- getTripDetail 에서 쓰는 쿼리 모음  -->
 	<!-- FIXME : getTripDetail 자체가 join 이나 서브쿼리로 해결 될 수 없는지 연구해봐야겠다 -->
 	<insert id="insertCoord" parameterType="db.CoordDataBean" keyProperty="coord_id">
-		INSERT INTO pao_coordinate(coord_name,country_id,coord_long,coord_lat) 
+		INSERT INTO pao_coordinate(coord_name,country_code,coord_long,coord_lat) 
 			VALUES( #{coord_name},#{country_code}, #{coord_long}, #{coord_lat} )
 	</insert>
 	<select id="getTripIds" resultType="int">
