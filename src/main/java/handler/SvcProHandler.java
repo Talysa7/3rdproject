@@ -631,6 +631,7 @@ public class SvcProHandler {
 		response.getOutputStream().close();
 	}
 	/////////////////////////evaluation ////////////////////
+	@RequestMapping("/evaluationPro")
 	public ModelAndView evaluationProcess(HttpServletRequest request, HttpServletResponse response)
 	 		throws HandlerException, IOException{
 		String user_name = request.getParameter("sel1");
