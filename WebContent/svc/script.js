@@ -646,7 +646,9 @@ function loadMoreList(next_row) {
 //달력 불러오기 //순서대로 입력 받기
 function loadCal(num){ 
 	if(num==1){
-		$("#start"+num+"").datepicker();
+		$("#start"+num+"").datepicker({
+			minDate:0
+		});
 	}else if(num>1){
 		var beforeStart=$('#start'+(num-1)+'').val();
 		$("#start"+num+"").datepicker({

@@ -348,7 +348,6 @@ public class SvcProHandler {
 		for (int i = 1; i <= schedulenum; i++) {
 			TripDataBean tripDto = new TripDataBean();
 			String coord_name = request.getParameter("place"+i);
-			System.out.println(coord_name);
 			List<CoordDataBean> coords = coordDao.checkCoordName(coord_name);	//	 같은이름의 coord가 있나 체크.
 			int coord_id=-1;	//	coord_id 초기값.
 			
@@ -359,9 +358,11 @@ public class SvcProHandler {
 				String country_code = request.getParameter("country_code" + i + "");
 				double coord_lat = Double.parseDouble(request.getParameter("lat" + i + ""));
 				double coord_long = Double.parseDouble(request.getParameter("lng" + i + ""));
-				
+				System.out.println(country_code);
+				System.out.println(coord_lat);
+				System.out.println(coord_long);
 				coordDto.setCoord_name(coord_name);
-				coordDto.setCountry_id(country_code);
+				coordDto.setCountry_code(country_code);
 				coordDto.setCoord_lat(coord_lat);
 				coordDto.setCoord_long(coord_long);
 				
@@ -630,8 +631,8 @@ public class SvcProHandler {
 		response.getOutputStream().flush();
 		response.getOutputStream().close();
 	}
-	/////////////////////////evaluation ////////////////////
-	@RequestMapping("/evaluationPro")
+	/////////////////////////review ////////////////////
+	@RequestMapping("/reviewPro")
 	public ModelAndView evaluationProcess(HttpServletRequest request, HttpServletResponse response)
 	 		throws HandlerException, IOException{
 		String user_name = request.getParameter("sel1");

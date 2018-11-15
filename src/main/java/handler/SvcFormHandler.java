@@ -157,7 +157,7 @@ public class SvcFormHandler {
 		return new ModelAndView("svc/tripMod");
 	}
 	
-	@RequestMapping("/evaluation")
+	@RequestMapping("/review")
 	public ModelAndView svcEvaluationProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		String user_id = (String) request.getSession().getAttribute("user_id");
 		List<TripDataBean> tripDto = tripDao.getUserTripList(user_id);
