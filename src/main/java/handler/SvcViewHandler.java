@@ -201,7 +201,7 @@ public class SvcViewHandler {
 	@RequestMapping("/album")
 	public ModelAndView svcAlbumProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		//get all photos and its amount from pao_album
-		List<AlbumDataBean>album=albumDao.getAllPhotos();
+		List<AlbumDataBean> album=albumDao.getAllPhotos();
 		int photoCount=album.size();
 		request.setAttribute("photoCount", photoCount);
 		if(photoCount>0) {
