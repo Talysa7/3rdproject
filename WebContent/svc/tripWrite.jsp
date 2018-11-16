@@ -55,7 +55,7 @@
             <div class="form-group row">
                  <label for="trip_location" class="col-2 col-form-label">${trip_location}</label>
                <div id="floating-panel" class="col-10">
-                  <input id="address" type="text"/>
+                  <input id="address" type="text" autocomplete=off/>
                   <input id="addSubmit" type="button" class="btn btn-dark btn-sm"  value="${btn_search}"/>
                </div>
                <div id="searchmap" class="col-12">

@@ -41,6 +41,7 @@
 <c:set var="email_used" value="이미 사용 중입니다. "/>
 <c:set var="page_not_found" value="페이지를 찾을 수 없습니다."/>
 
+
 <c:set var="str_id" value="아이디"/> <!-- o -->
 <c:set var="str_passwd" value="비밀번호"/> <!-- o -->
 <c:set var="str_repasswd" value="비밀번호 재입력"/> <!-- o -->
@@ -51,6 +52,7 @@
 <c:set var="str_email" value="이메일"/>
 <c:set var="str_reg_date" value="가입일자"/>
 <c:set var="str_tag" value="#태 그"/>
+<c:set var="str_searchTag" value="태그검색"/>
 <c:set var="str_write" value="글쓰기"/>
 <c:set var="trip_talk_link" value="오픈채팅"/>
 
@@ -82,6 +84,7 @@
 <c:set var="btn_auth" value="인증"/>
 <c:set var="btn_back_admin" value="뒤로"/>
 <c:set var="btn_add_trip" value="일정추가"/>
+<c:set var="btn_insert_tag" value="태그추가"/>
 
 <c:set var="trip_title" value="제목"/>
 <c:set var="trip_writer" value="작성자"/>

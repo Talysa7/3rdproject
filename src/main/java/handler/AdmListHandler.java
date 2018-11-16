@@ -86,6 +86,7 @@ public class AdmListHandler {
 
 	@RequestMapping("/adminTrip")
 	public ModelAndView adminTripHandler(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
+		
 		request.setAttribute("page", tripP);
 		int count = boardDao.getPostsCount();//list row num
 		
@@ -117,6 +118,7 @@ public class AdmListHandler {
 //				tripDao.noticeX(Integer.parseInt(board_no));
 //			}
 //		}
+		System.out.println("여기왔니?");
 		return new ModelAndView("admin/trip");
 	}
 	@RequestMapping("/adminComment")
