@@ -152,5 +152,11 @@ public class TagDBBean {
 		public List<TagDataBean> tagAutoComplete(String tag_value){
 			return session.selectList("tag.tagAutoComplete", tag_value);
 		}
-	
+		
+		public int insertUserTag(TagDataBean tagDto) {
+			return session.insert("tag.insertUserTag", tagDto);
+		}
+		public TagDataBean getTagByValue(String tag_value) {
+			return session.selectOne("tag.getTagByvalue",tag_value);
+		}
 }

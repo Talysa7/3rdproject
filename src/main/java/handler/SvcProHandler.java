@@ -33,6 +33,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FileUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -770,10 +773,10 @@ public class SvcProHandler {
 		List<MemberDataBean> memberList = memberDao.getMembers(trip_id_int);
 		return memberList;
 	}
-	//////////////////////////////////////ajax추가분 이민재 2018.11.05 /////////////////////////////////////
+	//////////////////////////////////////ajax추가분 이민재 2018.11.15 /////////////////////////////////////
 	@RequestMapping(value = "searchTag", produces="application/json") 
 	@ResponseBody
-	private String addAuto(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	private JSONArray searchTag(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String tag_value = request.getParameter("tag_value");
 		List<TagDataBean> tags = tagDao.tagAutoComplete(tag_value);
 		
@@ -786,10 +789,65 @@ public class SvcProHandler {
 		} catch (IOException e) { 
 			e.printStackTrace(); 
 		}
-		System.out.println(tags);
-		return tagstr;
+		
+		JSONParser parser = new JSONParser();
+		Object parseobj = parser.parse(tagstr);
+		JSONArray jsonTag = (JSONArray) parseobj;
+		return jsonTag;
 	}
-	//////////////////////////////////////ajax추가분 이민재 2018.11.05 /////////////////////////////////////
+	
+	@RequestMapping(value = "insertUserTag", produces="application/json") // 태그 검색후 없으면 추가하는 메소드.
+	@ResponseBody
+	private JSONObject insertUserTag(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String tag_value = request.getParameter("tag_value");
+		int ckcnt = tagDao.checkTag(tag_value);
+		TagDataBean tagDto = new TagDataBean();
+		if(ckcnt < 1 ) {
+			tagDto.setTag_value(tag_value);
+			tagDao.insertUserTag(tagDto);
+		} else {
+			tagDto = tagDao.getTagByValue(tag_value);
+		}
+		
+		ObjectMapper mapper = new ObjectMapper(); 
+		
+		String tagstr=""; 
+		try { 
+			tagstr = mapper.writeValueAsString(tagDto);
+			
+		} catch (IOException e) { 
+			e.printStackTrace(); 
+		}
+		
+		JSONParser parser = new JSONParser();
+		Object parseobj = parser.parse(tagstr);
+		JSONObject jsonobj = (JSONObject) parseobj;
+		
+		return jsonobj;
+	}
+	
+	@RequestMapping(value = "searchCoord", produces="application/json") 
+	@ResponseBody
+	private JSONArray searchCoord(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String coord_name = request.getParameter("coord_name");
+		List<CoordDataBean> coords = coordDao.coordAutoComplete(coord_name);
+		
+		ObjectMapper mapper = new ObjectMapper(); 
+		
+		String coordstr=""; 
+		try { 
+			coordstr = mapper.writeValueAsString(coords);
+			
+		} catch (IOException e) { 
+			e.printStackTrace(); 
+		}
+		
+		JSONParser parser = new JSONParser();
+		Object parseobj = parser.parse(coordstr);
+		JSONArray jsonCoord = (JSONArray) parseobj;
+		return jsonCoord;
+	}
+	//////////////////////////////////////ajax추가분 이민재 2018.11.15 /////////////////////////////////////
 	///////////////////////////////// etc/////////////////////////////////
 	public static String getRandomString() {
 		return UUID.randomUUID().toString().replaceAll("-", "");

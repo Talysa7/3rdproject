@@ -112,10 +112,10 @@
 					</div>
 				</div>
 			</div>
-			
+			<br>
 			<div class="form-group row">
 				<label for="tag" class="control-label col-sm-2" >${str_tag} </label>
-				<div id="tagArea" class="col-sm-8">				
+				<div id="tagArea" class="col-sm-8 btn-group btn-group-sm">				
 					<c:forEach var="i" items="${styleTags}">
 	                	<div class="btn-group btn-group-sm" role="group" aria-label="...">
 	                		<button type="button" class="btn btn-default"><input type="checkbox" name="user_tag" value="${i.tag_id}">${i.tag_value}</button>
@@ -123,9 +123,18 @@
 	                </c:forEach>
 	                
            		</div>
-           		<input type="text" id="searchTag" value="검색하세요">
             </div>
-            
+            <br>
+            <div class="form-group row">
+            	<label for="tagsearch" class="control-label col-sm-2" >${str_searchTag} </label>
+            	<div id="tagArea" class="col-sm-8 btn-group btn-group-sm">	
+	            	<input type="text"  class="form-control" id="searchTag" placeholder="태그검색">
+            	</div>
+            	<div class="col-sm-2">
+					<button type="button" class="btn btn-md btn-secondary" 
+					onclick="insertUserTag()">${btn_insert_tag}</button>
+				</div>
+            </div>
 			<div class="form-group row">
 				<div class="col-sm-2"></div>
 				<div class="col-sm-10">
