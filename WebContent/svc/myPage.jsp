@@ -83,6 +83,7 @@
 			</div>
 		</form>
 		<div id="reputation">
+		<a href="review.go">평판</a>
 		</div>
 </div>	
 

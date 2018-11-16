@@ -16,7 +16,9 @@ public class MemberDBBean {
 	public String getUserName(String user_id) {
 		return session.selectOne("user.getUserName", user_id);
 	}
-	
+	public List<MemberDataBean> getMemTripId(String user_id) {
+		return session.selectList("user.getMemTripId", user_id);
+	}
 	public int addTripMember(Map<String, String> addMemberMap) {
 		return session.update("user.addTripMember", addMemberMap);
 	}	

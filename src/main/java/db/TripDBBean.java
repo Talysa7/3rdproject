@@ -71,7 +71,8 @@ public class TripDBBean {
 		if(userTripList.size()>0) {
 			for(TripDataBean trip:userTripList) {
 				trip.setTrip_members(trip.getTrip_id());
-			}
+				userTripList.add(trip);
+			}			
 		}
 		return userTripList;
 	}
