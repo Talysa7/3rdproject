@@ -848,9 +848,91 @@ function absent(td_trip_id) {
 
 ///////////////////////////////////////////////////////이민재//////////////////////////////////////////////////////
 	//자동완성
+		$(function(){
+			$("#searchTag").autocomplete({
+				source : function( request, response ) {
+					$.ajax({
+							type: 'post',
+							url : 'searchTag.go',
+							dataType: 'json',
+							data: { tag_value : request.term + "%" },
+							success: function(data) {
+								response(
+									$.map(data, function(item) {
+										return {
+											label: item.tag_value,
+											value: item.tag_value,
+											id : item.tag_id
+										}
+									})
+								);
+							}
+							
+					})
+				},
+				minLength: 1,
+				select: function(event, ui){
+					var taglength = $('input[name=user_tag]').length
+					var tagId = ui.item.id
+					var insertBoolean = true;
+					for (var i =0; i<taglength; i++){
+						if(tagId == $('input[name=user_tag]')[i].value){
+							insertBoolean = false;
+							break;
+						}
+					}
+					if(insertBoolean){
+						var tagStr = "<button type='button' class='btn btn-default'><input type='checkbox' name='user_tag' value='"+tagId+"' checked>"+ui.item.value+"</button>"
+						$("#tagArea").append(tagStr)
+					} else {
+						alert("이미 추가된 태그입니다")
+					}
+					
+				}
+			});
+		}) 
 
+		function insertUserTag(){
+			var tag_value = $("#searchTag").val()
+			$.ajax({
+				type: 'post',
+				url : 'insertUserTag.go',
+				dataType : 'json',
+				data : { tag_value : tag_value },
+				success: function(data) {
+					var tagStr = "<button type='button' class='btn btn-default'><input type='checkbox' name='user_tag' value='"+data.tag_id+"' checked>"+data.tag_value+"</button>"
+					$("#tagArea").append(tagStr)
+				}
+			})
+		}
 
+		 /* $(function(){
+			$("#address").autocomplete({
+				source : function( request, response ) {
+					$.ajax({
+							type: 'post',
+							url : 'searchCoord.go',
+							dataType: 'json',
+							data: { coord_name : "%" +request.term + "%" },
+							success: function(data) {
+								response(
+									$.map(data, function(item) {
+										return {
+											label: item.coord_name,
+											value: item.coord_name,
+											id : item.coord_id
+										}
+									})
+								);
+							}
+							
+					})
+				},
+				minLength: 2
+			});
+		})  */
 
+		
 
 
 ///////////////////////////////////////////////////////이민재//////////////////////////////////////////////////////

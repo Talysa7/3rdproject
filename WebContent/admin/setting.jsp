@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
-<c:if test="${sessionScope.user_level ne 1}">
+<c:if test="${sessionScope.user_level ne 9}">
 	<script type="text/javascript">
 		<!--
 			<c:redirect url="login.go"/>
@@ -16,7 +16,7 @@
 	</script>
 </c:if>
 
-<c:set var="project" value="/3rdProject/adm/"/>
+<c:set var="project" value="/3rdproject/adm/"/>
 
 <c:set var="str_logout" value="로그아웃"/>
 
