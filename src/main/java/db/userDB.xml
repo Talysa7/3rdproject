@@ -64,7 +64,7 @@
 	<select id="getMemberCount" parameterType="int" resultType="int">
 		select count(*) from pao_members where trip_id=#{trip_id}
 	</select>
-	<select id="getMembers" parameterType="int" resultType="java.util.List">
+	<select id="getMembers" parameterType="int" resultType="db.MemberDataBean">
 		select *
 		from pao_view_members
 		where trip_id=#{trip_id}
@@ -127,7 +127,7 @@
 		select count(*) from pao_user where user_name=#{user_name}
 	</select>
 <!-- Trip -->
-	<select id="getUserTripList" parameterType="String" resultType="java.util.List">
+	<select id="getUserTripList" parameterType="String" resultType="db.TripDataBean">
 		select *
 		from pao_view_trip
 		where trip_id in (

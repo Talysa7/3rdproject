@@ -45,7 +45,7 @@ public class AlbumDBBean {
 	public List<AlbumDataBean> getAllPhotos() {
 		return session.selectList("album.getAllPhotos");
 	}
-	public List<AlbumDataBean> getPhotosByBoardNo(int board_no, int pageStart, int pageEnd) {
-		return session.selectList("album.getPhotosByBoardNo", board_no);
+	public List<AlbumDataBean> getPhotosByTripId(int trip_id) {
+		return session.selectList("album.getPhotosByTripId", trip_id);
 	}
 }

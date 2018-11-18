@@ -113,13 +113,13 @@ public class SvcViewHandler {
 		if(startPage>0) {
 			rowNumber=startPage*postPerPage;
 		} else {
-			rowNumber=1;
+			rowNumber=0;
 		}
 		List<BoardDataBean> postList=boardDao.getPostList(rowNumber, postPerPage);
 		//set count and next row info for 'load more list'
-		if(postList.size()>=10) {
+		if(postList.size()>=postPerPage) {
 			request.setAttribute("next_row", postPerPage+1);
-		} else if(postList.size()>0&&postList.size()<10) {
+		} else if(postList.size()>0&&postList.size()<postPerPage) {
 			request.setAttribute("next_row", postList.size()+1);
 		} else {
 			request.setAttribute("next_row", 0);
@@ -212,10 +212,10 @@ public class SvcViewHandler {
 
 	@RequestMapping("/svc/boardAlbum")//svc/boardAlbum
 	public ModelAndView svcBoardAlbumProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
-		int board_no=Integer.parseInt(request.getParameter("board_no"));
-		request.setAttribute("board_no", board_no);
+		int trip_id=Integer.parseInt(request.getParameter("trip_id"));
+		request.setAttribute("board_no", trip_id);
 		//always first page, load next page by ajax
-		List<AlbumDataBean> photoList=albumDao.getPhotosByBoardNo(board_no, 0, 6);
+		List<AlbumDataBean> photoList=albumDao.getPhotosByTripId(trip_id);
 		
 		if(photoList.size()>0) {
 			int photoPages=photoList.size()/photoPerPage;

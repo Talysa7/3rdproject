@@ -113,7 +113,11 @@ public class BoardDBBean {
 	public List<BoardDataBean> getPostList(int rowNumber, int postPerPage) {
 		Map<String, Integer> tripReq=new HashMap<String, Integer>();
 		tripReq.put("startRowNumber", rowNumber);
-		tripReq.put("endRowNumber", rowNumber*postPerPage);
+		if(rowNumber>0) {
+			tripReq.put("endRowNumber", rowNumber*postPerPage);
+		} else {
+			tripReq.put("endRowNumber", postPerPage);
+		}
 		List<BoardDataBean> postList=session.selectList("board.getPostList", tripReq);
 		//user_name null exception
 		if(postList.size()>0) {
