@@ -21,25 +21,21 @@ function giveSelection(selValue) {
 giveSelection(sel1.value);
 
 </script>
-<form method="post" action="evaluationPro.go">
+<form method="post" action="reviewPro.go">
 	
 		<div>일정</div>
-		<c:if test="${tripDto.size() eq 0}">
-		일정이 없습니다
-		</c:if>
-		<c:if test="${tripDto.size() ne 0 }">
 		<c:forEach var="trip" items="${tripDto}">
 		<span><select id="sel1" name="sel1" onchange="giveSelect(this.value)">
-			<option value="${trip.trip_id}"> ${trip.coord_name} </option>
+			<option value="${trip.getTrip_id()}"> ${trip.coord_name} </option>
 			</select> </span>
-			<c:forEach var="member" items="memberList">
+			<%-- <c:forEach var="member" items="memberList">
 			<div>평판대상</div>	
 			<span><select id="sel2" name="sel2">
 			<option data-option="${trip.trip_id}">${member.user_name}</option>
 			</select></span>
-			</c:forEach>				
-		</c:forEach>	
-		</c:if>	
+			</c:forEach>	--%>			
+		</c:forEach>	 
+	
 		<div>점수</div>
 		<span> <input type="checkbox" value="1" name="grade"> ★ </span>
 		<span> <input type="checkbox" value="2" name="grade"> ★★</span>

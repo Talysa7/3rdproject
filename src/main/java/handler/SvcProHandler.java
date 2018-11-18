@@ -648,7 +648,7 @@ public class SvcProHandler {
 		evalDto.setWriter_name(name);
 		request.setAttribute("evalDto", evalDto);
 		
-		return new ModelAndView("/svc/evaluationPro");		
+		return new ModelAndView("/svc/reviewPro");		
 	}
 	
 	///////////////////////////////// ajax list/////////////////////////////////

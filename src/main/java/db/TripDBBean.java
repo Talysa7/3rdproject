@@ -68,12 +68,12 @@ public class TripDBBean {
 	public List<TripDataBean> getUserTripList(String user_id) {
 		List<TripDataBean> userTripList=session.selectList("user.getUserTripList", user_id);
 		//set members user_name to each trip, for convenience
-		if(userTripList.size()>0) {
+		/*if(userTripList.size()>0) {
 			for(TripDataBean trip:userTripList) {
 				trip.setTrip_members(trip.getTrip_id());
 				userTripList.add(trip);
 			}			
-		}
+		}*/
 		return userTripList;
 	}
 	

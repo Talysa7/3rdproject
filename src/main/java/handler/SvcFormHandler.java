@@ -167,6 +167,6 @@ public class SvcFormHandler {
 			List<MemberDataBean> memberList= memberDao.getMembers(trip_id);
 			request.setAttribute("memberList", memberList);
 		}
-		return new ModelAndView("svc/evaluaion");		
+		return new ModelAndView("svc/review");		
 	}
 }
