@@ -164,6 +164,10 @@ public class SvcFormHandler {
 		request.setAttribute("tripDto", tripDto);
 		for(int i=0; i<tripDto.size(); i++) {
 			int trip_id =tripDto.get(i).getTrip_id();
+			int coord_id = tripDto.get(i).getCoord_id();
+			CoordDataBean coordDto = coordDao.getCoordinate(coord_id);
+			request.setAttribute("trip_id", trip_id);
+			request.setAttribute("coordDto", coordDto);
 			List<MemberDataBean> memberList= memberDao.getMembers(trip_id);
 			request.setAttribute("memberList", memberList);
 		}

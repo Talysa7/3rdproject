@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+0<%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@include file="header.jsp" %>
 <%@include file="setting.jsp" %>
@@ -83,7 +83,12 @@
 			</div>
 		</form>
 		<div id="reputation">
+		<c:if test="${writername eq 0}">
 		<a href="review.go">평판</a>
+		</c:if>
+		${username}님의 평점은 [게시글 수 : ${count} 평균평점 : ${average} ] 입니다
+		<br>
+		
 		</div>
 </div>	
 
