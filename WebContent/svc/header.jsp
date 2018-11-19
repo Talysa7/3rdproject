@@ -37,22 +37,6 @@
 		}
 	</style>
 </head>
-
-			<%-- 
-				TODO : 중복 제거 작업 중 / 중복 제거하면서
-				sessionScope.user_id eq null 일 때에 (비회원 시에) 남은 코드 일단 살려둠.
-				<form class="form-inline mt-2 mt-md-0 login-section" name="serch_trip" method="post" action="searchTrip.go" >
-					<select name="search_type">
-						<option value="schedule">${search_trip_schedule}</option>
-						<option value="trip_writer">${trip_writer}</option>
-					</select> &nbsp;
-					<input type="text" class="form-control" name="keyword" placeholder="${search_guide}"> &nbsp;
-					<button type="submit" style="border: none; background: transparent;"><img alt="" src="${project}img/search-m2-24.png"></button> &nbsp;&nbsp;
-					<a href="login.go" class="nav-item">${page_login}</a> &nbsp;|&nbsp;
-					<a href="registration.go" class="nav-item">${page_input}</a>
-				</form> 
-			--%>
-
 	<body>
 		<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
 			<a class="navbar-brand" href="tripList.go"> <img
@@ -67,17 +51,15 @@
 			<div class="collapse navbar-collapse" id="navbarCollapse">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item"><a class="nav-link"
-						href="tripList.go">${page_main_eng} <span class="sr-only">(current)</span></a>
-					</li>
-					<li class="nav-item"><a class="nav-link" href="tripList.go">${page_board_eng}</a>
-					</li>
-					<li class="nav-item"><a class="nav-link" href="album.go">${page_album_eng}</a>
-					</li>
+						href="tripList.go">${page_main_eng} <span class="sr-only">(current)</span></a></li>
+					<li class="nav-item"><a class="nav-link" href="tripList.go">${page_board_eng}</a></li>
+					<li class="nav-item"><a class="nav-link" href="album.go">${page_album_eng}</a></li>
+					
 					<c:if test="${sessionScope.user_id ne null}">
-					<li class="nav-item"><a class="nav-link" href="myTrip.go">${page_calendar_eng}</a>
-					</li>
+					<li class="nav-item"><a class="nav-link" href="myTrip.go">${page_calendar_eng}</a></li>
 					</c:if>
 				</ul>
+				
 				<c:if test="${user_level ne 9}">
 					<form class="form-inline mt-2 mt-md-0 login-section" name="serch_trip" method="post" action="searchTrip.go" >
 						<select name="search_type">
@@ -87,22 +69,20 @@
 						<input type="text" class="form-control" name="keyword" placeholder="${search_guide}"> &nbsp;
 						<button type="submit" style="border: none; background: transparent;">
 						<img alt="" src="${project}img/search-m2-24.png"></button> &nbsp;|&nbsp;
-						<a href="myPage.go" class="nav-item">${page_mypage2}</a> &nbsp;
+				<c:if test="${sessionScope.user_id eq null}">
+					<a href="login.go" class="nav-item">${page_login}</a> &nbsp;|&nbsp;
+					<a href="registration.go" class="nav-item">${page_input}</a>
+				</c:if>
+				<c:if test="${sessionScope.user_id ne null}">		
+						<a href="myPage.go" class="nav-item">${page_mypage}</a> &nbsp;
+				</c:if>
 					</form>
 				</c:if>
 				<c:if test="${user_level eq 9}">
-					<form class="form-inline mt-2 mt-md-0 login-section" name="serch_trip" method="post" action="searchTrip.go" >
-						<select name="search_type">
-							<option value="schedule">${search_trip_schedule}</option>
-							<option value="trip_writer">${trip_writer}</option>
-						</select> &nbsp;
-						<input type="text" class="form-control" name="keyword" placeholder="${search_guide}"> &nbsp;
-						<button type="submit" style="border: none; background: transparent;">
-						<img alt="" src="${project}img/search-m2-24.png"></button> &nbsp;|&nbsp;
-						<a class="nav-item" href="adminTrip.go">${btn_adm}</a> &nbsp;
-						<a class="nav-item" href="adminLogout.go">${btn_logout}</a>
-					</form>
+					<a class="nav-item" href="adminTrip.go">${btn_adm}</a> &nbsp;
+					<a class="nav-item" href="adminLogout.go">${btn_logout}</a>
 				</c:if>
+				
 			</div>
 		</nav>
 	</body>
