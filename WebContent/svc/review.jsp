@@ -4,39 +4,24 @@
 <%@include file="setting.jsp" %>
 <h2>평판페이지</h2>
 
-<script type="text/javascript">	
-var sel1 = document.getElementById('sel1');
-var sel2 = document.getElementById('sel2');
-var options2 = sel2.getElementByTagName('option');
 
-function giveSelection(selValue) {
-  sel2.innerHTML = '';
-  for(var i = 0; i < options2.length; i++) {
-    if(options2[i].dataset.option === selValue) {
-      sel2.appendChild(options2[i]);
-    }
-  }
-}
-
-giveSelection(sel1.value);
-
-</script>
 <form method="post" action="reviewPro.go">
 	
 		<div>
 		<span>일정</span>
-		<c:forEach var="memTrip" items="${memberDto}">
+			<c:forEach var="trip" items="${members}">
+			<c:forEach var="coord" items="${coord}">
 		<span><select id="sel1" name="sel1">
-			<option value="${memTrip.getTrip_id()}"> ${coord_name} </option>
-			</select> </span>
-		 <c:forEach var="member" items="memDto">
-			<div>평판대상</div>	
+			<option value="${trip.trip_id}"> ${coord.coord_name} </option>			
+			</select> </span>			
+			<span>평판대상</span>				
 			<span><select id="sel2" name="sel2">
-			<option value="${member.user_name}" data-option="${memTrip.getTrip_id()}">${member.user_name}</option>
+			<option value="${trip.user_id}">${trip.user_id}</option>
 			</select></span>
-			</c:forEach>		
-		</c:forEach>	 
+			</c:forEach>	
+			</c:forEach>			 
 		</div>
+		
 		<div>
 		<span>점수</span>
 		<span> <input type="checkbox" value="1" name="grade"> ★ </span>

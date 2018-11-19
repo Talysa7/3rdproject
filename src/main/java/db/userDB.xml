@@ -43,8 +43,11 @@
 	</select>
 -->
 <!-- Member -->
-	<select id="getMemTripId" parameterType="String" resultType="java.util.List">
+	<select id="getMemTripId" parameterType="String" resultType="int">
 		select trip_id from pao_members where user_id=#{user_id}
+	</select>
+	<select id="getMemberList" parameterType="String" resultType="db.MemberDataBean">
+		select * from pao_members where user_id=#{user_id}
 	</select>
 	<select id="getUserName" parameterType="String" resultType="String">
 		select user_name from pao_user where user_id=#{user_id}
@@ -69,6 +72,7 @@
 		from pao_view_members
 		where trip_id=#{trip_id}
 	</select>
+	
 <!-- Tag -->
 	<select id="getUserTags" parameterType="String" resultType="java.util.List">
 		select tag_value from pao_tag where tag_id in
@@ -142,11 +146,17 @@
 		where trip_id=#{trip_id}
 	</select>
 <!-- evaluation -->
-	<select id="getEvaluation" parameterType="String" resultType="java.util.List">
+	<select id="getEvaluation" parameterType="java.util.Map" resultType="db.ReviewDataBean">
 		select * from pao_user_review where user_id=#{user_id}
 	</select>
 	<insert id="insertEvaluation" parameterType="db.ReviewDataBean">
 		insert into pao_user_review values(#{user_id}, #{reviewer_id}, #{review_point}, #{review_comment}, #{trip_id})
 	</insert>
+	<select id="countEvaluation" parameterType="java.util.Map" resultType="int">
+		select count(*) from pao_user_review where user_id=#{user_id}
+	</select>
+	<select id="sumEvaluation" parameterType="String" resultType="int">
+		select sum(review_point) from pao_user_review where user_id=#{user_id}
+	</select>
 </mapper>
 

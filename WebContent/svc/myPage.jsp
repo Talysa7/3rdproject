@@ -1,4 +1,4 @@
-0<%@ page language="java" contentType="text/html; charset=UTF-8"
+<%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@include file="header.jsp" %>
 <%@include file="setting.jsp" %>
@@ -86,9 +86,26 @@
 		<%-- <c:if test="${reviewDto.writername eq 0}"> --%>
 		<a href="review.go">평판</a>
 		<%-- </c:if> --%>
-		${userDto.user_name}님의 평점은 [게시글 수 : ${count} 평균평점 : ${average} ] 입니다
+		${userDto.user_name}님의 평점은  
+		<c:if test="${count ne 0}">[게시글 수 : ${count}]</c:if>
+		<c:if test="${average ne 0 }"> [평균평점 : ${average} ] 입니다</c:if>
 		<br>
-		
+		<c:forEach var="${reviewDto}" items="${reviewDto}">
+		<table>		
+		<tr>평가자</tr> 
+		<td>${reviewDto.reviwer_id}</td>
+		<tr>평가점수</tr>
+		<td><c:choose>
+		<c:when test="${reviewDto.review_point eq 1}"> ★ </c:when>
+		<c:when test="${reviewDto.review_point eq 2}"> ★★  </c:when>
+		<c:when test="${reviewDto.review_point eq 3}"> ★★★  </c:when>
+		<c:when test="${reviewDto.review_point eq 4}"> ★★★★    </c:when>
+		<c:when test="${reviewDto.review_point eq 5}"> ★★★★★     </c:when>
+		</c:choose></td>
+		<tr>평가 내용</tr>
+		<td>${reviewDto.review_comment }</td>
+		</table>
+		</c:forEach>
 		</div>
 </div>	
 

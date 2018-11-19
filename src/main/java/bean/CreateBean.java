@@ -16,6 +16,7 @@ import db.UserDBBean;
 import db.CountryDBBean;
 import db.MemberDBBean;
 import db.RegionDBBean;
+import db.ReviewDBBean;
 
 @Configuration
 public class CreateBean {
@@ -59,7 +60,10 @@ public class CreateBean {
 	public UserDBBean userDao() {
 		return new UserDBBean();
 	}
-
+	@Bean
+	public ReviewDBBean reviewDao() {
+		return new ReviewDBBean();
+	}
 	@Bean
 	public ViewResolver viewResolver() {
 		UrlBasedViewResolver viewResolver=new UrlBasedViewResolver();

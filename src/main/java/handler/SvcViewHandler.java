@@ -90,8 +90,15 @@ public class SvcViewHandler {
 			//user_tags is a guest value, we should set it additionally
 			userDto.setUser_tags(tagDao.getUserTags(user_id));	//태그 가져오는거 수정.
 			request.setAttribute("userDto", userDto);
-			ReviewDataBean reviewDto = reviewDao.getEvaluation(user_id);
+			Map<String, String> user = new HashMap<String, String>();
+			user.put("user_id", user_id);
+			List<ReviewDataBean> reviewDto = reviewDao.getEvaluation(user);
 			request.setAttribute("reviewDto", reviewDto);
+			
+			int count = reviewDao.countEvaluation(user);
+			request.setAttribute("count", count);
+			int point = reviewDao.sumEvaluation(user_id);
+			request.setAttribute("average", point/count);
 		}
 		return new ModelAndView("svc/myPage");
 	}
