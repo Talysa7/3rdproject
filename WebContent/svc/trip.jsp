@@ -131,8 +131,8 @@
 						</form>
 
 						<div class="row pt-3 pb-1">
-							<label class="col-2">${tb_talk}</label> <a
-								href="${tbDto.tb_talk}" target="_blank">${tbDto.tb_talk}</a>
+							<label class="col-2">${trip_talklink}</label> <a
+								href="${tbDto.trip_talklink}" target="_blank">${tbDto.trip_talklink}</a>
 						</div>
 						<div id="trip_content">
 							<div class="row px-3">
