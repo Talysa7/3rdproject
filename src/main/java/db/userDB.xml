@@ -143,10 +143,10 @@
 	</select>
 <!-- evaluation -->
 	<select id="getEvaluation" parameterType="String" resultType="java.util.List">
-		select * from pao_evaluation where user_id=#{user_id}
+		select * from pao_user_review where user_id=#{user_id}
 	</select>
-	<insert id="insertEvaluation" parameterType="db.EvaluationDataBean">
-		insert into pao_evaluation values(#{user_name}, #{evaluation}, #{grade}, #{writer_name})
+	<insert id="insertEvaluation" parameterType="db.ReviewDataBean">
+		insert into pao_user_review values(#{user_id}, #{reviewer_id}, #{review_point}, #{review_comment}, #{trip_id})
 	</insert>
 </mapper>
 

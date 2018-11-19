@@ -648,11 +648,8 @@ public class SvcProHandler {
 		String name = userDao.getUserName("user_id");
 		
 		ReviewDataBean evalDto = new ReviewDataBean();
-		evalDto.setEvaluation(evaluation);
-		evalDto.setGrade(grade);
-		evalDto.setUser_name(user_name);
-		evalDto.setWriter_name(name);
-		request.setAttribute("evalDto", evalDto);
+		
+		
 		reviewDao.insertEvaluation(evalDto);
 		
 		return new ModelAndView("/svc/reviewPro");		
