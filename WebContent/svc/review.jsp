@@ -25,16 +25,16 @@ giveSelection(sel1.value);
 	
 		<div>
 		<span>일정</span>
-		<c:forEach var="trip" items="${tripDto}">
+		<c:forEach var="memTrip" items="${memberDto}">
 		<span><select id="sel1" name="sel1">
-			<option value="${tripDto.getTrip_id()}"> ${tripDto.getTrip_id() } </option>
+			<option value="${memTrip.getTrip_id()}"> ${coord_name} </option>
 			</select> </span>
-			<%-- <c:forEach var="member" items="memberList">
+		 <c:forEach var="member" items="memDto">
 			<div>평판대상</div>	
 			<span><select id="sel2" name="sel2">
-			<option data-option="${trip.trip_id}">${member.user_name}</option>
+			<option value="${member.user_name}" data-option="${memTrip.getTrip_id()}">${member.user_name}</option>
 			</select></span>
-			</c:forEach>	--%>			
+			</c:forEach>		
 		</c:forEach>	 
 		</div>
 		<div>

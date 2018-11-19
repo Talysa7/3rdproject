@@ -1,6 +1,6 @@
 package db;
 
-public class EvaluationDataBean {
+public class ReviewDataBean {
 	private String user_name;
 	private int grade;
 	private String evaluation;

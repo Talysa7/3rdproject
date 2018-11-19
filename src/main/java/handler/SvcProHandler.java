@@ -53,9 +53,10 @@ import db.CmtDBBean;
 import db.CmtDataBean;
 import db.CoordDBBean;
 import db.CoordDataBean;
-import db.EvaluationDataBean;
+import db.ReviewDataBean;
 import db.MemberDBBean;
 import db.MemberDataBean;
+import db.ReviewDBBean;
 import db.TagDBBean;
 import db.TagDataBean;
 import db.BoardDBBean;
@@ -89,6 +90,8 @@ public class SvcProHandler {
 	private BoardDBBean boardDao;
 	@Resource
 	private MemberDBBean memberDao; 
+	@Resource
+	private ReviewDBBean reviewDao;
 
 
 	///////////////////////////////// user pages/////////////////////////////////
@@ -644,12 +647,13 @@ public class SvcProHandler {
 		String user_id = (String) request.getSession().getAttribute("user_id");
 		String name = userDao.getUserName("user_id");
 		
-		EvaluationDataBean evalDto = new EvaluationDataBean();
+		ReviewDataBean evalDto = new ReviewDataBean();
 		evalDto.setEvaluation(evaluation);
 		evalDto.setGrade(grade);
 		evalDto.setUser_name(user_name);
 		evalDto.setWriter_name(name);
 		request.setAttribute("evalDto", evalDto);
+		reviewDao.insertEvaluation(evalDto);
 		
 		return new ModelAndView("/svc/reviewPro");		
 	}

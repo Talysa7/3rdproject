@@ -43,7 +43,7 @@
 	</select>
 -->
 <!-- Member -->
-	<select id="getTripId" parameterType="String" resultType="int">
+	<select id="getMemTripId" parameterType="String" resultType="java.util.List">
 		select trip_id from pao_members where user_id=#{user_id}
 	</select>
 	<select id="getUserName" parameterType="String" resultType="String">

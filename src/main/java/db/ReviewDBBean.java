@@ -4,13 +4,13 @@ import org.apache.ibatis.session.SqlSession;
 
 import bean.SqlMapClient;
 
-public class EvaluationDBBean {
+public class ReviewDBBean {
 private SqlSession session=SqlMapClient.getSession();
 	
-	public EvaluationDataBean getEvaluation(String user_id) {
+	public ReviewDataBean getEvaluation(String user_id) {
 		return session.selectOne("user.getEvaluation", user_id);
 	}
-	public int insertEvaluation(EvaluationDataBean evalDto) {
+	public int insertEvaluation(ReviewDataBean evalDto) {
 		return session.insert("user.insertEvaluation", evalDto);
 	}
 }

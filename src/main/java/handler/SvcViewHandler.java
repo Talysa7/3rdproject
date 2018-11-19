@@ -24,6 +24,8 @@ import db.CoordDBBean;
 import db.CoordDataBean;
 import db.MemberDBBean;
 import db.MemberDataBean;
+import db.ReviewDBBean;
+import db.ReviewDataBean;
 import db.TagDBBean;
 import db.TagDataBean;
 import db.BoardDBBean;
@@ -51,6 +53,8 @@ public class SvcViewHandler {
 	private BoardDBBean boardDao;
 	@Resource
 	private MemberDBBean memberDao;
+	@Resource
+	private ReviewDBBean reviewDao;
 
 	//amount of displayed photos in a page
 	private static final int photoPerPage=6;
@@ -86,6 +90,8 @@ public class SvcViewHandler {
 			//user_tags is a guest value, we should set it additionally
 			userDto.setUser_tags(tagDao.getUserTags(user_id));	//태그 가져오는거 수정.
 			request.setAttribute("userDto", userDto);
+			ReviewDataBean reviewDto = reviewDao.getEvaluation(user_id);
+			request.setAttribute("reviewDto", reviewDto);
 		}
 		return new ModelAndView("svc/myPage");
 	}
