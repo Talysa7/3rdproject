@@ -52,8 +52,8 @@
 			<div id="schedulediv" ></div>
 			
             <div class="form-group row">
-                 <label for="tb_talk" class="col-2 col-form-label">${tb_talk}</label>
-                 <input type="text" name="tb_talk" class="col-10" value="${tbDto.tb_talk}">
+                 <label for="trip_talklink" class="col-2 col-form-label">${trip_talklink}</label>
+                 <input type="text" name="trip_talklink" class="col-10" value="${tbDto.trip_talklink}">
             </div>
             <div class="form-group row">
                  <label for="trip_location" class="col-2 col-form-label">${trip_location}</label>              
