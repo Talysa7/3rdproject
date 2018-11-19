@@ -99,7 +99,6 @@
 
 <c:set var="trip_map" value="지도"/>
 <c:set var="trip_photo" value="사진"/>
-<c:set var="trip_member_myung" value="명 모집 중!"/>
 <c:set var="trip_attend" value="참석"/>
 <c:set var="trip_absent" value="빠지기"/>
 <c:set var="trip_from" value="부터 "/>
@@ -110,6 +109,7 @@
 <c:set var="trip_talk" value="오픈채팅"/>
 <c:set var="place_for_member" value="member list"/>
 <c:set var="moments" value="순간의 순간"/>
+<c:set var="trip_member_list" value="참가자"/>
 
 <c:set var="search_trip" value="여행 찾기..."/>
 <c:set var="search_guide" value="검색어를 입력하세요"/>

@@ -49,16 +49,16 @@
 			</div>
 			<!--  -->
 			<br>
-			<!----- 공지 ----->
 			<article>
 				<section>
+					<!-- notice -->
 					<c:if test="${boardDto.board_level eq 1}">
 						<div style="font-size: 32px;">
 							<img class="mb-4" src="${project}img/logo_c.png" alt=""
 								width="40" height="40"> <b>${trip_notice_2}</b>
 						</div>
 					</c:if>
-					<!-- Post -->
+					<!-- Title and writer -->
 					<div id="trip_title">
 						<div class="row">
 							<input type="text" name="trip_title"
@@ -70,36 +70,37 @@
 								<i><b>With</b></i>&nbsp; ${boardDto.user_name}
 							</div>
 						</div>
+						<br>
 
 						<!-- start schedule -->
-						<nav class="navbar bg-dark navbar-dark">
-							<div class="container">
-								<ul class="nav navbar-nav">
-									<c:forEach var="trip" items="${boardDto.tripLists}">
-										<a href="#" class="navbar-brand">
-											<li>${trip.coord_order}</li>
-										</a>
-									</c:forEach>
-								</ul>
-							</div>
+						<form>
+							<input type="hidden" name="trip_count" value="${boardDto.tripLists.size()}">
+						</form>
+						<nav class="navbar  navbar-expand-sm" style="height:30px;padding:0px">
+								<div class="collapse navbar-collapse">
+									<ul class="nav navbar-nav">
+										<c:forEach var="trip" items="${boardDto.tripLists}">
+											<li class="nav-item">
+												<button class="btn btn-sm" onclick="openSchedule(${trip.coord_order})">
+													[${trip.coord_order}]&nbsp;${trip.coord_name}
+												</button>
+											</li>
+										</c:forEach>
+									</ul>
+								</div>
 						</nav>
+						<br>
 						<c:forEach var="trip" items="${boardDto.tripLists}">
-							<div id="trip_${trip.coord_order}">
+							<div id="trip_${trip.coord_order}" style="display: none">
 								<form name="orderInfo">
-									<input type="hidden" name="order_of_${trip.trip_id}"
-										value="${trip.coord_order}"> <input type="hidden"
-										name="member_count_${trip.trip_id}"
-										value="${trip.trip_member_count}">
+									<input type="hidden" name="member_count_${trip.trip_id}" value="${trip.trip_member_count}">
 								</form>
-								<div class="container" style="width: 100%"
-									onmouseover="focusMarker(${order},${trip.coordinate.coord_long},${trip.coordinate.coord_lat})">
+								<div class="container" style="width:100%">
 									<div class="row">
 										<label class="col-2">${trip_schedule}</label> <input
 											type="text" class="col-3" value="${trip.start_date}"
 											readonly="readonly" /> ~ <input type="text" class="col-3"
 											value="${trip.end_date}" readonly="readonly" />
-									</div>
-									<div class="row">
 										<div class="col-12 offset-2">
 											<div class="loc" name="coord">
 												<input type="text" name="trip_location_${trip.coord_order}"
@@ -114,17 +115,14 @@
 											<!-- 장소 -->
 										</div>
 										<!-- column -->
-									</div>
-									<!-- row -->
-									<div class="row">
-										<label class="col-2">${trip_member_count}</label>
+										<label class="col-2">${trip_member_list}</label>
 										<div id="trip_button_${trip.trip_id}">
 											<c:if test="${sessionScope.user_id ne null}">
 												<c:choose>
-													<c:when test="${session.user_id eq boardDto.user_id}">
+													<c:when test="${sessionScope.user_id eq boardDto.user_id}">
 													&nbsp; 
-												</c:when>
-													<c:when test="${isMember eq true}">
+													</c:when>
+													<c:when test="${sessionScope.user_id ne boardDto.user_id and isMember eq true}">
 														<button onclick="absent(${trip.trip_id})"
 															class="btn btn-sm">불참</button>
 													</c:when>
@@ -138,9 +136,9 @@
 										&nbsp;
 										<div>
 											<div id="trip_member_list_${trip.coord_order}">
-												${trip_members.size}/${trip.trip_member_count}, &nbsp;
+												${trip.trip_members.size()}/${trip.trip_member_count}, &nbsp;
 												<c:forEach var="member" items="${trip.trip_members}">
-												${member.user_name}
+												${member.user_name} &nbsp;
 											</c:forEach>
 											</div>
 										</div>
@@ -148,19 +146,18 @@
 								</div>
 
 								<!--button 영역 -->
-								<button class="btn" onclick="showMap()">${trip_map}</button>
-								<button class="btn" onclick="showAlbum()">${trip_photo}</button>
+								<button class="btn btn-sm" onclick="showMap(${trip.trip_id})">${trip_map}</button>
+								<button class="btn btn-sm" onclick="showAlbum(${trip.trip_id})">${trip_photo}</button>
 
 								<!-- tripAlbum -->
-								<div id="albumTab">
-									<jsp:include page='boardAlbum.go?trip_id=${trip.trip_id}' />
+								<div id="albumTab_${trip.trip_id}" style="display: none">
+									<jsp:include page='boardAlbum.go?board_no=${boardDto.board_no}&trip_id=${trip.trip_id}' />
 								</div>
 								<!--- tripMap -->
 								<input type="hidden" value="${trip.coordinate.coord_lat}"
 									id="lat" /> <input type="hidden"
 									value="${trip.coordinate.coord_lng}" id="lng" />
-								<div id="mapTab" style="display: none"></div>
-							</div>
+								<div id="mapTab_${trip.trip_id}" style="display: none"></div>
 					</div>
 					</c:forEach>
 					<!-- 일정 Container box-->

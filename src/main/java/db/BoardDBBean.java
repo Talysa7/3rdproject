@@ -32,6 +32,9 @@ public class BoardDBBean {
 		boardDto.setBoard_tags(board_tags);
 		//set trips
 		List<TripDataBean> tripLists=session.selectList("location.getBoardTripList", board_no);
+		for(TripDataBean trip:tripLists) {
+			trip.getTrip_members(trip.getTrip_id());
+		}
 		boardDto.setTripLists(tripLists);
 
 		return boardDto;

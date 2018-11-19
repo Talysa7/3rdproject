@@ -5,39 +5,34 @@
 <link rel="stylesheet" type="text/css"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 <c:if test="${photoPages gt 1}">
-	<div class="navbar" style="background: #a2b1b1;"
-		onclick="previous(${start},${size})">◀</div>
-</c:if>
-<c:if test="${photoPages le 1}">
-	<div class="navbar transparent">&nbsp;&nbsp;</div>
+	<div class="navbar" style="background: #a2b1b1" onclick="previous(${start},${size})">◀</div>
 </c:if>
 <div class="container">
 	<h3>Album</h3>
 	<c:if test="${isMember eq true}">
 		<p>
-			<a class="btn btn-album my-2" onclick="uploadPhotos()">사진 업로드</a> <a
-				id="select" class="btn btn-album my-2" onclick="selectPhotos()">사진
-				선택 </a> <a id="download" class="btn btn-album my-2"
-				onclick="downloadPhotos()" style="display: none">사진 다운로드</a> <a
-				class="btn btn-album my-2" onclick="downloadAlbum()">앨범 전체 다운로드</a>
+			<a class="btn btn-album my-2" onclick="uploadPhotos()">사진 업로드</a>
+			<a id="select" class="btn btn-album my-2" onclick="selectPhotos()">사진 선택 </a> 
+			<a id="download" class="btn btn-album my-2" onclick="downloadPhotos()" style="display: none">사진 다운로드</a> 
+			<a class="btn btn-album my-2" onclick="downloadAlbum()">앨범 전체 다운로드</a>
 		</p>
 		<form id="uploadForm" action="boardAlbumPro.go" method="post"
 			enctype="multipart/form-data">
-			<input type="file" name="files" multiple="multiple" id="file"
-				accept=".gif, .jpg, .png" style="display: none" /> <input
-				type="hidden" name="board_no" value="${board_no}" />
+			<input type="file" name="files" multiple="multiple" id="file" accept=".gif, .jpg, .png" style="display: none" /> 
+			<input type="hidden" name="trip_id" value="${trip_id}" />
+			<input type="hidden" name="board_no" value="${board_no}" />
 		</form>
 		<form id="downloadForm" action="download.go" method="post"></form>
 		<form id="downloadAlbumForm" action="downloadAlbum.go" method="post">
-			<input type="hidden" name="board_no" value="${board_no}" />
+			<input type="hidden" name="trip_id" value="${trip_id}" />
 		</form>
 	</c:if>
 </div>
 <div class="album py-5 bg-light">
 	<div class="container">
-		<c:if test="${count gt 0}">
+		<c:if test="${photoList.size() gt 0}">
 			<div class="row">
-				<c:forEach var="photo" items="${album}">
+				<c:forEach var="photo" items="${photoList}">
 					<div class="col-md-4" id="photoArea">
 						<input type="checkbox" name='check1' style="display: none">
 						<input type="hidden" name="photo_url" value="${photo.photo_url}" />

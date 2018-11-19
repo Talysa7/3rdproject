@@ -149,8 +149,6 @@ public class SvcViewHandler {
 			}
 			//get trips of this post
 			for(TripDataBean trip:boardDto.getTripLists()) {
-				trip.setTrip_members(board_no);
-				//check, current user is a member of this post's trips?
 				boolean isMember=false;
 				for(MemberDataBean member:trip.getTrip_members()) {
 					if(member.getUser_id().equals(user_id)) {
@@ -213,14 +211,23 @@ public class SvcViewHandler {
 	@RequestMapping("/svc/boardAlbum")//svc/boardAlbum
 	public ModelAndView svcBoardAlbumProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		int trip_id=Integer.parseInt(request.getParameter("trip_id"));
-		request.setAttribute("board_no", trip_id);
+		String user_id=(String)request.getSession().getAttribute("user_id");
+		int board_no=Integer.parseInt(request.getParameter("board_no"));
+		request.setAttribute("board_no", board_no);
+		request.setAttribute("trip_id", trip_id);
 		//always first page, load next page by ajax
 		List<AlbumDataBean> photoList=albumDao.getPhotosByTripId(trip_id);
-		
 		if(photoList.size()>0) {
 			int photoPages=photoList.size()/photoPerPage;
 			request.setAttribute("photoPages", photoPages);
+			request.setAttribute("photoList", photoList);
 		}
+		boolean isMember=false;
+		List<MemberDataBean> members=memberDao.getMembers(trip_id);
+		for(MemberDataBean member:members) {
+			if(member.getUser_id().equals(user_id)) isMember=true;
+		}
+		request.setAttribute("isMember", isMember);
 		return new ModelAndView("svc/boardAlbum");
 	}
 

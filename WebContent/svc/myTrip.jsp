@@ -26,7 +26,8 @@
 		<c:choose>
 			<c:when test="${myTrips.size() eq 0}">
 				<center>
-					<h2>${search_no_result}</h2>
+					<h6>${search_no_result}</h6>
+					<br>
 					<img src="${project}img/paori.png">
 				</center>
 			</c:when>
