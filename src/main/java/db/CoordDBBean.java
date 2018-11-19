@@ -80,8 +80,8 @@ public class CoordDBBean {
 	}
 	
 	///////////////////////////////////////////////////////자동완성 관련 메소드 추가 및 추가 기능  , 이민재, 2018-11-05///////////////////////////////////
-	public List<CoordDataBean> autoComplete(String coord_name){
-		return session.selectList("location.autoComplete", coord_name);
+	public List<CoordDataBean> coordAutoComplete(String coord_name){
+		return session.selectList("location.coordAutoComplete", coord_name);
 	}
 	
 	public List<CoordDataBean> checkCoordName(String coord_name){
