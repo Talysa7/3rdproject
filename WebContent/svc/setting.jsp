@@ -91,6 +91,9 @@
 <c:set var="trip_notice_1" value="[공지]"/>
 <c:set var="trip_notice_2" value="공지사항"/>
 
+<c:set var="trip_map" value="지도"/>
+<c:set var="trip_photo" value="사진"/>
+
 <%-- FIXME : 임시 주석처리, 추후 이상없으면 삭제 예정
 <c:set var="page_confirm" value="아이디 중복확인"/> <!-- 쓰이는 곳 없음 -->
 <c:set var="page_mypage1" value="회 원 정 보"/> <!-- 쓰이는 곳 없음 -->
@@ -109,8 +112,6 @@
 <c:set var="btn_mod_cancel" value="수정취소"/> <!-- 쓰이는 곳 없음 -->
 <c:set var="btn_del_cancel" value="탈퇴취소"/> <!-- 쓰이는 곳 없음 -->
 
-<c:set var="trip_map" value="지도"/> <!-- 쓰이는 곳 없음 -->
-<c:set var="trip_photo" value="사진"/> <!-- 쓰이는 곳 없음 -->
 <c:set var="trip_member_myung" value="명 모집 중!"/> <!-- 쓰이는 곳 없음 -->
 <c:set var="trip_attend" value="참석"/> <!-- 쓰이는 곳 없음 -->
 <c:set var="trip_absent" value="빠지기"/> <!-- 쓰이는 곳 없음 -->
