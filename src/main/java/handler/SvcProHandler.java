@@ -694,7 +694,7 @@ public class SvcProHandler {
 			String user_id = cmtDto.getUser_id();
 			if (user_id == null || user_id.equals("")) {
 				user_name = "Ex-User";
-				cmtDto.setUser_name(user_name);		//FIXME : userName이 databean에 ㅇ벗음.
+				cmtDto.setUser_name(user_name);
 			} else {
 				user_name = memberDao.getUserName(user_id);
 				cmtDto.setUser_name(user_name);

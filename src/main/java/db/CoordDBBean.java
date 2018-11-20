@@ -41,7 +41,6 @@ public class CoordDBBean {
 		return session.selectList("db.selectCountry",board_no);
 	}
 	public CoordDataBean getTripDetail(int trip_id) {
-		// TODO : return 이 
 		CoordDataBean coordDto = session.selectOne("location.getCalendar", trip_id);
 		return coordDto;
 	}
