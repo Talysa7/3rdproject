@@ -76,7 +76,7 @@
                      </label>
                   </c:forEach>
                </c:if>
-            </div>      
+            </div>
                <input class="btn btn-dark btn-sm"  type="submit" value="${trip_write}">
                <input class="btn btn-dark btn-sm" type="button" value="${btn_list}"
                      onclick="location='tripList.go'">   
@@ -91,6 +91,6 @@
 
 <!-- Map Search API -->
    <script async defer
-       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTHrzKi3xuXtFRo_fm9dGO2cC--hrLBpo&callback=searchMap">
+       src="https://maps.googleapis.com/maps/api/js?callback=searchMap">
    </script>
 </html>
