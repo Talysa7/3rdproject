@@ -1,10 +1,10 @@
 //Initialize and add the map
-var boardmarkers=[];
+//var boardmarkers=[];
+//var coord_lats=[];
+//var coord_lngs=[];
+//var country_codes=[];
 var boardmarker;
 var boardmap;
-var coord_lats=[];
-var coord_lngs=[];
-var country_codes=[];
 var markers=[];
 var marker;
 var map;
@@ -21,26 +21,25 @@ function initMap() {//trip.jsp에서 좌표로 마커 표시
 	coord.each(function(i){
 		coord_lat[i]=parseFloat(coord.eq(i).find('input[name=coord_lat]').val());
 		coord_long[i]=parseFloat(coord.eq(i).find('input[name=coord_long]').val());
-			
 		centerLatSum+=coord_lat[i];
 		centerLngSum+=coord_long[i];
 		//location
 		location[i]= {lat: coord_lat[i], lng: coord_long[i]};
 	});
-	var centerLat = centerLatSum / coord.length ; 
-	var centerLng = centerLngSum / coord.length ;   
+	var centerLat = centerLatSum / coord.length;
+	var centerLng = centerLngSum / coord.length;
 	var center={lat:centerLat,lng:centerLng};
 	
 	// The map, centered at allPlace
 	boardmap = new google.maps.Map(
-		document.getElementById('map'), 
-		{zoom: 3, 
+		document.getElementById('map'),
+		{zoom: 3,
 		center:center
 		});
 	for(var i=0;i<coord.length;i++){
-		addMarker(location[i],i,boardmap);  
+		addMarker(location[i],i,boardmap);
 	}
-	if(isSameCountry()==1)boardmap.setZoom(6); 
+	if(isSameCountry()==1)boardmap.setZoom(6);
 }
 //Adds a marker to the map.
 function addMarker(location, num, boardmap) {
@@ -51,12 +50,12 @@ function addMarker(location, num, boardmap) {
 			if (results[0]) {
 				var address=results[0].formatted_address;
 				boardmarker = new google.maps.Marker({
-				position: location,
-				map: boardmap,
-				title:address,
-				label:''+num+'',
-				animation:google.maps.Animation.DROP,
-			});
+					position: location,
+					map: boardmap,
+					title:address,
+					label:''+num+'',
+					animation:google.maps.Animation.DROP,
+				});
 				//input에 주소 붙이기   		
 				$('#address'+num+'').val(address);
 			} else {
@@ -78,7 +77,10 @@ function isSameCountry(){
 }
 function focusMarker(order,lng,lat){
 	boardmap.setZoom(12);
-	boardmap.setCenter({lat:parseFloat(lat),lng:parseFloat(lng)});
+	boardmap.setCenter({
+		lat:parseFloat(lat),
+		lng:parseFloat(lng)
+	});
 }
 //Map for writing
 //지도 주소검색
@@ -165,3 +167,9 @@ function deleteMarkers(num) {
 		markers[i].setMap(null);
 	}	
 }
+
+
+
+
+
+// New One
