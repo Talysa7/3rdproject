@@ -80,7 +80,7 @@
 				</c:if>
 				<c:if test="${user_level eq 9}">
 					<a class="nav-item" href="adminTrip.go">${btn_adm}</a> &nbsp;
-					<a class="nav-item" href="adminLogout.go">${btn_logout}</a>
+					<a class="nav-item" href="logout.go">${btn_logout}</a>
 				</c:if>
 				
 			</div>

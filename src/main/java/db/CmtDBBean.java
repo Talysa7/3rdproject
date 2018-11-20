@@ -9,8 +9,6 @@ import bean.SqlMapClient;
 
 public class CmtDBBean {
 	SqlSession session = SqlMapClient.getSession();
-	// TODO : 1. CmtDBBean 중 c_ 네이밍 된 컬럼명 바꾸는 것 항시 체크 / xml의 쿼리, 핸들러 등등
-	// TODO : 2. xml 내 mapper namespace 주는것 체크
 	
 	//total comment
 	public int insertComment(CmtDataBean cmtDto) {

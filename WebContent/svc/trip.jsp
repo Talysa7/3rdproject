@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="/svc/setting.jsp"%>
 <%@include file="header.jsp"%>
@@ -25,7 +25,7 @@
 	<input type="hidden" name="user_id" value="${sessionScope.user_id}" />
 	<div class="container" style="width: 800px;">
 		<div>
-			<div id=button_area class="d-flex justify-content-end">
+			<div id="button_area" class="d-flex justify-content-end">
 				<!-- 목록 button -->
 				<div>
 					<input type="button" value="${btn_list}"
@@ -33,33 +33,32 @@
 				</div>
 				<!--수정/삭제 button -->
 				<c:if test="${boardDto.user_id eq user_id}">
-					<div>
-						<input type="button" value="${btn_mod}"
-							onclick="modifyBoard(${boardDto.board_no})" class="btn btn-sm">
-						<input type="button" value="${btn_delete}"
-							onclick="deleteBoard(${boardDto.board_no})" class="btn btn-sm">
-					</div>
+				<div>
+					<input type="button" class="btn btn-sm" value="${btn_mod}" onclick="modifyBoard(${boardDto.board_no})">
+					<input type="button" class="btn btn-sm" value="${btn_delete}" onclick="deleteBoard(${boardDto.board_no})">
+				</div>
 				</c:if>
 				<c:if test="${user_level eq 9}">
-					<div>
-						<input type="button" value="${btn_delete}" class="btn btn-sm"
-							onclick="deleteBoard(${board_no})"> <input type="button"
-							value="${btn_back_admin}" class="btn btn-sm"
-							onclick="goAdminPage()">
-					</div>
+				<div>
+					<input type="button" value="${btn_delete}" class="btn btn-sm" 
+						onclick="deleteBoard(${board_no})"> 
+					<input type="button" value="${btn_back_admin}" class="btn btn-sm" 
+						onclick="goAdminPage()">
+				</div>
 				</c:if>
 			</div>
 			<!--  -->
 			<br>
 			<article>
 				<section>
-					<!-- notice -->
+				<!-- notice -->
 					<c:if test="${boardDto.board_level eq 1}">
-						<div style="font-size: 32px;">
-							<img class="mb-4" src="${project}img/logo_c.png" alt=""
-								width="40" height="40"> <b>${trip_notice_2}</b>
-						</div>
+					<div style="font-size: 32px;">
+						<img class="mb-4" src="${project}img/logo_c.png" alt="" width="40" height="40"> 
+						<b>${trip_notice_2}</b>
+					</div>
 					</c:if>
+					
 					<!-- Title and writer -->
 					<div id="trip_title">
 						<div class="row">
@@ -79,17 +78,17 @@
 							<input type="hidden" name="trip_count" value="${boardDto.tripLists.size()}">
 						</form>
 						<nav class="navbar  navbar-expand-sm" style="height:30px;padding:0px">
-								<div class="collapse navbar-collapse">
-									<ul class="nav navbar-nav">
-										<c:forEach var="trip" items="${boardDto.tripLists}">
-											<li class="nav-item">
-												<button class="btn btn-sm" onclick="openSchedule(${trip.coord_order})">
-													[${trip.coord_order}]&nbsp;${trip.coord_name}
-												</button>
-											</li>
-										</c:forEach>
-									</ul>
-								</div>
+							<div class="collapse navbar-collapse">
+								<ul class="nav navbar-nav">
+									<c:forEach var="trip" items="${boardDto.tripLists}">
+									<li class="nav-item">
+										<button class="btn btn-sm" onclick="openSchedule(${trip.coord_order})">
+											[${trip.coord_order}]&nbsp;${trip.coord_name}
+										</button>
+									</li>
+									</c:forEach>
+								</ul>
+							</div>
 						</nav>
 						<br>
 						<c:forEach var="trip" items="${boardDto.tripLists}">
@@ -149,46 +148,44 @@
 										</div>
 									</div>
 								</div>
+							</div>
 
-								<!--button 영역 -->
-								<button class="btn btn-sm" onclick="showMap(${trip.trip_id})">${trip_map}</button>
-								<button class="btn btn-sm" onclick="showAlbum(${trip.trip_id})">${trip_photo}</button>
+							<!--button 영역 -->
+							<button class="btn btn-sm" onclick="showMap(${trip.trip_id})">${trip_map}</button>
+							<button class="btn btn-sm" onclick="showAlbum(${trip.trip_id})">${trip_photo}</button>
 
-								<!-- tripAlbum -->
-								<div id="albumTab_${trip.trip_id}" style="display: none">
-									<jsp:include page='boardAlbum.go?board_no=${boardDto.board_no}&trip_id=${trip.trip_id}' />
-								</div>
-								<!--- tripMap -->
-								<input type="hidden" value="${trip.coordinate.coord_lat}"
-									id="lat" /> <input type="hidden"
-									value="${trip.coordinate.coord_lng}" id="lng" />
-								<div id="mapTab_${trip.trip_id}" style="display: none"></div>
-					</div>
-					</c:forEach>
-					<!-- 일정 Container box-->
-
-					<div class="row pt-3 pb-1">
-						<label class="col-2">${boardDto.board_contact}</label> <a
-							href="${boardDto.board_contact}" target="_blank">${boardDto.board_contact}</a>
-					</div>
-					<div id="trip_content">
-						<div class="row px-3">
-							<textarea class="col-12" rows="8" style="border: dotted 1px grey"
-								readonly>${boardDto.board_content}</textarea>
+							<!-- tripAlbum -->
+							<div id="albumTab_${trip.trip_id}" style="display: none">
+							<jsp:include page='boardAlbum.go?board_no=${boardDto.board_no}&trip_id=${trip.trip_id}' />
+							</div>
+							<!--- tripMap -->
+							<input type="hidden" value="${trip.coordinate.coord_lat}" id="lat" /> 
+							<input type="hidden" value="${trip.coordinate.coord_lng}" id="lng" />
+							<div id="mapTab_${trip.trip_id}" style="display: none">
+							</div>
 						</div>
+						</c:forEach>
+					
+						<!-- 일정 Container box-->
+						<div class="row pt-3 pb-1">
+							<label class="col-2">${boardDto.board_contact}</label> 
+							<a href="${boardDto.board_contact}" target="_blank">${boardDto.board_contact}</a>
+						</div>
+						<div id="trip_content">
+							<div class="row px-3">
+								<textarea class="col-12" rows="8" style="border: dotted 1px grey" readonly>${boardDto.board_content}</textarea>
+							</div>
+						</div>
+						<!-- id: trip_content -->
 					</div>
-					<!-- id: trip_content -->
-		</div>
-		<!-- id: trip_title -->
-		</section>
+				<!-- id: trip_title -->
+				</section>
+			<br>
+			<!-- End of Post -->
+			</article>
 
-		<br>
-
-		<!-- End of Post -->
-		</article>
-
-		<!-- comment -->
-		<c:if test="${sessionScope.user_id != null}">
+			<!-- comment -->
+			<c:if test="${sessionScope.user_id != null}">
 			<div class="container">
 				<label for="content">comment</label>
 				<form name="commentInsertForm" method="post">
@@ -202,10 +199,11 @@
 					</div>
 				</form>
 			</div>
-		</c:if>
-		<div class="commentList"></div>
+			</c:if>
+			<div class="commentList">
+			</div>
 		<!-- comment -->
-	</div>
+		</div>
 	</div>
 </body>
 
