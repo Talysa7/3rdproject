@@ -64,6 +64,6 @@ public class MemberDBBean {
 		return isMember;
 	}
 	public int addTripMember(MemberDataBean memberDto) {
-		return session.selectOne("user.addTripMember", memberDto);
+		return session.update("user.addTripMember", memberDto);
 	}
 }

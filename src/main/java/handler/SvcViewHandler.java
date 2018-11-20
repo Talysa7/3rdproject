@@ -225,6 +225,7 @@ public class SvcViewHandler {
 		boolean isMember=false;
 		if(memberDao.isTripMember(memberDao.getOneMember((user_id)))) isMember=true;
 		request.setAttribute("isMember", isMember);
+		request.setAttribute("size", photoPerPage);
 		return new ModelAndView("svc/boardAlbum");
 	}
 

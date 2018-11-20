@@ -675,15 +675,15 @@ public class SvcProHandler {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		String user_id = (String) session.getAttribute("user_id");
-		String c_content= request.getParameter("c_content");
+		String user_id=request.getParameter("user_id");
+		int board_no=Integer.parseInt(request.getParameter("board_no"));
+		String comment_content=request.getParameter("c_content");
 		CmtDataBean cmtDto = new CmtDataBean();
-		if(c_content != null) {
-		cmtDto.setUser_id(user_id); // jsp에서 히든으로 가져오면됨
-		cmtDto.setBoard_no(Integer.parseInt(request.getParameter("board_no")));
-		cmtDto.setC_content(c_content);
-		
-		cmtDao.insertComment(cmtDto);
+		if(comment_content!=null) {
+			cmtDto.setUser_id(user_id);
+			cmtDto.setBoard_no(board_no);
+			cmtDto.setComment_content(comment_content);
+			cmtDao.insertComment(cmtDto);
 		}
 	}
 
@@ -721,16 +721,16 @@ public class SvcProHandler {
 			e.printStackTrace();
 		}
 		CmtDataBean cmtDto = new CmtDataBean();
-		cmtDto.setC_id(Integer.parseInt(request.getParameter("c_id")));
-		cmtDto.setC_content(request.getParameter("c_content"));
+		cmtDto.setComment_id(Integer.parseInt(request.getParameter("comment_id")));
+		cmtDto.setComment_content(request.getParameter("comment_content"));
 		cmtDao.updateComment(cmtDto);
 	}
 
 	@RequestMapping(value = "/commentDelete.go", method = RequestMethod.POST) // 댓글 삭제
 	@ResponseBody
 	private void commentDeleteProcess(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		int c_id = Integer.parseInt(request.getParameter("c_id"));
-		cmtDao.deleteComment(c_id);
+		int comment_id = Integer.parseInt(request.getParameter("comment_id"));
+		cmtDao.deleteComment(comment_id);
 	}
 
 	@RequestMapping(value = "/memberAttend.go", method = RequestMethod.POST)
