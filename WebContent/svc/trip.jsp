@@ -23,27 +23,22 @@
 <body class="trip">
 	<div class="container" style="width: 800px;">
 		<div>
-			<div id=button_area class="d-flex justify-content-end">
+			<div id="button_area" class="d-flex justify-content-end">
 				<!-- 목록 button -->
 				<div>
-					<input type="button" value="${btn_list}"
-						onclick="location='tripList.go'" class="btn btn-sm">&nbsp;
+					<input type="button" value="${btn_list}" onclick="location='tripList.go'" class="btn btn-sm">&nbsp;
 				</div>
 				<!--수정/삭제 button -->
 				<c:if test="${boardDto.user_id eq user_id}">
 					<div>
-						<input type="button" value="${btn_mod}"
-							onclick="modifyBoard(${boardDto.board_no})" class="btn btn-sm"> <input
-							type="button" value="${btn_delete}"
-							onclick="deleteBoard(${boardDto.board_no})" class="btn btn-sm">
+						<input type="button" value="${btn_mod}" onclick="modifyBoard(${boardDto.board_no})" class="btn btn-sm"> 
+						<input type="button" value="${btn_delete}" onclick="deleteBoard(${boardDto.board_no})" class="btn btn-sm">
 					</div>
 				</c:if>
 				<c:if test="${user_level eq 9}">
 					<div>
-						<input type="button" value="${btn_delete}" class="btn btn-sm"
-							onclick="deleteBoard(${board_no})"> <input type="button"
-							value="${btn_back_admin}" class="btn btn-sm"
-							onclick="goAdminPage()">
+						<input type="button" value="${btn_delete}" class="btn btn-sm" onclick="deleteBoard(${board_no})"> 
+						<input type="button" value="${btn_back_admin}" class="btn btn-sm" onclick="goAdminPage()">
 					</div>
 				</c:if>
 			</div>
@@ -60,8 +55,7 @@
 					</c:if>
 					<div id="trip_title">
 						<div class="row">
-							<input type="text" name="trip_title" class="col-12 form-control form-control-lg"
-								value="${boardDto.board_title}" readonly="readonly">
+							<input type="text" name="trip_title" class="col-12 form-control form-control-lg" value="${boardDto.board_title}" readonly="readonly">
 						</div>
 						<div class="row">
 							<div class="text-muted">
@@ -75,10 +69,10 @@
 							</form>
 							<div class="container" style="width: 100%" onmouseover="focusMarker(${order},${i.coord_long},${i.coord_lat})">
 								<div class="row">
-									<label class="col-2">${trip_schedule}</label> <input
-										type="text" class="col-3" value="${i.cal_start_date}"
-										readonly="readonly" /> ~ <input type="text" class="col-3"
-										value="${i.cal_end_date}" readonly="readonly" />
+									<label class="col-2">${trip_schedule}</label> 
+									<input type="text" class="col-3" value="${i.cal_start_date}" readonly="readonly" />
+									 ~ 
+									<input type="text" class="col-3" value="${i.cal_end_date}" readonly="readonly" />
 								</div>
 								<!-- 날짜 일정 -->
 								<div class="row">
@@ -116,7 +110,8 @@
 										<c:forEach var="memInfoList" items="${memInfoList}">
 											<c:if test="${i.td_trip_id eq memInfoList.td_trip_id}">
 												<div id="trip_member_list_${order}">
-													${memInfoList.memNum}/${tbDto.tb_m_num}, ${memInfoList.members}</div>
+													${memInfoList.memNum}/${tbDto.tb_m_num}, ${memInfoList.members}
+												</div>
 											</c:if>
 										</c:forEach>
 									</div>
@@ -131,13 +126,12 @@
 						</form>
 
 						<div class="row pt-3 pb-1">
-							<label class="col-2">${trip_talklink}</label> <a
-								href="${tbDto.trip_talklink}" target="_blank">${tbDto.trip_talklink}</a>
+							<label class="col-2">${trip_talklink}</label> 
+							<a href="${tbDto.trip_talklink}" target="_blank">${tbDto.trip_talklink}</a>
 						</div>
 						<div id="trip_content">
 							<div class="row px-3">
-								<textarea class="col-12" rows="8"
-									style="border: dotted 1px grey" readonly>${tbDto.tb_content}</textarea>
+								<textarea class="col-12" rows="8" style="border: dotted 1px grey" readonly>${tbDto.tb_content}</textarea>
 							</div>
 						</div>
 						<!-- id: trip_content -->
@@ -160,9 +154,7 @@
 					<section id="albumTab">
 				</c:if>
 					<div class="row" id="album">
-						<jsp:include
-							page='boardAlbum.go?board_no=${board_no}&start=${start}&tab=${tab}'
-							flush='false' />
+						<jsp:include page='boardAlbum.go?board_no=${board_no}&start=${start}&tab=${tab}' flush='false' />
 					</div>
 				</section>
 
@@ -173,9 +165,10 @@
 				<c:if test="${tab eq 1}">
 					<div id="mapTab" style="display: none">
 				</c:if>
-				<div id="map">지도</div>
-				<input type="hidden" value="${lat}" id="lat" /> <input
-					type="hidden" value="${lng}" id="lng" />
+				<div id="map">지도
+				</div>
+				<input type="hidden" value="${lat}" id="lat" /> 
+				<input type="hidden" value="${lng}" id="lng" />
 		</div>
 		</article>
 
@@ -185,26 +178,24 @@
 				<label for="content">comment</label>
 				<form name="commentInsertForm" method="post">
 					<div class="input-group">
-						<input type="hidden" name="board_no" value="${board_no}" /> <input
-							type="hidden" name="session" value="${user_id}" /> <input
-							type="text" class="input col-11" id="c_content" name="c_content"
-							placeholder="${trip_entercontent}"> <span
-							class="input-group-btn">
-							<button class="btn btn-default" type="button"
-								onclick="commentInsert()">등록</button>
+						<input type="hidden" name="board_no" value="${board_no}" /> 
+						<input type="hidden" name="session" value="${user_id}" /> 
+						<input type="text" class="input col-11" id="c_content" name="c_content" placeholder="${trip_entercontent}"> 
+						<span class="input-group-btn"> 
+							<button class="btn btn-default" type="button" onclick="commentInsert()">등록</button>
 						</span>
 					</div>
 				</form>
 			</div>
 		</c:if>
-		<div class="commentList"></div>
+		<div class="commentList">
+		</div>
 		<!-- comment -->
 	</div>
-	</div>
+	
 </body>
 
-<script async defer
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTHrzKi3xuXtFRo_fm9dGO2cC--hrLBpo&callback=initMap">
+<script async defer src="https://maps.googleapis.com/maps/api/js?callback=initMap">
 </script>
 
 <!-- Bootstrap core JavaScript

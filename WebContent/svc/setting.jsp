@@ -13,8 +13,6 @@
 <c:set var="page_delete" value="회 원 탈 퇴"/>
 <c:set var="page_modify" value="회원 정보 수정"/>
 <c:set var="page_mypage" value="회원 정보"/> <!-- 이름추적 및 교체함 : mypage2 => mypage / 의미없는 숫자 2로 인함 -->
-<c:set var="EmailId" value="아이디 찾기"/>
-<c:set var="EmailPasswd" value="비밀번호 찾기"/>
 
 <c:set var="page_main_eng" value="Main"/>
 <c:set var="page_board_eng" value="Board"/>
@@ -22,17 +20,19 @@
 <c:set var="page_calendar_eng" value="My Calendar"/>
 <c:set var="page_write" value="글쓰기"/>
 <c:set var="page_tripMod" value="글수정"/>
+<c:set var="page_not_found" value="페이지를 찾을 수 없습니다."/>
 
 <c:set var="msg_main" value="비회원이시면 회원가입을 해주세요"/>
 <c:set var="msg_main_login" value="님 안녕하세요"/>
 <c:set var="msg_passwdform" value="비밀번호를 다시 한 번 입력해주세요"/>
 
+<c:set var="EmailId" value="아이디 찾기"/>
+<c:set var="EmailPasswd" value="비밀번호 찾기"/>
 <c:set var="modError_passwd" value="비밀번호가 일치하지 않습니다."/>
 <c:set var="modError_noUser" value="사용자 정보가 올바르지 않습니다."/>
 <c:set var="userMod_updateError" value="사용자 정보 수정에 실패했습니다."/>
 <c:set var="email_auth_guide" value="메일로 전송된 인증번호를 입력하세요."/>
 <c:set var="email_used" value="이미 사용 중입니다. "/>
-<c:set var="page_not_found" value="페이지를 찾을 수 없습니다."/>
 
 <c:set var="str_id" value="아이디"/>
 <c:set var="str_passwd" value="비밀번호"/>
