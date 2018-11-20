@@ -138,17 +138,35 @@
 		where trip_id=#{trip_id}
 	</select>
 <!-- evaluation -->
+	<select id="beforeReview" parameterType="java.util.Map" resultType="int">
+		select count(*) from pao_user_review where reviewer_id=#{user_id} 
+		and trip_id in (select trip_id from pao_user_review where reviewer_id=#{user_id})
+	</select>
+	<select id="getReview" parameterType="java.util.Map" resultType="db.ReviewDataBean">
+		select * from pao_user_review where user_id=#{user_id} and
+		trip_id in (select trip_id from pao_user_review where reviewer_id=#{user_id})
+	</select>
+	<select id="getReviewCount" parameterType="java.util.Map" resultType="int">
+		select count(*) from pao_user_review where user_id=#{user_id} and
+		trip_id in (select trip_id from pao_user_review where reviewer_id=#{user_id})
+	</select>
+	<select id="getReviewSum" parameterType="java.util.Map" resultType="int">
+		select review_point from from pao_user_review where user_id=#{user_id} and
+		trip_id in (select trip_id from pao_user_review where reviewer_id=#{user_id})
+	</select>
 	<select id="getEvaluation" parameterType="java.util.Map" resultType="db.ReviewDataBean">
 		select * from pao_user_review where user_id=#{user_id}
 	</select>
 	<insert id="insertEvaluation" parameterType="db.ReviewDataBean">
-		insert into pao_user_review values(#{user_id}, #{reviewer_id}, #{review_point}, #{review_comment}, #{trip_id})
+		insert into pao_user_review(user_id, reviewer_id, trip_id, review_point, review_comment)
+		 values(#{user_id}, #{reviewer_id}, #{trip_id}, #{review_point}, #{review_comment})
 	</insert>
 	<select id="countEvaluation" parameterType="java.util.Map" resultType="int">
 		select count(*) from pao_user_review where user_id=#{user_id}
 	</select>
 	<select id="sumEvaluation" parameterType="String" resultType="int">
-		select sum(review_point) from pao_user_review where user_id=#{user_id}
+		select review_point from pao_user_review where user_id=#{user_id}
 	</select>
+	
 </mapper>
 

@@ -641,6 +641,11 @@ public class SvcProHandler {
 	@RequestMapping("/reviewPro")
 	public ModelAndView evaluationProcess(HttpServletRequest request, HttpServletResponse response)
 	 		throws HandlerException, IOException{
+		try {
+			request.setCharacterEncoding("utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		String user_name = request.getParameter("sel2");
 		String evaluation = request.getParameter("textarea");
 		int grade = Integer.parseInt(request.getParameter("grade"));
@@ -653,8 +658,8 @@ public class SvcProHandler {
 		evalDto.setReviewer_id(user_id);
 		evalDto.setUser_id(user_name);
 		evalDto.setTrip_id(trip_id);
-		reviewDao.insertEvaluation(evalDto);
-		
+		int result = reviewDao.insertEvaluation(evalDto);
+		request.setAttribute("result", result);
 		return new ModelAndView("/svc/reviewPro");		
 	}
 	

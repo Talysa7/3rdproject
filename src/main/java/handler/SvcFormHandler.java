@@ -1,7 +1,9 @@
 package handler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +21,8 @@ import db.CountryDBBean;
 import db.CountryDataBean;
 import db.MemberDBBean;
 import db.MemberDataBean;
+import db.ReviewDBBean;
+import db.ReviewDataBean;
 import db.TagDBBean;
 import db.TagDataBean;
 import db.BoardDBBean;
@@ -48,6 +52,8 @@ public class SvcFormHandler {
 	private CountryDBBean countryDao;
 	@Resource
 	private MemberDBBean memberDao;
+	@Resource
+	private ReviewDBBean reviewDao;
 	
 	/////////////////////////////////user pages/////////////////////////////////
 	@RequestMapping("/EmailId")
@@ -160,6 +166,7 @@ public class SvcFormHandler {
 	@RequestMapping("/review")
 	public ModelAndView svcReviewProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		String user_id = (String) request.getSession().getAttribute("user_id");
+		request.setAttribute("user_id", user_id);
 		List<Integer> trip_id = memberDao.getMemTripId(user_id);
 		request.setAttribute("trip_id", trip_id);
 		List<TripDataBean> usertrip = tripDao.getUserTripList(user_id);
@@ -170,6 +177,10 @@ public class SvcFormHandler {
 			tripDto.setTrip_members(tripDto.getTrip_id());
 			trip.add(tripDto);
 		}
+		Map<String, Object> user = new HashMap<String, Object>();
+		user.put("user_id", user_id);
+		List<ReviewDataBean>reviewDto = reviewDao.getEvaluation(user);
+		request.setAttribute("reviewDto", reviewDto);
 		request.setAttribute("trip", trip);
 		return new ModelAndView("svc/review");		
 	}

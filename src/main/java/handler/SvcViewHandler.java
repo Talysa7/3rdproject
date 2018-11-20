@@ -90,15 +90,42 @@ public class SvcViewHandler {
 			//user_tags is a guest value, we should set it additionally
 			userDto.setUser_tags(tagDao.getUserTags(user_id));	//태그 가져오는거 수정.
 			request.setAttribute("userDto", userDto);
-			Map<String, String> user = new HashMap<String, String>();
+			
+			Map<String, Object> user = new HashMap<String, Object>();
 			user.put("user_id", user_id);
 			List<ReviewDataBean> reviewDto = reviewDao.getEvaluation(user);
-			request.setAttribute("reviewDto", reviewDto);
-			
-			int count = reviewDao.countEvaluation(user);
-			request.setAttribute("count", count);
-			int point = reviewDao.sumEvaluation(user_id);
-			request.setAttribute("average", point/count);
+				int num = reviewDao.beforeReview(user);
+				request.setAttribute("num", num);
+				if(num==0) {
+					Map<String, String> userTO = new HashMap<String, String>();
+					userTO.put("user_id", user_id);
+					List<ReviewDataBean> reviewD =reviewDao.getReview(userTO);
+					request.setAttribute("reviewDto", reviewD);
+					int count = reviewDao.getReviewCount(userTO);
+					request.setAttribute("count", count);
+					int point = reviewDao.getReviewSum(userTO);
+					Double divide = 0.0;
+					try {
+						divide =(double) (point/count);
+					}catch(ArithmeticException e) {
+						divide = 0.0;
+					}				
+					request.setAttribute("average", divide);
+				}else{
+					request.setAttribute("reviewDto", reviewDto);
+					Map<String, String> userT = new HashMap<String, String>();
+					userT.put("user_id", user_id);
+					Double count = (double) reviewDao.countEvaluation(userT);
+					request.setAttribute("count", count);
+					Double point = (double) reviewDao.sumEvaluation(user_id);
+					Double divide = 0.0;
+					try {
+						divide =(double) (point/count);
+					}catch(ArithmeticException e) {
+						divide = 0.0;
+					}					
+					request.setAttribute("average", divide);
+				}		
 		}
 		return new ModelAndView("svc/myPage");
 	}

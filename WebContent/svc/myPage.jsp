@@ -83,31 +83,38 @@
 			</div>
 		</form>
 		<div id="reputation">
-		<%-- <c:if test="${reviewDto.writername eq 0}"> --%>
-		<input type="button" onclick="location='review.go?user_id=${user_id}'" value="평판">
-		<%-- </c:if> --%>
-		${userDto.user_name}님의 평점은  
-		<c:if test="${count ne 0}">[게시글 수 : ${count}]</c:if>
-		<c:if test="${average ne 0 }"> [평균평점 : ${average} ] 입니다</c:if>
+		<c:if test="${num ne 0}">
+			<input type="button" onclick="location='review.go?user_id=${user_id}'" value="평판">
+		</c:if> 
+		${userDto.user_name}님의 평점은  		
+		<c:if test="${average ne 0 }"> [평균평점 : ${average} ] </c:if>
+		<c:if test="${count ne 0}">[게시글 수 : ${count}]</c:if>입니다		
 		<br>
-		<c:forEach var="review" items="${reviewDto}">
+		
+		<c:forEach var="review" items="${reviewDto}">	
 		<table border="1">		
-		<tr><th>평가자</th> 
-		<td>${review.reviewer_id }</td>
+		<tr>
+			<th>평가자</th> 
+			<td>${review.reviewer_id }</td>
 		</tr>
-		<tr><th>평가점수</th>
-		<td><c:choose>
-		<c:when test="${review.review_point eq 1}"> ★ </c:when>
-		<c:when test="${review.review_point eq 2}"> ★★  </c:when>
-		<c:when test="${review.review_point eq 3}"> ★★★  </c:when>
-		<c:when test="${review.review_point eq 4}"> ★★★★    </c:when>
-		<c:when test="${review.review_point eq 5}"> ★★★★★     </c:when>
-		</c:choose></td>
+		<tr>
+			<th>평가점수</th>
+			<td>
+			<c:choose>
+				<c:when test="${review.review_point eq 1}"> ★ </c:when>
+				<c:when test="${review.review_point eq 2}"> ★★  </c:when>
+				<c:when test="${review.review_point eq 3}"> ★★★  </c:when>
+				<c:when test="${review.review_point eq 4}"> ★★★★    </c:when>
+				<c:when test="${review.review_point eq 5}"> ★★★★★     </c:when>
+			</c:choose>
+			</td>
 		</tr>
-		<tr><th>평가 내용</th>
-		<td>${review.review_comment }</td>
+		<tr>
+			<th>평가 내용</th>
+			<td>${review.review_comment }</td>
 		</tr>
 		</table>
+		<br>
 		</c:forEach>
 		</div>
 </div>	
