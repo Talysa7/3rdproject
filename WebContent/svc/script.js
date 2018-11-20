@@ -207,14 +207,14 @@ function deleteMarkers(num) {
 		    }	
 }
 //trip view-button event-map
-function showMap(){
-	$('#albumTab').hide();
-	$('#mapTab').show();
+function showMap(trip_id){
+	$('#albumTab_'+trip_id).hide();
+	$('#mapTab_'+trip_id).show();
 }
 //trip view-button event-boardAlbum
-function showAlbum(){
-	$('#albumTab').show();
-	$('#mapTab').hide();
+function showAlbum(trip_id){
+	$('#albumTab_'+trip_id).show();
+	$('#mapTab_'+trip_id).hide();
 }
 //trip-album-nextPage
 function next(start,size){
@@ -934,3 +934,12 @@ function absent(td_trip_id) {
 
 
 ///////////////////////////////////////////////////////이민재//////////////////////////////////////////////////////
+		
+		
+		
+function openSchedule(coord_order) {
+	for (var i =1; i<=10; i++) {
+		$('#trip_'+i).hide();
+	}
+	$('#trip_'+coord_order).show();
+}

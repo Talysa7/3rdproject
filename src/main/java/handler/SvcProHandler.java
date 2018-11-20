@@ -464,7 +464,7 @@ public class SvcProHandler {
 			throws HandlerException {
 
 		String uploadPath = request.getServletContext().getRealPath("/");
-		System.out.println(uploadPath);
+		System.out.println("path:"+uploadPath);
 		String path = uploadPath + "save/";
 		String DBpath = request.getContextPath() + "/save/";
 
@@ -493,14 +493,18 @@ public class SvcProHandler {
 					+ originFileName.substring(originFileName.lastIndexOf(".")).toLowerCase();
 			String safeFile = path + originFileName;
 			String safeDBFile = DBpath + originFileName;
+			
 			try {
 				mf.transferTo(new File(safeFile));
 				// db insert
 				albumDto = new AlbumDataBean();
 				albumDto.setPhoto_url(safeDBFile);
+				int trip_id=Integer.parseInt(request.getParameter("trip_id"));
+				albumDto.setTrip_id(trip_id);
+				String user_id=(String)request.getSession().getAttribute("user_id");
+				albumDto.setUser_id(user_id);
 				int board_no=Integer.parseInt(request.getParameter("board_no"));
-				albumDto.setBoard_no(board_no);
-				request.setAttribute("board_no",board_no);
+				request.setAttribute("board_no", board_no);
 				albumDao.addPhoto(albumDto);
 			} catch (IllegalStateException e) {
 				e.printStackTrace();

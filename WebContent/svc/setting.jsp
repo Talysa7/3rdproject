@@ -79,6 +79,9 @@
 <c:set var="trip_schedule" value="일정"/>
 <c:set var="trip_entercontent" value="내용을 입력하세요"/>
 
+<c:set var="moments" value="순간의 순간"/>
+<c:set var="trip_member_list" value="참가자"/>
+
 <c:set var="search_trip" value="여행 찾기..."/>
 <c:set var="search_guide" value="검색어를 입력하세요"/>
 <c:set var="search_result" value="의 검색 결과입니다."/>
@@ -87,6 +90,9 @@
 
 <c:set var="trip_notice_1" value="[공지]"/>
 <c:set var="trip_notice_2" value="공지사항"/>
+
+<c:set var="trip_map" value="지도"/>
+<c:set var="trip_photo" value="사진"/>
 
 <%-- FIXME : 임시 주석처리, 추후 이상없으면 삭제 예정
 <c:set var="page_confirm" value="아이디 중복확인"/> <!-- 쓰이는 곳 없음 -->
@@ -106,8 +112,6 @@
 <c:set var="btn_mod_cancel" value="수정취소"/> <!-- 쓰이는 곳 없음 -->
 <c:set var="btn_del_cancel" value="탈퇴취소"/> <!-- 쓰이는 곳 없음 -->
 
-<c:set var="trip_map" value="지도"/> <!-- 쓰이는 곳 없음 -->
-<c:set var="trip_photo" value="사진"/> <!-- 쓰이는 곳 없음 -->
 <c:set var="trip_member_myung" value="명 모집 중!"/> <!-- 쓰이는 곳 없음 -->
 <c:set var="trip_attend" value="참석"/> <!-- 쓰이는 곳 없음 -->
 <c:set var="trip_absent" value="빠지기"/> <!-- 쓰이는 곳 없음 -->
