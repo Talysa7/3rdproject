@@ -9,17 +9,19 @@
 	
 		<div>
 		<span>일정</span>
-			<c:forEach var="trip" items="${members}">
-			<c:forEach var="coord" items="${coord}">
+		<c:forEach var="trip" items="${trip}">		
 		<span><select id="sel1" name="sel1">
-			<option value="${trip.trip_id}"> ${coord.coord_name} </option>			
-			</select> </span>			
+			<option value="${trip.trip_id}">${trip.coordinate.coord_name}</option>			
+			</select> </span>	
 			<span>평판대상</span>				
-			<span><select id="sel2" name="sel2">
-			<option value="${trip.user_id}">${trip.user_id}</option>
-			</select></span>
-			</c:forEach>	
-			</c:forEach>			 
+			<span><select id="sel2" name="sel2" onchange="change(trip)">
+			<c:forEach var="member" items="${trip.trip_members}">
+			<option value="${member.user_id}" data-option="${trip.trip_id}">${member.user_id}</option>
+			</c:forEach>
+			</select>
+		</span>
+		</c:forEach>	
+					 
 		</div>
 		
 		<div>

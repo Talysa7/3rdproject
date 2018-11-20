@@ -158,17 +158,19 @@ public class SvcFormHandler {
 	}
 	
 	@RequestMapping("/review")
-	public ModelAndView svcEvaluationProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
+	public ModelAndView svcReviewProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		String user_id = (String) request.getSession().getAttribute("user_id");
 		List<Integer> trip_id = memberDao.getMemTripId(user_id);
-		for(int i=0; i<trip_id.size(); i++) {
-			int trip = trip_id.get(i);
-			TripDataBean tripDto = new TripDataBean();
-			List<MemberDataBean> members = tripDto.getTrip_members(trip);
-			CoordDataBean coord = tripDto.getCoordinate();
-			request.setAttribute("members", members);
-			request.setAttribute("coord", coord);
+		request.setAttribute("trip", trip_id);
+		List<TripDataBean> usertrip = tripDao.getUserTripList(user_id);
+		List<TripDataBean> trip = new ArrayList<TripDataBean>();
+		for(int i=0; i<usertrip.size(); i++) {		
+			TripDataBean tripDto = usertrip.get(i);
+			tripDto.setCoordinate(tripDto.getTrip_id());
+			tripDto.setTrip_members(tripDto.getTrip_id());
+			trip.add(tripDto);
 		}
+		request.setAttribute("trip", trip);
 		return new ModelAndView("svc/review");		
 	}
 }

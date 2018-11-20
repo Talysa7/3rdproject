@@ -641,15 +641,18 @@ public class SvcProHandler {
 	@RequestMapping("/reviewPro")
 	public ModelAndView evaluationProcess(HttpServletRequest request, HttpServletResponse response)
 	 		throws HandlerException, IOException{
-		String user_name = request.getParameter("sel1");
+		String user_name = request.getParameter("sel2");
 		String evaluation = request.getParameter("textarea");
 		int grade = Integer.parseInt(request.getParameter("grade"));
+		int trip_id = Integer.parseInt(request.getParameter("sel1"));
 		String user_id = (String) request.getSession().getAttribute("user_id");
-		String name = userDao.getUserName("user_id");
 		
 		ReviewDataBean evalDto = new ReviewDataBean();
-		
-		
+		evalDto.setReview_comment(evaluation);
+		evalDto.setReview_point(grade);
+		evalDto.setReviewer_id(user_id);
+		evalDto.setUser_id(user_name);
+		evalDto.setTrip_id(trip_id);
 		reviewDao.insertEvaluation(evalDto);
 		
 		return new ModelAndView("/svc/reviewPro");		

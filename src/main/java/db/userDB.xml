@@ -68,9 +68,7 @@
 		select count(*) from pao_members where trip_id=#{trip_id}
 	</select>
 	<select id="getMembers" parameterType="int" resultType="java.util.List">
-		select *
-		from pao_view_members
-		where trip_id=#{trip_id}
+		select * from pao_view_members where trip_id=#{trip_id}
 	</select>
 	
 <!-- Tag -->
