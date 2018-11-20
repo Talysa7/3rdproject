@@ -14,6 +14,7 @@ var trip_tileerror = "글제목을 입력해주세요";
 var contenterror = "글내용을 입력해주세요";
 
 var boarddeleteerror="게시물 삭제에 실패했습니다.\n잠시후 다시 시도하세요";
+var photodeletesuccess="사진을 삭제했습니다.";
 var photodeleteerror="사진 삭제에 실패했습니다.\n잠시후 다시 시도하세요";
 var extensionerror="jpg, gif, png 확장자만 업로드 가능합니다.";
 var sizeerror="이미지 용량은 5M이하만 가능합니다.";
@@ -235,17 +236,19 @@ function albumPaging(start){
 	$('#album').load(page);
 }
 //사진 지우기
-function deletePhoto(board_no,photo_id,start){
+function deletePhoto(board_no,trip_id,photo_id){
 	$.ajax({
 		type:'POST',
 		url:'photoDel.go',
 		data:{
 			board_no:board_no,
+			trip_id:trip_id,
 			photo_id:photo_id
 		},
 		success:function(data){
-			var page="svc/boardAlbum.go?board_no="+board_no+"&start="+start;
-			$('#album').load(page);
+			var page="svc/boardAlbum.go?board_no="+board_no+"&trip_id="+trip_id;
+			$('#albumTab_'+trip_id).load(page);
+			alert(photodeletesuccess);
 		},
 		error:function(e){
 			alert(photodeleteerror);
@@ -417,6 +420,7 @@ function download(form){
 }
 //board게시판 전체 사진 다운로드
 function downloadAlbum(){
+	alert("entered");
 	var form=$('#downloadAlbumForm');
 	form.submit();
 	endDownload();

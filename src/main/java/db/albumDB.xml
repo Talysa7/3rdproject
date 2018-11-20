@@ -28,7 +28,7 @@
 		order by photo_reg_date DESC
 	</select>
 	<select id="getPhoto_urls" parameterType="int" resultType="String">
-		select photo_url from pao_album where board_no=#{board_no}
+		select photo_url from pao_album where trip_id=#{trip_id}
 	</select>
 	
 	<select id="getThumbnail" parameterType="String" resultType="String">

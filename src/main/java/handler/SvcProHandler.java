@@ -521,23 +521,24 @@ public class SvcProHandler {
 			throws HandlerException {
 		int board_no = Integer.parseInt(request.getParameter("board_no"));
 		request.setAttribute("board_no", board_no);
-
+		int trip_id = Integer.parseInt(request.getParameter("trip_id"));
+		request.setAttribute("trip_id", trip_id);
 		int photo_id = Integer.parseInt(request.getParameter("photo_id"));
 		int result = albumDao.delPhoto(photo_id);
 		request.setAttribute("result", result);
 		return new ModelAndView("redirect:trip.go?board_no="+board_no);
 	}
 
-	@RequestMapping("/downloadAlbum.go")
+	@RequestMapping("/downloadAlbum")
 	public void downloadAlbumProcess(HttpServletRequest request, HttpServletResponse response)
 			throws HandlerException, IOException {
-		int board_no = Integer.parseInt(request.getParameter("board_no"));
-		List<String> photo_urls = albumDao.getPhoto_urls(board_no);
+		int trip_id = Integer.parseInt(request.getParameter("trip_id"));
+		List<String> photo_urls = albumDao.getPhoto_urls(trip_id);
 
 		String realFolder = request.getServletContext().getRealPath("/") + "save/";
 		int bufferSize = LIMIT_SIZE;
 		ZipOutputStream zos = null;
-		String zipName = "Travelers_Album" + board_no;
+		String zipName = "Travelers_Album" + trip_id;
 
 		response.reset();
 		response.setHeader("Content-Disposition", "attachment; filename=" + zipName + ".zip" + ";");
@@ -572,7 +573,7 @@ public class SvcProHandler {
 		bis.close();
 	}
 
-	@RequestMapping("/download.go")
+	@RequestMapping("/download")
 	public void downloadProcess(HttpServletRequest request, HttpServletResponse response)
 			throws HandlerException, IOException {
 		int n = Integer.parseInt(request.getParameter("num"));
