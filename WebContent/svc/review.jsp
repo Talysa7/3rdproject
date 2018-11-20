@@ -7,22 +7,25 @@
 
 <form method="post" action="reviewPro.go">
 	
-		<div>
-		<span>일정</span>
-		<c:forEach var="trip" items="${trip}">		
-		<span><select id="sel1" name="sel1">
-			<option value="${trip.trip_id}">${trip.coordinate.coord_name}</option>			
-			</select> </span>	
-			<span>평판대상</span>				
-			<span><select id="sel2" name="sel2" onchange="change(trip)">
-			<c:forEach var="member" items="${trip.trip_members}">
-			<option value="${member.user_id}" data-option="${trip.trip_id}">${member.user_id}</option>
-			</c:forEach>
-			</select>
+		
+		<c:forEach var="trip" items="${trip}">	
+			<div>	
+		<span>일정</span>	
+		<span><select id="sel1" name="sel1">		
+		<option value="${trip.trip_id}">${trip.coordinate.coord_name}</option>			
+		</select> </span>	
+		
+		<span>평판대상</span>				
+		<span><select id="sel2" name="sel2" onchange="change(trip)">
+		<c:forEach var="member" items="${trip.trip_members}">
+		<option value="${member.user_id}" data-option="${trip.trip_id}">${member.user_id}</option>
+		</c:forEach>
+		</select>
 		</span>
+		</div>
 		</c:forEach>	
 					 
-		</div>
+		
 		
 		<div>
 		<span>점수</span>
