@@ -21,6 +21,8 @@
 </head>
 
 <body class="trip">
+	<input type="hidden" name="board_no" value="${boardDto.board_no}" />
+	<input type="hidden" name="user_id" value="${sessionScope.user_id}" />
 	<div class="container" style="width: 800px;">
 		<div>
 			<div id=button_area class="d-flex justify-content-end">
@@ -93,7 +95,9 @@
 						<c:forEach var="trip" items="${boardDto.tripLists}">
 							<div id="trip_${trip.coord_order}" style="display: none">
 								<form name="orderInfo">
+									<input type="hidden" name="order_${trip.trip_id}" value="${trip.coord_order}">
 									<input type="hidden" name="member_count_${trip.trip_id}" value="${trip.trip_member_count}">
+									<input type="hidden" name="isMemberOf${trip.trip_id}" value="false"/>
 								</form>
 								<div class="container" style="width:100%">
 									<div class="row">
@@ -116,31 +120,32 @@
 										</div>
 										<!-- column -->
 										<label class="col-2">${trip_member_list}</label>
-										<div id="trip_button_${trip.trip_id}">
-											<c:if test="${sessionScope.user_id ne null}">
-												<c:choose>
-													<c:when test="${sessionScope.user_id eq boardDto.user_id}">
-													&nbsp; 
-													</c:when>
-													<c:when test="${sessionScope.user_id ne boardDto.user_id and isMember eq true}">
-														<button onclick="absent(${trip.trip_id})"
-															class="btn btn-sm">불참</button>
-													</c:when>
-													<c:otherwise>
-														<button onclick="attend(${trip.trip_id})"
-															class="btn btn-sm">참석</button>
-													</c:otherwise>
-												</c:choose>
-											</c:if>
-										</div>
-										&nbsp;
 										<div>
 											<div id="trip_member_list_${trip.coord_order}">
 												${trip.trip_members.size()}/${trip.trip_member_count}, &nbsp;
 												<c:forEach var="member" items="${trip.trip_members}">
 												${member.user_name} &nbsp;
-											</c:forEach>
+													<c:if test="${member.user_id = user_id}">
+														<input type="hidden" name="isMemberOf${trip.trip_id}" value="true"/>
+													</c:if>
+												</c:forEach>
 											</div>
+										</div>
+										&nbsp;
+										<div id="trip_button_${trip.trip_id}">
+											<input type="hidden" name="thisTripMemberCheck" value="isMemberOf${trip.trip_id}.val()">
+											<c:if test="${user_id ne null}">
+												<c:if test="${user_id ne boardDto.user_id}">
+													<c:choose>
+														<c:when test="${thisTripMemberCheck eq true}">
+															<button onclick="absent(${trip.trip_id})" class="btn btn-sm">${trip_absent}</button>
+														</c:when>
+														<c:otherwise>
+															<button onclick="attend(${trip.trip_id})" class="btn btn-sm">${trip_attend}</button>
+														</c:otherwise>
+													</c:choose>
+												</c:if>
+											</c:if>
 										</div>
 									</div>
 								</div>
@@ -188,8 +193,6 @@
 				<label for="content">comment</label>
 				<form name="commentInsertForm" method="post">
 					<div class="input-group">
-						<input type="hidden" name="board_no" value="${boardDto.board_no}" />
-						<input type="hidden" name="session" value="${boardDto.user_id}" />
 						<input type="text" class="input col-11" id="c_content"
 							name="c_content" placeholder="${trip_entercontent}"> <span
 							class="input-group-btn">

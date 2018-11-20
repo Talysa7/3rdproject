@@ -737,22 +737,22 @@ public class SvcProHandler {
 	@ResponseBody
 	private List<MemberDataBean> memberAttendProcess(HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		String trip_id = request.getParameter("trip_id");
+		int trip_id = Integer.parseInt(request.getParameter("trip_id"));
 		String user_id = request.getParameter("user_id");
-		int trip_id_int = Integer.parseInt(trip_id);
 		MemberDataBean memberDto = new MemberDataBean();		
-		memberDto.setTrip_id(trip_id_int);
+		memberDto.setTrip_id(trip_id);
 		memberDto.setUser_id(user_id);
 
-		int memberCheck = memberDao.isMember(memberDto);
+		boolean memberCheck = memberDao.isTripMember(memberDto);
 
-		if (memberCheck == 0) {
+		if (!memberCheck) {
 			int addMemberResult = memberDao.addTripMember(memberDto);
 			request.setAttribute("addMemberResult", addMemberResult);
-			request.setAttribute("isMember", true);
+			if(addMemberResult>=1) request.setAttribute("isMember", true);
+			else request.setAttribute("isMember", false);
 		}
 
-		List<MemberDataBean> memberList = memberDao.getMembers(trip_id_int);
+		List<MemberDataBean> memberList = memberDao.getMembers(trip_id);
 		return memberList;
 	}
 
@@ -760,22 +760,22 @@ public class SvcProHandler {
 	@ResponseBody
 	private List<MemberDataBean> memberAbsentProcess(HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		String trip_id = request.getParameter("trip_id");
+		int trip_id = Integer.parseInt(request.getParameter("trip_id"));
 		String user_id = request.getParameter("user_id");
-	    int trip_id_int = Integer.parseInt(trip_id);
 	    
 	    MemberDataBean memberDto = new MemberDataBean();
-	    memberDto.setTrip_id(trip_id_int);
+	    memberDto.setTrip_id(trip_id);
 	    memberDto.setUser_id(user_id);
 
-		int memberCheck = memberDao.isMember(memberDto);
+	    boolean memberCheck = memberDao.isTripMember(memberDto);
 
-		if (memberCheck != 0) {
+		if (memberCheck) {
 			int delMemberResult = memberDao.delTripMember(memberDto);
 			request.setAttribute("delMemberResult", delMemberResult);
-			request.setAttribute("isMember", false);
+			if (delMemberResult>=1) request.setAttribute("isMember", false);
+			else request.setAttribute("isMember", true);
 		}
-		List<MemberDataBean> memberList = memberDao.getMembers(trip_id_int);
+		List<MemberDataBean> memberList = memberDao.getMembers(trip_id);
 		return memberList;
 	}
 	//////////////////////////////////////ajax추가분 이민재 2018.11.15 /////////////////////////////////////

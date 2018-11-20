@@ -779,16 +779,17 @@ function goAdminPage(){
 	location.href="adminTrip.go";
 }
 
-function attend(td_trip_id) {
-	var user_id=trip_detail.user_id.value;
-	var order=$('input[name=order_of_'+td_trip_id+']').val();
-	var m_num=trip_detail.m_num.value;
+function attend(trip_id) {
+	var user_id=$('input[name=user_id]').val();
+	var order=$('input[name=order_'+trip_id+']').val();
+	var member_count=$('input[name=member_count_'+trip_id+']').val();
 	if(user_id) {
 		$.ajax({
 			type : 'post',
+			dataType: 'json',
 			data : {user_id : user_id,
-						td_trip_id : td_trip_id},
-			url : "memberAttend.go",
+						trip_id : trip_id},
+			url : 'memberAttend.go',
 			success : function(data) {
 				if(data) {
 					var mList="";
@@ -799,9 +800,9 @@ function attend(td_trip_id) {
 		            });
 					$('#trip_member_list_'+order).html(mList);
 					var buttonDiv='<c:if test="${sessionScope.user_id ne null}">';
-		            buttonDiv+=			'<button onclick="absent('+td_trip_id+')" class="btn btn-sm">불참</button>';
+		            buttonDiv+=			'<button onclick="absent('+trip_id+','+user_id+')" class="btn btn-sm">불참</button>';
 		            buttonDiv+=	'</c:if>';
-		            $('#trip_button_'+td_trip_id).html(buttonDiv);
+		            $('#trip_button_'+trip_id).html(buttonDiv);
 				} else {
 					alert('참가하려는 일정에 이상이 있습니다.');
 				}
@@ -813,16 +814,17 @@ function attend(td_trip_id) {
 	}
 }
 
-function absent(td_trip_id) {
-	var user_id=trip_detail.user_id.value;
-	var order=$('input[name=order_of_'+td_trip_id+']').val();
-	var m_num=trip_detail.m_num.value;
+function absent(trip_id) {
+	var user_id=$('input[name=user_id]').val();
+	var order=$('input[name=order_'+trip_id+']').val();
+	var member_count=$('input[name=member_count_'+trip_id+']').val();
 	if(user_id) {
 		$.ajax({
 			type : 'post',
+			dataType: 'json',
 			data :  {user_id : user_id,
-						td_trip_id : td_trip_id},
-			url : "memberAbsent.go",
+						trip_id : trip_id},
+			url : 'memberAbsent.go',
 			success : function(data) {
 				if(data) {
 					var mList="";
@@ -834,9 +836,9 @@ function absent(td_trip_id) {
 		            $('#trip_member_list_'+order).html(mList);
 		            albumPaging(1);
 		            var buttonDiv='<c:if test="${sessionScope.user_id ne null}">';
-		            buttonDiv+=			'<button onclick="attend('+td_trip_id+')" class="btn btn-sm">참석</button>';
+		            buttonDiv+=			'<button onclick="attend('+trip_id+','+user_id+')" class="btn btn-sm">참석</button>';
 		            buttonDiv+=	'</c:if>';
-		            $('#trip_button_'+td_trip_id).html(buttonDiv);
+		            $('#trip_button_'+trip_id).html(buttonDiv);
 				} else {
 					alert('빠지려는 일정에 이상이 있습니다.');
 				}

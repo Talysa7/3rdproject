@@ -93,6 +93,8 @@
 
 <c:set var="trip_map" value="지도"/>
 <c:set var="trip_photo" value="사진"/>
+<c:set var="trip_attend" value="참석"/> 
+<c:set var="trip_absent" value="빠지기"/>
 
 <%-- FIXME : 임시 주석처리, 추후 이상없으면 삭제 예정
 <c:set var="page_confirm" value="아이디 중복확인"/> <!-- 쓰이는 곳 없음 -->
@@ -113,8 +115,6 @@
 <c:set var="btn_del_cancel" value="탈퇴취소"/> <!-- 쓰이는 곳 없음 -->
 
 <c:set var="trip_member_myung" value="명 모집 중!"/> <!-- 쓰이는 곳 없음 -->
-<c:set var="trip_attend" value="참석"/> <!-- 쓰이는 곳 없음 -->
-<c:set var="trip_absent" value="빠지기"/> <!-- 쓰이는 곳 없음 -->
 <c:set var="trip_from" value="부터 "/> <!-- 쓰이는 곳 없음 -->
 <c:set var="trip_until" value="까지"/> <!-- 쓰이는 곳 없음 -->
 <c:set var="trip_to" value="로 여행합니다."/> <!-- 쓰이는 곳 없음 -->
