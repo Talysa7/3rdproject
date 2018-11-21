@@ -213,6 +213,7 @@ public class SvcViewHandler {
 		int trip_id=Integer.parseInt(request.getParameter("trip_id"));
 		String user_id=(String)request.getSession().getAttribute("user_id");
 		int board_no=Integer.parseInt(request.getParameter("board_no"));
+		String isMemberOfThisTrip=(String)request.getParameter("isMemberOfThisTrip");
 		request.setAttribute("board_no", board_no);
 		request.setAttribute("trip_id", trip_id);
 		//always first page, load next page by ajax
@@ -223,7 +224,7 @@ public class SvcViewHandler {
 			request.setAttribute("photoList", photoList);
 		}
 		boolean isMember=false;
-		if(memberDao.isTripMember(memberDao.getOneMember((user_id)))) isMember=true;
+		if(isMemberOfThisTrip.equals("true")) isMember=true;
 		request.setAttribute("isMember", isMember);
 		request.setAttribute("size", photoPerPage);
 		return new ModelAndView("svc/boardAlbum");

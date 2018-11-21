@@ -38,7 +38,7 @@ $(document).ready(function(){
 	}
 	var num=$('label[name=schedule]').length;//일정 개수 
 	if(num){
-	loadCal(num);
+		loadCal(num);
 	}
 });
 	
@@ -761,19 +761,19 @@ function writeCheck(){
 //글 수정
 function tripmodcheck() {
 	if (confirm("글수정을 하시겠습니까?")) {
-	if( ! tripmodform.trip_title.value ) {
-		alert( trip_titleerror );
-		modifyform.trip_title.focus();
-		return false;
-	} else if( ! tripmodform.content.value ) {
-		alert( contenterror );
-		modifyform.content.focus();
-		return false;
-	} else {
-		alert("작성을 완료하였습니다");
-		$("#tripmodform").button();
+		if( ! tripmodform.trip_title.value ) {
+			alert( trip_titleerror );
+			modifyform.trip_title.focus();
+			return false;
+		} else if( ! tripmodform.content.value ) {
+			alert( contenterror );
+			modifyform.content.focus();
+			return false;
+		} else {
+			alert("작성을 완료하였습니다");
+			$("#tripmodform").button();
+		}
 	}
-}
 }
 
 function goAdminPage(){
@@ -947,7 +947,8 @@ function absent(trip_id) {
 		
 		
 function openSchedule(coord_order) {
-	for (var i =1; i<=10; i++) {
+	var countOfSchedule=$("input[name=countOfSchedule]").val();
+	for (var i =1; i<=countOfSchedule; i++) {
 		$('#trip_'+i).hide();
 	}
 	$('#trip_'+coord_order).show();
