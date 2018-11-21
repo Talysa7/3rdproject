@@ -95,15 +95,16 @@ public class SvcViewHandler {
 			user.put("user_id", user_id);
 			List<ReviewDataBean> reviewDto = reviewDao.getEvaluation(user);
 				int num = reviewDao.beforeReview(user);
-				request.setAttribute("num", num);
-				if(num==0) {
-					Map<String, String> userTO = new HashMap<String, String>();
-					userTO.put("user_id", user_id);
-					List<ReviewDataBean> reviewD =reviewDao.getReview(userTO);
+				Map<String, String> userT = new HashMap<String, String>();
+				userT.put("user_id", user_id);
+				int number = reviewDao.countEvaluation(userT);
+				System.out.println(number + "+");
+				if(num!= number) {
+					List<ReviewDataBean> reviewD =reviewDao.getReview(userT);
 					request.setAttribute("reviewDto", reviewD);
-					int count = reviewDao.getReviewCount(userTO);
+					Double count = (double) reviewDao.getReviewCount(userT);
 					request.setAttribute("count", count);
-					int point = reviewDao.getReviewSum(userTO);
+					Double point = (double) reviewDao.getReviewSum(userT);
 					Double divide = 0.0;
 					try {
 						divide =(double) (point/count);
@@ -112,9 +113,7 @@ public class SvcViewHandler {
 					}				
 					request.setAttribute("average", divide);
 				}else{
-					request.setAttribute("reviewDto", reviewDto);
-					Map<String, String> userT = new HashMap<String, String>();
-					userT.put("user_id", user_id);
+					request.setAttribute("reviewDto", reviewDto);					
 					Double count = (double) reviewDao.countEvaluation(userT);
 					request.setAttribute("count", count);
 					Double point = (double) reviewDao.sumEvaluation(user_id);
