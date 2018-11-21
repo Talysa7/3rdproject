@@ -69,7 +69,7 @@
 	</select>
 
 	<select id="getStyleTags" resultType="db.TagDataBean">
-		select * from pao_tag where tag_type=1
+		select * from pao_tag where tag_type=9
 	</select>
 	
 	<select id="getCityTags" resultType="db.TagDataBean">
@@ -119,10 +119,10 @@
 		select * from pao_view_board_tags where board_no=#{board_no}
 	</select>
 	<select id="tagAutoComplete" parameterType="String" resultType="db.TagDataBean">
-		SELECT tag_id,tag_value FROM pao_tag WHERE tag_value LIKE #{tag_value} AND tag_type != 1
+		SELECT tag_id,tag_value FROM pao_tag WHERE tag_value LIKE #{tag_value} AND tag_type != 9
 	</select>
 	<insert id="insertUserTag" parameterType="db.TagDataBean" keyProperty="tag_id">
-		insert into pao_tag(tag_value, tag_type) values(#{tag_value}, 2)
+		insert into pao_tag(tag_value, tag_type) values(#{tag_value}, 1)
 		<selectKey keyProperty="tag_id" resultType="int" order="AFTER">
 	       SELECT LAST_INSERT_ID()
 	    </selectKey>

@@ -149,21 +149,16 @@ public class SvcViewHandler {
 		//admin page needs this
 		int rowNumber;
 		int startPage=0;
-		try {	//	exception 처리.
-			startPage=Integer.parseInt(request.getParameter("pageNum"));
-		} catch (Exception e) {
-			
-		} 
 		if(startPage>0) {
 			rowNumber=startPage*postPerPage;
 		} else {
-			rowNumber=1;
+			rowNumber=0;
 		}
 		List<BoardDataBean> postList=boardDao.getPostList(rowNumber, postPerPage);
 		//set count and next row info for 'load more list'
-		if(postList.size()>=10) {
+		if(postList.size()>=postPerPage) {
 			request.setAttribute("next_row", postPerPage+1);
-		} else if(postList.size()>0&&postList.size()<10) {
+		} else if(postList.size()>0&&postList.size()<postPerPage) {
 			request.setAttribute("next_row", postList.size()+1);
 		} else {
 			request.setAttribute("next_row", 0);
@@ -193,8 +188,6 @@ public class SvcViewHandler {
 			}
 			//get trips of this post
 			for(TripDataBean trip:boardDto.getTripLists()) {
-				trip.setTrip_members(board_no);
-				//check, current user is a member of this post's trips?
 				boolean isMember=false;
 				for(MemberDataBean member:trip.getTrip_members()) {
 					if(member.getUser_id().equals(user_id)) {
@@ -245,7 +238,7 @@ public class SvcViewHandler {
 	@RequestMapping("/album")
 	public ModelAndView svcAlbumProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		//get all photos and its amount from pao_album
-		List<AlbumDataBean>album=albumDao.getAllPhotos();
+		List<AlbumDataBean> album=albumDao.getAllPhotos();
 		int photoCount=album.size();
 		request.setAttribute("photoCount", photoCount);
 		if(photoCount>0) {
@@ -256,15 +249,22 @@ public class SvcViewHandler {
 
 	@RequestMapping("/svc/boardAlbum")//svc/boardAlbum
 	public ModelAndView svcBoardAlbumProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
+		int trip_id=Integer.parseInt(request.getParameter("trip_id"));
+		String user_id=(String)request.getSession().getAttribute("user_id");
 		int board_no=Integer.parseInt(request.getParameter("board_no"));
 		request.setAttribute("board_no", board_no);
+		request.setAttribute("trip_id", trip_id);
 		//always first page, load next page by ajax
-		List<AlbumDataBean> photoList=albumDao.getPhotosByBoardNo(board_no, 0, 6);
-		
+		List<AlbumDataBean> photoList=albumDao.getPhotosByTripId(trip_id);
 		if(photoList.size()>0) {
 			int photoPages=photoList.size()/photoPerPage;
 			request.setAttribute("photoPages", photoPages);
+			request.setAttribute("photoList", photoList);
 		}
+		boolean isMember=false;
+		if(memberDao.isTripMember(memberDao.getOneMember((user_id)))) isMember=true;
+		request.setAttribute("isMember", isMember);
+		request.setAttribute("size", photoPerPage);
 		return new ModelAndView("svc/boardAlbum");
 	}
 

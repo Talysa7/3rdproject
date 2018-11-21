@@ -14,6 +14,7 @@ var trip_tileerror = "글제목을 입력해주세요";
 var contenterror = "글내용을 입력해주세요";
 
 var boarddeleteerror="게시물 삭제에 실패했습니다.\n잠시후 다시 시도하세요";
+var photodeletesuccess="사진을 삭제했습니다.";
 var photodeleteerror="사진 삭제에 실패했습니다.\n잠시후 다시 시도하세요";
 var extensionerror="jpg, gif, png 확장자만 업로드 가능합니다.";
 var sizeerror="이미지 용량은 5M이하만 가능합니다.";
@@ -207,14 +208,14 @@ function deleteMarkers(num) {
 		    }	
 }
 //trip view-button event-map
-function showMap(){
-	$('#albumTab').hide();
-	$('#mapTab').show();
+function showMap(trip_id){
+	$('#albumTab_'+trip_id).hide();
+	$('#mapTab_'+trip_id).show();
 }
 //trip view-button event-boardAlbum
-function showAlbum(){
-	$('#albumTab').show();
-	$('#mapTab').hide();
+function showAlbum(trip_id){
+	$('#mapTab_'+trip_id).hide();
+	$('#albumTab_'+trip_id).show();
 }
 //trip-album-nextPage
 function next(start,size){
@@ -235,17 +236,19 @@ function albumPaging(start){
 	$('#album').load(page);
 }
 //사진 지우기
-function deletePhoto(board_no,photo_id,start){
+function deletePhoto(board_no,trip_id,photo_id){
 	$.ajax({
 		type:'POST',
 		url:'photoDel.go',
 		data:{
 			board_no:board_no,
+			trip_id:trip_id,
 			photo_id:photo_id
 		},
 		success:function(data){
-			var page="svc/boardAlbum.go?board_no="+board_no+"&start="+start;
-			$('#album').load(page);
+			var page="svc/boardAlbum.go?board_no="+board_no+"&trip_id="+trip_id;
+			$('#albumTab_'+trip_id).load(page);
+			alert(photodeletesuccess);
 		},
 		error:function(e){
 			alert(photodeleteerror);
@@ -417,6 +420,7 @@ function download(form){
 }
 //board게시판 전체 사진 다운로드
 function downloadAlbum(){
+	alert("entered");
 	var form=$('#downloadAlbumForm');
 	form.submit();
 	endDownload();
@@ -483,15 +487,9 @@ function sizeOver(size){
 
 ////comment
 
-
-function commentInsert(){ //댓글 등록 버튼 클릭시 
-	 var insertData = $('[name=commentInsertForm]').serialize(); //commentInsertForm의 내용을 가져옴
-	 CmtInsert(insertData); //Insert 함수호출(아래)
-}
-
 /////댓글 목록 
 function commentList(board_no){
-	var SessionID=$("input[name=session]").val();
+	var SessionID=$("input[name=user_id]").val();
 	$.ajax({
         url : 'commentSelect.go',
         type : 'get',
@@ -500,69 +498,76 @@ function commentList(board_no){
             var commentView ='';
             var UserName = 'Ex-User';
             $.each(data, function(key, comment){ 
-            	commentView += '<div class="commentArea" style="border-bottom:1px solid darkgray; margin-bottom: 15px;">';
-            	commentView += '</div class="commentInfo'+comment.c_id+'"><b>'+comment.user_name+'</b>';
-            	if(SessionID == comment.user_id && comment.user_name != UserName){
-            	commentView += '<a onclick="commentUpdate('+comment.c_id+',\''+comment.c_content+'\');"> 수정 </a>';
-            	commentView += '<a onclick="commentDelete('+comment.c_id+');"> 삭제 </a>';
+            	commentView += '<div class="commentArea">';
+            	commentView += '<div class="commentInfo'+comment.comment_id+'"><b>'+comment.user_name+'</b>';
+            	if(SessionID == comment.user_id && comment.user_name != UserName) {
+            		commentView += '<a style="float:right;padding-left:5px" onclick="commentDelete('+comment.comment_id+')">삭제 </a>';
+            		commentView += '<a style="float:right;padding-left:5px" onclick="commentUpdate('+comment.comment_id+',\''+comment.comment_content+'\')">수정 </a>';
             	}
-            	commentView += '<div class="commentContent"> <p>'+comment.c_content +'</p>';
-            	commentView += '</div></div>'
+            	commentView += '<div id="commentContent'+comment.comment_id+'"> <p>'+comment.comment_content +'</p>';
+            	commentView += '<hr style="width: 100%"></div></div></div>';
             });
-            $(".commentList").html(commentView);
+            $("#commentList").html(commentView);
         },
         error : function(error) {
             alert("댓글을 입력해주세요!");
         }
     });
-	}
+}
 
-
-//댓글 등록
-function CmtInsert(insertData){
-	var board_no=$("input[name=board_no").val();
+function commentInsert(){ //댓글 등록 버튼 클릭시 
+	var user_id=$('[name=commentUserId]').val();
+	var c_content=$('[name=c_content]').val();
+	var board_no=$('[name=commentBoardNo]').val();
 	if(commentInsertForm.c_content.value){
-	$.ajax({
-        url : 'commentInsert.go',
-        type : 'post',
-        data : insertData,
-        success : function(data){
-        	if(data == 1) {
-        		/*오류메세지 작성*/
-           }else{
-        	   commentList(board_no);
-        	   $('[name=c_content]').val('');
-           }
-        },
-    	error : function(error) {
-        alert("error : " + error);
-    }
-    });
-	}else{
+		$.ajax({
+	        url : 'commentInsert.go',
+	        type : 'post',
+	        data : {
+	        	user_id:user_id,
+	        	c_content:c_content,
+	        	board_no:board_no
+	        },
+	        success : function(data){
+	        	if(data == 1) {
+	        		/*오류메세지 작성*/
+		       } else {
+	        	   commentList(board_no);
+	        	   $('[name=c_content]').val('');
+		       }
+		    },
+		    error : function(error) {
+		    	alert("error : " + error);
+		    }
+	    });
+	} else {
 		alert("댓글을 입력해주세요");
 	}
-	}
+}
+
 //댓글 수정 - 댓글 내용 출력을 input 폼으로 변경 
-function commentUpdate(c_id, c_content){
+function commentUpdate(comment_id, comment_content){
     var commentModify ='';
-    
     commentModify += '<div class="input-group">';
-    commentModify += '<input type="text" class="form-control" name="c_content_'+c_id+'" value="'+c_content+'"/>';
-    commentModify += '<span class="input-group-btn"><button class="btn btn-default" type="button" onclick="commentUpdateProc('+c_id+');">수정</button> </span>';
+    commentModify += '<input type="text" class="form-control" name="comment_content_'+comment_id+'" value="'+comment_content+'"/>';
+    commentModify += '<span class="input-group-btn"><button class="btn btn-default" type="button" onclick="commentUpdatePro('+comment_id+');">수정</button> </span>';
     commentModify += '</div>';
     
-    $('.commentContent'+c_id).html(commentModify);
+    $('#commentContent'+comment_id).html(commentModify);
     
 }
  
 //댓글 수정
-function commentUpdateProc(c_id){
-    var updateContent = $('input[name=c_content_'+c_id+']').val();
-    var board_no=$("input[name=board_no").val();
+function commentUpdatePro(comment_id){
+    var updateContent = $('input[name=comment_content_'+comment_id+']').val();
+    var board_no=$("input[name=board_no]").val();
     $.ajax({
         url : 'commentUpdate.go',
         type : 'post',
-        data : {'c_content' : updateContent, 'c_id' : c_id},
+        data : {
+        			comment_content:updateContent,
+        			comment_id: comment_id
+        		},
         success : function(data){
             commentList(board_no); //댓글 수정후 목록 출력 
         }
@@ -570,13 +575,13 @@ function commentUpdateProc(c_id){
 }
  
 //댓글 삭제 
-function commentDelete(c_id){
+function commentDelete(comment_id){
 	var board_no=$("input[name=board_no]").val();
     $.ajax({
         url : 'commentDelete.go',
         type : 'post',
         data : {
-        	c_id : c_id
+        	comment_id : comment_id
         },
         success : function(data){
             commentList(board_no); //댓글 삭제후 목록 출력 
@@ -777,29 +782,31 @@ function goAdminPage(){
 	location.href="adminTrip.go";
 }
 
-function attend(td_trip_id) {
-	var user_id=trip_detail.user_id.value;
-	var order=$('input[name=order_of_'+td_trip_id+']').val();
-	var m_num=trip_detail.m_num.value;
+function attend(trip_id) {
+	var user_id=$('input[name=user_id]').val();
+	var order=$('input[name=order_'+trip_id+']').val();
+	var member_count=$('input[name=member_count_'+trip_id+']').val();
+	var board_no=$('input[name=board_no]').val();
 	if(user_id) {
 		$.ajax({
 			type : 'post',
+			dataType: 'json',
 			data : {user_id : user_id,
-						td_trip_id : td_trip_id},
-			url : "memberAttend.go",
+						trip_id : trip_id},
+			url : 'memberAttend.go',
 			success : function(data) {
 				if(data) {
 					var mList="";
 					var count=data.length;
-					mList+=count+'/'+m_num+', ';
+					mList+=count+'/'+member_count+', ';
 					$.each(data, function(key, memberList) {
 						mList+=memberList.user_name+' ';
 		            });
 					$('#trip_member_list_'+order).html(mList);
 					var buttonDiv='<c:if test="${sessionScope.user_id ne null}">';
-		            buttonDiv+=			'<button onclick="absent('+td_trip_id+')" class="btn btn-sm">불참</button>';
+		            buttonDiv+=			'<button onclick="absent('+trip_id+')" class="btn btn-sm">빠지기</button>';
 		            buttonDiv+=	'</c:if>';
-		            $('#trip_button_'+td_trip_id).html(buttonDiv);
+		            $('#trip_button_'+trip_id).html(buttonDiv);
 				} else {
 					alert('참가하려는 일정에 이상이 있습니다.');
 				}
@@ -811,30 +818,32 @@ function attend(td_trip_id) {
 	}
 }
 
-function absent(td_trip_id) {
-	var user_id=trip_detail.user_id.value;
-	var order=$('input[name=order_of_'+td_trip_id+']').val();
-	var m_num=trip_detail.m_num.value;
+function absent(trip_id) {
+	var user_id=$('input[name=user_id]').val();
+	var order=$('input[name=order_'+trip_id+']').val();
+	var member_count=$('input[name=member_count_'+trip_id+']').val();
+	var board_no=$('input[name=board_no]').val();
 	if(user_id) {
 		$.ajax({
 			type : 'post',
+			dataType: 'json',
 			data :  {user_id : user_id,
-						td_trip_id : td_trip_id},
-			url : "memberAbsent.go",
+						trip_id : trip_id},
+			url : 'memberAbsent.go',
 			success : function(data) {
 				if(data) {
 					var mList="";
 					var count=data.length;
-					mList+=count+'/'+m_num+', ';
+					mList+=count+'/'+member_count+', ';
 					$.each(data, function(key, memberList) {
 						mList+=memberList.user_name+' ';
 		            });
 		            $('#trip_member_list_'+order).html(mList);
 		            albumPaging(1);
 		            var buttonDiv='<c:if test="${sessionScope.user_id ne null}">';
-		            buttonDiv+=			'<button onclick="attend('+td_trip_id+')" class="btn btn-sm">참석</button>';
+		            buttonDiv+=			'<button onclick="attend('+trip_id+')" class="btn btn-sm">참석</button>';
 		            buttonDiv+=	'</c:if>';
-		            $('#trip_button_'+td_trip_id).html(buttonDiv);
+		            $('#trip_button_'+trip_id).html(buttonDiv);
 				} else {
 					alert('빠지려는 일정에 이상이 있습니다.');
 				}
@@ -936,3 +945,12 @@ function absent(td_trip_id) {
 
 
 ///////////////////////////////////////////////////////이민재//////////////////////////////////////////////////////
+		
+		
+		
+function openSchedule(coord_order) {
+	for (var i =1; i<=10; i++) {
+		$('#trip_'+i).hide();
+	}
+	$('#trip_'+coord_order).show();
+}

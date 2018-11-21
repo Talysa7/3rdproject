@@ -16,12 +16,19 @@ public class MemberDBBean {
 	public String getUserName(String user_id) {
 		return session.selectOne("user.getUserName", user_id);
 	}
+
 	public List<Integer> getMemTripId(String user_id) {
 		return session.selectList("user.getMemTripId", user_id);
 	}
 	public List<MemberDataBean> getMemberList(String user_id) {
 		return session.selectList("user.getMemberList", user_id);
 	}
+
+	public MemberDataBean getOneMember(String user_id) {
+		return session.selectOne("user.getOneMember", user_id);
+	}
+	
+
 	public int addTripMember(Map<String, String> addMemberMap) {
 		return session.update("user.addTripMember", addMemberMap);
 	}	
@@ -59,10 +66,13 @@ public class MemberDBBean {
 	public List<MemberDataBean> getMembers(int trip_id) {
 		return session.selectList("user.getMembers", trip_id);
 	}
-	public int isMember(MemberDataBean memberDto) {
-		return session.selectOne("user.isMember", memberDto);
+	public boolean isTripMember(MemberDataBean memberDto) {
+		boolean isMember=false;
+		int check=session.selectOne("user.isTripMember", memberDto);
+		if(check>=1) isMember=true;
+		return isMember;
 	}
 	public int addTripMember(MemberDataBean memberDto) {
-		return session.selectOne("user.addTripMember", memberDto);
+		return session.update("user.addTripMember", memberDto);
 	}
 }

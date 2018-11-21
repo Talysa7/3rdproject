@@ -26,13 +26,14 @@
 		<c:choose>
 			<c:when test="${myTrips.size() eq 0}">
 				<center>
-					<h2>${search_no_result}</h2>
+					<h6>${search_no_result}</h6>
+					<br>
 					<img src="${project}img/paori.png">
 				</center>
 			</c:when>
 			<c:otherwise>
 				<c:forEach var="trip" items="${myTrips}">
-						<label>게시물 보기 : </label><a href="/trip.go?board_no=${trip.board_no}">link</a><br>
+						<label>게시물 보기 : </label><a href="/3rdProject/trip.go?board_no=${trip.board_no}">link</a><br>
 						<label>가는 곳 : </label> ${trip.coord_name}<br>
 						<label>날짜 : </label>${trip.start_date}~${trip.end_date}<br>
 					<hr size="1px" color="black" noshade>

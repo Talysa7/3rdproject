@@ -61,16 +61,22 @@
 	<delete id="delTripMember" parameterType="db.MemberDataBean">
 		delete from pao_members where user_id=#{user_id} and trip_id=#{trip_id}
 	</delete>
-	<select id="isMember" parameterType="db.MemberDataBean" resultType="int">
+	<select id="isTripMember" parameterType="db.MemberDataBean" resultType="int">
 		select count(*) from pao_members where user_id=#{user_id} and trip_id=#{trip_id}
 	</select>
 	<select id="getMemberCount" parameterType="int" resultType="int">
 		select count(*) from pao_members where trip_id=#{trip_id}
 	</select>
 	<select id="getMembers" parameterType="int" resultType="db.MemberDataBean">
-		select * from pao_view_members where trip_id=#{trip_id}
+		select *
+		from pao_view_members
+		where trip_id=#{trip_id}
 	</select>
-	
+	<select id="getOneMember" parameterType="String" resultType="db.MemberDataBean">
+		select *
+		from pao_view_members
+		where user_id=#{user_id}
+	</select>
 <!-- Tag -->
 	<select id="getUserTags" parameterType="String" resultType="java.util.List">
 		select tag_value from pao_tag where tag_id in
@@ -130,7 +136,13 @@
 	</select>
 <!-- Trip -->
 	<select id="getUserTripList" parameterType="String" resultType="db.TripDataBean">
-		select * from pao_trip where trip_id in (select trip_id from pao_members where user_id=#{user_id})
+		select *
+		from pao_view_trip
+		where trip_id in (
+				select trip_id
+				from pao_members
+				where user_id=#{user_id}
+			)
 	</select>
 	<select id="getMemberNames" parameterType="int" resultType="java.util.List">
 		select user_name

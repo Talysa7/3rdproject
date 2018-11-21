@@ -23,16 +23,6 @@
 <body>
 	<!-- Category & Contents Box -->
 	<div class="body-box">
-		<div class="d-flex justify-content-end">
-			<c:if test="${sessionScope.user_id eq null}">
-				<a href="login.go"></a>
-			</c:if>
-			<c:if test="${sessionScope.user_id ne null}">
-				<a href="tripWrite.go"> <img
-					src="${project}img/compose_icon.png" width="120" height="40">
-				</a>
-			</c:if>
-		</div>
 		<div class="board-list" id="board-list">
 			<c:choose>
 				<c:when test="${count ne 0}">

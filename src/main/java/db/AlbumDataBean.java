@@ -9,7 +9,7 @@ public class AlbumDataBean {
 	private Timestamp photo_reg_date;
 	//FK
 	private String user_id;			//varchar (20), on delete cascade
-	private int board_no;				//int (10), not null, on delete cascade
+	private int trip_id;				//int (10), not null, on delete cascade
 	//guest value from pao_view_album
 	private String user_name;
 	
@@ -31,12 +31,7 @@ public class AlbumDataBean {
 	public void setUser_id(String user_id) {
 		this.user_id = user_id;
 	}
-	public int getBoard_no() {
-		return board_no;
-	}
-	public void setBoard_no(int board_no) {
-		this.board_no = board_no;
-	}
+	
 	public Timestamp getPhoto_reg_date() {
 		return photo_reg_date;
 	}
@@ -49,5 +44,12 @@ public class AlbumDataBean {
 	public void setUser_name(String user_name) {
 		this.user_name = user_name;
 	}
+	public int getTrip_id() {
+		return trip_id;
+	}
+	public void setTrip_id(int trip_id) {
+		this.trip_id = trip_id;
+	}
+	
 	
 }

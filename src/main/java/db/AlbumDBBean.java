@@ -32,8 +32,8 @@ public class AlbumDBBean {
 //	public int getBoardCount(int board_no) {
 //		return session.selectOne("album.getBoardPCount",board_no);
 //	}
-	public List<String> getPhoto_urls(int board_no){
-		return session.selectList("album.getPhoto_urls",board_no);
+	public List<String> getPhoto_urls(int trip_id){
+		return session.selectList("album.getPhoto_urls",trip_id);
 	}
 	
 	
@@ -45,7 +45,7 @@ public class AlbumDBBean {
 	public List<AlbumDataBean> getAllPhotos() {
 		return session.selectList("album.getAllPhotos");
 	}
-	public List<AlbumDataBean> getPhotosByBoardNo(int board_no, int pageStart, int pageEnd) {
-		return session.selectList("album.getPhotosByBoardNo", board_no);
+	public List<AlbumDataBean> getPhotosByTripId(int trip_id) {
+		return session.selectList("album.getPhotosByTripId", trip_id);
 	}
 }
