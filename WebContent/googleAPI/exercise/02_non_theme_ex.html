@@ -54,9 +54,12 @@
         placeholder="Enter a location">
     <div id="map"></div>
     <div id="infowindow-content">
-      <span id="place-name"  class="title"></span><br>
-      Place ID <span id="place-id"></span><br>
-      <span id="place-address"></span>
+      place-name | <span id="place-name"  class="title"></span><br>
+      place-id | <span id="place-id"></span><br>
+      place-address |  <span id="place-address"></span><br>
+      place-location | <span id="place-location"></span><br>
+      place-lat | <span id="place-lat"></span><br>
+      place-lng | <span id="place-lng"></span><br>
     </div>
 
     <script>
@@ -69,28 +72,26 @@
       // This example requires the Places library. Include the libraries=places
       // parameter when you first load the API. For example:
       // <script src="https://maps.googleapis.com/maps/api/js?libraries=places">
-      var map, infowindow, geocoder, marker, autocomplete
+
       function initMap() {
-        map = new google.maps.Map(document.getElementById('map'), {
+        var map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: -33.8688, lng: 151.2195},
           zoom: 13
         });
 
         var input = document.getElementById('pac-input');
 
-        autocomplete = new google.maps.places.Autocomplete(
+        var autocomplete = new google.maps.places.Autocomplete(
             input, {placeIdOnly: true});
         autocomplete.bindTo('bounds', map);
 
         map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
-        infowindow = new google.maps.InfoWindow();
-        
+        var infowindow = new google.maps.InfoWindow();
         var infowindowContent = document.getElementById('infowindow-content');
         infowindow.setContent(infowindowContent);
-        
-        geocoder = new google.maps.Geocoder;
-        marker = new google.maps.Marker({
+        var geocoder = new google.maps.Geocoder;
+        var marker = new google.maps.Marker({
           map: map
         });
         marker.addListener('click', function() {
@@ -110,7 +111,7 @@
               window.alert('Geocoder failed due to: ' + status);
               return;
             }
-            map.setZoom(13);
+            map.setZoom(11);
             map.setCenter(results[0].geometry.location);
             // Set the position of the marker using the place ID and location.
             marker.setPlace({
@@ -122,9 +123,14 @@
             infowindowContent.children['place-id'].textContent = place.place_id;
             infowindowContent.children['place-address'].textContent =
                 results[0].formatted_address;
+            infowindowContent.children['place-location'].textContent = results[0].geometry.location;
+            infowindowContent.children['place-lat'].textContent = results[0].geometry.location.lat();
+            infowindowContent.children['place-lng'].textContent = results[0].geometry.location.lng();
+
             infowindow.open(map, marker);
           });
         });
+        
       }
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?libraries=places&callback=initMap"
