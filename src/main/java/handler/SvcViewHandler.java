@@ -22,6 +22,8 @@ import db.BoardDataBean;
 import db.CmtDBBean;
 import db.CoordDBBean;
 import db.CoordDataBean;
+import db.CoordReviewDBBean;
+import db.CoordReviewDataBean;
 import db.MemberDBBean;
 import db.MemberDataBean;
 import db.ReviewDBBean;
@@ -55,6 +57,8 @@ public class SvcViewHandler {
 	private MemberDBBean memberDao;
 	@Resource
 	private ReviewDBBean reviewDao;
+	@Resource
+	private CoordReviewDBBean coordreDao;
 
 	//amount of displayed photos in a page
 	private static final int photoPerPage=6;
@@ -154,7 +158,13 @@ public class SvcViewHandler {
 		request.setAttribute("myTrips", myTrips);
 		return new ModelAndView("svc/myTrip");
 	}
-
+	@RequestMapping("/coordReview")
+	public ModelAndView SvcTripReviewProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
+		int coord_id = Integer.parseInt(request.getParameter("coord_id"));
+		List<CoordReviewDataBean> review = coordreDao.getCoordReview(coord_id);
+		request.setAttribute("review", review);
+		return new ModelAndView("svc/coordReview");
+	}
 	/////////////////////////////////board pages/////////////////////////////////
 
 	//get board posts

@@ -22,9 +22,6 @@ private SqlSession session=SqlMapClient.getSession();
 	public List<ReviewDataBean> getEvaluation(Map<String, Object> user) {
 		return session.selectList("user.getEvaluation", user);
 	}
-	public List<ReviewDataBean> getReview(Map<String, String> user) {
-		return session.selectList("user.getEvaluation", user);
-	}
 	public int insertEvaluation(ReviewDataBean evalDto) {
 		return session.insert("user.insertEvaluation", evalDto);
 	}

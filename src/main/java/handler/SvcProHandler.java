@@ -53,6 +53,8 @@ import db.CmtDBBean;
 import db.CmtDataBean;
 import db.CoordDBBean;
 import db.CoordDataBean;
+import db.CoordReviewDBBean;
+import db.CoordReviewDataBean;
 import db.ReviewDataBean;
 import db.MemberDBBean;
 import db.MemberDataBean;
@@ -92,6 +94,8 @@ public class SvcProHandler {
 	private MemberDBBean memberDao; 
 	@Resource
 	private ReviewDBBean reviewDao;
+	@Resource
+	private CoordReviewDBBean coordreDao;
 
 
 	///////////////////////////////// user pages/////////////////////////////////
@@ -665,9 +669,31 @@ public class SvcProHandler {
 		evalDto.setTrip_id(trip_id);
 		int result = reviewDao.insertEvaluation(evalDto);
 		request.setAttribute("result", result);
-		return new ModelAndView("/svc/reviewPro");		
+		return new ModelAndView("/svc/myPage");		
 	}
-	
+	/////////////////////////Coordreview  placeWritePro ////////////////////
+	@RequestMapping("/placeWritePro")
+	public ModelAndView placeWriteProcess(HttpServletRequest request, HttpServletResponse response)
+	throws HandlerException, IOException{
+		try {
+			request.setCharacterEncoding("utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		String comment = request.getParameter("textarea");
+		int grade = Integer.parseInt(request.getParameter("grade"));
+		int coord_id = Integer.parseInt(request.getParameter("sel1"));
+		String user_id = (String) request.getSession().getAttribute("user_id");
+		
+		CoordReviewDataBean coordreDto = new CoordReviewDataBean();
+		coordreDto.setCoord_id(coord_id);
+		coordreDto.setReview_comment(comment);
+		coordreDto.setReview_point(grade);
+		coordreDto.setUser_id(user_id);
+		int result = coordreDao.insertCoordReview(coordreDto);
+		request.setAttribute("result", result);
+		return new ModelAndView("/svc/placeWritePro");	
+	}
 	///////////////////////////////// ajax list/////////////////////////////////
 
 	@RequestMapping(value = "/checkId.go", method = RequestMethod.POST, produces = "application/json")

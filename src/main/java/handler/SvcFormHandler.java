@@ -176,8 +176,22 @@ public class SvcFormHandler {
 			tripDto.setCoordinate(tripDto.getTrip_id());
 			tripDto.setReview_members(tripDto.getTrip_id());
 			trip.add(tripDto);
-			Map<String, Object> user = new HashMap<String, Object>();
-			user.put("user_id", user_id);
+		}	
+		request.setAttribute("trip", trip);
+		return new ModelAndView("svc/review");		
+	}
+	@RequestMapping("/placeWrite")
+	public ModelAndView svcPlaceWriteProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
+		String user_id = (String) request.getSession().getAttribute("user_id");
+		request.setAttribute("user_id", user_id);
+		List<Integer> trip_id = memberDao.getMemTripId(user_id);
+		request.setAttribute("trip_id", trip_id);
+		List<TripDataBean> usertrip = tripDao.getUserTripList(user_id);
+		List<TripDataBean> trip = new ArrayList<TripDataBean>();
+		for(int i=0; i<usertrip.size(); i++) {		
+			TripDataBean tripDto = usertrip.get(i);
+			tripDto.setCoordinate(tripDto.getTrip_id());
+			trip.add(tripDto);
 		}	
 		request.setAttribute("trip", trip);
 		return new ModelAndView("svc/review");		

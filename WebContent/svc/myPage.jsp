@@ -88,8 +88,9 @@
 			<input type="button" onclick="location='review.go'" value="작성해야 할 평판이 있습니다">
 		</c:if> 
 		</span>
+		&nbsp;&nbsp;
 		<span>
-			<input type="button" onclick="location='placeWrite.go'" value="작성해야 할 장소평판이 있습니다">
+			<input type="button" onclick="location='placeWrite.go'" value="여행지를 평가해주세요">
 		</span>
 		<br>
 		${userDto.user_name}님의 평점은  		

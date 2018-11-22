@@ -24,7 +24,7 @@
 <body>
 	<div class="container">
 		<c:choose>
-			<c:when test="${myTrips.size() eq 0}">
+			<c:when test="${review.size() eq 0}">
 				<center>
 					<h6>${search_no_result}</h6>
 					<br>
@@ -32,11 +32,9 @@
 				</center>
 			</c:when>
 			<c:otherwise>
-				<c:forEach var="trip" items="${myTrips}">
-						<label>게시물 보기 : </label><a href="/3rdProject/trip.go?board_no=${trip.board_no}">link</a><br>
-						<label>가는 곳 : </label> ${trip.coord_name}<br>
-						<label>날짜 : </label>${trip.start_date}~${trip.end_date}<br>
-						<label>평가 : </label><a href="/3rdProject/tripReview.go?coord_id=${trip.coord_id}">link</a><br>
+				<c:forEach var="review" items="${review}">
+						<label>평가점수 : </label>${review.review_point }<br>
+						<label>평가 내용: </label> ${review.review_comment}<br>
 					<hr size="1px" color="black" noshade>
 				</c:forEach>
 			</c:otherwise>

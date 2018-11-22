@@ -191,4 +191,12 @@
 	<select id="checkCoordName" parameterType="String" resultType="db.CoordDataBean">
 		SELECT * FROM pao_coordinate WHERE coord_name = #{coord_name}
 	</select>
+	
+	<!-- CoordReview 에서 쓰는 sql문 -->
+	<select id="getCoordReview" parameterType="int" resultType="db.CoordReviewDataBean">
+		select * from pao_coord_review where coord_id=#{coord_id}
+	</select>
+	<insert id="insertCoordReview" parameterType="db.CoordReviewDataBean">
+		insert into pao_coord_review values(#{coord_id}, #{user_id}, #{review_point}, #{review_comment})
+	</insert>
 </mapper>
