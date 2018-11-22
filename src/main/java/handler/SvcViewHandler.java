@@ -98,7 +98,7 @@ public class SvcViewHandler {
 				Map<String, String> userT = new HashMap<String, String>();
 				userT.put("user_id", user_id);
 				int number = reviewDao.countEvaluation(userT);
-				System.out.println(number + "+");
+				System.out.println(number + "+" + num);
 				if(num!= number) {
 					List<ReviewDataBean> reviewD =reviewDao.getReview(userT);
 					request.setAttribute("reviewDto", reviewD);

@@ -163,7 +163,7 @@
 		trip_id in (select trip_id from pao_user_review where reviewer_id=#{user_id})
 	</select>
 	<select id="getReviewSum" parameterType="java.util.Map" resultType="int">
-		select review_point from from pao_user_review where user_id=#{user_id} and
+		select review_point from pao_user_review where user_id=#{user_id} and
 		trip_id in (select trip_id from pao_user_review where reviewer_id=#{user_id})
 	</select>
 	<select id="getEvaluation" parameterType="java.util.Map" resultType="db.ReviewDataBean">
