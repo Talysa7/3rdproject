@@ -83,9 +83,14 @@
 			</div>
 		</form>
 		<div id="reputation">
+		<span>
 		<c:if test="${catchNum ne 0}">
-			<input type="button" onclick="location='review.go?user_id=${user_id}'" value="작성해야 할 평판이 있습니다">
+			<input type="button" onclick="location='review.go'" value="작성해야 할 평판이 있습니다">
 		</c:if> 
+		</span>
+		<span>
+			<input type="button" onclick="location='placeWrite.go'" value="작성해야 할 장소평판이 있습니다">
+		</span>
 		<br>
 		${userDto.user_name}님의 평점은  		
 		<c:if test="${average ne 0 }"> [평균평점 : ${average} ] </c:if>
