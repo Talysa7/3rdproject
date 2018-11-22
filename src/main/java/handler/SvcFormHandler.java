@@ -174,13 +174,11 @@ public class SvcFormHandler {
 		for(int i=0; i<usertrip.size(); i++) {		
 			TripDataBean tripDto = usertrip.get(i);
 			tripDto.setCoordinate(tripDto.getTrip_id());
-			tripDto.setTrip_members(tripDto.getTrip_id());
+			tripDto.setReview_members(tripDto.getTrip_id());
 			trip.add(tripDto);
-		}
-		Map<String, Object> user = new HashMap<String, Object>();
-		user.put("user_id", user_id);
-		List<ReviewDataBean>reviewDto = reviewDao.getEvaluation(user);
-		request.setAttribute("reviewDto", reviewDto);
+			Map<String, Object> user = new HashMap<String, Object>();
+			user.put("user_id", user_id);
+		}	
 		request.setAttribute("trip", trip);
 		return new ModelAndView("svc/review");		
 	}

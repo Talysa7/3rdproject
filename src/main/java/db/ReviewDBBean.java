@@ -74,4 +74,7 @@ private SqlSession session=SqlMapClient.getSession();
 
 		return hap;
 	}
+	public List<MemberDataBean> getReviewMembers(int trip_id) {
+		return session.selectList("user.getReviewMembers", trip_id);
+	}
 }

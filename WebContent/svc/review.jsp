@@ -4,23 +4,24 @@
 <%@include file="setting.jsp" %>
 <h2>평판페이지</h2>
 
-
 <form method="post" action="reviewPro.go">
 	<div>	
 	<span>일정</span>	
 	<span><select id="sel1" name="sel1">	
-	<c:forEach var="trip" items="${trip}">		
+	<c:forEach var="trip" items="${trip}">	
+	<c:forEach var="member" items="${trip.review_members}">
+	<c:if test="${member.user_id ne null}">	
 	<option value="${trip.trip_id}">${trip.coordinate.coord_name}</option>
+	</c:if>
+	</c:forEach>
 	</c:forEach>				
 	</select> </span>		
 	<span>평판대상</span>				
-	<span><select id="sel2" name="sel2" onchange="change(trip)">
+	<span><select id="sel2" name="sel2">
 	<c:forEach var="trip" items="${trip}">	
-	<c:forEach var="member" items="${trip.trip_members}">
+	<c:forEach var="member" items="${trip.review_members}">
 	<c:if test="${member.user_id ne user_id}">
-	<c:if test="${recDto.user_id ne member.user_id}">
 	<option value="${member.user_id}" class="${trip.trip_id}">${member.user_id}</option>
-	</c:if>
 	</c:if>
 	</c:forEach>
 	</c:forEach>

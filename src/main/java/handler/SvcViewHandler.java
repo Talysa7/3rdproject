@@ -104,11 +104,12 @@ public class SvcViewHandler {
 					Map<String, Object> user = new HashMap<String, Object>();
 					user.put("user_id", user_id);
 					List<ReviewDataBean> review = reviewDao.stepOne(user);
-					String userD[] = new String[review.size()];
 					List<ReviewDataBean> reviewDto = new ArrayList<ReviewDataBean>();
 					for(int i=0; i<review.size(); i++) {
 					String users=review.get(i).getUser_id();
 					user.put("reviewer_id", users);	
+					int trip_id = review.get(i).getTrip_id();
+					user.put("trip_id", trip_id);
 					ReviewDataBean reviewW = reviewDao.stepTwo(user);
 					reviewDto.add(reviewW);
 					}				
