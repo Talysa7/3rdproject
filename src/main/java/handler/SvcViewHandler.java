@@ -91,17 +91,26 @@ public class SvcViewHandler {
 			userDto.setUser_tags(tagDao.getUserTags(user_id));	//태그 가져오는거 수정.
 			request.setAttribute("userDto", userDto);
 			
-			Map<String, Object> user = new HashMap<String, Object>();
-			user.put("user_id", user_id);
-			List<ReviewDataBean> reviewDto = reviewDao.getEvaluation(user);
-				int num = reviewDao.beforeReview(user);
-				Map<String, String> userT = new HashMap<String, String>();
+			
+				
+				Map<String, String> userT = new HashMap<String, String>();				
 				userT.put("user_id", user_id);
+				int num = reviewDao.beforeReview(userT);
 				int number = reviewDao.countEvaluation(userT);
 				System.out.println(number + "+" + num);
 				if(num!= number) {
-					List<ReviewDataBean> reviewD =reviewDao.getReview(userT);
-					request.setAttribute("reviewDto", reviewD);
+					Map<String, Object> user = new HashMap<String, Object>();
+					user.put("user_id", user_id);
+					List<ReviewDataBean> review = reviewDao.stepOne(user);
+					String userD[] = new String[review.size()];
+					List<ReviewDataBean> reviewDto = new ArrayList<ReviewDataBean>();
+					for(int i=0; i<review.size(); i++) {
+					String users=review.get(i).getUser_id();
+					user.put("reviewer_id", users);	
+					ReviewDataBean reviewW = reviewDao.stepTwo(user);
+					reviewDto.add(reviewW);
+					}				
+					request.setAttribute("reviewDto", reviewDto);
 					Double count = (double) reviewDao.getReviewCount(userT);
 					request.setAttribute("count", count);
 					Double point = (double) reviewDao.getReviewSum(userT);
@@ -113,6 +122,9 @@ public class SvcViewHandler {
 					}				
 					request.setAttribute("average", divide);
 				}else{
+					Map<String, Object> user = new HashMap<String, Object>();
+					user.put("user_id", user_id);
+					List<ReviewDataBean> reviewDto = reviewDao.getEvaluation(user);
 					request.setAttribute("reviewDto", reviewDto);					
 					Double count = (double) reviewDao.countEvaluation(userT);
 					request.setAttribute("count", count);

@@ -10,8 +10,14 @@ import bean.SqlMapClient;
 
 public class ReviewDBBean {
 private SqlSession session=SqlMapClient.getSession();
-	public int beforeReview(Map<String, Object> user){
-		return session.selectOne("user.beforeReview", user);
+	public int beforeReview(Map<String, String> userT){
+		return session.selectOne("user.beforeReview", userT);
+	}
+	public List<ReviewDataBean> stepOne(Map<String, Object> user) {
+		return session.selectList("user.stepOne", user);
+	}
+	public ReviewDataBean stepTwo(Map<String, Object> user) {
+		return session.selectOne("user.stepTwo", user);
 	}
 	public List<ReviewDataBean> getEvaluation(Map<String, Object> user) {
 		return session.selectList("user.getEvaluation", user);

@@ -152,7 +152,12 @@
 <!-- evaluation -->
 	<select id="beforeReview" parameterType="java.util.Map" resultType="int">
 		select count(*) from pao_user_review where reviewer_id=#{user_id} 
-		and trip_id in (select trip_id from pao_user_review where reviewer_id=#{user_id})
+	</select>
+	<select id="stepOne" parameterType="java.util.Map" resultType="db.ReviewDataBean">
+		select * from pao_user_review where reviewer_id=#{user_id}
+	</select>
+	<select id="stepTwo" parameterType="java.util.Map" resultType="db.ReviewDataBean">
+		select * from pao_user_review where reviewer_id=#{reviewer_id} and user_id=#{user_id}
 	</select>
 	<select id="getReview" parameterType="java.util.Map" resultType="db.ReviewDataBean">
 		select * from pao_user_review where user_id=#{user_id} and
@@ -160,11 +165,11 @@
 	</select>
 	<select id="getReviewCount" parameterType="java.util.Map" resultType="int">
 		select count(*) from pao_user_review where user_id=#{user_id} and
-		trip_id in (select trip_id from pao_user_review where reviewer_id=#{user_id})
+		reviewer_id in (select user_id from pao_user_review where reviewer_id=#{user_id})
 	</select>
 	<select id="getReviewSum" parameterType="java.util.Map" resultType="int">
 		select review_point from pao_user_review where user_id=#{user_id} and
-		trip_id in (select trip_id from pao_user_review where reviewer_id=#{user_id})
+		reviewer_id in (select user_id from pao_user_review where reviewer_id=#{user_id})
 	</select>
 	<select id="getEvaluation" parameterType="java.util.Map" resultType="db.ReviewDataBean">
 		select * from pao_user_review where user_id=#{user_id}
