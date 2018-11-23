@@ -84,7 +84,7 @@
 		</form>
 		<div id="reputation">
 		<span>
-		<c:if test="${catchNum ne 0}">
+		<c:if test="${catchNum ne null}">
 			<input type="button" onclick="location='review.go'" value="작성해야 할 평판이 있습니다">
 		</c:if> 
 		</span>
@@ -94,8 +94,8 @@
 		</span>
 		<br>
 		${userDto.user_name}님의 평점은  		
-		<c:if test="${average ne 0 }"> [평균평점 : ${average} ] </c:if>
-		<c:if test="${count ne 0}">[게시글 수 : ${count}]</c:if>입니다		
+		<c:if test="${average ne 0 }"> [평균평점 : ${average}점 (5점만점)] </c:if>
+		<c:if test="${count ne 0}">[게시글 수 : ${count}개]</c:if>입니다		
 		<br>
 		<br>
 		<c:forEach var="review" items="${reviewDto}">	

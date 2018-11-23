@@ -101,7 +101,18 @@ public class SvcViewHandler {
 				userT.put("user_id", user_id);
 				int num = reviewDao.beforeReview(userT);
 				int number = reviewDao.countEvaluation(userT);
-				int catchNum = number - num;
+				
+				List<Integer> tripid = memberDao.getMemTripId(user_id);
+				List<Integer> catchNum = null;
+				for(int j=0; j<tripid.size(); j++) {
+					int trip = tripid.get(j);
+					int catchNumber =reviewDao.getReviewMembers(trip).size();
+					try {
+						catchNum.add(catchNumber);
+					}catch(NullPointerException e){
+						e.printStackTrace();
+					}
+				}
 				request.setAttribute("catchNum", catchNum);
 				
 				if(num!= number) {
@@ -118,12 +129,14 @@ public class SvcViewHandler {
 					reviewDto.add(reviewW);
 					}				
 					request.setAttribute("reviewDto", reviewDto);
-					Double count = (double) reviewDao.getReviewCount(userT);
-					request.setAttribute("count", count);
+					int reviewCount = reviewDao.getReviewCount(userT);
+					Double count = (double) reviewCount;
+					request.setAttribute("count", reviewCount);
 					Double point = (double) reviewDao.getReviewSum(userT);
 					Double divide = 0.0;
 					try {
 						divide =(double) (point/count);
+						divide = Double.parseDouble(String.format("%.2f",divide));
 					}catch(ArithmeticException e) {
 						divide = 0.0;
 					}				
@@ -132,13 +145,15 @@ public class SvcViewHandler {
 					Map<String, Object> user = new HashMap<String, Object>();
 					user.put("user_id", user_id);
 					List<ReviewDataBean> reviewDto = reviewDao.getEvaluation(user);
-					request.setAttribute("reviewDto", reviewDto);					
-					Double count = (double) reviewDao.countEvaluation(userT);
-					request.setAttribute("count", count);
+					request.setAttribute("reviewDto", reviewDto);	
+					int reviewCount = reviewDao.countEvaluation(userT);
+					Double count = (double) reviewCount;
+					request.setAttribute("count", reviewCount);
 					Double point = (double) reviewDao.sumEvaluation(user_id);
 					Double divide = 0.0;
 					try {
-						divide =(double) (point/count);
+						divide =(double) (point/count);						
+						divide = Double.parseDouble(String.format("%.2f",divide));
 					}catch(ArithmeticException e) {
 						divide = 0.0;
 					}					
