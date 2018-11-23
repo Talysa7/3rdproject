@@ -33,10 +33,10 @@
 				</div>
 				<!--수정/삭제 button -->
 				<c:if test="${boardDto.user_id eq user_id}">
-				<div>
-					<input type="button" class="btn btn-sm" value="${btn_mod}" onclick="modifyBoard(${boardDto.board_no})">
-					<input type="button" class="btn btn-sm" value="${btn_delete}" onclick="deleteBoard(${boardDto.board_no})">
-				</div>
+					<div>
+						<input type="button" class="btn btn-sm" value="${btn_mod}" onclick="modifyBoard(${boardDto.board_no})">
+						<input type="button" class="btn btn-sm" value="${btn_delete}" onclick="deleteBoard(${boardDto.board_no})">
+					</div>
 				</c:if>
 				<c:if test="${user_level eq 9}">
 				<div>
@@ -100,21 +100,17 @@
 								</form>
 								<div class="container" style="width:100%">
 									<div class="row">
-										<label class="col-2">${trip_schedule}</label> <input
-											type="text" class="col-3" value="${trip.start_date}"
-											readonly="readonly" /> ~ <input type="text" class="col-3"
-											value="${trip.end_date}" readonly="readonly" />
+										<label class="col-2">${trip_schedule}</label> 
+										<input type="text" class="col-3" value="${trip.start_date}" readonly="readonly" /> ~ 
+										<input type="text" class="col-3" value="${trip.end_date}" readonly="readonly" />
 										<div class="col-12 offset-2">
 											<!-- 장소 정보 저장 시작 -->
 											<div class="loc" name="coord">
 												<input type="text" name="trip_location_${trip.coord_order}"
-													id="address${trip.coord_order}" class="col-8 pt-3"
-													readonly="readonly"> <input type="hidden"
-													name="coord_long" value="${trip.coordinate.coord_long}">
-												<input type="hidden" name="coord_lat"
-													value="${trip.coordinate.coord_lat}"> <input
-													type="hidden" id="country${trip.coord_order}"
-													value="${trip.coordinate.country_name}">
+													id="address${trip.coord_order}" class="col-8 pt-3" readonly="readonly"> 
+												<input type="hidden" name="coord_long" value="${trip.coordinate.coord_long}">
+												<input type="hidden" name="coord_lat" value="${trip.coordinate.coord_lat}">
+												<input type="hidden" id="country${trip.coord_order}" value="${trip.coordinate.country_name}">
 											</div>
 											<!-- 장소 저장 끝 -->
 										</div>

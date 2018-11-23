@@ -23,13 +23,26 @@
 <body>
 	<!-- Category & Contents Box -->
 	<div class="body-box">
-		<div class="d-flex justify-content-end">
+		<!-- search -->
+		<div class="container justify-content-end" style="width:25%;border:solid 1px;float:right">
+			<form method="post">
+				<div class="row"><input type="text" placeholder="장소검색창 위치"></div>
+				<div class="row" style="border:solid 1px">지도 상자</div>
+				<div class="row">날짜 검색</div>
+				<div class="row"><input type="text" placeholder="일정 검색"></div>
+				<div class="row">일정 검색</div>
+				<div class="row"><input type="text" placeholder="장소검색창 위치"></div>
+				<input type="submit" class="btn btn-sm" value="검색">
+			</form>
+		</div>
+		<!-- search -->
+		<div class="d-flex" name="board_list">
 			<c:if test="${sessionScope.user_id eq null}">
 				<a href="login.go"></a>
 			</c:if>
 			<c:if test="${sessionScope.user_id ne null}">
-				<a href="tripWrite.go"> <img
-					src="${project}img/compose_icon.png" width="120" height="40">
+				<a href="tripWrite.go">
+					<img src="${project}img/compose_icon.png" width="120" height="40">
 				</a>
 			</c:if>
 		</div>
@@ -40,8 +53,8 @@
 						<div class="col-md-12">
 							<div class="card flex-md-row mb-3 shadow-sm h-md-250">
 								<div class="card-body d-flex flex-column align-items-start">
-									<strong class="d-inline-block mb-2"> <c:forEach
-											var="trip" items="${post.tripLists}">
+									<strong class="d-inline-block mb-2"> 
+									<c:forEach var="trip" items="${post.tripLists}">
 					              		${trip.coord_name}
 					              	</c:forEach>
 									</strong>
@@ -50,7 +63,7 @@
 										<c:if test="${post.board_level eq 1}">
 											 ${trip_notice_1}
 										</c:if>
-										${post.board_title}
+											${post.board_title}
 										</a>
 									</h3>
 									<div class="mb-1 text-muted text-right">
