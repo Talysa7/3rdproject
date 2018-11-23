@@ -92,8 +92,7 @@
 		<span>
 			<input type="button" onclick="location='placeWrite.go'" value="여행지를 평가해주세요">
 		</span>
-		<br>
-		${userDto.user_name}님의 평점은  		
+		<br> ${userDto.user_name}님의 평점은  		
 		<c:if test="${average ne 0 }"> [평균평점 : ${average}점 (5점만점)] </c:if>
 		<c:if test="${count ne 0}">[게시글 수 : ${count}개]</c:if>입니다		
 		<br>
