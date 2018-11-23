@@ -46,6 +46,7 @@ function erroralert( msg ) {
 	alert( msg );
 	history.back();
 }
+//////////////////////////////////////////////////////////////// Google Map 관련 ////////////////////////////////////////////////////////////////
 //Initialize and add the map
 var boardmarkers=[];
 var boardmarker;
@@ -53,6 +54,10 @@ var boardmap;
 var coord_lats=[];
 var coord_lngs=[];
 var country_codes=[];
+var markers=[];
+var marker;
+var map;
+
 //Map for board
 function initMap() {//trip.jsp에서 좌표로 마커 표시
 	var coord=$('div[name=coord]');
@@ -61,15 +66,15 @@ function initMap() {//trip.jsp에서 좌표로 마커 표시
 	var centerLatSum=0;
 	var centerLngSum=0;
 	var location=[];
-	 coord.each(function(i){
-		 coord_lat[i]=parseFloat(coord.eq(i).find('input[name=coord_lat]').val());
-		 coord_long[i]=parseFloat(coord.eq(i).find('input[name=coord_long]').val());
-		 
-		 centerLatSum+=coord_lat[i];
-		 centerLngSum+=coord_long[i];
+		coord.each(function(i){
+		coord_lat[i]=parseFloat(coord.eq(i).find('input[name=coord_lat]').val());
+		coord_long[i]=parseFloat(coord.eq(i).find('input[name=coord_long]').val());
+		
+		centerLatSum+=coord_lat[i];
+		centerLngSum+=coord_long[i];
 		//location
-		 location[i]= {lat: coord_lat[i], lng: coord_long[i]};
-	 });
+		location[i]= {lat: coord_lat[i], lng: coord_long[i]};
+	});
 	var centerLat = centerLatSum / coord.length ; 
     var centerLng = centerLngSum / coord.length ;   
 	var center={lat:centerLat,lng:centerLng};
@@ -121,11 +126,11 @@ function focusMarker(order,lng,lat){
 }
 //Map for writing
 //지도 주소검색
-var map;
+
 function searchMap() {
 	map = new google.maps.Map(document.getElementById('searchmap'), {
-      zoom: 8,
-      center: {lat: -34.397, lng: 150.644}
+		zoom: 8,
+		center: {lat: -34.397, lng: 150.644}
     });
     var geocoder = new google.maps.Geocoder();
     
@@ -134,8 +139,6 @@ function searchMap() {
     });
   }
 //주소로 좌표 표시
-var markers=[];
-var marker;
 function geocodeAddress(geocoder, resultsMap) {
   var address = document.getElementById('address').value;
   geocoder.geocode({'address': address}, function(results, status) {
@@ -203,10 +206,11 @@ function updateMarker(marker,num){
 }
 // Removes the markers 
 function deleteMarkers(num) {
-	 for (var i = 0; i < markers.length-1; i++) {
-		    markers[i].setMap(null);
-		    }	
+	for (var i = 0; i < markers.length-1; i++) {
+		markers[i].setMap(null);
+	}	
 }
+//////////////////////////////////////////////////////////////// Google Map 끝 ////////////////////////////////////////////////////////////////
 //trip view-button event-map
 function showMap(trip_id){
 	$('#albumTab_'+trip_id).hide();
