@@ -188,6 +188,6 @@
 	<select id="getReviewMembers" parameterType="int" resultType="db.MemberDataBean">
 		select * from pao_members where trip_id=#{trip_id} and user_id not in 
 		(select user_id from pao_user_review where trip_id=#{trip_id})
-	</select>
+	</select>	
 </mapper>
 
