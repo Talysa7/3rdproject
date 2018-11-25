@@ -84,7 +84,7 @@
 		</form>
 		<div id="reputation">
 		<span>
-		<c:if test="${catchNum ne null}">
+		<c:if test="${catchNum gt 0}">
 			<input type="button" onclick="location='review.go'" value="작성해야 할 평판이 있습니다">
 		</c:if> 
 		</span>
@@ -101,8 +101,8 @@
 		</c:if>		
 		<br>
 		<br>
-		<c:forEach var="review" items="${reviewDto}">	
-		<table border="1">		
+		<c:forEach var="review" items="${reviewDto}" begin="1" end="4" step="1">	
+		<table name="input" id="input" border="1">		
 		<tr>
 			<th>평가자</th> 
 			<td>${review.reviewer_id }</td>
@@ -133,7 +133,44 @@
 		</form>
 		<div id="loading-button">
 			<button type="button" class="btn btn-dark col-md-12"
-				onclick="loadList(${next_row})">Load more...</button>
+				onclick="loadList(id)">Load more...</button>
+				<input type="hidden" id="id" value="0">
+<div id="con" style="display:none">
+<c:forEach var="review" items="${reviewDto}" begin="5" step="1">	
+		<table name="input" id="input" border="1">		
+		<tr>
+			<th>평가자</th> 
+			<td>${review.reviewer_id }</td>
+		</tr>
+		<tr>
+			<th>평가점수</th>
+			<td>
+			<c:choose>
+				<c:when test="${review.review_point eq 1}"> ★ </c:when>
+				<c:when test="${review.review_point eq 2}"> ★★  </c:when>
+				<c:when test="${review.review_point eq 3}"> ★★★  </c:when>
+				<c:when test="${review.review_point eq 4}"> ★★★★    </c:when>
+				<c:when test="${review.review_point eq 5}"> ★★★★★     </c:when>
+			</c:choose>
+			</td>
+		</tr>
+		<tr>
+			<th>평가 내용</th>
+			<td>${review.review_comment }</td>
+		</tr>
+		</table>
+		<br>
+		</c:forEach>
+		
+</div>
+<!-- html 끝 -->
+<!-- 스크립트 시작 -->
+<script>
+function loadList(id){ 
+  document.getElementById(con).style.display = ""; // 보여줌
+}
+</script>
+
 		</div>
 </div>	
 

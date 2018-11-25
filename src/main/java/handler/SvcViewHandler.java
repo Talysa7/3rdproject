@@ -101,16 +101,11 @@ public class SvcViewHandler {
 			int number = reviewDao.countEvaluation(userT);
 			
 			List<Integer> tripid = memberDao.getMemTripId(user_id);
-			List<Integer> catchNum = null;
+			
 			for(int j=0; j<tripid.size(); j++) {
 				int trip = tripid.get(j);
 				int catchNumber =reviewDao.getReviewMembers(trip).size();
-				try {
-					catchNum.add(catchNumber);
-					request.setAttribute("catchNum", catchNum);
-				}catch(NullPointerException e){
-					e.printStackTrace();
-				}
+				request.setAttribute("catchNum", catchNumber);
 			}
 			
 			int rowNumber;
@@ -135,6 +130,7 @@ public class SvcViewHandler {
 					user.put("trip_id", trip_id);
 					ReviewDataBean reviewW = reviewDao.stepTwo(user);
 					reviewDto.add(reviewW);
+					//reviewDto = reviewDao.getPersonList(user);
 				}		
 				//set count and next row info for 'load list'
 				
@@ -145,7 +141,7 @@ public class SvcViewHandler {
 				} else {
 					request.setAttribute("next_row", 0);
 				}					
-				reviewDto = reviewDao.getPersonList(user);
+				
 				request.setAttribute("reviewDto", reviewDto);
 				int reviewCount = reviewDao.getReviewCount(userT);
 				Double count = (double) reviewCount;
@@ -166,7 +162,7 @@ public class SvcViewHandler {
 				userD.put("rowNumber", rowNumber);
 				userD.put("postPerPage", postPerPage);				
 				if(reviewDto.size()> 0) {
-				reviewDto = reviewDao.getEvaluationFin(userD);
+				//reviewDto = reviewDao.getEvaluationFin(userD);
 				request.setAttribute("reviewDto", reviewDto);	
 				}
 				if(reviewDto.size()>=postPerPage) {
