@@ -74,4 +74,15 @@ private SqlSession session=SqlMapClient.getSession();
 	public List<MemberDataBean> getReviewMembers(int trip_id) {
 		return session.selectList("user.getReviewMembers", trip_id);
 	}
+	public List<ReviewDataBean> getPersonList(Map<String, Object> user) {		
+		user.put("startRowNumber", user.get("rowNumber"));
+		if(Integer.parseInt((String) user.get("rowNumber"))>0) {
+			user.put("endRowNumber", Integer.parseInt((String) user.get("rowNumber"))*Integer.parseInt((String) user.get("postPerPage")));
+		} else {
+			user.put("endRowNumber", user.get("postPerPage"));
+		}
+		List<ReviewDataBean> postList=session.selectList("review.getReviewFin", user);
+		return postList;
+	}
+	
 }

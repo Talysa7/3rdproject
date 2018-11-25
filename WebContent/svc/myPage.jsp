@@ -92,9 +92,13 @@
 		<span>
 			<input type="button" onclick="location='placeWrite.go'" value="여행지를 평가해주세요">
 		</span>
-		<br> ${userDto.user_name}님의 평점은  		
-		<c:if test="${average ne 0 }"> [평균평점 : ${average}점 (5점만점)] </c:if>
-		<c:if test="${count ne 0}">[게시글 수 : ${count}개]</c:if>입니다		
+		<br>
+		<c:if test="${average != 'NaN'} && ${count ne 0}">
+			 ${userDto.user_name}님의 평점은  		
+			<c:if test="${average != 'NaN'}"> [평균평점 : ${average}점 (5점만점)] </c:if>
+			<c:if test="${count ne 0}">[게시글 수 : ${count}개]</c:if>
+			입니다
+		</c:if>		
 		<br>
 		<br>
 		<c:forEach var="review" items="${reviewDto}">	
@@ -122,6 +126,14 @@
 		</table>
 		<br>
 		</c:forEach>
+		</div>
+		<!-- board list -->
+		<form name="tripListInfo">
+			<input type="hidden" name="next_row" value="${next_row}">
+		</form>
+		<div id="loading-button">
+			<button type="button" class="btn btn-dark col-md-12"
+				onclick="loadList(${next_row})">Load more...</button>
 		</div>
 </div>	
 

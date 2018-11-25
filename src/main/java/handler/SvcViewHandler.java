@@ -94,71 +94,97 @@ public class SvcViewHandler {
 			//user_tags is a guest value, we should set it additionally
 			userDto.setUser_tags(tagDao.getUserTags(user_id));	//태그 가져오는거 수정.
 			request.setAttribute("userDto", userDto);
+							
+			Map<String, String> userT = new HashMap<String, String>();				
+			userT.put("user_id", user_id);
+			int num = reviewDao.beforeReview(userT);
+			int number = reviewDao.countEvaluation(userT);
 			
-			
-				
-				Map<String, String> userT = new HashMap<String, String>();				
-				userT.put("user_id", user_id);
-				int num = reviewDao.beforeReview(userT);
-				int number = reviewDao.countEvaluation(userT);
-				
-				List<Integer> tripid = memberDao.getMemTripId(user_id);
-				List<Integer> catchNum = null;
-				for(int j=0; j<tripid.size(); j++) {
-					int trip = tripid.get(j);
-					int catchNumber =reviewDao.getReviewMembers(trip).size();
-					try {
-						catchNum.add(catchNumber);
-					}catch(NullPointerException e){
-						e.printStackTrace();
-					}
+			List<Integer> tripid = memberDao.getMemTripId(user_id);
+			List<Integer> catchNum = null;
+			for(int j=0; j<tripid.size(); j++) {
+				int trip = tripid.get(j);
+				int catchNumber =reviewDao.getReviewMembers(trip).size();
+				try {
+					catchNum.add(catchNumber);
+				}catch(NullPointerException e){
+					e.printStackTrace();
 				}
-				request.setAttribute("catchNum", catchNum);
+			}
+			request.setAttribute("catchNum", catchNum);
+			int rowNumber;
+			int startPage=0;
+			if(startPage>0) {
+				rowNumber=startPage*postPerPage;
+			} else {
+				rowNumber=0;
+			}
+			Map<String, Object> user = new HashMap<String, Object>();
+			user.put("user_id", user_id);
+			user.put("rowNumber", rowNumber);
+			user.put("postPerPage", postPerPage);
+			if(num!= number) {
 				
-				if(num!= number) {
-					Map<String, Object> user = new HashMap<String, Object>();
-					user.put("user_id", user_id);
-					List<ReviewDataBean> review = reviewDao.stepOne(user);
-					List<ReviewDataBean> reviewDto = new ArrayList<ReviewDataBean>();
-					for(int i=0; i<review.size(); i++) {
+				List<ReviewDataBean> review = reviewDao.stepOne(user);
+				List<ReviewDataBean> reviewDto = new ArrayList<ReviewDataBean>();
+				for(int i=0; i<review.size(); i++) {
 					String users=review.get(i).getUser_id();
 					user.put("reviewer_id", users);	
 					int trip_id = review.get(i).getTrip_id();
 					user.put("trip_id", trip_id);
 					ReviewDataBean reviewW = reviewDao.stepTwo(user);
 					reviewDto.add(reviewW);
-					}				
-					request.setAttribute("reviewDto", reviewDto);
-					int reviewCount = reviewDao.getReviewCount(userT);
-					Double count = (double) reviewCount;
-					request.setAttribute("count", reviewCount);
-					Double point = (double) reviewDao.getReviewSum(userT);
-					Double divide = 0.0;
-					try {
-						divide =(double) (point/count);
-						divide = Double.parseDouble(String.format("%.2f",divide));
-					}catch(ArithmeticException e) {
-						divide = 0.0;
-					}				
-					request.setAttribute("average", divide);
-				}else{
-					Map<String, Object> user = new HashMap<String, Object>();
-					user.put("user_id", user_id);
-					List<ReviewDataBean> reviewDto = reviewDao.getEvaluation(user);
-					request.setAttribute("reviewDto", reviewDto);	
-					int reviewCount = reviewDao.countEvaluation(userT);
-					Double count = (double) reviewCount;
-					request.setAttribute("count", reviewCount);
-					Double point = (double) reviewDao.sumEvaluation(user_id);
-					Double divide = 0.0;
-					try {
-						divide =(double) (point/count);						
-						divide = Double.parseDouble(String.format("%.2f",divide));
-					}catch(ArithmeticException e) {
-						divide = 0.0;
-					}					
-					request.setAttribute("average", divide);
 				}		
+				//set count and next row info for 'load list'
+				
+				if(reviewDto.size()>=postPerPage) {
+					request.setAttribute("next_row", postPerPage+1);
+				} else if(reviewDto.size()>0&&reviewDto.size()<postPerPage) {
+					request.setAttribute("next_row", reviewDto.size()+1);
+				} else {
+					request.setAttribute("next_row", 0);
+				}					
+				reviewDto = reviewDao.getPersonList(user);
+				request.setAttribute("reviewDto", reviewDto);
+				int reviewCount = reviewDao.getReviewCount(userT);
+				Double count = (double) reviewCount;
+				request.setAttribute("count", reviewCount);
+				Double point = (double) reviewDao.getReviewSum(userT);
+				Double divide = 0.0;
+				try {
+					divide =(double) (point/count);
+					divide = Double.parseDouble(String.format("%.2f",divide));
+				}catch(ArithmeticException e) {
+					divide = 0.0;
+				}				
+				request.setAttribute("average", divide);
+			}else{
+				List<ReviewDataBean> reviewDto = reviewDao.getEvaluation(user);
+				//set count and next row info for 'load list'	
+				reviewDto = reviewDao.getPersonList(user);
+				request.setAttribute("reviewDto", reviewDto);	
+				
+				if(reviewDto.size()>=postPerPage) {
+					request.setAttribute("next_row", postPerPage+1);
+				} else if(reviewDto.size()>0&&reviewDto.size()<postPerPage) {
+					request.setAttribute("next_row", reviewDto.size()+1);
+				} else {
+					request.setAttribute("next_row", 0);
+				}
+				int reviewCount = reviewDao.countEvaluation(userT);
+				Double count = (double) reviewCount;
+				request.setAttribute("count", reviewCount);
+				Double point = (double) reviewDao.sumEvaluation(user_id);
+				Double divide = 0.0;
+				try {
+					divide =(double) (point/count);						
+					divide = Double.parseDouble(String.format("%.2f",divide));
+				}catch(ArithmeticException e) {
+					divide = 0.0;
+				}					
+				request.setAttribute("average", divide);
+			}
+				
 		}
 		return new ModelAndView("svc/myPage");
 	}
@@ -314,6 +340,14 @@ public class SvcViewHandler {
 	public List<BoardDataBean> loadMoreList(int next_row) {
 		//get more 10 trip posts when 'load more' button is pressed
 		List<BoardDataBean> additionalList=boardDao.getPostList(next_row, postPerPage);
+		return additionalList;
+	}
+	/////////////////////////////ajax method list// review(person)////////////
+	@RequestMapping(value="/loadList", method=RequestMethod.GET, produces="application/json")
+	@ResponseBody
+	public List<ReviewDataBean> loadList(int next_row) {
+		//get more 10 trip posts when 'load more' button is pressed
+		List<ReviewDataBean> additionalList=reviewDao.getPersonList(next_row, postPerPage);
 		return additionalList;
 	}
 }
