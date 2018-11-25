@@ -163,11 +163,9 @@
 	<select id="getReviewFin" parameterType="java.util.Map" resultType="db.ReviewDataBean">
 		select * 
 		from pao_user_review 
-		where reviewer_id=#{reviewer_id}
-		or reviewer_id is null 
+		where reviewer_id=#{reviewer_id} 
 		and user_id=#{user_id}
 		and trip_id=#{trip_id}
-		or trip_id is null
 		order by review_point desc, trip_id desc
 		limit #{startRowNumber},#{endRowNumber}
 	</select>

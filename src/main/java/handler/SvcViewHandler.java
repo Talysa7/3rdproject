@@ -95,7 +95,7 @@ public class SvcViewHandler {
 			userDto.setUser_tags(tagDao.getUserTags(user_id));	//태그 가져오는거 수정.
 			request.setAttribute("userDto", userDto);
 							
-			Map<String, String> userT = new HashMap<String, String>();				
+			Map<String, Object> userT = new HashMap<String, Object>();				
 			userT.put("user_id", user_id);
 			int num = reviewDao.beforeReview(userT);
 			int number = reviewDao.countEvaluation(userT);
@@ -107,11 +107,12 @@ public class SvcViewHandler {
 				int catchNumber =reviewDao.getReviewMembers(trip).size();
 				try {
 					catchNum.add(catchNumber);
+					request.setAttribute("catchNum", catchNum);
 				}catch(NullPointerException e){
 					e.printStackTrace();
 				}
 			}
-			request.setAttribute("catchNum", catchNum);
+			
 			int rowNumber;
 			int startPage=0;
 			if(startPage>0) {
@@ -119,12 +120,12 @@ public class SvcViewHandler {
 			} else {
 				rowNumber=0;
 			}
-			Map<String, Object> user = new HashMap<String, Object>();
-			user.put("user_id", user_id);
-			user.put("rowNumber", rowNumber);
-			user.put("postPerPage", postPerPage);
+			
 			if(num!= number) {
-				
+				Map<String, Object> user = new HashMap<String, Object>();
+				user.put("user_id", user_id);
+				user.put("rowNumber", rowNumber);
+				user.put("postPerPage", postPerPage);
 				List<ReviewDataBean> review = reviewDao.stepOne(user);
 				List<ReviewDataBean> reviewDto = new ArrayList<ReviewDataBean>();
 				for(int i=0; i<review.size(); i++) {
@@ -159,11 +160,15 @@ public class SvcViewHandler {
 				}				
 				request.setAttribute("average", divide);
 			}else{
-				List<ReviewDataBean> reviewDto = reviewDao.getEvaluation(user);
-				//set count and next row info for 'load list'	
-				reviewDto = reviewDao.getPersonList(user);
+				Map<String, Object> userD = new HashMap<String, Object>();
+				userD.put("user_id", user_id);
+				List<ReviewDataBean> reviewDto = reviewDao.getEvaluation(userD);
+				userD.put("rowNumber", rowNumber);
+				userD.put("postPerPage", postPerPage);				
+				if(reviewDto.size()> 0) {
+				reviewDto = reviewDao.getEvaluationFin(userD);
 				request.setAttribute("reviewDto", reviewDto);	
-				
+				}
 				if(reviewDto.size()>=postPerPage) {
 					request.setAttribute("next_row", postPerPage+1);
 				} else if(reviewDto.size()>0&&reviewDto.size()<postPerPage) {
@@ -171,7 +176,7 @@ public class SvcViewHandler {
 				} else {
 					request.setAttribute("next_row", 0);
 				}
-				int reviewCount = reviewDao.countEvaluation(userT);
+				int reviewCount = reviewDao.countEvaluation(userD);
 				Double count = (double) reviewCount;
 				request.setAttribute("count", reviewCount);
 				Double point = (double) reviewDao.sumEvaluation(user_id);
@@ -347,7 +352,10 @@ public class SvcViewHandler {
 	@ResponseBody
 	public List<ReviewDataBean> loadList(int next_row) {
 		//get more 10 trip posts when 'load more' button is pressed
-		List<ReviewDataBean> additionalList=reviewDao.getPersonList(next_row, postPerPage);
+		Map<String, Object> user = new HashMap<String, Object>();
+		user.put("rowNum", next_row);
+		user.put("postPerPage", postPerPage);
+		List<ReviewDataBean> additionalList=reviewDao.getPersonList(user);
 		return additionalList;
 	}
 }

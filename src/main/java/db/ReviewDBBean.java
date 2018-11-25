@@ -10,7 +10,7 @@ import bean.SqlMapClient;
 
 public class ReviewDBBean {
 private SqlSession session=SqlMapClient.getSession();
-	public int beforeReview(Map<String, String> userT){
+	public int beforeReview(Map<String, Object> userT){
 		return session.selectOne("user.beforeReview", userT);
 	}
 	public List<ReviewDataBean> stepOne(Map<String, Object> user) {
@@ -25,20 +25,20 @@ private SqlSession session=SqlMapClient.getSession();
 	public int insertEvaluation(ReviewDataBean evalDto) {
 		return session.insert("user.insertEvaluation", evalDto);
 	}
-	public int countEvaluation(Map<String, String> user) {
+	public int countEvaluation(Map<String, Object> userD) {
 		int count=0;
 		try {
-			count = session.selectOne("user.countEvaluation", user);
+			count = session.selectOne("user.countEvaluation", userD);
 		}catch(NullPointerException e) {
 			count = 0;
 		}
 		return count;
 	}
-	public int getReviewCount(Map<String, String> user) {
-		return session.selectOne("user.getReviewCount", user);
+	public int getReviewCount(Map<String, Object> userT) {
+		return session.selectOne("user.getReviewCount", userT);
 	}
 	public int sumEvaluation(String user_id) {
-		Map<String, String> user = new HashMap<String, String>();
+		Map<String, Object> user = new HashMap<String, Object>();
 		user.put("user_id", user_id);
 		ReviewDBBean reviewDao = new ReviewDBBean();
 		int count = reviewDao.countEvaluation(user);
@@ -55,13 +55,13 @@ private SqlSession session=SqlMapClient.getSession();
 		
 		return hap;
 	}
-	public int getReviewSum(Map<String, String> user) {
+	public int getReviewSum(Map<String, Object> userT) {
 		ReviewDBBean reviewDao = new ReviewDBBean();
-		int count = reviewDao.getReviewCount(user);
+		int count = reviewDao.getReviewCount(userT);
 		List<Integer> sum ;		
 		int hap=0;
 		if(count>0) {
-		 sum =  session.selectList("user.getReviewSum", user);
+		 sum =  session.selectList("user.getReviewSum", userT);
 		 int[] summit= new int[sum.size()] ;
 		 for(int i=0; i<sum.size(); i++) {
 			 summit[i]=sum.get(i);
@@ -75,13 +75,23 @@ private SqlSession session=SqlMapClient.getSession();
 		return session.selectList("user.getReviewMembers", trip_id);
 	}
 	public List<ReviewDataBean> getPersonList(Map<String, Object> user) {		
-		user.put("startRowNumber", user.get("rowNumber"));
-		if(Integer.parseInt((String) user.get("rowNumber"))>0) {
-			user.put("endRowNumber", Integer.parseInt((String) user.get("rowNumber"))*Integer.parseInt((String) user.get("postPerPage")));
+		user.put("startRowNumber", user.get("rowNumber").hashCode());
+		if( user.get("rowNumber").hashCode() >0) {
+			user.put("endRowNumber", user.get("rowNumber").hashCode()*user.get("postPerPage").hashCode());
 		} else {
-			user.put("endRowNumber", user.get("postPerPage"));
+			user.put("endRowNumber", user.get("postPerPage").hashCode());
 		}
 		List<ReviewDataBean> postList=session.selectList("review.getReviewFin", user);
+		return postList;		
+	}
+	public List<ReviewDataBean> getEvaluationFin(Map<String, Object> user) {
+		user.put("startRowNumber", user.get("rowNumber").hashCode());
+		if( user.get("rowNumber").hashCode() >0) {
+			user.put("endRowNumber", user.get("rowNumber").hashCode()*user.get("postPerPage").hashCode());
+		} else {
+			user.put("endRowNumber", user.get("postPerPage").hashCode());
+		}
+		List<ReviewDataBean> postList=session.selectList("review.getEvaluationFin", user);
 		return postList;
 	}
 	
