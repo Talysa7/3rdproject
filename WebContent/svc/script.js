@@ -954,3 +954,52 @@ function openSchedule(coord_order) {
 	}
 	$('#trip_'+coord_order).show();
 }
+
+
+/////////////////////////////////////////////최혜원////////////////////////////////////////////
+function loadUserReviewList(next_row) {
+	var tag_value = $("#searchTag").val()
+	$.ajax({
+		type : 'get',
+		data : {next_row : next_row},
+		url : "loadUserReviewList.go",
+		success : function(data) {
+			if(data.length>0){
+				var AppendList="";
+				$.each(data, function(key, review){
+					next_row=next_row+1;
+					AppendList+='<div class="form-group row">'				
+					AppendList+='<label for="reviewer" class="control-label col-sm-2" >평가자 </label>'
+					AppendList+=	'<div class="col-sm-8">&nbsp;'+"${review.reviewer_id }"+'</div>'
+					AppendList+='</div>'
+					AppendList+='<div class="form-group row">'		
+					AppendList+='<label for="point" class="control-label col-sm-2" >평가점수</label>'
+					AppendList+=	'<div class="col-sm-8">'
+					AppendList+=	'&nbsp;<c:choose>'
+					AppendList+=		'<c:when test='+"${review.review_point eq 1}"+'> ★ </c:when>'
+					AppendList+=		'<c:when test='+"${review.review_point eq 2}"+'> ★★  </c:when>'
+					AppendList+=		'<c:when test='+"${review.review_point eq 3}"+'> ★★★  </c:when>'
+					AppendList+=		'<c:when test='+"${review.review_point eq 4}"+'> ★★★★    </c:when>'
+					AppendList+=		'<c:when test='+"${review.review_point eq 5}"+'> ★★★★★     </c:when>'
+					AppendList+=	'</c:choose>'
+					AppendList+=	'</div>'
+					AppendList+='</div>'
+					AppendList+='<div class="form-group row">'
+					AppendList+='<label for="comment" class="control-label col-sm-2" >평가 내용</label>'
+					AppendList+=	'<div class="col-sm-8">&nbsp;'+"${review.review_comment }"+'</div>'
+					AppendList+='</div>'
+					AppendList+='<br>'
+					
+	            });
+	            $("#id").append(AppendList);
+	            var newButton='<button type="button" class="btn btn-dark col-md-12" onclick="loadList('+next_row_after+')">Load more...</button>';
+	            $("#loading-button").html(newButton);
+			} else {
+				alert('더 이상 불러올 글이 없습니다.');
+			}
+		},
+		error : function(error) {
+			alert('글 불러오기에 실패했습니다.'+error);
+		}
+	});
+}

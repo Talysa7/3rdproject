@@ -20,6 +20,7 @@ import db.AlbumDBBean;
 import db.AlbumDataBean;
 import db.BoardDataBean;
 import db.CmtDBBean;
+import db.CmtDataBean;
 import db.CoordDBBean;
 import db.CoordDataBean;
 import db.CoordReviewDBBean;
@@ -128,13 +129,20 @@ public class SvcViewHandler {
 				}	
 				
 				request.setAttribute("reviewDto", reviewDto);
-				int reviewCount = reviewDao.getReviewCount(userT);
-				Double count = (double) reviewCount;
-				request.setAttribute("count", reviewCount);
+				int count = reviewDao.getReviewCount(userT);
+				if(count>=3) {
+					request.setAttribute("next_row", 3+1);
+				} else if(count>0&&count<3) {
+					request.setAttribute("next_row", count+1);
+				} else {
+					request.setAttribute("next_row", 0);
+				}
+				Double reviewcount = (double) count;
+				request.setAttribute("count", count);
 				Double point = (double) reviewDao.getReviewSum(userT);
 				Double divide = 0.0;
 				try {
-					divide =(double) (point/count);
+					divide =(double) (point/reviewcount);
 					divide = Double.parseDouble(String.format("%.2f",divide));
 				}catch(ArithmeticException e) {
 					divide = 0.0;
@@ -159,6 +167,13 @@ public class SvcViewHandler {
 					divide = 0.0;
 				}					
 				request.setAttribute("average", divide);
+				if(number>=3) {
+					request.setAttribute("next_row", 3+1);
+				} else if(number>0&&number<3) {
+					request.setAttribute("next_row", number+1);
+				} else {
+					request.setAttribute("next_row", 0);
+				}
 			}
 				
 		}
@@ -319,14 +334,49 @@ public class SvcViewHandler {
 		return additionalList;
 	}
 	/////////////////////////////ajax method list// review(person)////////////
-	@RequestMapping(value="/loadList", method=RequestMethod.GET, produces="application/json")
+	@RequestMapping(value = "/loadUserReviewList.go", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public List<ReviewDataBean> loadList(int next_row) {
-		//get more 10 trip posts when 'load more' button is pressed
-		Map<String, Object> user = new HashMap<String, Object>();
-		user.put("rowNum", next_row);
-		user.put("postPerPage", postPerPage);
-		List<ReviewDataBean> additionalList=reviewDao.getPersonList(user);
-		return additionalList;
+	public List<ReviewDataBean> reviewSelectProcess(HttpServletRequest request, HttpServletResponse response)
+			throws HandlerException {
+		try {
+			request.setCharacterEncoding("utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		int rowNumber;
+		int startPage=0;
+		if(startPage>0) {
+			rowNumber=startPage*3;
+		} else {
+			rowNumber=0;
+		}
+		
+		
+		String user_id=(String)request.getSession().getAttribute("user_id");
+		Map<String, Object> user = new HashMap<String, Object>();				
+		user.put("user_id", user_id);
+		int num = reviewDao.beforeReview(user);
+		int number = reviewDao.countEvaluation(user);
+		
+		if(num!= number) {
+			
+			List<ReviewDataBean> review = reviewDao.stepOne(user);
+			List<ReviewDataBean> reviewDto = new ArrayList<ReviewDataBean>();
+			for(int i=0; i<review.size(); i++) {
+				String users=review.get(i).getUser_id();
+				user.put("reviewer_id", users);	
+				int trip_id = review.get(i).getTrip_id();
+				user.put("trip_id", trip_id);
+				ReviewDataBean reviewW = reviewDao.stepTwo(user);
+				reviewDto.add(reviewW);					
+			}				
+			request.setAttribute("reviewDto", reviewDto);
+			return reviewDto;
+		}else {
+			
+			List<ReviewDataBean> reviewDto = reviewDao.getEvaluation(user);			
+			request.setAttribute("reviewDto", reviewDto);
+			return reviewDto;
+		}
 	}
 }

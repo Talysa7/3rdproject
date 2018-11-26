@@ -85,56 +85,64 @@
 		<div id="reputation">
 		<span>
 		<c:if test="${catchNum gt 0}">
-			<input type="button" onclick="location='review.go'" value="작성해야 할 평판이 있습니다">
+			<button type="button" class="btn btn-lg btn-secondary btn-block" onclick="location='review.go'">작성해야 할 평판이 있습니다</button>
 		</c:if> 
 		</span>
-		&nbsp;&nbsp;
-		<span>
-			<input type="button" onclick="location='placeWrite.go'" value="여행지를 평가해주세요">
-		</span>
+		<div class="form-group row">
+				<div class="col-sm-2"></div>
+				<div class="col-sm-8">
+			<button type="button" class="btn btn-lg btn-secondary btn-block" onclick="location='placeWrite.go'">여행지를 평가해주세요</button>
+			</div>
+		</div>
 		<br>
-		<c:if test="${average != 'NaN'} && ${count ne 0}">
-			 ${userDto.user_name}님의 평점은  		
+		<div class="form-group row">
+		<div class="text-center">		
+			${userDto.user_name}님의 평점은  		
 			<c:if test="${average != 'NaN'}"> [평균평점 : ${average}점 (5점만점)] </c:if>
 			<c:if test="${count ne 0}">[게시글 수 : ${count}개]</c:if>
-			입니다
-		</c:if>		
-		<br>
-		<br>
-		<c:forEach var="review" items="${reviewDto}">	
-		<table border="1">		
-		<tr>
-			<th>평가자</th> 
-			<td>${review.reviewer_id }</td>
-		</tr>
-		<tr>
-			<th>평가점수</th>
-			<td>
-			<c:choose>
-				<c:when test="${review.review_point eq 1}"> ★ </c:when>
-				<c:when test="${review.review_point eq 2}"> ★★  </c:when>
-				<c:when test="${review.review_point eq 3}"> ★★★  </c:when>
-				<c:when test="${review.review_point eq 4}"> ★★★★    </c:when>
-				<c:when test="${review.review_point eq 5}"> ★★★★★     </c:when>
-			</c:choose>
-			</td>
-		</tr>
-		<tr>
-			<th>평가 내용</th>
-			<td>${review.review_comment }</td>
-		</tr>
-		</table>
-		<br>
-		</c:forEach>
+			<c:if test="${average != 'NaN'} && ${count ne 0}">아직 없습니다</c:if>
+			입니다		
+		</div>	
 		</div>
-		<!-- board list -->
+		<br>
+		<br>
+		
+				
+		<c:forEach var="review" items="${reviewDto}">	
+		<div class="form-group row">				
+			<label for="reviewer" class="control-label col-sm-2" >평가자 </label>
+				<div class="col-sm-8">&nbsp;${review.reviewer_id }</div>
+		</div>
+		<div class="form-group row">		
+			<label for="point" class="control-label col-sm-2" >평가점수</label>
+				<div class="col-sm-8">
+				&nbsp;<c:choose>
+					<c:when test="${review.review_point eq 1}"> ★ </c:when>
+					<c:when test="${review.review_point eq 2}"> ★★  </c:when>
+					<c:when test="${review.review_point eq 3}"> ★★★  </c:when>
+					<c:when test="${review.review_point eq 4}"> ★★★★    </c:when>
+					<c:when test="${review.review_point eq 5}"> ★★★★★     </c:when>
+				</c:choose>
+				</div>
+		</div>
+		<div class="form-group row">
+			<label for="comment" class="control-label col-sm-2" >평가 내용</label>
+				<div class="col-sm-8">&nbsp;${review.review_comment }</div>
+		</div>
+			<br>
+			
+		</c:forEach>
+		
+			
+		</div>
+		<!-- UserReview list -->
 		<form name="tripListInfo">
 			<input type="hidden" name="next_row" value="${next_row}">
+			<div id="id"></div>
 		</form>
 		<div id="loading-button">
-			<button type="button" class="btn btn-dark col-md-12"
-				onclick="loadList(id)">Load more...</button>
-				<input type="hidden" id="id" value="0">
+			<button type="button" class="btn btn-lg btn-secondary btn-block"
+				onclick="loadUserReviewList(next_row)">Load more...</button>
 		</div>
 </div>	
 
