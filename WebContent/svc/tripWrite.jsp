@@ -64,12 +64,13 @@
 				</div>
 
 				<div class="form-group row">
+					<%-- 
 					<label for="trip_location" class="col-2 col-form-label">${trip_location}</label>
 					<div id="floating-panel" class="col-10">
 						<input id="address" type="text" autocomplete=off /> 
 						<input id="addSubmit" type="button" class="btn btn-dark btn-sm" value="${btn_search}" />
 					</div>
-
+					 --%>
 					<!--/////////// google MAP API 파트 ///////////-->
 					<div class="pac-card" id="pac-card">
 						<div id="pac-container">
@@ -85,7 +86,7 @@
 						<img src="" width="16" height="16" id="place-icon"> 
 						<span id="place-name" class="title"></span><br> 
 						<span id="place-address"></span><br> 
-						<span id="place-latlng"></span><br>
+						<span id="place-location"></span><br>
 					</div>
 					<!--/////////// google MAP API 파트 ///////////-->
 				</div>
@@ -102,9 +103,9 @@
 					<label for="trip_tag" class="col-2 col-form-label">${trip_tag}</label>
 					
 					<c:if test="${styleTags.size() ne 0}">
-					<c:forEach var="i" items="${styleTags}">
+					<c:forEach var="tagCnt" items="${styleTags}">
 					<label class="btn btn-secondary"> 
-					<input type="checkbox" name="tag" value="${i.tag_id}">${i.tag_value}
+					<input type="checkbox" name="tag" value="${tagCnt.tag_id}">${tagCnt.tag_value}
 					</label>
 					</c:forEach>
 					</c:if>
