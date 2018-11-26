@@ -104,23 +104,18 @@ public class SvcViewHandler {
 			
 			for(int j=0; j<tripid.size(); j++) {
 				int trip = tripid.get(j);
-				int catchNumber =reviewDao.getReviewMembers(trip).size();
+				userT.put("trip_id", trip);
+				int catchNumber =reviewDao.getReview(userT).size();
 				request.setAttribute("catchNum", catchNumber);
 			}
 			
-			int rowNumber;
-			int startPage=0;
-			if(startPage>0) {
-				rowNumber=startPage*postPerPage;
-			} else {
-				rowNumber=0;
-			}
+			
 			
 			if(num!= number) {
 				Map<String, Object> user = new HashMap<String, Object>();
 				user.put("user_id", user_id);
-				user.put("rowNumber", rowNumber);
-				user.put("postPerPage", postPerPage);
+				/*user.put("rowNumber", rowNumber);
+				user.put("postPerPage", postPerPage);*/
 				List<ReviewDataBean> review = reviewDao.stepOne(user);
 				List<ReviewDataBean> reviewDto = new ArrayList<ReviewDataBean>();
 				for(int i=0; i<review.size(); i++) {
@@ -129,18 +124,8 @@ public class SvcViewHandler {
 					int trip_id = review.get(i).getTrip_id();
 					user.put("trip_id", trip_id);
 					ReviewDataBean reviewW = reviewDao.stepTwo(user);
-					reviewDto.add(reviewW);
-					//reviewDto = reviewDao.getPersonList(user);
-				}		
-				//set count and next row info for 'load list'
-				
-				if(reviewDto.size()>=postPerPage) {
-					request.setAttribute("next_row", postPerPage+1);
-				} else if(reviewDto.size()>0&&reviewDto.size()<postPerPage) {
-					request.setAttribute("next_row", reviewDto.size()+1);
-				} else {
-					request.setAttribute("next_row", 0);
-				}					
+					reviewDto.add(reviewW);					
+				}	
 				
 				request.setAttribute("reviewDto", reviewDto);
 				int reviewCount = reviewDao.getReviewCount(userT);
@@ -159,19 +144,9 @@ public class SvcViewHandler {
 				Map<String, Object> userD = new HashMap<String, Object>();
 				userD.put("user_id", user_id);
 				List<ReviewDataBean> reviewDto = reviewDao.getEvaluation(userD);
-				userD.put("rowNumber", rowNumber);
-				userD.put("postPerPage", postPerPage);				
-				if(reviewDto.size()> 0) {
-				//reviewDto = reviewDao.getEvaluationFin(userD);
+				
 				request.setAttribute("reviewDto", reviewDto);	
-				}
-				if(reviewDto.size()>=postPerPage) {
-					request.setAttribute("next_row", postPerPage+1);
-				} else if(reviewDto.size()>0&&reviewDto.size()<postPerPage) {
-					request.setAttribute("next_row", reviewDto.size()+1);
-				} else {
-					request.setAttribute("next_row", 0);
-				}
+				
 				int reviewCount = reviewDao.countEvaluation(userD);
 				Double count = (double) reviewCount;
 				request.setAttribute("count", reviewCount);

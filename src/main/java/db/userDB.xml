@@ -201,5 +201,13 @@
 		select * from pao_members where trip_id=#{trip_id} and user_id not in 
 		(select user_id from pao_user_review where trip_id=#{trip_id})
 	</select>	
+	<select id="getReview" parameterType="map" resultType="db.MemberDataBean">
+		select * from pao_members where trip_id=#{trip_id}
+		and user_id not in 
+		(select user_id from pao_user_review where trip_id=#{trip_id})
+		intersect
+		select * from pao_members where trip_id=#{trip_id}
+		and not user_id=#{user_id};
+	</select>
 </mapper>
 

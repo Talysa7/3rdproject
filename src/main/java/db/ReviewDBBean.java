@@ -19,6 +19,9 @@ private SqlSession session=SqlMapClient.getSession();
 	public ReviewDataBean stepTwo(Map<String, Object> user) {
 		return session.selectOne("user.stepTwo", user);
 	}
+	public List<ReviewDataBean> getReview(Map<String, Object>user){
+		return session.selectList("user.getReview", user);
+	}
 	public List<ReviewDataBean> getEvaluation(Map<String, Object> user) {
 		return session.selectList("user.getEvaluation", user);
 	}
