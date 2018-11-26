@@ -26,56 +26,62 @@ function initMap() {
 
 	var infowindow = new google.maps.InfoWindow();
 	var infowindowContent = document.getElementById('infowindow-content');
+	var schedule = document.getElementById('schedule');
 	infowindow.setContent(infowindowContent);
 	var marker = new google.maps.Marker({
 		map : map,
 		anchorPoint : new google.maps.Point(0, -29)
 	});
-
+	google.maps.event.addListener(marker,'click',function() {
+		map.setZoom(16);
+		map.setCenter(marker.getPosition());
+	});
 	autocomplete.addListener('place_changed', function() {
-			infowindow.close();
-			marker.setVisible(false);
-			var place = autocomplete.getPlace();
-			if (!place.geometry) {
-				// User entered the name of a Place that was not
-				// suggested and
-				// pressed the Enter key, or the Place Details
-				// request failed.
-				window.alert("찾으시는 '"+ place.name + "' 에 대한 결과가 없습니다 /n"
-				+ "다른 검색어를 찾아주세요");
-				return;
-			}
+		infowindow.close();
+		marker.setVisible(false);
+		var place = autocomplete.getPlace();
+		if (!place.geometry) {
+			// User entered the name of a Place that was not
+			// suggested and
+			// pressed the Enter key, or the Place Details
+			// request failed.
+			window.alert("찾으시는 '"+ place.name + "' 에 대한 결과가 없습니다 \n"
+			+ "다른 검색어를 입력 해주세요");
+			return;
+		}
 
-			// If the place has a geometry, then present it on a
-			// map.
-			if (place.geometry.viewport) {
-				map.fitBounds(place.geometry.viewport);
-			} else {
-				map.setCenter(place.geometry.location);
-				map.setZoom(17); // Why 17? Because it looks
-									// good.
-			}
-			marker.setPosition(place.geometry.location);
-			marker.setVisible(true);
+		// If the place has a geometry, then present it on a
+		// map.
+		if (place.geometry.viewport) {
+			map.fitBounds(place.geometry.viewport);
+		} else {
+			map.setCenter(place.geometry.location);
+			map.setZoom(17); // Why 17? Because it looks
+								// good.
+		}
+		marker.setPosition(place.geometry.location);
+		marker.setVisible(true);
 
-			var address = '';
-			if (place.address_components) {
-				address = [
-						(place.address_components[0]
-								&& place.address_components[0].short_name || ''),
-						(place.address_components[1]
-								&& place.address_components[1].short_name || ''),
-						(place.address_components[2]
-								&& place.address_components[2].short_name || '') ]
-						.join(' ');
-			}
+		var address = '';
+		if (place.address_components) {
+			address = [
+				(place.address_components[0]
+						&& place.address_components[0].short_name || ''),
+				(place.address_components[1]
+						&& place.address_components[1].short_name || ''),
+				(place.address_components[2]
+						&& place.address_components[2].short_name || '') ]
+				.join(' ');
+		}
 
-			infowindowContent.children['place-icon'].src = place.icon;
-			infowindowContent.children['place-name'].textContent = place.name;
-			infowindowContent.children['place-address'].textContent = address;
-			infowindowContent.children['place-latlng'].textContent = 
-				place.geometry.location.lat() + place.geometry.location.lng();
-			infowindow.open(map, marker);
+		infowindowContent.children['place-icon'].src = place.icon;
+		infowindowContent.children['place-name'].textContent = place.name;
+		infowindowContent.children['place-address'].textContent = address;
+		infowindowContent.children['place-location'].textContent = 
+			place.geometry.location.lat() + place.geometry.location;
+		schedule.children['place1'].textContent = place.name;
+		
+		infowindow.open(map, marker);
 	});
 
 	// Sets a listener on a radio button to change the filter type on Places
