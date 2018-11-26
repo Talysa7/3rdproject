@@ -669,7 +669,7 @@ public class SvcProHandler {
 		evalDto.setTrip_id(trip_id);
 		int result = reviewDao.insertEvaluation(evalDto);
 		request.setAttribute("result", result);
-		return new ModelAndView("/svc/myPage");		
+		return new ModelAndView("/svc/reviewPro");		
 	}
 	/////////////////////////Coordreview  placeWritePro ////////////////////
 	@RequestMapping("/placeWritePro")

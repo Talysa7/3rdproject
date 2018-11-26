@@ -10,11 +10,11 @@
 	<span><select id="sel1" name="sel1">	
 	<c:forEach var="trip" items="${trip}">	
 	<c:forEach var="member" items="${trip.review_members}">
-	<c:if test="${member.user_id ne null}">	
-	<option value="${trip.trip_id}">${trip.coordinate.coord_name}</option>
+	<c:if test="${member.user_id ne user}">
+	<option value="${trip.trip_id}">${trip.coord_name}</option>
 	</c:if>
 	</c:forEach>
-	</c:forEach>				
+	</c:forEach>			
 	</select> </span>		
 	<span>평판대상</span>				
 	<span><select id="sel2" name="sel2">
