@@ -1,3 +1,4 @@
+<%-- FIXME : 삭제 예정 
 <%@ page language="java" contentType="text/html; charset=UTF-8"
    session="true"
     buffer="10kb"
@@ -13,4 +14,4 @@
 		<h4><a href="adminLogout.go">${str_logout}</a></h4>
 	</div>
 </header>
-<!-- FIXME : 이거 용도 확인 후 삭제 예정 -->
+ --%>
