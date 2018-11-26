@@ -20,7 +20,7 @@
 	<span><select id="sel2" name="sel2">
 	<c:forEach var="trip" items="${trip}">	
 	<c:forEach var="member" items="${trip.review_members}">
-	<c:if test="${member.user_id ne user_id}">
+	<c:if test="${member.user_id ne user}">
 	<option value="${member.user_id}" class="${trip.trip_id}">${member.user_id}</option>
 	</c:if>
 	</c:forEach>
