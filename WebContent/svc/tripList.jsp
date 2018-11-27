@@ -36,7 +36,7 @@
 			</form>
 		</div>
 		<!-- search -->
-		<div class="d-flex" name="board_list">
+		<div class="d-flex justify-content-flex-start">
 			<c:if test="${sessionScope.user_id eq null}">
 				<a href="login.go"></a>
 			</c:if>
@@ -50,7 +50,7 @@
 			<c:if test="${postList.size() ne 0}">
 				<c:forEach var="post" items="${postList}">
 					<div class="row">
-						<div class="col-md-12">
+						<div class="col-md-6">
 							<div class="card flex-md-row mb-3 shadow-sm h-md-250">
 								<div class="card-body d-flex flex-column align-items-start">
 									<strong class="d-inline-block mb-2"> 
@@ -97,7 +97,7 @@
 			<input type="hidden" name="next_row" value="${next_row}">
 		</form>
 		<div id="loading-button">
-			<button type="button" class="btn btn-dark col-md-12"
+			<button type="button" class="btn btn-dark col-md-6"
 				onclick="loadMoreList(${next_row})">Load more...</button>
 		</div>
 	</div>
