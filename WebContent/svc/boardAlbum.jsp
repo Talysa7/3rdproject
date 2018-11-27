@@ -46,7 +46,7 @@
 								<c:if test="${isMember eq true}">
 									<button type="button" style="height: 30px; !important"
 										class="btn_album_delete"
-										onclick="deletePhoto(${board_no},${photo.photo_id},${start})">
+										onclick="deletePhoto(${board_no},${trip_id},${photo.photo_id})">
 										<img style="width: 15px; height: 15px; !important"
 											src="${project}img/xmark_24px.png"></img>
 									</button>

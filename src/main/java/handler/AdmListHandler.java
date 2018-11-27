@@ -197,13 +197,5 @@ public class AdmListHandler {
 		}
 		return new ModelAndView("admin/album");
 	}
-//	FIXME : adminLogout이 따로 있을 필요가 없다 생각함 추후 삭제 예정
-//	@RequestMapping("/adminLogout")
-//	public ModelAndView adminLogoutHandler(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
-//		request.getSession().removeAttribute( "user_id" );
-//		request.getSession().removeAttribute( "user_level" );
-//		return new ModelAndView("redirect:login.go");
-//	}
-	
 	
 }

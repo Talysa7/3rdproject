@@ -223,11 +223,9 @@ public class SvcViewHandler {
 			request.setAttribute("photoList", photoList);
 		}
 		boolean isMember=false;
-		List<MemberDataBean> members=memberDao.getMembers(trip_id);
-		for(MemberDataBean member:members) {
-			if(member.getUser_id().equals(user_id)) isMember=true;
-		}
+		if(memberDao.isTripMember(memberDao.getOneMember((user_id)))) isMember=true;
 		request.setAttribute("isMember", isMember);
+		request.setAttribute("size", photoPerPage);
 		return new ModelAndView("svc/boardAlbum");
 	}
 

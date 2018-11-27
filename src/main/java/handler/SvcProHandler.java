@@ -521,23 +521,24 @@ public class SvcProHandler {
 			throws HandlerException {
 		int board_no = Integer.parseInt(request.getParameter("board_no"));
 		request.setAttribute("board_no", board_no);
-
+		int trip_id = Integer.parseInt(request.getParameter("trip_id"));
+		request.setAttribute("trip_id", trip_id);
 		int photo_id = Integer.parseInt(request.getParameter("photo_id"));
 		int result = albumDao.delPhoto(photo_id);
 		request.setAttribute("result", result);
 		return new ModelAndView("redirect:trip.go?board_no="+board_no);
 	}
 
-	@RequestMapping("/downloadAlbum.go")
+	@RequestMapping("/downloadAlbum")
 	public void downloadAlbumProcess(HttpServletRequest request, HttpServletResponse response)
 			throws HandlerException, IOException {
-		int board_no = Integer.parseInt(request.getParameter("board_no"));
-		List<String> photo_urls = albumDao.getPhoto_urls(board_no);
+		int trip_id = Integer.parseInt(request.getParameter("trip_id"));
+		List<String> photo_urls = albumDao.getPhoto_urls(trip_id);
 
 		String realFolder = request.getServletContext().getRealPath("/") + "save/";
 		int bufferSize = LIMIT_SIZE;
 		ZipOutputStream zos = null;
-		String zipName = "Travelers_Album" + board_no;
+		String zipName = "Travelers_Album" + trip_id;
 
 		response.reset();
 		response.setHeader("Content-Disposition", "attachment; filename=" + zipName + ".zip" + ";");
@@ -572,7 +573,7 @@ public class SvcProHandler {
 		bis.close();
 	}
 
-	@RequestMapping("/download.go")
+	@RequestMapping("/download")
 	public void downloadProcess(HttpServletRequest request, HttpServletResponse response)
 			throws HandlerException, IOException {
 		int n = Integer.parseInt(request.getParameter("num"));
@@ -674,15 +675,15 @@ public class SvcProHandler {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		String user_id = (String) session.getAttribute("user_id");
-		String c_content= request.getParameter("c_content");
+		String user_id=request.getParameter("user_id");
+		int board_no=Integer.parseInt(request.getParameter("board_no"));
+		String comment_content=request.getParameter("c_content");
 		CmtDataBean cmtDto = new CmtDataBean();
-		if(c_content != null) {
-		cmtDto.setUser_id(user_id); // jsp에서 히든으로 가져오면됨
-		cmtDto.setBoard_no(Integer.parseInt(request.getParameter("board_no")));
-		cmtDto.setC_content(c_content);
-		
-		cmtDao.insertComment(cmtDto);
+		if(comment_content!=null) {
+			cmtDto.setUser_id(user_id);
+			cmtDto.setBoard_no(board_no);
+			cmtDto.setComment_content(comment_content);
+			cmtDao.insertComment(cmtDto);
 		}
 	}
 
@@ -698,7 +699,7 @@ public class SvcProHandler {
 			String user_id = cmtDto.getUser_id();
 			if (user_id == null || user_id.equals("")) {
 				user_name = "Ex-User";
-				cmtDto.setUser_name(user_name);		//FIXME : userName이 databean에 ㅇ벗음.
+				cmtDto.setUser_name(user_name);
 			} else {
 				user_name = memberDao.getUserName(user_id);
 				cmtDto.setUser_name(user_name);
@@ -720,38 +721,38 @@ public class SvcProHandler {
 			e.printStackTrace();
 		}
 		CmtDataBean cmtDto = new CmtDataBean();
-		cmtDto.setC_id(Integer.parseInt(request.getParameter("c_id")));
-		cmtDto.setC_content(request.getParameter("c_content"));
+		cmtDto.setComment_id(Integer.parseInt(request.getParameter("comment_id")));
+		cmtDto.setComment_content(request.getParameter("comment_content"));
 		cmtDao.updateComment(cmtDto);
 	}
 
 	@RequestMapping(value = "/commentDelete.go", method = RequestMethod.POST) // 댓글 삭제
 	@ResponseBody
 	private void commentDeleteProcess(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		int c_id = Integer.parseInt(request.getParameter("c_id"));
-		cmtDao.deleteComment(c_id);
+		int comment_id = Integer.parseInt(request.getParameter("comment_id"));
+		cmtDao.deleteComment(comment_id);
 	}
 
 	@RequestMapping(value = "/memberAttend.go", method = RequestMethod.POST)
 	@ResponseBody
 	private List<MemberDataBean> memberAttendProcess(HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		String trip_id = request.getParameter("trip_id");
+		int trip_id = Integer.parseInt(request.getParameter("trip_id"));
 		String user_id = request.getParameter("user_id");
-		int trip_id_int = Integer.parseInt(trip_id);
 		MemberDataBean memberDto = new MemberDataBean();		
-		memberDto.setTrip_id(trip_id_int);
+		memberDto.setTrip_id(trip_id);
 		memberDto.setUser_id(user_id);
 
-		int memberCheck = memberDao.isMember(memberDto);
+		boolean memberCheck = memberDao.isTripMember(memberDto);
 
-		if (memberCheck == 0) {
+		if (!memberCheck) {
 			int addMemberResult = memberDao.addTripMember(memberDto);
 			request.setAttribute("addMemberResult", addMemberResult);
-			request.setAttribute("isMember", true);
+			if(addMemberResult>=1) request.setAttribute("isMember", true);
+			else request.setAttribute("isMember", false);
 		}
 
-		List<MemberDataBean> memberList = memberDao.getMembers(trip_id_int);
+		List<MemberDataBean> memberList = memberDao.getMembers(trip_id);
 		return memberList;
 	}
 
@@ -759,22 +760,22 @@ public class SvcProHandler {
 	@ResponseBody
 	private List<MemberDataBean> memberAbsentProcess(HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		String trip_id = request.getParameter("trip_id");
+		int trip_id = Integer.parseInt(request.getParameter("trip_id"));
 		String user_id = request.getParameter("user_id");
-	    int trip_id_int = Integer.parseInt(trip_id);
 	    
 	    MemberDataBean memberDto = new MemberDataBean();
-	    memberDto.setTrip_id(trip_id_int);
+	    memberDto.setTrip_id(trip_id);
 	    memberDto.setUser_id(user_id);
 
-		int memberCheck = memberDao.isMember(memberDto);
+	    boolean memberCheck = memberDao.isTripMember(memberDto);
 
-		if (memberCheck != 0) {
+		if (memberCheck) {
 			int delMemberResult = memberDao.delTripMember(memberDto);
 			request.setAttribute("delMemberResult", delMemberResult);
-			request.setAttribute("isMember", false);
+			if (delMemberResult>=1) request.setAttribute("isMember", false);
+			else request.setAttribute("isMember", true);
 		}
-		List<MemberDataBean> memberList = memberDao.getMembers(trip_id_int);
+		List<MemberDataBean> memberList = memberDao.getMembers(trip_id);
 		return memberList;
 	}
 	//////////////////////////////////////ajax추가분 이민재 2018.11.15 /////////////////////////////////////
