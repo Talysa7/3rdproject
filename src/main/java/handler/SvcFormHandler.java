@@ -1,7 +1,9 @@
 package handler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +20,9 @@ import db.CoordDataBean;
 import db.CountryDBBean;
 import db.CountryDataBean;
 import db.MemberDBBean;
+import db.MemberDataBean;
+import db.ReviewDBBean;
+import db.ReviewDataBean;
 import db.TagDBBean;
 import db.TagDataBean;
 import db.BoardDBBean;
@@ -47,6 +52,8 @@ public class SvcFormHandler {
 	private CountryDBBean countryDao;
 	@Resource
 	private MemberDBBean memberDao;
+	@Resource
+	private ReviewDBBean reviewDao;
 	
 	/////////////////////////////////user pages/////////////////////////////////
 	@RequestMapping("/EmailId")
@@ -154,5 +161,38 @@ public class SvcFormHandler {
 		request.setAttribute("tripTags", tripTags); 
 		
 		return new ModelAndView("svc/tripMod");
+	}
+	
+	@RequestMapping("/review")
+	public ModelAndView svcReviewProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
+		String user_id = (String) request.getSession().getAttribute("user_id");
+		request.setAttribute("user", user_id);
+		List<TripDataBean> usertrip = tripDao.getUserTripList(user_id);
+		List<TripDataBean> trip = new ArrayList<TripDataBean>();
+		for(int i=0; i<usertrip.size(); i++) {		
+			TripDataBean tripDto = usertrip.get(i);
+			tripDto.setCoordinate(tripDto.getTrip_id());
+			tripDto.setReview_members(tripDto.getTrip_id());
+			trip.add(tripDto);
+		}	
+		request.setAttribute("trip", trip);
+		return new ModelAndView("svc/review");		
+	}
+	@RequestMapping("/placeWrite")
+	public ModelAndView svcPlaceWriteProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
+		String user_id = (String) request.getSession().getAttribute("user_id");
+		request.setAttribute("user_id", user_id);
+		List<Integer> trip_id = memberDao.getMemTripId(user_id);
+		request.setAttribute("trip_id", trip_id);
+		List<TripDataBean> usertrip = tripDao.getUserTripList(user_id);
+		List<TripDataBean> trip = new ArrayList<TripDataBean>();
+		for(int i=0; i<usertrip.size(); i++) {		
+			TripDataBean tripDto = usertrip.get(i);
+			tripDto.setCoordinate(tripDto.getTrip_id());
+			tripDto.setReview_members(tripDto.getTrip_id());
+			trip.add(tripDto);
+		}	
+		request.setAttribute("trip", trip);
+		return new ModelAndView("svc/placeWrite");		
 	}
 }

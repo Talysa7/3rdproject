@@ -20,10 +20,15 @@ import db.AlbumDBBean;
 import db.AlbumDataBean;
 import db.BoardDataBean;
 import db.CmtDBBean;
+import db.CmtDataBean;
 import db.CoordDBBean;
 import db.CoordDataBean;
+import db.CoordReviewDBBean;
+import db.CoordReviewDataBean;
 import db.MemberDBBean;
 import db.MemberDataBean;
+import db.ReviewDBBean;
+import db.ReviewDataBean;
 import db.TagDBBean;
 import db.TagDataBean;
 import db.BoardDBBean;
@@ -51,6 +56,10 @@ public class SvcViewHandler {
 	private BoardDBBean boardDao;
 	@Resource
 	private MemberDBBean memberDao;
+	@Resource
+	private ReviewDBBean reviewDao;
+	@Resource
+	private CoordReviewDBBean coordreDao;
 
 	//amount of displayed photos in a page
 	private static final int photoPerPage=6;
@@ -86,6 +95,92 @@ public class SvcViewHandler {
 			//user_tags is a guest value, we should set it additionally
 			userDto.setUser_tags(tagDao.getUserTags(user_id));	//태그 가져오는거 수정.
 			request.setAttribute("userDto", userDto);
+							
+			Map<String, Object> userT = new HashMap<String, Object>();				
+			userT.put("user_id", user_id);
+			int num = reviewDao.beforeReview(userT);
+			int number = reviewDao.countEvaluation(userT);
+			
+			List<Integer> tripid = memberDao.getMemTripId(user_id);
+			
+			for(int j=0; j<tripid.size(); j++) {
+				int trip = tripid.get(j);
+				userT.put("trip_id", trip);
+				int catchNumber =reviewDao.getReview(userT).size();
+				request.setAttribute("catchNum", catchNumber);
+			}
+			
+			int rowNumber=0;			
+			int startPage=0;
+			if(startPage>0) {
+				rowNumber=startPage*3;
+			} else {
+				rowNumber=0;
+			}
+			
+			if(num!= number) {
+				Map<String, Object> user = new HashMap<String, Object>();
+				user.put("user_id", user_id);
+				
+				List<ReviewDataBean> review = reviewDao.stepOne(user);
+				List<ReviewDataBean> reviewDto = new ArrayList<ReviewDataBean>();
+				for(int i=0; i<review.size(); i++) {
+					String users=review.get(i).getUser_id();
+					user.put("reviewer_id", users);	
+					int trip_id = review.get(i).getTrip_id();
+					user.put("trip_id", trip_id);
+					ReviewDataBean reviewW = reviewDao.stepTwo(user);
+					reviewDto.add(reviewW);					
+				}	
+				
+				request.setAttribute("reviewDto", reviewDto);
+				int count = reviewDao.getReviewCount(userT);
+				if(count>=3) {
+					request.setAttribute("next_row", 3+1);
+				} else if(count>0&&count<3) {
+					request.setAttribute("next_row", count+1);
+				} else {
+					request.setAttribute("next_row", 0);
+				}
+				Double reviewcount = (double) count;
+				request.setAttribute("count", count);
+				Double point = (double) reviewDao.getReviewSum(userT);
+				Double divide = 0.0;
+				try {
+					divide =(double) (point/reviewcount);
+					divide = Double.parseDouble(String.format("%.2f",divide));
+				}catch(ArithmeticException e) {
+					divide = 0.0;
+				}				
+				request.setAttribute("average", divide);
+			}else{
+				Map<String, Object> userD = new HashMap<String, Object>();
+				userD.put("user_id", user_id);
+				List<ReviewDataBean> reviewDto = reviewDao.getEvaluation(userD);
+				
+				request.setAttribute("reviewDto", reviewDto);	
+				
+				int reviewCount = reviewDao.countEvaluation(userD);
+				Double count = (double) reviewCount;
+				request.setAttribute("count", reviewCount);
+				Double point = (double) reviewDao.sumEvaluation(user_id);
+				Double divide = 0.0;
+				try {
+					divide =(double) (point/count);						
+					divide = Double.parseDouble(String.format("%.2f",divide));
+				}catch(ArithmeticException e) {
+					divide = 0.0;
+				}					
+				request.setAttribute("average", divide);
+				if(number>=3) {
+					request.setAttribute("next_row", 3+1);
+				} else if(number>0&&number<3) {
+					request.setAttribute("next_row", number+1);
+				} else {
+					request.setAttribute("next_row", 0);
+				}
+			}
+				
 		}
 		return new ModelAndView("svc/myPage");
 	}
@@ -100,7 +195,13 @@ public class SvcViewHandler {
 		request.setAttribute("myTrips", myTrips);
 		return new ModelAndView("svc/myTrip");
 	}
-
+	@RequestMapping("/coordReview")
+	public ModelAndView SvcTripReviewProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
+		int coord_id = Integer.parseInt(request.getParameter("coord_id"));
+		List<CoordReviewDataBean> review = coordreDao.getCoordReview(coord_id);
+		request.setAttribute("review", review);
+		return new ModelAndView("svc/coordReview");
+	}
 	/////////////////////////////////board pages/////////////////////////////////
 
 	//get board posts
@@ -237,5 +338,44 @@ public class SvcViewHandler {
 		//get more 10 trip posts when 'load more' button is pressed
 		List<BoardDataBean> additionalList=boardDao.getPostList(next_row, postPerPage);
 		return additionalList;
+	}
+	/////////////////////////////ajax method list// review(person)////////////
+	@RequestMapping(value = "/loadUserReviewList.go", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public List<ReviewDataBean> reviewSelectProcess(HttpServletRequest request, HttpServletResponse response, int next_row)
+			throws HandlerException {
+		try {
+			request.setCharacterEncoding("utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		String user_id=(String)request.getSession().getAttribute("user_id");
+		Map<String, Object> user = new HashMap<String, Object>();				
+		user.put("user_id", user_id);
+		int num = reviewDao.beforeReview(user);
+		int number = reviewDao.countEvaluation(user);
+		
+		if(num!= number) {			
+			List<ReviewDataBean> review = reviewDao.stepOne(user);
+			List<ReviewDataBean> reviewDto = new ArrayList<ReviewDataBean>();
+			for(int i=0; i<review.size(); i++) {
+				String users=review.get(i).getUser_id();
+				user.put("reviewer_id", users);	
+				int trip_id = review.get(i).getTrip_id();
+				user.put("trip_id", trip_id);
+				ReviewDataBean reviewW = reviewDao.stepTwo(user);
+				reviewDto.add(reviewW);					
+			}				
+			
+			request.setAttribute("reviewDto", reviewDto);
+			return reviewDto;
+		}else {			
+			List<ReviewDataBean> reviewDto = reviewDao.getEvaluation(user);		
+			
+			request.setAttribute("reviewDto", reviewDto);
+			return reviewDto;
+		}
+	
 	}
 }

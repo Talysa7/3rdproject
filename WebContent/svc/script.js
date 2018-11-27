@@ -655,7 +655,9 @@ function loadMoreList(next_row) {
 //달력 불러오기 //순서대로 입력 받기
 function loadCal(num){ 
 	if(num==1){
-		$("#start"+num+"").datepicker();
+		$("#start"+num+"").datepicker({
+			minDate:0
+		});
 	}else if(num>1){
 		var beforeStart=$('#start'+(num-1)+'').val();
 		$("#start"+num+"").datepicker({
@@ -956,4 +958,53 @@ function openSchedule(coord_order) {
 		$('#trip_'+i).hide();
 	}
 	$('#trip_'+coord_order).show();
+}
+
+
+/////////////////////////////////////////////최혜원////////////////////////////////////////////
+function loadUserReviewList(next_row) {
+	
+	var trace = document.getElementById("trace").value
+	if(trace ==0){
+	$.ajax({
+		type : 'get',
+		data : {next_row : next_row},
+		url : "loadUserReviewList.go",
+		success : function(data) {
+			if(data.length>0){
+				var AppendList="";
+				$.each(data, function(key, review){
+					next_row=next_row+1;
+					AppendList+='<div class="form-group row">'				
+					AppendList+='<label for="reviewer" class="control-label col-sm-2" >평가자 </label>'
+					AppendList+=	'<div class="col-sm-8">&nbsp;'+review.reviewer_id+'</div>'
+					AppendList+='</div>'
+					AppendList+='<div class="form-group row">'		
+					AppendList+='<label for="point" class="control-label col-sm-2" >평가점수</label>'
+					AppendList+=	'<div class="col-sm-8">'
+					AppendList+=	'&nbsp;' + review.review_point + '점'
+					AppendList+=	'</div>'
+					AppendList+='</div>'
+					AppendList+='<div class="form-group row">'
+					AppendList+='<label for="comment" class="control-label col-sm-2" >평가 내용</label>'
+					AppendList+=	'<div class="col-sm-8">&nbsp;'+review.review_comment +'</div>'
+					AppendList+='</div>'
+					AppendList+='<br>'
+					
+	            });
+	            $("#id").append(AppendList);
+	            var newButton='<button type="button" class="btn btn-dark col-md-12" onclick="loadList('+next_row_after+')">Load more...</button>';
+	            $("#loading-button").html(newButton);
+			} else {
+				alert('더 이상 불러올 글이 없습니다.');
+			}
+		},
+		error : function(error) {
+			alert('글 불러오기에 실패했습니다.'+error);
+		}
+	});
+	}else{
+		alert('버튼은 한번만 클릭가능합니다');
+	}
+	document.getElementById("trace").value = 1;
 }

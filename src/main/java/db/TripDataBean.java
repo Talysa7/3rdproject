@@ -24,6 +24,9 @@ public class TripDataBean {
 	//guest value from pao_coordinate
 	//We should set it once by trip_id when we need it.
 	private CoordDataBean coordinate;			//varchar (20), not null
+	//we need below value to get unreviewed members
+	private List<MemberDataBean> review_members;
+	
 	
 	public int getTrip_id() {
 		return trip_id;
@@ -102,5 +105,18 @@ public class TripDataBean {
 	public void setCoord_order(int coord_order) {
 		this.coord_order = coord_order;
 	}
-	
+	public List<MemberDataBean> getReview_members() {
+		return review_members;
+	}
+	public void setReview_members(List<MemberDataBean> review_members) {
+		this.review_members = review_members;
+	}
+	public List<MemberDataBean> getReview_members(int trip_id) {
+		this.setReview_members(trip_id);
+		return review_members;
+	}
+	public void setReview_members(int trip_id) {
+		ReviewDBBean reviewDao = new ReviewDBBean();
+		this.review_members=reviewDao.getReviewMembers(trip_id);
+	}
 }

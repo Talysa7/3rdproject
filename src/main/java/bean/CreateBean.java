@@ -9,6 +9,7 @@ import org.springframework.web.servlet.view.UrlBasedViewResolver;
 import db.AlbumDBBean;
 import db.CmtDBBean;
 import db.CoordDBBean;
+import db.CoordReviewDBBean;
 import db.TagDBBean;
 import db.BoardDBBean;
 import db.TripDBBean;
@@ -16,6 +17,7 @@ import db.UserDBBean;
 import db.CountryDBBean;
 import db.MemberDBBean;
 import db.RegionDBBean;
+import db.ReviewDBBean;
 
 @Configuration
 public class CreateBean {
@@ -59,7 +61,14 @@ public class CreateBean {
 	public UserDBBean userDao() {
 		return new UserDBBean();
 	}
-
+	@Bean
+	public ReviewDBBean reviewDao() {
+		return new ReviewDBBean();
+	}
+	@Bean
+	public CoordReviewDBBean coordreDao() {
+		return new CoordReviewDBBean();
+	}
 	@Bean
 	public ViewResolver viewResolver() {
 		UrlBasedViewResolver viewResolver=new UrlBasedViewResolver();

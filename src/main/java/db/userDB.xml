@@ -43,8 +43,11 @@
 	</select>
 -->
 <!-- Member -->
-	<select id="getTripId" parameterType="String" resultType="int">
+	<select id="getMemTripId" parameterType="String" resultType="int">
 		select trip_id from pao_members where user_id=#{user_id}
+	</select>
+	<select id="getMemberList" parameterType="String" resultType="db.MemberDataBean">
+		select * from pao_members where user_id=#{user_id}
 	</select>
 	<select id="getUserName" parameterType="String" resultType="String">
 		select user_name from pao_user where user_id=#{user_id}
@@ -128,7 +131,7 @@
 		passwd=#{passwd}, user_name=#{user_name} where
 		user_id=#{user_id}
 	</update>
-	<select id="nameCheck" parameterType="String" resultType="Integer">
+	<select id="nameCheck" parameterType="String" resultType="int">
 		select count(*) from pao_user where user_name=#{user_name}
 	</select>
 <!-- Trip -->
@@ -145,6 +148,62 @@
 		select user_name
 		from pao_view_trip
 		where trip_id=#{trip_id}
+	</select>
+<!-- evaluation -->
+	<select id="beforeReview" parameterType="java.util.Map" resultType="int">
+		select count(*) from pao_user_review where reviewer_id=#{user_id} 
+	</select>
+	<select id="stepOne" parameterType="java.util.Map" resultType="db.ReviewDataBean">
+		select * from pao_user_review where reviewer_id=#{user_id}
+	</select>
+	<select id="stepTwo" parameterType="java.util.Map" resultType="db.ReviewDataBean">
+		select * from pao_user_review where reviewer_id=#{reviewer_id} and user_id=#{user_id}
+		and trip_id=#{trip_id}
+	</select>
+	<select id="getReviewFin" parameterType="java.util.Map" resultType="db.ReviewDataBean">
+		select * 
+		from #{ReviewDataBean} as c
+		order by review_point desc, trip_id desc
+		limit #{startRowNumber},#{endRowNumber}
+	</select>
+	<select id="getReviewCount" parameterType="java.util.Map" resultType="int">
+		select count(*) from pao_user_review where user_id=#{user_id} and
+		reviewer_id in (select user_id from pao_user_review where reviewer_id=#{user_id})
+	</select>
+	<select id="getReviewSum" parameterType="java.util.Map" resultType="int">
+		select review_point from pao_user_review where user_id=#{user_id} and
+		reviewer_id in (select user_id from pao_user_review where reviewer_id=#{user_id})
+	</select>
+	<select id="getEvaluation" parameterType="java.util.Map" resultType="db.ReviewDataBean">
+		select * from pao_user_review where user_id=#{user_id}
+	</select>
+	<select id="getEvalFin" parameterType="java.util.Map" resultType="db.ReviewDataBean">
+		select * 		
+		from (select * from pao_user_review where ReviewDataBan=#{ReviewDataBean})
+		order by review_point desc, trip_id desc
+		limit #{startRowNumber},#{endRowNumber}
+	</select>
+	<insert id="insertEvaluation" parameterType="db.ReviewDataBean">
+		insert into pao_user_review(user_id, reviewer_id, trip_id, review_point, review_comment)
+		 values(#{user_id}, #{reviewer_id}, #{trip_id}, #{review_point}, #{review_comment})
+	</insert>
+	<select id="countEvaluation" parameterType="java.util.Map" resultType="int">
+		select count(*) from pao_user_review where user_id=#{user_id}
+	</select>
+	<select id="sumEvaluation" parameterType="String" resultType="int">
+		select review_point from pao_user_review where user_id=#{user_id}
+	</select>
+	<select id="getReviewMembers" parameterType="int" resultType="db.MemberDataBean">
+		select * from pao_members where trip_id=#{trip_id} and user_id not in 
+		(select user_id from pao_user_review where trip_id=#{trip_id})
+	</select>	
+	<select id="getReview" parameterType="map" resultType="db.MemberDataBean">
+		select * from pao_members where trip_id=#{trip_id}
+		and user_id not in 
+		(select user_id from pao_user_review where trip_id=#{trip_id})
+		intersect
+		select * from pao_members where trip_id=#{trip_id}
+		and not user_id=#{user_id};
 	</select>
 </mapper>
 
