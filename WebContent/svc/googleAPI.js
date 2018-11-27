@@ -1,175 +1,105 @@
-//Initialize and add the map
-//var boardmarkers=[];
-//var coord_lats=[];
-//var coord_lngs=[];
-//var country_codes=[];
-var boardmarker;
-var boardmap;
-var markers=[];
-var marker;
-var map;
-
-//Map for board
-function initMap() {//trip.jsp에서 좌표로 마커 표시
-	var coord=$('div[name=coord]');
-	var coord_lat=[];
-	var coord_long=[];
-	var centerLatSum=0;
-	var centerLngSum=0;
-	var location=[];
+function initMap() {
 	
-	coord.each(function(i){
-		coord_lat[i]=parseFloat(coord.eq(i).find('input[name=coord_lat]').val());
-		coord_long[i]=parseFloat(coord.eq(i).find('input[name=coord_long]').val());
-		centerLatSum+=coord_lat[i];
-		centerLngSum+=coord_long[i];
-		//location
-		location[i]= {lat: coord_lat[i], lng: coord_long[i]};
+	var map = new google.maps.Map(document.getElementById('map'), {
+		center : {
+			lat : -33.8688,
+			lng : 151.2195
+		},
+		zoom : 13
 	});
-	var centerLat = centerLatSum / coord.length;
-	var centerLng = centerLngSum / coord.length;
-	var center={lat:centerLat,lng:centerLng};
-	
-	// The map, centered at allPlace
-	boardmap = new google.maps.Map(
-		document.getElementById('map'),
-		{zoom: 3,
-		center:center
+	var card = document.getElementById('pac-card');
+	var input = document.getElementById('pac-input');
+	var types = document.getElementById('type-selector');
+	var strictBounds = document.getElementById('strict-bounds-selector');
+
+	map.controls[google.maps.ControlPosition.TOP_RIGHT].push(card);
+
+	var autocomplete = new google.maps.places.Autocomplete(input);
+
+	// Bind the map's bounds (viewport) property to the autocomplete object,
+	// so that the autocomplete requests use the current map bounds for the
+	// bounds option in the request.
+	autocomplete.bindTo('bounds', map);
+
+	// Set the data fields to return when the user selects a place.
+	autocomplete.setFields([ 'address_components', 'geometry', 'icon', 'name' ]);
+
+	var infowindow = new google.maps.InfoWindow();
+	var infowindowContent = document.getElementById('infowindow-content');
+	var schedule = document.getElementById('schedule');
+	infowindow.setContent(infowindowContent);
+	var marker = new google.maps.Marker({
+		map : map,
+		anchorPoint : new google.maps.Point(0, -29)
+	});
+	google.maps.event.addListener(marker,'click',function() {
+		map.setZoom(16);
+		map.setCenter(marker.getPosition());
+	});
+	autocomplete.addListener('place_changed', function() {
+		infowindow.close();
+		marker.setVisible(false);
+		var place = autocomplete.getPlace();
+		if (!place.geometry) {
+			// User entered the name of a Place that was not
+			// suggested and
+			// pressed the Enter key, or the Place Details
+			// request failed.
+			window.alert("찾으시는 '"+ place.name + "' 에 대한 결과가 없습니다 \n"
+			+ "다른 검색어를 입력 해주세요");
+			return;
+		}
+
+		// If the place has a geometry, then present it on a
+		// map.
+		if (place.geometry.viewport) {
+			map.fitBounds(place.geometry.viewport);
+		} else {
+			map.setCenter(place.geometry.location);
+			map.setZoom(17); // Why 17? Because it looks
+								// good.
+		}
+		marker.setPosition(place.geometry.location);
+		marker.setVisible(true);
+
+		var address = '';
+		if (place.address_components) {
+			address = [
+				(place.address_components[0]
+						&& place.address_components[0].short_name || ''),
+				(place.address_components[1]
+						&& place.address_components[1].short_name || ''),
+				(place.address_components[2]
+						&& place.address_components[2].short_name || '') ]
+				.join(' ');
+		}
+
+		infowindowContent.children['place-icon'].src = place.icon;
+		infowindowContent.children['place-name'].textContent = place.name;
+		infowindowContent.children['place-address'].textContent = address;
+		infowindowContent.children['place-location'].textContent = 
+			place.geometry.location.lat() + place.geometry.location;
+		schedule.children['place1'].textContent = place.name;
+		
+		infowindow.open(map, marker);
+	});
+
+	// Sets a listener on a radio button to change the filter type on Places
+	// Autocomplete.
+	function setupClickListener(id, types) {
+		var radioButton = document.getElementById(id);
+		radioButton.addEventListener('click', function() {
+			autocomplete.setTypes(types);
 		});
-	for(var i=0;i<coord.length;i++){
-		addMarker(location[i],i,boardmap);
 	}
-	if(isSameCountry()==1)boardmap.setZoom(6);
-}
-//Adds a marker to the map.
-function addMarker(location, num, boardmap) {
-	num++;
-	var geocoder = new google.maps.Geocoder();
-	geocoder.geocode({'location': location}, function(results, status) {
-		if (status === 'OK') {
-			if (results[0]) {
-				var address=results[0].formatted_address;
-				boardmarker = new google.maps.Marker({
-					position: location,
-					map: boardmap,
-					title:address,
-					label:''+num+'',
-					animation:google.maps.Animation.DROP,
-				});
-				//input에 주소 붙이기   		
-				$('#address'+num+'').val(address);
-			} else {
-				window.alert(noplaceresult);
-			}
-		} else {
-		}
-	});
-}
-function isSameCountry(){
-	var result=1;
-	num=$('div[name=coord]').length;
-	for(var i=2;i<=num;i++){
-		if($('#country1').val()!=$('#country'+i+'').val()){
-			result=0;break;
-		}
-	}
-	return result;
-}
-function focusMarker(order,lng,lat){
-	boardmap.setZoom(12);
-	boardmap.setCenter({
-		lat:parseFloat(lat),
-		lng:parseFloat(lng)
-	});
-}
-//Map for writing
-//지도 주소검색
 
-function searchMap() {
-	map = new google.maps.Map(document.getElementById('searchmap'), {
-		zoom: 8,
-		center: {lat: -34.397, lng: 150.644}
-    });
-	var geocoder = new google.maps.Geocoder();
-    
-	document.getElementById('addSubmit').addEventListener('click', function() {
-		geocodeAddress(geocoder, map);
-	});
-}
-//주소로 좌표 표시
-function geocodeAddress(geocoder, resultsMap) {
-	var address = document.getElementById('address').value;
-	geocoder.geocode({'address': address}, function(results, status) {
-		if (status === 'OK') {
-			for(var i =0; i<results.length; i++){
-				alert(results[i]);
-			}
-			resultsMap.setCenter(results[0].geometry.location);
-			
-			//국가-jason 값 가져오기
-			var country=results[0].address_components.filter(function(component){
-				return component.types[0]=="country"
+	setupClickListener('changetype-all', []);
+
+	document.getElementById('use-strict-bounds')
+		.addEventListener('click', function() {
+			console.log('Checkbox clicked! New state=' + this.checked);
+			autocomplete.setOptions({
+				strictBounds : this.checked
 			});
-			var country_code=country[0].short_name;
-			var country_name=country[0].long_name;
-			var full_address=results[0].formatted_address;
-			
-			var searchmarker = new google.maps.Marker({
-				map: resultsMap,
-				position: results[0].geometry.location,
-				title:full_address,
-			});	
-			
-			//좌표 받기
-			var lat=searchmarker.position.lat();//위도 
-			var lng=searchmarker.position.lng();//경도
-			
-			var infowindow = new google.maps.InfoWindow;
-			 
-			geocodeLatLng({lat: lat, lng: lng},geocoder, resultsMap,infowindow); 
-			searchmarker.setMap(null);  
-			showPlace(country_code,full_address,lat,lng);
-		} else {
-			alert(locationerror);
-		}
 	});
 }
-//좌표로 주소 띄우기(coordinate->address)
-function geocodeLatLng(latlng,geocoder, map,infowindow) {
-	geocoder.geocode({'location': latlng}, function(results, status) {
-		if (status === 'OK') {
-			if (results[0]) {
-				map.setZoom(8);
-				marker = new google.maps.Marker({
-					position: latlng,
-					map: map,
-					title:results[0].formatted_address,
-					animation:google.maps.Animation.DROP,
-				});
-				var num=$('#schedulenum').find('input[name=schedulenum]').val();
-				updateMarker(marker,num);
-			} else {
-				window.alert(noPlaceresult);
-			}
-		} else {
-		}
-	});
-}
-//push marker to the array.
-function updateMarker(marker,num){
-	markers.push(marker);
-	marker.setLabel(''+num+'');
-	deleteMarkers(num);
-}
-// Removes the markers 
-function deleteMarkers(num) {
-	for (var i = 0; i < markers.length-1; i++) {
-		markers[i].setMap(null);
-	}	
-}
-
-
-
-
-
-// New One

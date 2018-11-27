@@ -3,8 +3,9 @@
 <%@ include file="setting.jsp"%>
 <link rel="stylesheet" type="text/css" href="${project}style_admin.css">
 <script src="${project}script.js"></script>
-<jsp:include page='head.jsp' flush="false"/>
-<jsp:include page='list.jsp' flush="false"/>	
+<%@ include file="/svc/header.jsp" %>
+<%-- <jsp:include page='list.jsp' flush="false"/> --%>	
+ 
 <article>
 	<h3>|${str_list_m}</h3>
 	<section>
@@ -78,4 +79,4 @@
 			</c:if>
 		</div>
 	</section>
-</article>
+</article> 
