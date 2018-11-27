@@ -77,25 +77,31 @@ private SqlSession session=SqlMapClient.getSession();
 	public List<MemberDataBean> getReviewMembers(int trip_id) {
 		return session.selectList("user.getReviewMembers", trip_id);
 	}
-	public List<ReviewDataBean> getPersonList(Map<String, Object> user) {		
-		user.put("startRowNumber", user.get("rowNumber").hashCode());
-		if( user.get("rowNumber").hashCode() >0) {
-			user.put("endRowNumber", user.get("rowNumber").hashCode()*user.get("postPerPage").hashCode());
+	public List<ReviewDataBean> getPersonList(List<ReviewDataBean> reviewDto, int next_row) {	
+		Map<String, Object> user = new HashMap<String, Object>();
+		user.put("startRowNumber", next_row);
+		user.put("ReviewDataBean", reviewDto);
+		if( next_row >0) {
+			user.put("endRowNumber", ((next_row/3)+1)*3);
 		} else {
-			user.put("endRowNumber", user.get("postPerPage").hashCode());
-		}
+			user.put("endRowNumber", 3);
+		}		
 		List<ReviewDataBean> postList=session.selectList("review.getReviewFin", user);
 		return postList;		
 	}
-	public List<ReviewDataBean> getEvaluationFin(Map<String, Object> user) {
-		user.put("startRowNumber", user.get("rowNumber").hashCode());
-		if( user.get("rowNumber").hashCode() >0) {
-			user.put("endRowNumber", user.get("rowNumber").hashCode()*user.get("postPerPage").hashCode());
+	public List<ReviewDataBean> getEvaluationFin(int next_row) {
+		Map<String, Object> user = new HashMap<String, Object>();
+		user.put("startRowNumber", next_row);
+		
+		if( next_row >0) {
+			user.put("endRowNumber", ((next_row/3)+1)*3 );
 		} else {
-			user.put("endRowNumber", user.get("postPerPage").hashCode());
+			user.put("endRowNumber", 3);
 		}
-		List<ReviewDataBean> postList=session.selectList("review.getEvaluationFin", user);
+		
+		List<ReviewDataBean> postList=session.selectList("review.getEvaluationFin", next_row);
 		return postList;
 	}
+	
 	
 }

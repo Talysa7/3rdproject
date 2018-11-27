@@ -1,11 +1,16 @@
 package db;
 
+import java.util.List;
+
 public class ReviewDataBean {
 	private String user_id;
 	private String reviewer_id;
 	private int review_point;
 	private String review_comment;
 	private int trip_id;
+	
+	private List<ReviewDataBean> reviewList;
+	
 	public String getUser_id() {
 		return user_id;
 	}
@@ -35,6 +40,12 @@ public class ReviewDataBean {
 	}
 	public void setTrip_id(int trip_id) {
 		this.trip_id = trip_id;
+	}
+	public List<ReviewDataBean> getReviewList() {
+		return reviewList;
+	}
+	public void setReviewList(List<ReviewDataBean> reviewList) {
+		this.reviewList = reviewList;
 	}
 	
 	

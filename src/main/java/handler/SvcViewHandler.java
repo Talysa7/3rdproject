@@ -110,13 +110,18 @@ public class SvcViewHandler {
 				request.setAttribute("catchNum", catchNumber);
 			}
 			
-			
+			int rowNumber=0;			
+			int startPage=0;
+			if(startPage>0) {
+				rowNumber=startPage*3;
+			} else {
+				rowNumber=0;
+			}
 			
 			if(num!= number) {
 				Map<String, Object> user = new HashMap<String, Object>();
 				user.put("user_id", user_id);
-				/*user.put("rowNumber", rowNumber);
-				user.put("postPerPage", postPerPage);*/
+				
 				List<ReviewDataBean> review = reviewDao.stepOne(user);
 				List<ReviewDataBean> reviewDto = new ArrayList<ReviewDataBean>();
 				for(int i=0; i<review.size(); i++) {
@@ -336,21 +341,13 @@ public class SvcViewHandler {
 	/////////////////////////////ajax method list// review(person)////////////
 	@RequestMapping(value = "/loadUserReviewList.go", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
-	public List<ReviewDataBean> reviewSelectProcess(HttpServletRequest request, HttpServletResponse response)
+	public List<ReviewDataBean> reviewSelectProcess(HttpServletRequest request, HttpServletResponse response, int next_row)
 			throws HandlerException {
 		try {
 			request.setCharacterEncoding("utf-8");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		int rowNumber;
-		int startPage=0;
-		if(startPage>0) {
-			rowNumber=startPage*3;
-		} else {
-			rowNumber=0;
-		}
-		
 		
 		String user_id=(String)request.getSession().getAttribute("user_id");
 		Map<String, Object> user = new HashMap<String, Object>();				
@@ -358,8 +355,7 @@ public class SvcViewHandler {
 		int num = reviewDao.beforeReview(user);
 		int number = reviewDao.countEvaluation(user);
 		
-		if(num!= number) {
-			
+		if(num!= number) {			
 			List<ReviewDataBean> review = reviewDao.stepOne(user);
 			List<ReviewDataBean> reviewDto = new ArrayList<ReviewDataBean>();
 			for(int i=0; i<review.size(); i++) {
@@ -370,13 +366,15 @@ public class SvcViewHandler {
 				ReviewDataBean reviewW = reviewDao.stepTwo(user);
 				reviewDto.add(reviewW);					
 			}				
+			
 			request.setAttribute("reviewDto", reviewDto);
 			return reviewDto;
-		}else {
+		}else {			
+			List<ReviewDataBean> reviewDto = reviewDao.getEvaluation(user);		
 			
-			List<ReviewDataBean> reviewDto = reviewDao.getEvaluation(user);			
 			request.setAttribute("reviewDto", reviewDto);
 			return reviewDto;
 		}
+	
 	}
 }

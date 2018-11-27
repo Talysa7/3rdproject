@@ -92,6 +92,11 @@
 				<div class="col-sm-2"></div>
 				<div class="col-sm-8">
 			<button type="button" class="btn btn-lg btn-secondary btn-block" onclick="location='placeWrite.go'">여행지를 평가해주세요</button>
+				<div id="loading-button">
+				<br>
+			<button type="button" class="btn btn-lg btn-secondary btn-block" onclick="loadUserReviewList(${next_row})">평판불러오기</button>
+			<input type="hidden" value="0" id="trace" name="trace">
+				</div>
 			</div>
 		</div>
 		<br>
@@ -108,7 +113,7 @@
 		<br>
 		
 				
-		<c:forEach var="review" items="${reviewDto}">	
+		<%-- <c:forEach var="review" items="${reviewDto}">	
 		<div class="form-group row">				
 			<label for="reviewer" class="control-label col-sm-2" >평가자 </label>
 				<div class="col-sm-8">&nbsp;${review.reviewer_id }</div>
@@ -131,7 +136,7 @@
 		</div>
 			<br>
 			
-		</c:forEach>
+		</c:forEach> --%>
 		
 			
 		</div>
@@ -140,10 +145,6 @@
 			<input type="hidden" name="next_row" value="${next_row}">
 			<div id="id"></div>
 		</form>
-		<div id="loading-button">
-			<button type="button" class="btn btn-lg btn-secondary btn-block"
-				onclick="loadUserReviewList(next_row)">Load more...</button>
-		</div>
 </div>	
 
 </body>

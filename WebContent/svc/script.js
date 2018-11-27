@@ -958,7 +958,9 @@ function openSchedule(coord_order) {
 
 /////////////////////////////////////////////최혜원////////////////////////////////////////////
 function loadUserReviewList(next_row) {
-	var tag_value = $("#searchTag").val()
+	
+	var trace = document.getElementById("trace").value
+	if(trace ==0){
 	$.ajax({
 		type : 'get',
 		data : {next_row : next_row},
@@ -970,23 +972,17 @@ function loadUserReviewList(next_row) {
 					next_row=next_row+1;
 					AppendList+='<div class="form-group row">'				
 					AppendList+='<label for="reviewer" class="control-label col-sm-2" >평가자 </label>'
-					AppendList+=	'<div class="col-sm-8">&nbsp;'+"${review.reviewer_id }"+'</div>'
+					AppendList+=	'<div class="col-sm-8">&nbsp;'+review.reviewer_id+'</div>'
 					AppendList+='</div>'
 					AppendList+='<div class="form-group row">'		
 					AppendList+='<label for="point" class="control-label col-sm-2" >평가점수</label>'
 					AppendList+=	'<div class="col-sm-8">'
-					AppendList+=	'&nbsp;<c:choose>'
-					AppendList+=		'<c:when test='+"${review.review_point eq 1}"+'> ★ </c:when>'
-					AppendList+=		'<c:when test='+"${review.review_point eq 2}"+'> ★★  </c:when>'
-					AppendList+=		'<c:when test='+"${review.review_point eq 3}"+'> ★★★  </c:when>'
-					AppendList+=		'<c:when test='+"${review.review_point eq 4}"+'> ★★★★    </c:when>'
-					AppendList+=		'<c:when test='+"${review.review_point eq 5}"+'> ★★★★★     </c:when>'
-					AppendList+=	'</c:choose>'
+					AppendList+=	'&nbsp;' + review.review_point + '점'
 					AppendList+=	'</div>'
 					AppendList+='</div>'
 					AppendList+='<div class="form-group row">'
 					AppendList+='<label for="comment" class="control-label col-sm-2" >평가 내용</label>'
-					AppendList+=	'<div class="col-sm-8">&nbsp;'+"${review.review_comment }"+'</div>'
+					AppendList+=	'<div class="col-sm-8">&nbsp;'+review.review_comment +'</div>'
 					AppendList+='</div>'
 					AppendList+='<br>'
 					
@@ -1002,4 +998,8 @@ function loadUserReviewList(next_row) {
 			alert('글 불러오기에 실패했습니다.'+error);
 		}
 	});
+	}else{
+		alert('버튼은 한번만 클릭가능합니다');
+	}
+	document.getElementById("trace").value = 1;
 }

@@ -162,10 +162,7 @@
 	</select>
 	<select id="getReviewFin" parameterType="java.util.Map" resultType="db.ReviewDataBean">
 		select * 
-		from pao_user_review 
-		where reviewer_id=#{reviewer_id} 
-		and user_id=#{user_id}
-		and trip_id=#{trip_id}
+		from #{ReviewDataBean} as c
 		order by review_point desc, trip_id desc
 		limit #{startRowNumber},#{endRowNumber}
 	</select>
@@ -181,9 +178,8 @@
 		select * from pao_user_review where user_id=#{user_id}
 	</select>
 	<select id="getEvalFin" parameterType="java.util.Map" resultType="db.ReviewDataBean">
-		select *
-		from pao_user_review
-		where user_id=#{user_id}
+		select * 		
+		from (select * from pao_user_review where ReviewDataBan=#{ReviewDataBean})
 		order by review_point desc, trip_id desc
 		limit #{startRowNumber},#{endRowNumber}
 	</select>
