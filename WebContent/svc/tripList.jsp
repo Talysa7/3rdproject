@@ -8,36 +8,123 @@
 <meta charset="utf-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+<script src="//code.jquery.com/jquery.js"></script>
+
 <!-- Bootstrap core CSS -->
 <link rel="stylesheet" type="text/css"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+
+<!-- Timepicker -->
+<script src="https://unpkg.com/gijgo@1.9.11/js/gijgo.min.js" type="text/javascript"></script>
+<link href="https://unpkg.com/gijgo@1.9.11/css/gijgo.min.css" rel="stylesheet" type="text/css"/>
+
 <!-- Custom styles for this template -->
 <link href="https://fonts.googleapis.com/css?family=Work+Sans"
 	rel="stylesheet">
 <link rel="stylesheet" href="${project}travelers_style.css">
 
-<script src="//code.jquery.com/jquery.js"></script>
 <script src="${project}script.js"></script>
+
 </head>
 
 <body>
+	<!------------------------------------------------------- RIGHT COLUMN ------------------------------------------------------>
 	<!-- Category & Contents Box -->
 	<div class="body-box">
-		<div class="d-flex justify-content-flex-start">
-			<c:if test="${sessionScope.user_id eq null}">
-				<a href="login.go"></a>
-			</c:if>
-			<c:if test="${sessionScope.user_id ne null}">
-				<a href="tripWrite.go"> <img
-					src="${project}img/compose_icon.png" width="120" height="40">
-				</a>
-			</c:if>
-		</div>
+		<div class="right">
+			<div class="row d-flex justify-content-end">
+					<div>
+						<form method="post">
+						<div class="pac-card" id="pac-card">
+						  		<!-- GOOGLEMAP TITLE -->
+							    <div id="title">
+							      	TRAVEL SITE SEARCH
+							    </div>
+						    	<!-- GOOGLEMAP RADIO BUTTON -->
+							    <div id="type-selector" class="pac-controls">
+							      <input type="radio" name="type" id="changetype-all" checked="checked">
+							      <label for="changetype-all">All</label>
+							
+							      <input type="radio" name="type" id="changetype-establishment">
+							      <label for="changetype-establishment">Establishments</label>
+							
+							      <input type="radio" name="type" id="changetype-address">
+							      <label for="changetype-address">Addresses</label>
+							
+							      <input type="radio" name="type" id="changetype-geocode">
+							      <label for="changetype-geocode">Geocodes</label>
+							    </div>
+							    <div id="strict-bounds-selector" class="pac-controls">
+							      <input type="checkbox" id="use-strict-bounds" value="">
+							      <label for="use-strict-bounds">Strict Bounds</label>
+							    </div>
+						  	<!-- GOOGLEMAP LOCATION TEXTAREA -->
+								  <div id="pac-container">
+								    <input id="pac-input" type="text"
+								        placeholder="Enter a location">
+								  </div>
+						</div>
+								<div id="map"></div>
+								<div id="infowindow-content">
+									  <img src="" width="16" height="16" id="place-icon">
+									  <span id="place-name"  class="title"></span><br>
+									  <span id="place-address"></span>
+								</div>
+								<!-- Replace the value of the key parameter with your own API key. -->
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDbvvT_kUPxmLL9PHcM9gp2qibpr8sThVQ&libraries=places&callback=initMap"async defer></script>
+								
+								 <div class="row mt-md-2" style="padding: 0px 0px 0px 14px;">
+								 	<button type="button" class="btn btn-secondary">날짜 검색</button>&nbsp;
+								 <input id="fromDate" width="170"/>
+									    <script>
+									        $('#fromDate').datepicker({
+									            uiLibrary: 'bootstrap4'
+									        });
+									    </script>
+										&nbsp;
+								 <input id="toDate" width="170"/>
+									    <script>
+									        $('#toDate').datepicker({
+									            uiLibrary: 'bootstrap4'
+									        });
+									    </script>
+								</div>
+								<div class="row mt-md-2" style="padding: 0px 0px 0px 14px;">
+								 	<button type="button" class="btn btn-secondary">기간 검색</button>&nbsp;
+								 	<input type="text" placeholder="일 단위 기간을 입력하세요">
+								</div>
+								<div class="row mt-md-2" style="padding: 0px 0px 0px 14px;">
+								 	<button type="button" class="btn btn-secondary">태그 검색</button>&nbsp;
+								 	<input type="text" placeholder="검색할 태그를 입력하세요">
+								 	<input type="submit" class="btn btn-secondary" value="검색">
+								</div>
+								<div class="row mt-md-2" style="padding: 0px 0px 0px 14px;">			
+									<input type="submit" class="btn btn-secondary" value="검색">
+								</div>
+							</form>
+						</div>	
+					</div>
+				</div>
+			
+		<!------------------------------------------------------- LEFT COLUMN ------------------------------------------------------>
+			<div class="left" style = "padding: 0px 0px 0px 100px;">
+				<div class="d-flex" name="board_list">
+					<c:if test="${sessionScope.user_id eq null}">
+						<a href="login.go"></a>
+					</c:if>
+					<c:if test="${sessionScope.user_id ne null}">
+						<a href="tripWrite.go"> 
+							<img src="${project}img/compose_icon.png" width="120" height="40">
+						</a>
+					</c:if>
+				</div>
 		<div class="board-list" id="board-list">
 			<c:if test="${postList.size() ne 0}">
 				<c:forEach var="post" items="${postList}">
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-11">
 							<div class="card flex-md-row mb-3 shadow-sm h-md-250">
 								<div class="card-body d-flex flex-column align-items-start">
 									<strong class="d-inline-block mb-2"> <c:forEach
@@ -84,17 +171,22 @@
 			<input type="hidden" name="next_row" value="${next_row}">
 		</form>
 		<div id="loading-button">
-			<button type="button" class="btn btn-dark col-md-6"
+			<button type="button" class="btn btn-dark col-md-11"
 				onclick="loadMoreList(${next_row})">Load more...</button>
 		</div>
 	</div>
+</div>
 	<!-- body box -->
-
-	<!-- Footer -->
-	<footer class="board-footer">
-		<p>
-			<a href="">Back to top</a>
-		</p>
-	</footer>
+	
+	<!-- Park Jun-kyu : I disabled 'Footer' because of alignment. As soon as I find solution, I'll fix it. -->
+	
+	<!-- Footer
+			<footer class="board-footer">
+				<p>
+					<a href="">Back to top</a>
+				</p>
+			</footer>
+			
+	 -->
 </body>
 </html>
