@@ -66,11 +66,11 @@ function initMap() {
 		if (place.address_components) {
 			address = [
 				(place.address_components[0]
-						&& place.address_components[0].short_name || ''),
+					&& place.address_components[0].short_name || ''),
 				(place.address_components[1]
-						&& place.address_components[1].short_name || ''),
+					&& place.address_components[1].short_name || ''),
 				(place.address_components[2]
-						&& place.address_components[2].short_name || '') ]
+					&& place.address_components[2].short_name || '') ]
 				.join(' ');
 		}
 
@@ -78,7 +78,7 @@ function initMap() {
 		infowindowContent.children['place-name'].textContent = place.name;
 		infowindowContent.children['place-address'].textContent = address;
 		infowindowContent.children['place-location'].textContent = 
-			place.geometry.location.lat() + place.geometry.location;
+			place.geometry.location.lat() + place.geometry.location.lng();
 		schedule.children['place1'].textContent = place.name;
 		
 		infowindow.open(map, marker);
