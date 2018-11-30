@@ -84,19 +84,19 @@
 		</form>
 		<div id="reputation">
 		<span>
-		<c:if test="${catchNum gt 0}">
-			<button type="button" class="btn btn-lg btn-secondary btn-block" onclick="location='review.go'">작성해야 할 평판이 있습니다</button>
-		</c:if> 
+		
 		</span>
 		<div class="form-group row">
 				<div class="col-sm-2"></div>
 				<div class="col-sm-8">
 			<button type="button" class="btn btn-lg btn-secondary btn-block" onclick="location='placeWrite.go'">여행지를 평가해주세요</button>
-				<div id="loading-button">
 				<br>
-			<button type="button" class="btn btn-lg btn-secondary btn-block" onclick="loadUserReviewList(${next_row})">평판불러오기</button>
+			<button type="button" class="btn btn-lg btn-secondary btn-block" onclick="location='reviewPage.go'">평판불러오기</button>
 			<input type="hidden" value="0" id="trace" name="trace">
-				</div>
+				<br>
+			<c:if test="${catchNum gt 0}">
+			<button type="button" class="btn btn-lg btn-secondary btn-block" onclick="location='review.go'">작성해야 할 평판이 있습니다</button>
+			</c:if> 
 			</div>
 		</div>
 		<br>
@@ -113,7 +113,7 @@
 		<br>
 		
 				
-		<%-- <c:forEach var="review" items="${reviewDto}">	
+		<c:forEach var="review" items="${reviewDto}">	
 		<div class="form-group row">				
 			<label for="reviewer" class="control-label col-sm-2" >평가자 </label>
 				<div class="col-sm-8">&nbsp;${review.reviewer_id }</div>
@@ -136,15 +136,8 @@
 		</div>
 			<br>
 			
-		</c:forEach> --%>
-		
-			
+		</c:forEach>
 		</div>
-		<!-- UserReview list -->
-		<form name="tripListInfo">
-			<input type="hidden" name="next_row" value="${next_row}">
-			<div id="id"></div>
-		</form>
 </div>	
 
 </body>

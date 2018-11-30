@@ -95,7 +95,7 @@ public class SvcProHandler {
 	@Resource
 	private ReviewDBBean reviewDao;
 	@Resource
-	private CoordReviewDBBean coordreDao;
+	private CoordReviewDBBean coordReviewDao;
 
 
 	///////////////////////////////// user pages/////////////////////////////////
@@ -690,7 +690,7 @@ public class SvcProHandler {
 		coordreDto.setReview_comment(comment);
 		coordreDto.setReview_point(grade);
 		coordreDto.setUser_id(user_id);
-		int result = coordreDao.insertCoordReview(coordreDto);
+		int result = coordReviewDao.insertCoordReview(coordreDto);
 		request.setAttribute("result", result);
 		return new ModelAndView("/svc/placeWritePro");	
 	}

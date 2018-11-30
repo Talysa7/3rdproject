@@ -959,8 +959,7 @@ function openSchedule(coord_order) {
 /////////////////////////////////////////////최혜원////////////////////////////////////////////
 function loadUserReviewList(next_row) {
 	
-	var trace = document.getElementById("trace").value
-	if(trace ==0){
+	
 	$.ajax({
 		type : 'get',
 		data : {next_row : next_row},
@@ -987,7 +986,7 @@ function loadUserReviewList(next_row) {
 					AppendList+='<br>'
 					
 	            });
-	            $("#id").append(AppendList);
+	            $("#trace").append(AppendList);
 	            var newButton='<button type="button" class="btn btn-dark col-md-12" onclick="loadList('+next_row_after+')">Load more...</button>';
 	            $("#loading-button").html(newButton);
 			} else {
@@ -998,8 +997,5 @@ function loadUserReviewList(next_row) {
 			alert('글 불러오기에 실패했습니다.'+error);
 		}
 	});
-	}else{
-		alert('버튼은 한번만 클릭가능합니다');
-	}
-	document.getElementById("trace").value = 1;
+	
 }

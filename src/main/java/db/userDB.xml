@@ -157,14 +157,22 @@
 		select * from pao_user_review where reviewer_id=#{user_id}
 	</select>
 	<select id="stepTwo" parameterType="java.util.Map" resultType="db.ReviewDataBean">
-		select * from pao_user_review where reviewer_id=#{reviewer_id} and user_id=#{user_id}
+		SET @rownum:=0;
+		SELECT
+ 		@rownum:=@rownum+1 as no, 
+		 * from pao_user_review where reviewer_id=#{reviewer_id} and user_id=#{user_id}
 		and trip_id=#{trip_id}
 	</select>
 	<select id="getReviewFin" parameterType="java.util.Map" resultType="db.ReviewDataBean">
-		select * 
-		from #{ReviewDataBean} as c
-		order by review_point desc, trip_id desc
-		limit #{startRowNumber},#{endRowNumber}
+		select *
+			FROM (
+				SELECT user_id, reviewer_id, review_point, review_comment, user_review_reg_date
+				FROM pao_user_review
+				WHERE user_id=#{user_id} and trip_id=#{trip_id} and reviewer_id=#{reviewer_id}
+				ORDER BY review_point desc
+				) as c
+			ORDER BY user_review_reg_date DESC
+		limit #{start},#{end}
 	</select>
 	<select id="getReviewCount" parameterType="java.util.Map" resultType="int">
 		select count(*) from pao_user_review where user_id=#{user_id} and
@@ -178,10 +186,10 @@
 		select * from pao_user_review where user_id=#{user_id}
 	</select>
 	<select id="getEvalFin" parameterType="java.util.Map" resultType="db.ReviewDataBean">
-		select * 		
-		from (select * from pao_user_review where ReviewDataBan=#{ReviewDataBean})
-		order by review_point desc, trip_id desc
-		limit #{startRowNumber},#{endRowNumber}
+		select * from pao_user_review
+		WHERE user_id=#{user_id}
+		order by user_review_reg_date DESC, review_point desc
+		limit #{start},#{end}
 	</select>
 	<insert id="insertEvaluation" parameterType="db.ReviewDataBean">
 		insert into pao_user_review(user_id, reviewer_id, trip_id, review_point, review_comment)
