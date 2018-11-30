@@ -224,9 +224,6 @@ h1.body-box, h2.body-box, h3.body-box, h4.body-box, h5.body-box, h6.body-box {
 		height: 250px;
 	}
 }
-div {
-        width: 100%;
-}
 div.left {
         width: 50%;
         float: left;

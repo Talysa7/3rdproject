@@ -34,13 +34,13 @@
 	<!-- Category & Contents Box -->
 	<div class="body-box">
 		<div class="right">
-			<div class="row d-flex justify-content-end">
+			<div>
 					<div>
 						<form method="post">
 						<div class="pac-card" id="pac-card">
 						  		<!-- GOOGLEMAP TITLE -->
 							    <div id="title">
-							      	TRAVEL SITE SEARCH
+							      	여행 장소 검색
 							    </div>
 						    	<!-- GOOGLEMAP RADIO BUTTON -->
 							    <div id="type-selector" class="pac-controls">
@@ -74,35 +74,34 @@
 								</div>
 								<!-- Replace the value of the key parameter with your own API key. -->
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDbvvT_kUPxmLL9PHcM9gp2qibpr8sThVQ&libraries=places&callback=initMap"async defer></script>
-								
-								 <div class="row mt-md-2" style="padding: 0px 0px 0px 14px;">
-								 	<button type="button" class="btn btn-secondary">날짜 검색</button>&nbsp;
-								 <input id="fromDate" width="170"/>
-									    <script>
-									        $('#fromDate').datepicker({
-									            uiLibrary: 'bootstrap4'
-									        });
-									    </script>
-										&nbsp;
-								 <input id="toDate" width="170"/>
-									    <script>
-									        $('#toDate').datepicker({
-									            uiLibrary: 'bootstrap4'
-									        });
-									    </script>
-								</div>
-								<div class="row mt-md-2" style="padding: 0px 0px 0px 14px;">
-								 	<button type="button" class="btn btn-secondary">기간 검색</button>&nbsp;
-								 	<input type="text" placeholder="일 단위 기간을 입력하세요">
-								</div>
-								<div class="row mt-md-2" style="padding: 0px 0px 0px 14px;">
-								 	<button type="button" class="btn btn-secondary">태그 검색</button>&nbsp;
-								 	<input type="text" placeholder="검색할 태그를 입력하세요">
-								 	<input type="submit" class="btn btn-secondary" value="검색">
-								</div>
-								<div class="row mt-md-2" style="padding: 0px 0px 0px 14px;">			
-									<input type="submit" class="btn btn-secondary" value="검색">
-								</div>
+						
+									<div class="row" style="padding: 0px 0px 10px 14px;">
+										 	<button type="button" class="btn btn-secondary col-md-1">날짜</button>&nbsp;
+										 <input id="fromDate" width="160"/>
+											    <script>
+											        $('#fromDate').datepicker({
+											            uiLibrary: 'bootstrap4'
+											        });
+											    </script>
+												&nbsp;
+										 <input id="toDate" width="160"/>
+											    <script>
+											        $('#toDate').datepicker({
+											            uiLibrary: 'bootstrap4'
+											        });
+											    </script>
+									</div>
+									<div  class="row" style="padding: 0px 0px 10px 14px;">
+										 	<button type="button" class="btn btn-secondary col-md-1">기간</button>&nbsp;
+											<input type="text" class="form-control col-md-4" placeholder="일 단위로 입력하세요">	&nbsp;	
+											<input type="submit" class="btn btn-secondary" value="검색">
+										</div>
+									</div>
+									<div class="row" style="padding: 0px 0px 0px 14px;">
+									 	<button type="button" class="btn btn-secondary col-md-1">태그</button>&nbsp;
+										<input type="text" class="form-control col-md-4" placeholder="검색할 태그를 입력하세요">&nbsp;
+									 	<input type="submit" class="btn btn-secondary" value="검색">
+									</div>
 							</form>
 						</div>	
 					</div>
