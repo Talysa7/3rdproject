@@ -170,15 +170,15 @@ public class SvcFormHandler {
 		String user_id = (String) request.getSession().getAttribute("user_id");
 		request.setAttribute("user", user_id);
 		List<TripDataBean> usertrip = tripDao.getUserTripList(user_id);
+		System.out.println(usertrip.size());
 		List<TripDataBean> trip = new ArrayList<TripDataBean>();
 		for(int i=0; i<usertrip.size(); i++) {		
 			TripDataBean tripDto = usertrip.get(i);
 			tripDto.setCoordinate(tripDto.getTrip_id());
-			user.put("trip_id", tripDto.getTrip_id());
-			//tripDto.setReview_members(tripDto.getTrip_id());
-			tripDto.setReview_members(user);
+			tripDto.setReview_members(tripDto.getTrip_id());
+			
 			trip.add(tripDto);
-			System.out.println(tripDto.getReview_members(user));
+			
 		}	
 		
 		request.setAttribute("trip", trip);

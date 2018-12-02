@@ -1,5 +1,6 @@
 package db;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,6 +87,10 @@ private SqlSession session=SqlMapClient.getSession();
 		
 		List<ReviewDataBean> postList=session.selectList("user.getEvalFin", user);
 		return postList;
+	}
+	public List<ReviewDataBean> getReviewMember(Map<String, Object> user) {
+		List<ReviewDataBean> review = session.selectList("user.getReviewMember", user);
+		return review;
 	}
 	
 	

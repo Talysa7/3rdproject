@@ -26,27 +26,31 @@
 <form class="form-horizontal" name="review" method="post" action="reviewPro.go">
 
 	<div>	
+	
 	<span>일정</span>	
 	<span><select id="sel1" name="sel1">	
 	<c:forEach var="trip" items="${trip}">	
 	<c:forEach var="member" items="${trip.review_members}">
 	<c:if test="${member.user_id ne user}">
-	<option value="${trip.trip_id}">${trip.trip_id}${trip.coord_name}</option>
+	<option value="${trip.trip_id}">${trip.coord_name} : ${trip.start_date}~${trip.end_date}</option>
 	</c:if>
 	</c:forEach>
-	</c:forEach>			
+	</c:forEach>
+				
 	</select> </span>		
 	<span>평판대상</span>				
 	<span><select id="sel2" name="sel2">
 	<c:forEach var="trip" items="${trip}">	
 	<c:forEach var="member" items="${trip.review_members}">
 	<c:if test="${member.user_id ne user}">
-	<option value="${trip.trip_id}/${member.user_id}" class="${trip.trip_id}">${trip.trip_id}/${member.user_id}</option>
+	<option value="${trip.trip_id}/${member.user_id}" class="${trip.trip_id}">${member.user_id}</option>
 	</c:if>
 	</c:forEach>
 	</c:forEach>
+	
 	</select>
 	</span>
+	
 	</div>	
 	<script src="//code.jquery.com/jquery.min.js"></script>
 	<script src='//rawgit.com/tuupola/jquery_chained/master/jquery.chained.min.js'></script>

@@ -191,6 +191,18 @@ public class SvcViewHandler {
 		request.setAttribute("review", review);
 		return new ModelAndView("svc/coordReview");
 	}
+	@RequestMapping("/memberReview")
+	public ModelAndView SvcMemberReviewProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
+		String user_id=(String)request.getSession().getAttribute("user_id");
+		request.setAttribute("user", user_id);
+		int trip_id = Integer.parseInt(request.getParameter("trip_id"));
+		Map<String, Object>user = new HashMap<String, Object>();
+		user.put("user_id", user_id);
+		user.put("trip_id", trip_id);
+		List<ReviewDataBean>review = reviewDao.getReviewMember(user);
+		request.setAttribute("review", review);
+		return new ModelAndView("svc/coordReview");
+	}
 	private static final int pageSize=10;
 	private static final int pageBlock = 5;
 	// 게시판 연산 로직

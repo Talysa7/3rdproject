@@ -1,5 +1,7 @@
 package db;
 
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 public class ReviewDataBean {
@@ -8,8 +10,8 @@ public class ReviewDataBean {
 	private int review_point;
 	private String review_comment;
 	private int trip_id;
+	private Timestamp user_review_reg_date;	
 	
-	private List<ReviewDataBean> reviewList;
 	
 	public String getUser_id() {
 		return user_id;
@@ -41,11 +43,11 @@ public class ReviewDataBean {
 	public void setTrip_id(int trip_id) {
 		this.trip_id = trip_id;
 	}
-	public List<ReviewDataBean> getReviewList() {
-		return reviewList;
+	public Timestamp getUser_review_reg_date() {
+		return user_review_reg_date;
 	}
-	public void setReviewList(List<ReviewDataBean> reviewList) {
-		this.reviewList = reviewList;
+	public void setUser_review_reg_date(Timestamp user_review_reg_date) {
+		this.user_review_reg_date = user_review_reg_date;
 	}
 	
 	

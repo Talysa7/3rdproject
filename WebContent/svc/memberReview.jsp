@@ -32,17 +32,23 @@
 				</center>
 			</c:when>
 			<c:otherwise>
-				<c:forEach var="trip" items="${myTrips}">
-						<label>게시물 보기 : </label><a href="/3rdProject/trip.go?board_no=${trip.board_no}">link</a><br>
-						<label>가는 곳 : </label> ${trip.coord_name}<br>
-						<label>날짜 : </label>${trip.start_date}~${trip.end_date}<br>
-						<label>평가 : </label><a href="/3rdProject/coordReview.go?coord_id=${trip.coord_id}">link</a><br>
-						<c:set var = "now" value = "<%= new java.util.Date()%>" />	
-						<c:if test="${now lt trip.end_date }">					
-						<label>평판보기 : </label><a href="/3rdProject/memberReview.go?trip_id=${trip.trip_id}">link</a><br>
-						</c:if>
-					<hr size="1px" color="black" noshade>
-				</c:forEach>
+			<c:forEach var="member" items="${review}">
+				<c:if test="${review ne null}">
+				<c:if test="${member.user_id ne user }">
+				<h6>멤버 : ${member.user_id}</h6>					
+					<label>평가자 : </label> ${member.reviewer_id }<br>
+					<label>평판점수 : </label> <c:choose>
+										<c:when test="${member.review_point eq 1}"> ★ </c:when>
+										<c:when test="${member.review_point eq 2}"> ★★  </c:when>
+										<c:when test="${member.review_point eq 3}"> ★★★  </c:when>
+										<c:when test="${member.review_point eq 4}"> ★★★★    </c:when>
+										<c:when test="${member.review_point eq 5}"> ★★★★★     </c:when>
+									</c:choose><br>
+					<label>평판내용 : </label>${member.review_comment}<br>
+				<hr size="1px" color="black" noshade>			
+				</c:if>
+				</c:if>
+			</c:forEach>
 			</c:otherwise>
 		</c:choose>
 	</div>

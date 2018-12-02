@@ -656,6 +656,8 @@ public class SvcProHandler {
 			e.printStackTrace();
 		}
 		String user_name = request.getParameter("sel2");
+		user_name = user_name.split("/")[1];
+		System.out.println(user_name);
 		String evaluation = request.getParameter("textarea");
 		int grade = Integer.parseInt(request.getParameter("grade"));
 		int trip_id = Integer.parseInt(request.getParameter("sel1"));
@@ -667,6 +669,7 @@ public class SvcProHandler {
 		evalDto.setReviewer_id(user_id);
 		evalDto.setUser_id(user_name);
 		evalDto.setTrip_id(trip_id);
+		evalDto.setUser_review_reg_date( new Timestamp(System.currentTimeMillis()));
 		int result = reviewDao.insertEvaluation(evalDto);
 		request.setAttribute("result", result);
 		return new ModelAndView("/svc/reviewPro");		
