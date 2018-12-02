@@ -31,7 +31,7 @@
 	<c:forEach var="trip" items="${trip}">	
 	<c:forEach var="member" items="${trip.review_members}">
 	<c:if test="${member.user_id ne user}">
-	<option value="${trip.trip_id}">${trip.coord_name}</option>
+	<option value="${trip.trip_id}">${trip.trip_id}${trip.coord_name}</option>
 	</c:if>
 	</c:forEach>
 	</c:forEach>			
@@ -41,7 +41,7 @@
 	<c:forEach var="trip" items="${trip}">	
 	<c:forEach var="member" items="${trip.review_members}">
 	<c:if test="${member.user_id ne user}">
-	<option value="${member.user_id}" class="${trip.trip_id}">${member.user_id}</option>
+	<option value="${trip.trip_id}/${member.user_id}" class="${trip.trip_id}">${trip.trip_id}/${member.user_id}</option>
 	</c:if>
 	</c:forEach>
 	</c:forEach>

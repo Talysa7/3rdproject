@@ -102,13 +102,15 @@ public class SvcViewHandler {
 			int number = reviewDao.countEvaluation(userT);
 			
 			List<Integer> tripid = memberDao.getMemTripId(user_id);
-			
+			int catchNum[] = new int[tripid.size()];
 			for(int j=0; j<tripid.size(); j++) {
 				int trip = tripid.get(j);
 				userT.put("trip_id", trip);
 				int catchNumber =reviewDao.getReview(userT).size();
+				catchNum[j] = catchNumber;
 				request.setAttribute("catchNum", catchNumber);
 			}
+			
 			
 			int rowNumber=0;			
 			int startPage=0;
@@ -171,36 +173,7 @@ public class SvcViewHandler {
 		}
 		return new ModelAndView("svc/myPage");
 	}
-	// 평판 연산 로직
-		private int begin;
-		private int exit;
-		private static final int caseSize=10;
-		private static final int caseBlock =5;
-		public void setReviewLogic(HttpServletRequest request, String pageNumber, int count, int begin, int exit){
-			int currentCase = Integer.parseInt(pageNumber);
-			int caseCount = count / caseSize + (count % caseSize>0 ? 1:0 );
-			if( currentCase > caseCount ) currentCase = caseCount;
-			begin = ( currentCase - 1 )*caseSize + 1;					
-			exit = begin + caseSize - 1;	
-			
-			if(exit > count) exit = count;
-			
-			int number = count - (currentCase - 1) * caseSize;				
-				
-			int startCase = (currentCase / caseBlock) * caseBlock+1;  		
-			if(currentCase % caseBlock == 0) startCase -= caseBlock;
-			int endCase = startCase + caseBlock - 1;
-			if(endCase > caseCount ) endCase = caseCount;
-		
-			request.setAttribute( "count", count );
-			request.setAttribute( "pageNumber", pageNumber );
-			request.setAttribute( "currentPage", currentCase );
-			request.setAttribute( "number", number );
-			request.setAttribute( "startPage", startCase );
-			request.setAttribute( "endPage", endCase );
-			request.setAttribute( "caseCount", caseCount );
-			request.setAttribute( "caseBlock", caseBlock );
-		}
+
 	@RequestMapping("/myTrip")
 	public ModelAndView SvcMyTripProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		//To find which user is this?
@@ -218,15 +191,45 @@ public class SvcViewHandler {
 		request.setAttribute("review", review);
 		return new ModelAndView("svc/coordReview");
 	}
+	private static final int pageSize=10;
+	private static final int pageBlock = 5;
+	// 게시판 연산 로직
+		private int start;
+		private int end;
+		public void setReviewLogic(HttpServletRequest request, String pageNum, int count, int start, int end){
+			int currentPage = Integer.parseInt(pageNum);
+			int pageCount = count / pageSize + (count % pageSize>0 ? 1:0 );
+			if( currentPage > pageCount ) currentPage = pageCount;
+			start = ( currentPage - 1 )*pageSize + 1;					
+			end = start + pageSize - 1;	
+			
+			if(end > count) end = count;
+			
+			int number = count - (currentPage - 1) * pageSize;				
+				
+			int startPage = (currentPage / pageBlock) * pageBlock+1;  		
+			if(currentPage % pageBlock == 0) startPage -= pageBlock;
+			int endPage = startPage + pageBlock - 1;
+			if(endPage > pageCount ) endPage = pageCount;
+		
+			request.setAttribute( "count", count );
+			request.setAttribute( "pageNum", pageNum );
+			request.setAttribute( "currentPage", currentPage );
+			request.setAttribute( "number", number );
+			request.setAttribute( "startPage", startPage );
+			request.setAttribute( "endPage", endPage );
+			request.setAttribute( "pageCount", pageCount );
+			request.setAttribute( "pageBlock", pageBlock );
+		}
 	@RequestMapping("/reviewPage")
 	public ModelAndView SvcReviewProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		String user_id = (String) request.getSession().getAttribute("user_id");
 		Map<String, Object> user = new HashMap<String, Object>();				
 		user.put("user_id", user_id);
 		int num = reviewDao.beforeReview(user);
-		int number = reviewDao.countEvaluation(user);
+		int number2 = reviewDao.countEvaluation(user);
 		
-		String pageNum = request.getParameter("pageNumber");
+		String pageNum = request.getParameter("pageNum");
 		if(pageNum == null || pageNum.equals("")){
 			pageNum = "1";
 		}
@@ -237,9 +240,8 @@ public class SvcViewHandler {
 		} else {
 			rowNumber=0;
 		}
-	
-	
-		if(num!= number) {		
+		int count = 0;
+		if(num!= number2) {		
 			
 			List<ReviewDataBean> review = reviewDao.stepOne(user);
 			List<ReviewDataBean> reviewDto = new ArrayList<ReviewDataBean>();
@@ -251,33 +253,23 @@ public class SvcViewHandler {
 				ReviewDataBean reviewW = reviewDao.stepTwo(user);
 				reviewDto.add(reviewW);					
 			}			
-			
-			
-			if(reviewDto.size()>=postPerPage) {
-				request.setAttribute("next_row", postPerPage+1);
-			} else if(reviewDto.size()>0&&reviewDto.size()<postPerPage) {
-				request.setAttribute("next_row", reviewDto.size()+1);
-			} else {
-				request.setAttribute("next_row", 0);
-			}
-			
+			count = reviewDao.getReviewCount(user);
+			 setReviewLogic(request, pageNum, count, start, end);
+			user.put("start", rowNumber);
+			user.put("end", postPerPage);
+			reviewDto = reviewDao.getReviewFin(user);
 			request.setAttribute("reviewDto", reviewDto);
 			
-		}else {					
-				List<ReviewDataBean>reviewDto = reviewDao.getEvaluationFin(user, rowNumber);
-				if(reviewDto.size()>=postPerPage) {
-					request.setAttribute("next_row", postPerPage+1);
-				} else if(reviewDto.size()>0&&reviewDto.size()<postPerPage) {
-					request.setAttribute("next_row", reviewDto.size()+1);
-				} else {
-					request.setAttribute("next_row", 0);
-				}
-				request.setAttribute("reviewDto", reviewDto);
-			
+		}else {						
+				count = reviewDao.countEvaluation(user);
+				 setReviewLogic(request, pageNum, count, start, end);
+				 user.put("start", rowNumber);
+				user.put("end", postPerPage);
+				List<ReviewDataBean>reviewDto = reviewDao.getEvaluationFin(user);
+				
+				request.setAttribute("reviewDto", reviewDto);			
 		}
-		
-		
-		
+				
 		return new ModelAndView("svc/reviewPage");
 	}
 	/////////////////////////////////board pages/////////////////////////////////
@@ -416,13 +408,5 @@ public class SvcViewHandler {
 		List<BoardDataBean> additionalList=boardDao.getPostList(next_row, postPerPage);
 		return additionalList;
 	}
-	@RequestMapping(value="/loadUserReviewList", method=RequestMethod.GET, produces="application/json")
-	@ResponseBody
-	public List<BoardDataBean> loadUserReviewList(int next_row) {
-		//get more 10 trip posts when 'load more' button is pressed
-		List<BoardDataBean> additionalList=boardDao.getPostList(next_row, postPerPage);
-		return additionalList;
-	}
-	
 	
 }

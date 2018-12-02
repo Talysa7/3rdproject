@@ -27,10 +27,6 @@
 			<c:if test="${sessionScope.user_id eq null}">
 				<a href="login.go"></a>
 			</c:if>
-			<c:if test="${sessionScope.user_id ne null}">
-				<button type="button" class="btn btn-warning"
-				onclick="review.go">평판 작성</button>
-			</c:if>
 		</div>
 		<div class="review-list" id="review-list">
 			<c:if test="${reviewDto.size() eq 0 }">
@@ -43,7 +39,7 @@
 							<div class="card flex-md-row mb-3 shadow-sm h-md-250">
 								<div class="card-body d-flex flex-column align-items-start">
 									<div class="mb-1 text-muted text-right">
-										<i><b>평가자</b></i>&nbsp; ${review.reviewer_name}
+										<i><b>평가자</b></i>&nbsp; ${review.reviewer_id}
 									</div>
 									<hr size="1px" color="black" noshade>
 									<p class="card-text mb-auto">${review.review_comment}</p>
@@ -73,16 +69,29 @@
 		</div>
 		<div id="trace">
 		</div>
-		<form name="tripListInfo">
-			<input type="hidden" name="next_row" value="${next_row}">
-		</form>
-		<div id="loading-button">
-			<button type="button" class="btn btn-dark col-md-12"
-				onclick="loadUserReviewList(${next_row})">Load more...</button>
-		</div>
+		<div id="page">
+				<c:if test="${count ne 0}">
+					<c:if test="${startPage gt pageBlock}">
+						<a href="reviewPage.go">[◀◀] </a>
+						<a href="reviewPage.go?pageNum=${startPage-pageBlock}">[◀] </a>
+					</c:if>
+					<c:forEach var="i" begin="${startPage}" end="${endPage}">
+						<c:if test="${i eq currentPage}">
+							<p>[${i}]<p>
+						</c:if>
+						<c:if test="${i ne currentPage}">					
+							<a href="reviewPage.go?pageNum=${i}">[${i}] </a>
+						</c:if>	
+					</c:forEach>
+					<c:if test="${pageCount gt endPage}">
+						<a href ="reviewPage.go?pageNum=${startPage+pageBlock}">[▶]</a>
+						<a href ="reviewPage.go?pageNum=${pageCount}">[▶▶]</a>
+					</c:if>	
+				</c:if>
 	</div>
 	<!-- body box -->
-
+	
+			</div>
 	<!-- Footer -->
 	<footer class="board-footer">
 		<p>

@@ -19,7 +19,7 @@ private SqlSession session=SqlMapClient.getSession();
 	public ReviewDataBean stepTwo(Map<String, Object> user) {
 		return session.selectOne("user.stepTwo", user);
 	}
-	public List<ReviewDataBean> getReview(Map<String, Object>user){
+	public List<MemberDataBean> getReview(Map<String, Object>user){
 		return session.selectList("user.getReview", user);
 	}
 	public List<ReviewDataBean> getEvaluation(Map<String, Object> user) {
@@ -77,23 +77,13 @@ private SqlSession session=SqlMapClient.getSession();
 	public List<MemberDataBean> getReviewMembers(int trip_id) {
 		return session.selectList("user.getReviewMembers", trip_id);
 	}
-	public List<ReviewDataBean> getReviewFin(Map<String, Object> user, int rowNumber) {
-		user.put("startRowNumber", rowNumber);
-		if(rowNumber>0) {
-			user.put("endRowNumber", rowNumber*5);
-		} else {
-			user.put("endRowNumber", 5);
-		}	
+	public List<ReviewDataBean> getReviewFin(Map<String, Object> user) {
+		
 		List<ReviewDataBean> postList=session.selectList("user.getReviewFin", user);
 		return postList;		
 	}
-	public List<ReviewDataBean> getEvaluationFin(Map<String, Object> user, int rowNumber) {
-		user.put("startRowNumber", rowNumber);
-		if(rowNumber>0) {
-			user.put("endRowNumber", rowNumber*5);
-		} else {
-			user.put("endRowNumber", 5);
-		}	
+	public List<ReviewDataBean> getEvaluationFin(Map<String, Object> user) {
+		
 		List<ReviewDataBean> postList=session.selectList("user.getEvalFin", user);
 		return postList;
 	}

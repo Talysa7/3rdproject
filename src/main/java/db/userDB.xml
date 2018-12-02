@@ -157,10 +157,7 @@
 		select * from pao_user_review where reviewer_id=#{user_id}
 	</select>
 	<select id="stepTwo" parameterType="java.util.Map" resultType="db.ReviewDataBean">
-		SET @rownum:=0;
-		SELECT
- 		@rownum:=@rownum+1 as no, 
-		 * from pao_user_review where reviewer_id=#{reviewer_id} and user_id=#{user_id}
+		select * from pao_user_review where reviewer_id=#{reviewer_id} and user_id=#{user_id}
 		and trip_id=#{trip_id}
 	</select>
 	<select id="getReviewFin" parameterType="java.util.Map" resultType="db.ReviewDataBean">
@@ -188,7 +185,7 @@
 	<select id="getEvalFin" parameterType="java.util.Map" resultType="db.ReviewDataBean">
 		select * from pao_user_review
 		WHERE user_id=#{user_id}
-		order by user_review_reg_date DESC, review_point desc
+		order by review_point desc, user_review_reg_date desc
 		limit #{start},#{end}
 	</select>
 	<insert id="insertEvaluation" parameterType="db.ReviewDataBean">
