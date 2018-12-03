@@ -92,6 +92,16 @@ private SqlSession session=SqlMapClient.getSession();
 		List<ReviewDataBean> review = session.selectList("user.getReviewMember", user);
 		return review;
 	}
-	
-	
+	public List<ReviewDataBean> getRecent(Map<String, Object> user) {
+		List<ReviewDataBean> review = session.selectList("user.getRecent", user);
+		return review;
+	}
+	public ReviewDataBean getWorst(Map<String, Object> user) {
+		ReviewDataBean review = session.selectOne("user.getBest", user);
+		return review;
+	}
+	public ReviewDataBean getBest(Map<String, Object> user) {
+		ReviewDataBean review = session.selectOne("user.getWorst", user);
+		return review;
+	}
 }

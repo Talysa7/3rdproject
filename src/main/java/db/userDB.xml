@@ -211,51 +211,20 @@
 		select * from pao_members where trip_id=#{trip_id}
 		and not user_id=#{user_id};
 	</select>
-	<select id="getReviewMember" parameterType="map" resultType="db.MemberDataBean">
-			select *
-			from
-			select * from pao_user_review where user_id=(select user_id from pao_members where trip_id=#{trip_id})
-			as a
-			order by user_review_reg_date desc
-			limit 1
-		union
-			select *
-			from
-			select * from pao_user_review where user_id=(select user_id from pao_members where trip_id=#{trip_id})
-			as b
-			order by review_point desc
-			limit 5
-		union
-			select *
-			from
-			select * from pao_user_review where user_id=(select user_id from pao_members where trip_id=#{trip_id})
-			as c
-			order by review_point asc
-			limit 1		
-	</select>
-	<select id="getBest" parameterType="map" resultType="db.MemberDataBean">
-		select *
-		from
-		select * from pao_user_review where user_id=(select user_id from pao_members where trip_id=#{trip_id})
-		as b
+	<select id="getBest" parameterType="map" resultType="db.ReviewDataBean">
+		select * from pao_user_review where user_id=#{user_id}
 		order by review_point desc
-		limit 5
-	</select>
-	<select id="getRecent" parameterType="map" resultType="db.MemberDataBean">
-		select *
-		from
-		select * from pao_user_review where user_id=(select user_id from pao_members where trip_id=#{trip_id})
-		as a
-		order by user_review_reg_date desc
 		limit 1
 	</select>
-	<select id="getWorst" parameterType="map" resultType="db.MemberDataBean">
-		select *
-		from
-		select * from pao_user_review where user_id=(select user_id from pao_members where trip_id=#{trip_id})
-		as c
+	<select id="getRecent" parameterType="map" resultType="db.ReviewDataBean">
+		select * from pao_user_review where user_id=#{user_id}
+		order by user_review_reg_date desc
+		limit 5
+	</select>
+	<select id="getWorst" parameterType="map" resultType="db.ReviewDataBean">
+		select * from pao_user_review where user_id=#{user_id}
 		order by review_point asc
-		limit 1		
+		limit 1
 	</select>
 </mapper>
 

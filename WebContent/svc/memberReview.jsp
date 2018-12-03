@@ -31,24 +31,47 @@
 					<img src="${project}img/paori.png">
 				</center>
 			</c:when>
-			<c:otherwise>
-			<c:forEach var="member" items="${review}">
-				<c:if test="${review ne null}">
-				<c:if test="${member.user_id ne user }">
-				<h6>멤버 : ${member.user_id}</h6>					
-					<label>평가자 : </label> ${member.reviewer_id }<br>
+			<c:otherwise>	
+				<c:forEach var="best" items="${best}" varStatus="status">
+				     <h6>멤버 : ${best.user_id}의 최고 평판</h6>	
+				    	<label>평가자 : </label> ${best.reviewer_id }<br>
+						<label>평판점수 : </label> <c:choose>
+											<c:when test="${best.review_point eq 1}"> ★ </c:when>
+											<c:when test="${best.review_point eq 2}"> ★★  </c:when>
+											<c:when test="${best.review_point eq 3}"> ★★★  </c:when>
+											<c:when test="${best.review_point eq 4}"> ★★★★    </c:when>
+											<c:when test="${best.review_point eq 5}"> ★★★★★     </c:when>
+										</c:choose><br>
+						<label>평판내용 : </label>${best.review_comment}<br>
+					<hr size="1px" color="black" noshade>
+				</c:forEach>		
+				<c:forEach var="recent" items="${recent}">
+					<h6>멤버 : ${recent.user_id}의 최신 평판</h6>					
+						<label>평가자 : </label> ${recent.reviewer_id }<br>
+						<label>평판점수 : </label> <c:choose>
+											<c:when test="${recent.review_point eq 1}"> ★ </c:when>
+											<c:when test="${recent.review_point eq 2}"> ★★  </c:when>
+											<c:when test="${recent.review_point eq 3}"> ★★★  </c:when>
+											<c:when test="${recent.review_point eq 4}"> ★★★★    </c:when>
+											<c:when test="${recent.review_point eq 5}"> ★★★★★     </c:when>
+										</c:choose><br>
+						<label>평판내용 : </label>${recent.review_comment}<br>
+					<hr size="1px" color="black" noshade>					
+				</c:forEach>
+				<c:forEach var="wst" items="${wst}">
+				<h6>멤버 : ${wst.user_id}의 최저평판</h6>					
+					<label>평가자 : </label> ${wst.reviewer_id }<br>
 					<label>평판점수 : </label> <c:choose>
-										<c:when test="${member.review_point eq 1}"> ★ </c:when>
-										<c:when test="${member.review_point eq 2}"> ★★  </c:when>
-										<c:when test="${member.review_point eq 3}"> ★★★  </c:when>
-										<c:when test="${member.review_point eq 4}"> ★★★★    </c:when>
-										<c:when test="${member.review_point eq 5}"> ★★★★★     </c:when>
+										<c:when test="${wst.review_point eq 1}"> ★ </c:when>
+										<c:when test="${wst.review_point eq 2}"> ★★  </c:when>
+										<c:when test="${wst.review_point eq 3}"> ★★★  </c:when>
+										<c:when test="${wst.review_point eq 4}"> ★★★★    </c:when>
+										<c:when test="${wst.review_point eq 5}"> ★★★★★     </c:when>
 									</c:choose><br>
-					<label>평판내용 : </label>${member.review_comment}<br>
-				<hr size="1px" color="black" noshade>			
-				</c:if>
-				</c:if>
-			</c:forEach>
+					<label>평판내용 : </label>${wst.review_comment}<br>
+				<hr size="1px" color="black" noshade>
+				</c:forEach>			
+									
 			</c:otherwise>
 		</c:choose>
 	</div>
