@@ -143,6 +143,7 @@
 				from pao_members
 				where user_id=#{user_id}
 			)
+		order by end_date desc
 	</select>
 	<select id="getMemberNames" parameterType="int" resultType="java.util.List">
 		select user_name
@@ -161,10 +162,15 @@
 		and trip_id=#{trip_id}
 	</select>
 	<select id="getReviewFin" parameterType="java.util.Map" resultType="db.ReviewDataBean">
-		select * 
-		from #{ReviewDataBean} as c
-		order by review_point desc, trip_id desc
-		limit #{startRowNumber},#{endRowNumber}
+		select *
+			FROM (
+				SELECT user_id, reviewer_id, review_point, review_comment, user_review_reg_date
+				FROM pao_user_review
+				WHERE user_id=#{user_id} and trip_id=#{trip_id} and reviewer_id=#{reviewer_id}
+				ORDER BY review_point desc
+				) as c
+			ORDER BY user_review_reg_date DESC
+		limit #{start},#{end}
 	</select>
 	<select id="getReviewCount" parameterType="java.util.Map" resultType="int">
 		select count(*) from pao_user_review where user_id=#{user_id} and
@@ -178,10 +184,10 @@
 		select * from pao_user_review where user_id=#{user_id}
 	</select>
 	<select id="getEvalFin" parameterType="java.util.Map" resultType="db.ReviewDataBean">
-		select * 		
-		from (select * from pao_user_review where ReviewDataBan=#{ReviewDataBean})
-		order by review_point desc, trip_id desc
-		limit #{startRowNumber},#{endRowNumber}
+		select * from pao_user_review
+		WHERE user_id=#{user_id}
+		order by review_point desc, user_review_reg_date desc
+		limit #{start},#{end}
 	</select>
 	<insert id="insertEvaluation" parameterType="db.ReviewDataBean">
 		insert into pao_user_review(user_id, reviewer_id, trip_id, review_point, review_comment)
@@ -204,6 +210,21 @@
 		intersect
 		select * from pao_members where trip_id=#{trip_id}
 		and not user_id=#{user_id};
+	</select>
+	<select id="getBest" parameterType="map" resultType="db.ReviewDataBean">
+		select * from pao_user_review where user_id=#{user_id}
+		order by review_point desc
+		limit 1
+	</select>
+	<select id="getRecent" parameterType="map" resultType="db.ReviewDataBean">
+		select * from pao_user_review where user_id=#{user_id}
+		order by user_review_reg_date desc
+		limit 5
+	</select>
+	<select id="getWorst" parameterType="map" resultType="db.ReviewDataBean">
+		select * from pao_user_review where user_id=#{user_id}
+		order by review_point asc
+		limit 1
 	</select>
 </mapper>
 

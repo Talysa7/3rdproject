@@ -36,7 +36,11 @@
 						<label>게시물 보기 : </label><a href="/3rdProject/trip.go?board_no=${trip.board_no}">link</a><br>
 						<label>가는 곳 : </label> ${trip.coord_name}<br>
 						<label>날짜 : </label>${trip.start_date}~${trip.end_date}<br>
-						<label>평가 : </label><a href="/3rdProject/tripReview.go?coord_id=${trip.coord_id}">link</a><br>
+						<label>평가 : </label><a href="/3rdProject/coordReview.go?coord_id=${trip.coord_id}">link</a><br>
+						<c:set var = "now" value = "<%= new java.util.Date()%>" />	
+						<c:if test="${now lt trip.end_date }">					
+						<label>평판보기 : </label><a href="/3rdProject/memberReview.go?trip_id=${trip.trip_id}">link</a><br>
+						</c:if>
 					<hr size="1px" color="black" noshade>
 				</c:forEach>
 			</c:otherwise>

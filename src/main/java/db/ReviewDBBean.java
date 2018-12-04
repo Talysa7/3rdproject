@@ -1,5 +1,6 @@
 package db;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +20,7 @@ private SqlSession session=SqlMapClient.getSession();
 	public ReviewDataBean stepTwo(Map<String, Object> user) {
 		return session.selectOne("user.stepTwo", user);
 	}
-	public List<ReviewDataBean> getReview(Map<String, Object>user){
+	public List<MemberDataBean> getReview(Map<String, Object>user){
 		return session.selectList("user.getReview", user);
 	}
 	public List<ReviewDataBean> getEvaluation(Map<String, Object> user) {
@@ -77,31 +78,30 @@ private SqlSession session=SqlMapClient.getSession();
 	public List<MemberDataBean> getReviewMembers(int trip_id) {
 		return session.selectList("user.getReviewMembers", trip_id);
 	}
-	public List<ReviewDataBean> getPersonList(List<ReviewDataBean> reviewDto, int next_row) {	
-		Map<String, Object> user = new HashMap<String, Object>();
-		user.put("startRowNumber", next_row);
-		user.put("ReviewDataBean", reviewDto);
-		if( next_row >0) {
-			user.put("endRowNumber", ((next_row/3)+1)*3);
-		} else {
-			user.put("endRowNumber", 3);
-		}		
-		List<ReviewDataBean> postList=session.selectList("review.getReviewFin", user);
+	public List<ReviewDataBean> getReviewFin(Map<String, Object> user) {
+		
+		List<ReviewDataBean> postList=session.selectList("user.getReviewFin", user);
 		return postList;		
 	}
-	public List<ReviewDataBean> getEvaluationFin(int next_row) {
-		Map<String, Object> user = new HashMap<String, Object>();
-		user.put("startRowNumber", next_row);
+	public List<ReviewDataBean> getEvaluationFin(Map<String, Object> user) {
 		
-		if( next_row >0) {
-			user.put("endRowNumber", ((next_row/3)+1)*3 );
-		} else {
-			user.put("endRowNumber", 3);
-		}
-		
-		List<ReviewDataBean> postList=session.selectList("review.getEvaluationFin", next_row);
+		List<ReviewDataBean> postList=session.selectList("user.getEvalFin", user);
 		return postList;
 	}
-	
-	
+	public List<ReviewDataBean> getReviewMember(Map<String, Object> user) {
+		List<ReviewDataBean> review = session.selectList("user.getReviewMember", user);
+		return review;
+	}
+	public List<ReviewDataBean> getRecent(Map<String, Object> user) {
+		List<ReviewDataBean> review = session.selectList("user.getRecent", user);
+		return review;
+	}
+	public ReviewDataBean getWorst(Map<String, Object> user) {
+		ReviewDataBean review = session.selectOne("user.getBest", user);
+		return review;
+	}
+	public ReviewDataBean getBest(Map<String, Object> user) {
+		ReviewDataBean review = session.selectOne("user.getWorst", user);
+		return review;
+	}
 }

@@ -66,7 +66,7 @@ public class CreateBean {
 		return new ReviewDBBean();
 	}
 	@Bean
-	public CoordReviewDBBean coordreDao() {
+	public CoordReviewDBBean coordReviewDao() {
 		return new CoordReviewDBBean();
 	}
 	@Bean

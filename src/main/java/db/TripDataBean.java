@@ -3,6 +3,7 @@ package db;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 //database view(with user_name) : pao_view_trip
 //database table : pao_trip
@@ -118,5 +119,13 @@ public class TripDataBean {
 	public void setReview_members(int trip_id) {
 		ReviewDBBean reviewDao = new ReviewDBBean();
 		this.review_members=reviewDao.getReviewMembers(trip_id);
+	}
+	public List<MemberDataBean> getReview_members(Map<String, Object> user) {
+		this.setReview_members(user);
+		return review_members;
+	}
+	public void setReview_members(Map<String, Object> user) {
+		ReviewDBBean reviewDao = new ReviewDBBean();
+		this.review_members=reviewDao.getReview(user);
 	}
 }
