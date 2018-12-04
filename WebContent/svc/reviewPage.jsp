@@ -88,6 +88,9 @@
 						<a href ="reviewPage.go?pageNum=${pageCount}">[▶▶]</a>
 					</c:if>	
 				</c:if>
+			<div class="mx-auto">
+				<button type="button" class="btn btn-secondary btn-sm" onclick="goback()">이전페이지로</button>
+			</div>
 	</div>
 	<!-- body box -->
 	

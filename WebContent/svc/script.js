@@ -47,7 +47,7 @@ function erroralert( msg ) {
 	history.back();
 }
 
-function history(){
+function goback(){
 	history.back();
 }
 //Initialize and add the map

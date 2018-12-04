@@ -69,8 +69,10 @@
 	<div>내용 </div>
 	<div> ※ 동행인에 대한 평판글은 수정 및 삭제가 불가하오니 이점 유의하여 작성해주세요 ※</div>
 	<div> <textarea name="textarea" rows="10" cols="50"></textarea> </div>
-	<div><input type="submit" value="제출">
-		 <input type="reset" value="취소">
+	<div>
+		 <button type="submit" class="btn btn-secondary btn-sm">제출</button>
+		  <button type="reset" class="btn btn-secondary btn-sm">취소</button>
+		 <button type="button" class="btn btn-secondary btn-sm" onclick="goback()">이전페이지로</button>		
 	</div>
 </form>
 
