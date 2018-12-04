@@ -46,6 +46,10 @@ function erroralert( msg ) {
 	alert( msg );
 	history.back();
 }
+
+function history(){
+	history.back();
+}
 //Initialize and add the map
 var boardmarkers=[];
 var boardmarker;
