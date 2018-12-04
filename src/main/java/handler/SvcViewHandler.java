@@ -201,22 +201,24 @@ public class SvcViewHandler {
 		List<ReviewDataBean> recent = new ArrayList<ReviewDataBean>();
 		List<ReviewDataBean> worst = new ArrayList<ReviewDataBean>();
 		List<ReviewDataBean> best = new ArrayList<ReviewDataBean>();
+		ArrayList<List <ReviewDataBean>> users  = new ArrayList<List <ReviewDataBean>>();
+		
 		for(int i=0; i<member.size(); i++) {
 			String memId = member.get(i).getUser_id();
-			user.put("user_id", memId); 
-			request.setAttribute("member", memId);
+			user.put("user_id", memId);
 			List<ReviewDataBean>recentTo = reviewDao.getRecent(user);
 			ReviewDataBean bestTo = reviewDao.getBest(user);
-			ReviewDataBean worstTo = reviewDao.getWorst(user);
-			recent.addAll(recentTo);
-			worst.add(worstTo);
-			best.add(bestTo);
+			recentTo.add(bestTo);
+			recentTo.add(reviewDao.getWorst(user));
+			users.add(recentTo);
+			
 		}
+
+		request.setAttribute("users", users);
 		request.setAttribute("best", best);
 		request.setAttribute("wst", worst);
 		request.setAttribute("recent", recent);
 		
-		//request.setAttribute("review", review);
 		return new ModelAndView("svc/memberReview");
 	}
 	private static final int pageSize=10;
