@@ -656,8 +656,6 @@ public class SvcProHandler {
 			e.printStackTrace();
 		}
 		String user_name = request.getParameter("sel2");
-		user_name = user_name.split("/")[1];
-		System.out.println(user_name);
 		String evaluation = request.getParameter("textarea");
 		int grade = Integer.parseInt(request.getParameter("grade"));
 		int trip_id = Integer.parseInt(request.getParameter("sel1"));
