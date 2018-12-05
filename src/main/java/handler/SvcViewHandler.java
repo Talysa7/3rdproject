@@ -98,8 +98,6 @@ public class SvcViewHandler {
 							
 			Map<String, Object> userT = new HashMap<String, Object>();				
 			userT.put("user_id", user_id);
-			int num = reviewDao.beforeReview(userT);
-			int number = reviewDao.countEvaluation(userT);
 			
 			List<Integer> tripid = memberDao.getMemTripId(user_id);
 			int catchNum[] = new int[tripid.size()];
@@ -108,66 +106,57 @@ public class SvcViewHandler {
 				userT.put("trip_id", trip);
 				int catchNumber =reviewDao.getReview(userT).size();
 				catchNum[j] = catchNumber;
-				request.setAttribute("catchNum", catchNumber);
-			}
-			
-			
-			int rowNumber=0;			
-			int startPage=0;
-			if(startPage>0) {
-				rowNumber=startPage*3;
-			} else {
-				rowNumber=0;
-			}
-			
-			if(num!= number) {
-				Map<String, Object> user = new HashMap<String, Object>();
-				user.put("user_id", user_id);
 				
-				List<ReviewDataBean> review = reviewDao.stepOne(user);
-				List<ReviewDataBean> reviewDto = new ArrayList<ReviewDataBean>();
-				for(int i=0; i<review.size(); i++) {
-					String users=review.get(i).getUser_id();
-					user.put("reviewer_id", users);	
-					int trip_id = review.get(i).getTrip_id();
-					user.put("trip_id", trip_id);
-					ReviewDataBean reviewW = reviewDao.stepTwo(user);
-					reviewDto.add(reviewW);					
-				}	
+				request.setAttribute("catchNum", catchNumber);			
+				if(catchNum[j] !=0) {
+					Map<String, Object> user = new HashMap<String, Object>();
+					user.put("user_id", user_id);
+					
+					List<ReviewDataBean> review = reviewDao.stepOne(user);
+					List<ReviewDataBean> reviewDto = new ArrayList<ReviewDataBean>();
+					for(int i=0; i<review.size(); i++) {
+						String users=review.get(i).getUser_id();
+						user.put("reviewer_id", users);	
+						int trip_id = review.get(i).getTrip_id();
+						user.put("trip_id", trip_id);
+						ReviewDataBean reviewW = reviewDao.stepTwo(user);
+						reviewDto.add(reviewW);					
+					}	
+					
+					request.setAttribute("reviewDto", reviewDto);
+					int count = reviewDao.getReviewCount(userT);
+					
+					Double reviewcount = (double) count;
+					request.setAttribute("count", count);
+					Double point = (double) reviewDao.getReviewSum(userT);
+					Double divide = 0.0;
+					try {
+						divide =(double) (point/reviewcount);
+						divide = Double.parseDouble(String.format("%.2f",divide));
+					}catch(ArithmeticException e) {
+						divide = 0.0;
+					}				
+					request.setAttribute("average", divide);
+				}else{
+					Map<String, Object> userD = new HashMap<String, Object>();
+					userD.put("user_id", user_id);
+					List<ReviewDataBean> reviewDto = reviewDao.getEvaluation(userD);			
+					request.setAttribute("reviewDto", reviewDto);
 				
-				request.setAttribute("reviewDto", reviewDto);
-				int count = reviewDao.getReviewCount(userT);
-				
-				Double reviewcount = (double) count;
-				request.setAttribute("count", count);
-				Double point = (double) reviewDao.getReviewSum(userT);
-				Double divide = 0.0;
-				try {
-					divide =(double) (point/reviewcount);
-					divide = Double.parseDouble(String.format("%.2f",divide));
-				}catch(ArithmeticException e) {
-					divide = 0.0;
-				}				
-				request.setAttribute("average", divide);
-			}else{
-				Map<String, Object> userD = new HashMap<String, Object>();
-				userD.put("user_id", user_id);
-				List<ReviewDataBean> reviewDto = reviewDao.getEvaluation(userD);			
-				request.setAttribute("reviewDto", reviewDto);
-			
-				int reviewCount = reviewDao.countEvaluation(userD);
-				Double count = (double) reviewCount;
-				request.setAttribute("count", reviewCount);
-				Double point = (double) reviewDao.sumEvaluation(user_id);
-				Double divide = 0.0;
-				try {
-					divide =(double) (point/count);						
-					divide = Double.parseDouble(String.format("%.2f",divide));
-				}catch(ArithmeticException e) {
-					divide = 0.0;
-				}					
-				request.setAttribute("average", divide);
-				
+					int reviewCount = reviewDao.countEvaluation(userD);
+					Double count = (double) reviewCount;
+					request.setAttribute("count", reviewCount);
+					Double point = (double) reviewDao.sumEvaluation(user_id);
+					Double divide = 0.0;
+					try {
+						divide =(double) (point/count);						
+						divide = Double.parseDouble(String.format("%.2f",divide));
+					}catch(ArithmeticException e) {
+						divide = 0.0;
+					}					
+					request.setAttribute("average", divide);
+					
+				}
 			}
 				
 		}
@@ -256,8 +245,6 @@ public class SvcViewHandler {
 		String user_id = (String) request.getSession().getAttribute("user_id");
 		Map<String, Object> user = new HashMap<String, Object>();				
 		user.put("user_id", user_id);
-		int num = reviewDao.beforeReview(user);
-		int number2 = reviewDao.countEvaluation(user);
 		
 		String pageNum = request.getParameter("pageNum");
 		if(pageNum == null || pageNum.equals("")){
@@ -265,49 +252,59 @@ public class SvcViewHandler {
 		}
 		
 		int count = 0;
-		if(num!= number2) {		
+		
+		List<Integer> tripid = memberDao.getMemTripId(user_id);
+		int catchNum[] = new int[tripid.size()];
+		for(int j=0; j<tripid.size(); j++) {
+			int trip = tripid.get(j);
+			user.put("trip_id", trip);
+			int catchNumber =reviewDao.getReview(user).size();
+			catchNum[j] = catchNumber;
 			
-			List<ReviewDataBean> review = reviewDao.stepOne(user);
-			List<ReviewDataBean> reviewDto = new ArrayList<ReviewDataBean>();
-			for(int i=0; i<review.size(); i++) {
-				String users=review.get(i).getUser_id();
-				user.put("reviewer_id", users);	
-				int trip_id = review.get(i).getTrip_id();
-				user.put("trip_id", trip_id);
-				ReviewDataBean reviewW = reviewDao.stepTwo(user);
-				reviewDto.add(reviewW);					
-			}			
-			count = reviewDao.getReviewCount(user);
-			int rowNumber;
-			int startPage=0;
-			if(startPage>0) {
-				rowNumber=startPage*postPerPage;
-			} else {
-				rowNumber=0;
-			}
-			 setReviewLogic(request, pageNum, count, start, end);
-			user.put("start", start);
-			user.put("end", postPerPage);
-			reviewDto = reviewDao.getReviewFin(user);
-			request.setAttribute("reviewDto", reviewDto);
-			
-		}else {						
-				count = reviewDao.countEvaluation(user);
+			request.setAttribute("catchNum", catchNumber);			
+			if(catchNum[j] !=0) {
+				
+				List<ReviewDataBean> review = reviewDao.stepOne(user);
+				List<ReviewDataBean> reviewDto = new ArrayList<ReviewDataBean>();
+				for(int i=0; i<review.size(); i++) {
+					String users=review.get(i).getUser_id();
+					user.put("reviewer_id", users);	
+					int trip_id = review.get(i).getTrip_id();
+					user.put("trip_id", trip_id);
+					ReviewDataBean reviewW = reviewDao.stepTwo(user);
+					reviewDto.add(reviewW);					
+				}			
+				count = reviewDao.getReviewCount(user);
+				int rowNumber;
+				int startPage=0;
+				if(startPage>0) {
+					rowNumber=startPage*postPerPage;
+				} else {
+					rowNumber=0;
+				}
 				 setReviewLogic(request, pageNum, count, start, end);
-				 int rowNumber;
-					int startPage=0;
-					if(startPage>0) {
-						rowNumber=startPage*postPerPage;
-					} else {
-						rowNumber=0;
-					}
-				 user.put("start", start);
+				user.put("start", rowNumber);
+				user.put("end", postPerPage);
+				reviewDto = reviewDao.getReviewFin(user);
+				request.setAttribute("reviewDto", reviewDto);
+				
+			}else {						
+				count = reviewDao.countEvaluation(user);
+				setReviewLogic(request, pageNum, count, start, end);
+				int rowNumber;
+				int startPage=0;
+				if(startPage>0) {
+					rowNumber=startPage*postPerPage;
+				} else {
+					rowNumber=0;
+				}
+				user.put("start", rowNumber);
 				user.put("end", postPerPage);
 				List<ReviewDataBean>reviewDto = reviewDao.getEvaluationFin(user);
 				
 				request.setAttribute("reviewDto", reviewDto);			
+			}
 		}
-				
 		return new ModelAndView("svc/reviewPage");
 	}
 	/////////////////////////////////board pages/////////////////////////////////
