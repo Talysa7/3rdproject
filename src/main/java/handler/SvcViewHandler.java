@@ -259,9 +259,7 @@ public class SvcViewHandler {
 			int trip = tripid.get(j);
 			user.put("trip_id", trip);
 			int catchNumber =reviewDao.getReview(user).size();
-			catchNum[j] = catchNumber;
-			
-			request.setAttribute("catchNum", catchNumber);			
+			catchNum[j] = catchNumber;	
 			if(catchNum[j] !=0) {
 				
 				List<ReviewDataBean> review = reviewDao.stepOne(user);
@@ -283,7 +281,7 @@ public class SvcViewHandler {
 					rowNumber=0;
 				}
 				 setReviewLogic(request, pageNum, count, start, end);
-				user.put("start", rowNumber);
+				user.put("start", start);
 				user.put("end", postPerPage);
 				reviewDto = reviewDao.getReviewFin(user);
 				request.setAttribute("reviewDto", reviewDto);
@@ -298,7 +296,7 @@ public class SvcViewHandler {
 				} else {
 					rowNumber=0;
 				}
-				user.put("start", rowNumber);
+				user.put("start", start);
 				user.put("end", postPerPage);
 				List<ReviewDataBean>reviewDto = reviewDao.getEvaluationFin(user);
 				
