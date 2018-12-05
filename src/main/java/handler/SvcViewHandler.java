@@ -269,14 +269,7 @@ public class SvcViewHandler {
 					ReviewDataBean reviewW = reviewDao.stepTwo(user);
 					reviewDto.add(reviewW);					
 				}			
-				count = reviewDao.getReviewCount(user);
-				int rowNumber;
-				int startPage=0;
-				if(startPage>0) {
-					rowNumber=startPage*postPerPage;
-				} else {
-					rowNumber=0;
-				}
+				count = reviewDao.getReviewCount(user);			
 				 setReviewLogic(request, pageNum, count, start, end);
 				user.put("start", start);
 				user.put("end", postPerPage);
@@ -285,14 +278,7 @@ public class SvcViewHandler {
 				
 			}else {						
 				count = reviewDao.countEvaluation(user);
-				setReviewLogic(request, pageNum, count, start, end);
-				int rowNumber;
-				int startPage=0;
-				if(startPage>0) {
-					rowNumber=startPage*postPerPage;
-				} else {
-					rowNumber=0;
-				}
+				setReviewLogic(request, pageNum, count, start, end);				
 				user.put("start", start);
 				user.put("end", postPerPage);
 				List<ReviewDataBean>reviewDto = reviewDao.getEvaluationFin(user);
