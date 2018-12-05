@@ -38,16 +38,30 @@
 		           <div class="col-md-4" id="photoArea">
 		           <input type="checkbox" name='check1' style="display:none">
 		              <div class="card mb-4 shadow-sm">
-		                <img class="card-img-top" data-src="holder.js/100px225?theme=thumb&bg=55595c&fg=eceeef&text=Thumbnail" alt="Card image cap" src="${photo.photo_url}">
+		                <img class="card-img-top" data-src="holder.js/100px225?theme=thumb&bg=55595c&fg=eceeef&text=Thumbnail" 
+		                alt="Card image cap" src="${photo.photo_url}" data-toggle="modal" data-target="#myModal_${photo.photo_id}">
+					    <div id="myModal_${photo.photo_id}" class="modal fade">
+					        <div class="modal-dialog">
+					            <div class="modal-content">
+					                <div class="modal-header">
+					                	${photo.photo_reg_date}
+					                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+					                </div>
+					                <div class="modal-body">
+					                    <img src="${photo.photo_url}" class="img-fluid" alt="dog">
+					                </div>
+					            </div>
+					        </div>
+					    </div>
 		                <div class="card-body">
 		                	<c:set var="done" value="false"/>
-		                  <c:forEach var='eachPhoto' items="${photoInfos}">
-		                  	<c:if test="${eachPhoto.this_board_no eq photo.board_no and not done}">
-		                  	<p class="card-text">
-		                  		${eachPhoto.photoLoc}
-		                  		<c:set var="done" value="true"/>
-		                  	 </p>
-		                  	</c:if>
+		                	<c:forEach var='eachPhoto' items="${photoInfos}">
+			                  	<c:if test="${eachPhoto.this_board_no eq photo.board_no and not done}">
+				                  	<p class="card-text">
+				                  		${eachPhoto.photoLoc}
+				                  		<c:set var="done" value="true"/>
+				                  	 </p>
+			                  	</c:if>
 		                  </c:forEach>
 		                  <div class="d-flex justify-content-between align-items-center">
 		                    <div class="btn-group">
