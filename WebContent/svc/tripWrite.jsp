@@ -31,7 +31,6 @@
 			<hr size="1px" color="black">
 			<div class="input-box">
 				<input type="hidden" name="user_name" value="${user_name}">
-				
 				<div class="form-group row">
 					<input type="text" name="trip_title" class="col-12 form-control form-control-lg" maxlength="30"
 						placeholder="${trip_title}" autofocus required>
@@ -51,7 +50,9 @@
 					<input name="place${i}" id="place${i}" type="text" readonly="readonly" placeholder="${trip_location}"> 
 					
 					<button id="btn${i}" class="btn_plus" type="button" onclick="addSchedule(${i})">
-						<img class="btn_img" src="${project}img/addbutton.png">${btn_add_trip}
+						<i class="fas fa-plus-circle"></i>
+						<i class="fas fa-minus-circle"></i>
+						${btn_add_trip}
 					</button>
 					<div id="coordinfo${i}">
 					</div>
