@@ -48,157 +48,167 @@
 			</div>
 			<!-- top area end -->
 			
-			<!-- left area start -->
-			<div id="left" style="width:70%">
-				<!-- board list start -->
-				<div class="board-list" id="board-list">
-					<c:if test="${postList.size() ne 0}">
-						<c:forEach var="post" items="${postList}">
-							<!-- left row start -->
-							<div class="row">
-								<!-- col-md-11 start -->
-								<div class="col-md-11">
-									<!-- left card start -->
-									<div class="card flex-md-row mb-3 shadow-sm h-md-250">
-										<!-- card body start -->
-										<div class="card-body">
-											<strong class="d-inline-block mb-2"> 
-											<c:forEach var="trip" items="${post.tripLists}">
-							              		${trip.coord_name}
-							              	</c:forEach>
-											</strong>
-											<h3 class="mb-0">
-												<a class="text-dark" href="trip.go?board_no=${post.board_no}">
-												<c:if test="${post.board_level eq 1}">
-													 ${trip_notice_1}
-												</c:if>
-													${post.board_title}
-												</a>
-											</h3>
-											<div class="mb-1 text-muted text-right">
-												<i><b>With</b></i>&nbsp; ${post.user_name}
+			<!-- mid area row start -->
+			<div class="row">
+			
+				<!-- left area start -->
+				<div id="left">
+					<!-- board list start -->
+					<div class="board-list" id="board-list">
+						<c:if test="${postList.size() ne 0}">
+							<c:forEach var="post" items="${postList}">
+								<!-- left row start -->
+								<div class="row">
+									<!-- col-md-11 start -->
+									<div class="col-md-11">
+										<!-- left card start -->
+										<div class="card flex-md-row mb-3 shadow-sm h-md-250">
+											<!-- card body start -->
+											<div class="card-body">
+												<strong class="d-inline-block mb-2"> 
+												<c:forEach var="trip" items="${post.tripLists}">
+								              		${trip.coord_name}
+								              	</c:forEach>
+												</strong>
+												<h3 class="mb-0">
+													<a class="text-dark" href="trip.go?board_no=${post.board_no}">
+													<c:if test="${post.board_level eq 1}">
+														 ${trip_notice_1}
+													</c:if>
+														${post.board_title}
+													</a>
+												</h3>
+												<div class="mb-1 text-muted text-right">
+													<i><b>With</b></i>&nbsp; ${post.user_name}
+												</div>
+												<hr style="width: 100%" noshade>
+												<p class="card-text mb-auto">${post.board_content}</p>
+												<hr style="width: 100%" noshade>
 											</div>
-											<hr style="width: 100%" noshade>
-											<p class="card-text mb-auto">${post.board_content}</p>
-											<hr style="width: 100%" noshade>
+											<!-- card body end -->
+											<!-- card center start -->
+											<div class="card-center justify-content-center">
+												<div class="p-2">
+													조회수:${post.board_view_count}
+												</div>
+												<div class="p-2">
+													<c:forEach var="tag" items="${post.board_tags}">
+														<label class="btn btn-sm taglist"> # ${tag.tag_value} </label>
+													</c:forEach>
+												</div>
+											</div>
+											<!-- card center end-->
 										</div>
-										<!-- card body end -->
-										<!-- card center start -->
-										<div class="card-center justify-content-center">
-											<div class="p-2">
-												조회수:${post.board_view_count}
-											</div>
-											<div class="p-2">
-												<c:forEach var="tag" items="${post.board_tags}">
-													<label class="btn btn-sm taglist"> # ${tag.tag_value} </label>
-												</c:forEach>
-											</div>
-										</div>
-										<!-- card center end-->
+										<!-- left card end -->
 									</div>
-									<!-- left card end -->
+									<!-- col-md-11 end -->
 								</div>
-								<!-- col-md-11 start -->
-							</div>
-							<!-- left row end -->
-						</c:forEach>
-					</c:if>
+								<!-- left row end -->
+							</c:forEach>
+						</c:if>
+					</div>
+					<!-- board list end -->
 				</div>
-				<!-- board list end -->
-			</div>
-			<!-- left area end -->
+				<!-- left area end -->
+				
+				<!-- <!-- aside area start -->
+				<aside id="right">
+					<div class="col-sm-15">
+						<form method="post">
+							<!-- pac-card start -->
+							<div class="pac-card" id="pac-card">
+								GOOGLEMAP TITLE
+								<div id="title">
+									여행 장소 검색
+								</div>
+								GOOGLEMAP RADIO BUTTON
+								<div id="type-selector" class="pac-controls">
+									<input type="radio" name="type" id="changetype-all" checked="checked">
+									<label for="changetype-all">All</label>
+									<input type="radio" name="type" id="changetype-establishment">
+									<label for="changetype-establishment">Establishments</label>
+							     	<input type="radio" name="type" id="changetype-address">
+							     	<label for="changetype-address">Addresses</label>
+									<input type="radio" name="type" id="changetype-geocode">
+									<label for="changetype-geocode">Geocodes</label>
+								</div>
+								<div id="strict-bounds-selector" class="pac-controls">
+									<input type="checkbox" id="use-strict-bounds" value="">
+									<label for="use-strict-bounds">Strict Bounds</label>
+								</div>
+							  	GOOGLEMAP LOCATION TEXTAREA
+								<div id="pac-container">
+									<input id="pac-input" type="text" placeholder="Enter a location">
+								</div>
+							</div>
+							<!-- pac card end -->
+							<div id="map"></div>
+							<div id="infowindow-content" display="none">
+								 <span id="place-name"  class="title"></span><br>
+								 <span id="place-address"></span>
+							</div>
+							<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDbvvT_kUPxmLL9PHcM9gp2qibpr8sThVQ&libraries=places&callback=initMap" async defer></script>
+							<label>날짜</label>
+							<div class="row" style="padding: 0px 0px 10px 14px;">
+								<input id="fromDate" width="45%"/>
+								<script>
+							        $('#fromDate').datepicker({
+							            uiLibrary: 'bootstrap4'
+							        });
+								</script>
+								&nbsp;
+								<input id="toDate" width="45%"/>
+								<script>
+							        $('#toDate').datepicker({
+							            uiLibrary: 'bootstrap4'
+							        });
+							    </script>
+							</div>
+							<label>기간</label>
+							<div  class="row" style="padding: 0px 0px 10px 14px;">
+								<input type="text" class="form-control col-md-9" placeholder="일 단위로 입력하세요">	&nbsp;	
+								<input type="submit" class="btn btn-secondary" value="검색">
+							</div>
+							<label>태그</label>
+							<div class="row" style="padding: 0px 0px 0px 14px;">
+								<input type="text" class="form-control col-md-9" placeholder="검색할 태그를 입력하세요">&nbsp;
+							 	<input type="submit" class="btn btn-secondary" value="검색">
+							</div>
+						</form>
+					</div>
+				</aside>
+				<!-- right area end -->
 			
-			<div id="right" style="width:25%">
-				<form method="post">
-					<!-- pac-card start -->
-					<div class="pac-card" id="pac-card">
-						<!-- GOOGLEMAP TITLE -->
-						<div id="title">
-							여행 장소 검색
-						</div>
-						<!-- GOOGLEMAP RADIO BUTTON -->
-						<div id="type-selector" class="pac-controls">
-							<input type="radio" name="type" id="changetype-all" checked="checked">
-							<label for="changetype-all">All</label>
-							<input type="radio" name="type" id="changetype-establishment">
-							<label for="changetype-establishment">Establishments</label>
-					     	<input type="radio" name="type" id="changetype-address">
-					     	<label for="changetype-address">Addresses</label>
-							<input type="radio" name="type" id="changetype-geocode">
-							<label for="changetype-geocode">Geocodes</label>
-						</div>
-						<div id="strict-bounds-selector" class="pac-controls">
-							<input type="checkbox" id="use-strict-bounds" value="">
-							<label for="use-strict-bounds">Strict Bounds</label>
-						</div>
-					  	<!-- GOOGLEMAP LOCATION TEXTAREA -->
-						<div id="pac-container">
-							<input id="pac-input" type="text" placeholder="Enter a location">
-						</div>
-					</div>
-					<!-- pac-card end -->
-					<div id="map"></div>
-					<div id="infowindow-content">
-						 <img src="" width="16" height="16" id="place-icon">
-						 <span id="place-name"  class="title"></span><br>
-						 <span id="place-address"></span>
-					</div>
-					<!-- Replace the value of the key parameter with your own API key. -->
-					<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDbvvT_kUPxmLL9PHcM9gp2qibpr8sThVQ&libraries=places&callback=initMap" async defer></script>
-					<div class="row" style="padding: 0px 0px 10px 14px;">
-						<button type="button" class="btn btn-secondary col-md-1">날짜</button>&nbsp;
-						<input id="fromDate" width="160"/>
-						<script>
-					        $('#fromDate').datepicker({
-					            uiLibrary: 'bootstrap4'
-					        });
-						</script>
-						&nbsp;
-						<input id="toDate" width="160"/>
-						<script>
-					        $('#toDate').datepicker({
-					            uiLibrary: 'bootstrap4'
-					        });
-					    </script>
-					</div>
-					<div  class="row" style="padding: 0px 0px 10px 14px;">
-					 	<button type="button" class="btn btn-secondary col-md-1">기간</button>&nbsp;
-						<input type="text" class="form-control col-md-4" placeholder="일 단위로 입력하세요">	&nbsp;	
-						<input type="submit" class="btn btn-secondary" value="검색">
-					</div>
-					<div class="row" style="padding: 0px 0px 0px 14px;">
-					 	<button type="button" class="btn btn-secondary col-md-1">태그</button>&nbsp;
-						<input type="text" class="form-control col-md-4" placeholder="검색할 태그를 입력하세요">&nbsp;
-					 	<input type="submit" class="btn btn-secondary" value="검색">
-					</div>
-				</form>
 			</div>
-			<!-- right area end -->
+			<!-- mid area row end -->
 			
-			<!-- footer area start-->
-			<div id="footer">
+			<!-- loading button start -->
+			<div id="loading-button">
 				<!-- board data -->
 				<form name="tripListInfo">
 					<input type="hidden" name="next_row" value="${next_row}">
 				</form>
 				<!-- board data -->
-				<!-- loading button start -->
-				<div id="loading-button">
-					<button type="button" class="btn btn-dark col-md-11"
-						onclick="loadMoreList(${next_row})">Load more...</button>
-				</div>
-				<!-- loading button end -->
-				<footer class="board-footer">
-					<p>
-						<a href="">Back to top</a>
-					</p>
-				</footer>
+				<button type="button" class="btn btn-dark btn-block"
+				onclick="loadMoreList(${next_row})">Load more...</button>
 			</div>
-			<!-- footer area end-->
+			<!-- loading button end -->
 			
 		</div>
 		<!-- container area end -->
+		
 	</div>
 	<!-- body box end-->
 </body>
+
+<!-- footer area start-->
+<div id="footer">
+	<footer class="board-footer">
+		<p>
+			<a href="">Back to top</a>
+		</p>
+	</footer>
+</div>
+<!-- footer area end-->
+		
 </html>

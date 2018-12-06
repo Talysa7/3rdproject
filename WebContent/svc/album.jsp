@@ -14,7 +14,7 @@
       href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 
     <!-- Custom styles for this template -->
-    <link href="style_album.css" rel="stylesheet">
+    <link rel="stylesheet" href="${project}travelers_style.css">
     <link href="https://fonts.googleapis.com/css?family=Work+Sans" rel="stylesheet">
   </head>
   <body id="album">
@@ -48,7 +48,7 @@
 					                    <button type="button" class="close" data-dismiss="modal">&times;</button>
 					                </div>
 					                <div class="modal-body">
-					                    <img src="${photo.photo_url}" class="img-fluid" alt="dog">
+					                    <img src="${photo.photo_url}" class="img-fluid">
 					                </div>
 					            </div>
 					        </div>
