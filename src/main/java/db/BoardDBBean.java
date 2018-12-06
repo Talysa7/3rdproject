@@ -141,4 +141,8 @@ public class BoardDBBean {
 	public BoardDataBean getBoard(int board_no) {
 		return session.selectOne("board.getBoard", board_no);
 	}
+	
+	public List<BoardDataBean> advanceSearch(Map<String,String> searchMap){
+		return session.selectList("board.advanceSearch",searchMap);
+	}
 }

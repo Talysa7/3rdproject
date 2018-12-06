@@ -35,8 +35,8 @@
 	<div class="body-box">
 		<div class="right">
 			<div>
-					<div>
-						<form method="post">
+				<div>
+					<form method="post">
 						<div class="pac-card" id="pac-card">
 						  		<!-- GOOGLEMAP TITLE -->
 							    <div id="title">
@@ -77,14 +77,14 @@
 						
 									<div class="row" style="padding: 0px 0px 10px 14px;">
 										 	<button type="button" class="btn btn-secondary col-md-1">날짜</button>&nbsp;
-										 <input id="fromDate" width="160"/>
+										 <input id="fromDate" width="160" name="fromDate"/>
 											    <script>
 											        $('#fromDate').datepicker({
 											            uiLibrary: 'bootstrap4'
 											        });
 											    </script>
 												&nbsp;
-										 <input id="toDate" width="160"/>
+										 <input id="toDate" width="160" name="toDate"/>
 											    <script>
 											        $('#toDate').datepicker({
 											            uiLibrary: 'bootstrap4'
@@ -92,14 +92,14 @@
 											    </script>
 									</div>
 									<div  class="row" style="padding: 0px 0px 10px 14px;">
-										 	<button type="button" class="btn btn-secondary col-md-1">기간</button>&nbsp;
+										 	<button type="button" class="btn btn-secondary col-md-1" name="searchPeriod">기간</button>&nbsp;
 											<input type="text" class="form-control col-md-4" placeholder="일 단위로 입력하세요">	&nbsp;	
 											<input type="submit" class="btn btn-secondary" value="검색">
 										</div>
 									</div>
 									<div class="row" style="padding: 0px 0px 0px 14px;">
 									 	<button type="button" class="btn btn-secondary col-md-1">태그</button>&nbsp;
-										<input type="text" class="form-control col-md-4" placeholder="검색할 태그를 입력하세요">&nbsp;
+										<input type="text" class="form-control col-md-4" placeholder="검색할 태그를 입력하세요" name="searchTag">&nbsp;
 									 	<input type="submit" class="btn btn-secondary" value="검색">
 									</div>
 							</form>

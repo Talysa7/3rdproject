@@ -57,7 +57,7 @@
 			WHERE b_no=#{b_no}
 		)
 	</select>
- -->
+-->
 	<select id="getTripList" parameterType="int" resultType="java.util.List">
 		SELECT * 
 		FROM pao_trip 
@@ -100,6 +100,9 @@
 	</delete>	
 	<select id="getCoordId" parameterType="int" resultType="int">
 		select coord_id from pao_trip where trip_id=#{trip_id}
+	</select>
+	<select id="advanceSearch" parameterType="java.util.Map" resultType="db.BoardDataBean">
+		select board_no from pao_trip where between start_date=#{fromDate} and end_date={toDate}
 	</select>
 	<!--/////////////////////////////////////////////////// start-line pao_comment table ///////////////////////////////////////////////////-->
 	<insert id="insertComment" parameterType="db.CmtDataBean">

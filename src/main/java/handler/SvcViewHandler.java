@@ -3,8 +3,15 @@ package handler;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Calendar;
+import java.util.Date;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -124,6 +131,7 @@ public class SvcViewHandler {
 		} else {
 			request.setAttribute("next_row", 0);
 		}
+
 		request.setAttribute("postList", postList);
 		return new ModelAndView("svc/tripList");
 	}
@@ -193,7 +201,60 @@ public class SvcViewHandler {
 		request.setAttribute("count", count);
 		return new ModelAndView("svc/foundList");
 	}
-
+	
+	//advance search by site, start date, end date, period, tag
+	@RequestMapping("/advanceSearch")
+	public ModelAndView advanceSearchProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
+	
+		String fromDate = request.getParameter("fromDate");
+		String toDate = request.getParameter("toDate");
+		String searchPeriod = request.getParameter("searchPeriod");
+		String searchTag = request.getParameter("searchTag");
+		
+		if(toDate == "" || toDate == null) {
+			toDate="01/01/2100";
+			searchPeriod = "";
+		}
+		
+		if(fromDate == "" || fromDate == null) {
+			fromDate="01/01/1970";
+			searchPeriod = "";
+		}
+		
+		java.sql.Timestamp timeStampDateTo;
+		java.sql.Timestamp timeStampDateFrom;
+		try {
+			DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+			Date dateTo = formatter.parse(fromDate);
+			Date dateFrom = formatter.parse(toDate);
+			timeStampDateTo = new Timestamp(dateTo.getTime());
+			timeStampDateFrom = new Timestamp(dateFrom.getTime());
+			//System.out.println(timeStampDateTo);
+			//System.out.println(timeStampDateFrom);
+		}catch (ParseException e) {
+			System.out.println("Exception :" + e);
+			    return null;
+		}
+		
+		Map<String, String> searchMap = new HashMap<String, String>();	
+		searchMap.put("fromDate",timeStampDateFrom);
+		searchMap.put("toDate", timeStampDateTo);
+		searchMap.put("searchPeriod", searchPeriod);
+		searchMap.put("searchTag", searchTag);
+		
+		Iterator<String> mapIter = searchMap.keySet().iterator();
+		 
+	    while(mapIter.hasNext()){
+	    	String key = mapIter.next();
+	        String value = searchMap.get( key );
+	 
+	        System.out.println(key+" : "+value);
+	    }
+	    
+	    boardDao.advanceSearch(searchMap);
+	
+		return new ModelAndView("svc/tripList");
+}
 	/////////////////////////////////album pages/////////////////////////////////
 
 	@RequestMapping("/album")
