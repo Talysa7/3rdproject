@@ -22,9 +22,9 @@
                     cityInfo[0] = column[0]
                     cityInfo[1] = column[1]
                     var lat  = column[2].replaceAll("\"" ,'')
-                    var long = column[3].replaceAll("\"" ,'')
+                    var longti = column[3].replaceAll("\"" ,'')
                     cityInfo[3] =  "\"" + parseFloat(lat).toFixed(6) +  "\""
-                    cityInfo[2] =  "\"" + parseFloat(long).toFixed(6) +  "\""
+                    cityInfo[2] =  "\"" + parseFloat(longti).toFixed(6) +  "\""
                     cityInfos[i] = cityInfo
 				}
 				

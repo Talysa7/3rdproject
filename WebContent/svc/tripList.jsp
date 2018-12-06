@@ -30,8 +30,7 @@
 </head>
 
 <body>
-	<!------------------------------------------------------- RIGHT COLUMN ------------------------------------------------------>
-	<!-- Category & Contents Box -->
+	<!-- body box start -->
 	<div class="body-box">
 		<div class="right">
 			<div>
@@ -113,79 +112,183 @@
 					<c:if test="${sessionScope.user_id eq null}">
 						<a href="login.go"></a>
 					</c:if>
+		<!-- container area start -->
+		<div class="container">
+			<!-- top area start -->
+			<div id="top">
+				<!-- write button -->
+				<div class="row justify-content-end">
 					<c:if test="${sessionScope.user_id ne null}">
-						<a href="tripWrite.go"> 
+						<a href="tripWrite.go">
 							<img src="${project}img/compose_icon.png" width="120" height="40">
 						</a>
 					</c:if>
 				</div>
-		<div class="board-list" id="board-list">
-			<c:if test="${postList.size() ne 0}">
-				<c:forEach var="post" items="${postList}">
-					<div class="row">
-						<div class="col-md-11">
-							<div class="card flex-md-row mb-3 shadow-sm h-md-250">
-								<div class="card-body d-flex flex-column align-items-start">
-									<strong class="d-inline-block mb-2"> <c:forEach
-											var="trip" items="${post.tripLists}">
-					              		${trip.coord_name}
-					              	</c:forEach>
-									</strong>
-									<h3 class="mb-0">
-										<a class="text-dark" href="trip.go?board_no=${post.board_no}">
-										<c:if test="${post.board_level eq 1}">
-											 ${trip_notice_1}
-										</c:if>
-										${post.board_title}
-										</a>
-									</h3>
-									<div class="mb-1 text-muted text-right">
-										<i><b>With</b></i>&nbsp; ${post.user_name}
-									</div>
-									<hr size="1px" color="black" noshade>
-									<p class="card-text mb-auto">${post.board_content}</p>
-									<hr style="width: 100%">
-									<div class="d-flex justify-content-center">
-										<div class="p-2">조회수:${post.board_view_count}</div>
-										&nbsp;
-										<div class="p-2">
-											<c:forEach var="tag" items="${post.board_tags}">
-												<label class="btn btn-sm taglist"> # ${tag.tag_value} </label>
-											</c:forEach>
-										</div>
-									</div>
-									<!-- card-footer -->
-								</div>
-								<!-- card-body -->
-							</div>
-						</div>
-						<!-- col-md-12 -->
-					</div>
-					<!-- 1 row -->
-				</c:forEach>
-			</c:if>
-		</div>
-		<!-- board list -->
-		<form name="tripListInfo">
-			<input type="hidden" name="next_row" value="${next_row}">
-		</form>
-		<div id="loading-button">
-			<button type="button" class="btn btn-dark col-md-11"
-				onclick="loadMoreList(${next_row})">Load more...</button>
-		</div>
-	</div>
-</div>
-	<!-- body box -->
-	
-	<!-- Park Jun-kyu : I disabled 'Footer' because of alignment. As soon as I find solution, I'll fix it. -->
-	
-	<!-- Footer
-			<footer class="board-footer">
-				<p>
-					<a href="">Back to top</a>
-				</p>
-			</footer>
+				<!-- write button -->
+			</div>
+			<!-- top area end -->
 			
-	 -->
+			<!-- mid area row start -->
+			<div class="row">
+			
+				<!-- left area start -->
+				<div id="left">
+					<!-- board list start -->
+					<div class="board-list" id="board-list">
+						<c:if test="${postList.size() ne 0}">
+							<c:forEach var="post" items="${postList}">
+								<!-- left row start -->
+								<div class="row">
+									<!-- col-md-11 start -->
+									<div class="col-md-11">
+										<!-- left card start -->
+										<div class="card flex-md-row mb-3 shadow-sm h-md-250">
+											<!-- card body start -->
+											<div class="card-body">
+												<strong class="d-inline-block mb-2"> 
+												<c:forEach var="trip" items="${post.tripLists}">
+								              		${trip.coord_name}
+								              	</c:forEach>
+												</strong>
+												<h3 class="mb-0">
+													<a class="text-dark" href="trip.go?board_no=${post.board_no}">
+													<c:if test="${post.board_level eq 1}">
+														 ${trip_notice_1}
+													</c:if>
+														${post.board_title}
+													</a>
+												</h3>
+												<div class="mb-1 text-muted text-right">
+													<i><b>With</b></i>&nbsp; ${post.user_name}
+												</div>
+												<hr style="width: 100%" noshade>
+												<p class="card-text mb-auto">${post.board_content}</p>
+												<hr style="width: 100%" noshade>
+											</div>
+											<!-- card body end -->
+											<!-- card center start -->
+											<div class="card-center justify-content-center">
+												<div class="p-2">
+													조회수:${post.board_view_count}
+												</div>
+												<div class="p-2">
+													<c:forEach var="tag" items="${post.board_tags}">
+														<label class="btn btn-sm taglist"> # ${tag.tag_value} </label>
+													</c:forEach>
+												</div>
+											</div>
+											<!-- card center end-->
+										</div>
+										<!-- left card end -->
+									</div>
+									<!-- col-md-11 end -->
+								</div>
+								<!-- left row end -->
+							</c:forEach>
+						</c:if>
+					</div>
+					<!-- board list end -->
+				</div>
+				<!-- left area end -->
+				
+				<!-- <!-- aside area start -->
+				<aside id="right">
+					<div class="col-sm-15">
+						<form method="post">
+							<!-- pac-card start -->
+							<div class="pac-card" id="pac-card">
+								GOOGLEMAP TITLE
+								<div id="title">
+									여행 장소 검색
+								</div>
+								GOOGLEMAP RADIO BUTTON
+								<div id="type-selector" class="pac-controls">
+									<input type="radio" name="type" id="changetype-all" checked="checked">
+									<label for="changetype-all">All</label>
+									<input type="radio" name="type" id="changetype-establishment">
+									<label for="changetype-establishment">Establishments</label>
+							     	<input type="radio" name="type" id="changetype-address">
+							     	<label for="changetype-address">Addresses</label>
+									<input type="radio" name="type" id="changetype-geocode">
+									<label for="changetype-geocode">Geocodes</label>
+								</div>
+								<div id="strict-bounds-selector" class="pac-controls">
+									<input type="checkbox" id="use-strict-bounds" value="">
+									<label for="use-strict-bounds">Strict Bounds</label>
+								</div>
+							  	GOOGLEMAP LOCATION TEXTAREA
+								<div id="pac-container">
+									<input id="pac-input" type="text" placeholder="Enter a location">
+								</div>
+							</div>
+							<!-- pac card end -->
+							<div id="map"></div>
+							<div id="infowindow-content" display="none">
+								 <span id="place-name"  class="title"></span><br>
+								 <span id="place-address"></span>
+							</div>
+							<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDbvvT_kUPxmLL9PHcM9gp2qibpr8sThVQ&libraries=places&callback=initMap" async defer></script>
+							<label>날짜</label>
+							<div class="row" style="padding: 0px 0px 10px 14px;">
+								<input id="fromDate" width="45%"/>
+								<script>
+							        $('#fromDate').datepicker({
+							            uiLibrary: 'bootstrap4'
+							        });
+								</script>
+								&nbsp;
+								<input id="toDate" width="45%"/>
+								<script>
+							        $('#toDate').datepicker({
+							            uiLibrary: 'bootstrap4'
+							        });
+							    </script>
+							</div>
+							<label>기간</label>
+							<div  class="row" style="padding: 0px 0px 10px 14px;">
+								<input type="text" class="form-control col-md-9" placeholder="일 단위로 입력하세요">	&nbsp;	
+								<input type="submit" class="btn btn-secondary" value="검색">
+							</div>
+							<label>태그</label>
+							<div class="row" style="padding: 0px 0px 0px 14px;">
+								<input type="text" class="form-control col-md-9" placeholder="검색할 태그를 입력하세요">&nbsp;
+							 	<input type="submit" class="btn btn-secondary" value="검색">
+							</div>
+						</form>
+					</div>
+				</aside>
+				<!-- right area end -->
+			
+			</div>
+			<!-- mid area row end -->
+			
+			<!-- loading button start -->
+			<div id="loading-button">
+				<!-- board data -->
+				<form name="tripListInfo">
+					<input type="hidden" name="next_row" value="${next_row}">
+				</form>
+				<!-- board data -->
+				<button type="button" class="btn btn-dark btn-block"
+				onclick="loadMoreList(${next_row})">Load more...</button>
+			</div>
+			<!-- loading button end -->
+			
+		</div>
+		<!-- container area end -->
+		
+	</div>
+	<!-- body box end-->
 </body>
+
+<!-- footer area start-->
+<div id="footer">
+	<footer class="board-footer">
+		<p>
+			<a href="">Back to top</a>
+		</p>
+	</footer>
+</div>
+<!-- footer area end-->
+		
 </html>

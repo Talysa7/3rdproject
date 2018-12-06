@@ -16,6 +16,7 @@
 a {
    color: black;
 }
+
 /*===login.jsp===*/
 body.login {
 	margin-top: 5rem;
@@ -147,21 +148,6 @@ button img{
 	border: 1px black solid;
 }
 /*===tripList.jsp===*/
-.n_name div{
-	text-align: right;
-}
-aside {
-	position: relative;
-	width:20%;
-   height:100%;
-   min-height:800px;
-   margin:auto;
-   padding-top: 15px;
-   padding-right: 20px;
-   padding-left: 20px;
-   float:left;
-   border-style: dotted;
-}
 .board-header {
 	line-height: 1;
 	border-bottom: 1px solid #e5e5e5;
@@ -172,9 +158,19 @@ aside {
 }
 .body-box { 
    padding-top: 20px;
-   padding-right: 80px;
-   padding-left: 80px;
-
+}
+aside {
+	width:25%;
+	float:right;
+}
+#top {
+	padding-bottom:20px;
+}
+#left {
+	width:75%;
+}
+#loading-button.button {
+	width:100%;
 }
 h1.body-box, h2.body-box, h3.body-box, h4.body-box, h5.body-box, h6.body-box {
 	font-family: "Playfair Display", Georgia, "Times New Roman", serif;
@@ -237,6 +233,7 @@ div.right {
 
 /*===Footer===*/
 .board-footer {
+	grid-area:footer;
 	padding: 2.5rem 0;
 	text-align: center;
 	background-color: #f9f9f9;
@@ -249,11 +246,12 @@ div.right {
 .pac-card {
   margin: 10px 10px 0 0;
   border-radius: 2px 0 0 2px;
-  
   outline: none;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
   background-color: #fff;
   font-family: Roboto;
+  width:100%;
+  overflow:hidden;
 }
 
 #pac-container {

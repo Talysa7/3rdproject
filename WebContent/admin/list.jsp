@@ -1,3 +1,4 @@
+<%-- FIXME : 삭제 예정
 <%@ page language="java" contentType="text/html; charset=UTF-8"
    session="true"
     buffer="10kb"
@@ -21,4 +22,4 @@
 	<h1><a href="adminAlbum.go">${str_photo_m}</a></h1>
 		<h3><a href="adminAlbum.go">${str_photo_v}</a></h3>
 		<br>
-</aside>
+</aside> --%>
