@@ -11,10 +11,7 @@ import db.TagDataBean;
 
 public class TagDBBean {
 		private SqlSession session=SqlMapClient.getSession();
-		
-		public List<String> getB_tags(int board_no) {
-			return session.selectList("board.getBoardTags", board_no);
-		}
+	
 		
 		public int insertUser_tag(Map<String, String> map) {
 			return session.update("tag.insertUser_tag", map);		
@@ -55,7 +52,7 @@ public class TagDBBean {
 			return session.selectList("tag.getUserTags", user_id);
 		}
 		public List<TagDataBean> getPostTags(int board_no) {
-			return session.selectList("board.getPostTags", board_no);	// need to check after making boardDB.xml
+			return session.selectList("tag.getPostTags", board_no);	// need to check after making boardDB.xml
 		}
 		public List<TagDataBean> getStyleTags() {
 			return session.selectList("tag.getStyleTags");

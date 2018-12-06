@@ -36,6 +36,7 @@ import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,6 +46,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import db.AlbumDBBean;
@@ -53,6 +55,7 @@ import db.CmtDBBean;
 import db.CmtDataBean;
 import db.CoordDBBean;
 import db.CoordDataBean;
+import db.LogDBBean;
 import db.MemberDBBean;
 import db.MemberDataBean;
 import db.TagDBBean;
@@ -867,6 +870,15 @@ public class SvcProHandler {
 			return true;
 		}
 		return false;
+	}
+	
+	@RequestMapping("/makeLog")	
+	public ModelAndView makeLog(HttpServletRequest request, HttpServletResponse response)
+			throws HandlerException, ParseException, IOException {
+		LogDBBean logDao = new LogDBBean();
+		JSONArray jsonPosts = logDao.makeBoardLog();
+		request.setAttribute("json", jsonPosts);
+		return new ModelAndView("googleAPI/makeLog");
 	}
 
 }

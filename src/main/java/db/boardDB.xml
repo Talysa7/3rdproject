@@ -46,21 +46,9 @@
 		DELETE FROM pao_board WHERE board_no=#{board_no}
 	</delete>
 
-<!-- not used
-	<select id="getBoardTags" parameterType="int" resultType="java.util.List">
-		SELECT tag_value
-		FROM pao_tag
-		WHERE tag_id in
-		(
-			SELECT tag_id
-			FROM pao_trip_tag
-			WHERE b_no=#{b_no}
-		)
-	</select>
- -->
-	<select id="getTripList" parameterType="int" resultType="java.util.List">
+	<select id="getTripList" parameterType="int" resultType="db.TripDataBean">
 		SELECT * 
-		FROM pao_trip 
+		FROM pao_view_trip 
 		WHERE board_no=#{board_no}
 	</select>
 	<select id="getTripIds" parameterType="int" resultType="java.util.List">
@@ -149,4 +137,9 @@
 		where user_name like #{keyword} or user_id like #{keyword}
 	</select>
 	<!--/////////////////////////////////////////////////// end-line pao_comment table ///////////////////////////////////////////////////-->
+	<!-- //////////////////////////////////////// 로그데이터 생성을 위한 임시 쿼리들 ///////////////////////////////////////////////// -->
+	<select id="tempSelect"  resultType="db.BoardDataBean">
+		select * from pao_view_board
+	</select>
+	<!-- ////////////////////////////////////////////////임시쿼리 끝. 추후 삭제 예정 ///////////////////////////////////////////////// -->
 </mapper>
