@@ -58,6 +58,7 @@ import db.CoordDataBean;
 
 import db.CoordReviewDBBean;
 import db.CoordReviewDataBean;
+import db.LogDBBean;
 import db.ReviewDataBean;
 
 import db.MemberDBBean;
@@ -933,10 +934,10 @@ public class SvcProHandler {
 	@RequestMapping("/makeLog")	
 	public ModelAndView makeLog(HttpServletRequest request, HttpServletResponse response)
 			throws HandlerException, ParseException, IOException {
-		/*LogDBBean logDao = new LogDBBean();
+		LogDBBean logDao = new LogDBBean();
 		JSONArray jsonPosts = logDao.makeBoardLog();
 		request.setAttribute("json", jsonPosts);
-*/		return new ModelAndView("googleAPI/makeLog");
+		return new ModelAndView("googleAPI/makeLog");
 	}
 
 }
