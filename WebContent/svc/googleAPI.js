@@ -79,7 +79,8 @@ function initMap() {
 		infowindowContent.children['place-address'].textContent = address;
 		infowindowContent.children['place-location'].textContent = 
 			place.geometry.location.lat() + place.geometry.location.lng();
-		schedule.children['place1'].textContent = place.name;
+		
+		$("#place1").val( place.name );
 		
 		infowindow.open(map, marker);
 	});
