@@ -66,4 +66,31 @@ public class LogDBBean {
 		
 		return members;
 	}
+	
+	public JSONArray makeCommentLog() throws ParseException, IOException {
+		BufferedWriter br = Files.newBufferedWriter(Paths.get("C:/Users/Playdata/desktop/csv/commentLog.csv"), Charset.forName("UTF-8"));
+		ObjectMapper mapper = new ObjectMapper();
+		JSONArray jsonPosts = new JSONArray();
+		
+		for (int i=1; i<5001; i++) {
+			List<CmtDataBean> comments = session.selectList("board.getComment", i);
+			String templog = "";
+			JSONObject finalJson = new JSONObject();
+			
+			templog = mapper.writeValueAsString(comments);
+			JSONParser parser = new JSONParser();
+			Object parseobj = parser.parse(templog);
+			JSONObject postJson = (JSONObject) parseobj;		
+			
+			finalJson.put("result", postJson);
+			finalJson.put("log_type", 4);
+			System.out.println(finalJson.toString());
+			br.write(finalJson.toString() + "\n");
+			br.flush();
+			
+			jsonPosts.add(finalJson);
+		}
+		br.close();
+		return jsonPosts;
+	}
 }
