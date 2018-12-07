@@ -79,8 +79,8 @@ function initMap() {
 		infowindowContent.children['place-address'].textContent = address;
 		infowindowContent.children['place-location'].textContent = 
 			place.geometry.location.lat() + place.geometry.location.lng();
-		
-		$("#place1").val( place.name );
+		var num = $("input[name=num_counter]")
+		$("#place"+num).val( place.name );
 		
 		infowindow.open(map, marker);
 	});

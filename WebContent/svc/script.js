@@ -695,7 +695,8 @@ function addSchedule(num){
 			var schedule="";
 			$('#btn'+num+'').hide();//btn 숨기기
 			num++;
-			schedule+= 	'<div id="schedule'+num+'" class="form-group row">';	  
+			schedule+= 	'<div id="schedule'+num+'" class="form-group row">';
+			schedule+=		'<input type="hidden" name="num_counter" value="'+num+'">';	  
 			schedule+= 		'<label for="cal_date" class="col-2 col-form-label">일정 '+num+'</label>';         
 			schedule+=      	'<input type="text" name="start'+num+'" id="start'+num+'" maxlength="10" value="yyyy-MM-dd" class="col-2" autocomplete="off"/>';
 			schedule+=			'~';

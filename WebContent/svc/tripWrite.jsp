@@ -40,14 +40,14 @@
 					<label for="trip_m_num" class="col-2 col-form-label">${trip_m_num}</label>
 					<input type="number" name="trip_member_num${i}" class="col-2" min="1">
 				</div>
-				
 				<div id="schedule" class="form-group row">
+					<input type="hidden" name="num_counter" value="${i}">
 					<label for="cal_date" name="schedule" class="col-2 col-form-label">${trip_schedule} ${i}</label> 
 					<input type="text" name="start${i}" id="start${i}" maxlength="10" class="col-2" autofocus autocomplete="off" />
 					 ~ 
 					<input type="text" name="end${i}" id="end${i}" maxlength="10" class="col-2" autofocus autocomplete="off" /> 
 					&nbsp;&nbsp; 
-					<input name="place${i}" id="place${i}" type="text" readonly="readonly" placeholder="${trip_location}"> 
+					<input name="place${i}" id="place${i}" type="text" readonly="readonly" placeholder="${trip_location} : 지도에서 검색해주세요"> 
 					
 					<button id="btn${i}" class="btn_plus" type="button" onclick="addSchedule(${i})">
 						<i class="fas fa-plus-circle"></i>
@@ -57,6 +57,7 @@
 					<div id="coordinfo${i}">
 					</div>
 				</div>
+				
 				<div id="schedulediv"></div>
 				<div class="form-group row">
 					<label for="trip_talklink" class="col-2 col-form-label">${trip_talklink}</label>
