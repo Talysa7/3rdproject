@@ -746,6 +746,7 @@ public class SvcProHandler {
 			cmtDto.setBoard_no(board_no);
 			cmtDto.setComment_content(comment_content);
 			cmtDao.insertComment(cmtDto);
+			cmtDao.insertCommentLog(cmtDto);
 		}
 	}
 
