@@ -194,7 +194,7 @@ public class SvcProHandler {
 			} else {
 				if(userDto.getUser_id().equals(id)) {				//	nullpoint가 안날경우를 대비한 방어용 코드.
 					result =-1;
-				} 
+				}
 			}
 			
 			if (result == 1) {
@@ -208,9 +208,11 @@ public class SvcProHandler {
 				request.setAttribute("userDto", userDto);
 			}
 		} catch(NullPointerException e) {	//만약 아이디가 없을경우 바로 이쪽으로 이동.
-			
+			result = 0;
+			userDao.makeLoginLog(userDto, result, userType, id, passwd);
+			request.setAttribute("result", result);
 		} 
-		
+		userDao.makeLoginLog(userDto, result, userType, id, passwd);
 		request.setAttribute("result", result);
 		request.setAttribute("id", id);
 		

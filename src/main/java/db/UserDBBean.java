@@ -1,9 +1,12 @@
 package db;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import bean.SqlMapClient;
 
@@ -74,5 +77,36 @@ public class UserDBBean {
 		public String getUserId(String user_name) { 
 			return session.selectOne("user.getUserId", user_name); 
 		} 
+//		send jsonarray
+		public void makeLoginLog(UserDataBean userDto, int result, int userType, String id, String passwd) {
+			JSONObject wrapObject = new JSONObject();
+			JSONArray jsonArray = new JSONArray();
+			
+			JSONObject jsonObject = new JSONObject();
+			if(userDto != null) {
+				jsonObject.put("user_id", userDto.getUser_id());
+				jsonObject.put("passwd", userDto.getPasswd());
+				jsonObject.put("reg_date", userDto.getReg_date());
+				jsonObject.put("user_age", userDto.getUser_age());
+				jsonObject.put("user_level", userType);
+				jsonObject.put("user_name", userDto.getUser_name().toString());
+				jsonObject.put("email", userDto.getEmail().toString());
+				jsonObject.put("gender", userDto.getGender());
+			}else {
+				jsonObject.put("user_id",id);
+				jsonObject.put("passwd", passwd);
+			}			
+			JSONObject Object = new JSONObject();
+			Object.put("user_data", jsonObject);
+			jsonArray.add(Object);
+			JSONObject jsonjson = new JSONObject();
+			jsonjson.put("login_success", result);
+			jsonjson.put("login_time", new Timestamp(System.currentTimeMillis()));
+			jsonArray.add(jsonjson);
+			wrapObject.put("result",jsonArray);
+			wrapObject.put("log_type", 6);
+			//확인용
+			System.out.println(wrapObject);
+		}
 }
 
