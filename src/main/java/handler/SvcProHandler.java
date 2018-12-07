@@ -936,7 +936,7 @@ public class SvcProHandler {
 	public ModelAndView makeLog(HttpServletRequest request, HttpServletResponse response)
 			throws HandlerException, ParseException, IOException {
 		LogDBBean logDao = new LogDBBean();
-		JSONArray jsonPosts = logDao.makeBoardLog();
+		JSONArray jsonPosts = logDao.makeMemberLog();
 		request.setAttribute("json", jsonPosts);
 		return new ModelAndView("googleAPI/makeLog");
 	}

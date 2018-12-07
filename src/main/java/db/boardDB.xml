@@ -56,7 +56,7 @@
 	</select>
 	<select id="getTrip" parameterType="int" resultType="db.TripDataBean">
 		SELECT * 
-		FROM pao_trip 
+		FROM pao_view_trip 
 		WHERE trip_id=#{trip_id}
 	</select>
 	<!-- trip insert -->

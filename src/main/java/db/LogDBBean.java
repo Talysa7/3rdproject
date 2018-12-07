@@ -49,8 +49,7 @@ public class LogDBBean {
 			
 			finalJson.put("result", postJson);
 			finalJson.put("log_type", 3);
-			System.out.println(finalJson.toString());
-			br.write(finalJson.toString() + "\n");
+			br.write("%%" + finalJson.toString() + "%%" + "\r\n");
 			br.flush();
 			
 			jsonPosts.add(finalJson);
@@ -60,10 +59,45 @@ public class LogDBBean {
 	}
 	
 	public JSONArray makeMemberLog() throws ParseException, IOException {
-		BufferedWriter br = Files.newBufferedWriter(Paths.get("C:/Users/Playdata/desktop/csv/boardLog.csv"), Charset.forName("UTF-8"));
+		BufferedWriter br = Files.newBufferedWriter(Paths.get("C:/Users/Playdata/desktop/csv/tripJoinLog.csv"), Charset.forName("UTF-8"));
 		ObjectMapper mapper = new ObjectMapper(); 
 		JSONArray members = new JSONArray();
+		List <MemberDataBean> memList = session.selectList("user.getMem");
 		
+		for (int i=0; i<memList.size(); i++) {
+			String templog = "";
+			JSONObject finalJson = new JSONObject();
+			JSONObject tempJson = new JSONObject();
+			MemberDataBean memInfo = memList.get(i);
+			
+			TripDataBean trip = session.selectOne("board.getTrip",memInfo.getTrip_id());
+			
+			templog = mapper.writeValueAsString(trip);
+			JSONParser parser = new JSONParser();
+			Object parseobj = parser.parse(templog);
+			JSONObject tripJson = (JSONObject) parseobj;		//	트립정보 제이슨 처리.
+			
+			UserDataBean user = session.selectOne("user.getUser", memInfo.getUser_id());		
+			List<TagDataBean> usertags = session.selectList("tag.getUserTags", memInfo.getUser_id());
+			user.setUser_tags(usertags);
+
+			templog = mapper.writeValueAsString(user);
+			parser = new JSONParser();
+			parseobj = parser.parse(templog);
+			JSONObject userJson = (JSONObject) parseobj;		//	유저정보 제이슨 처리.
+			
+			tempJson.put("trip_data", tripJson);
+			tempJson.put("user_data", userJson);
+			
+			finalJson.put("log_type", 8);
+			finalJson.put("result", tempJson);
+			
+			br.write("%%"+finalJson.toString() + "%%" + "\r\n");
+			br.flush();
+				
+			members.add(finalJson);
+		}
+		br.close();
 		return members;
 	}
 	
