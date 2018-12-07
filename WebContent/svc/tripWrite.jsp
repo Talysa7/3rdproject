@@ -47,7 +47,7 @@
 					 ~ 
 					<input type="text" name="end${i}" id="end${i}" maxlength="10" class="col-2" autofocus autocomplete="off" /> 
 					&nbsp;&nbsp; 
-					<input name="place${i}" id="place${i}" type="text" readonly="readonly" placeholder="${trip_location} : 지도에서 검색해주세요"> 
+					<input name="place${i}" id="place${i}" type="text" readonly="readonly" placeholder="${trip_location}"> 
 					
 					<button id="btn${i}" class="btn_plus" type="button" onclick="addSchedule(${i})">
 						<i class="fas fa-plus-circle"></i>
@@ -76,10 +76,6 @@
 					<div class="pac-card" id="pac-card">
 						<div id="pac-container">
 							<input id="pac-input" type="text" placeholder="Enter a location">
-							<div id="strict-bounds-selector" class="pac-controls">
-								<label for="use-strict-bounds">Strict Bounds</label> 
-								<input type="checkbox" id="use-strict-bounds" value="">
-							</div>
 						</div>
 					</div>
 					<div id="map"></div>
