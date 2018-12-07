@@ -147,7 +147,7 @@ public class SvcProHandler {
 
 	@RequestMapping("/userModPro")
 	public ModelAndView UserModifyprocess(HttpServletRequest request, HttpServletResponse response)
-			throws HandlerException {
+			throws HandlerException, ParseException, IOException {
 		try {
 			request.setCharacterEncoding("utf-8");
 		} catch (UnsupportedEncodingException e) {
@@ -155,6 +155,7 @@ public class SvcProHandler {
 		}
 		UserDataBean userDto = new UserDataBean();
 		String user_id = (String) request.getSession().getAttribute("user_id");
+		UserDataBean useruser = userDao.getUser(user_id);
 		userDto.setUser_id(user_id);
 		userDto.setPasswd(request.getParameter("passwd"));
 		userDto.setUser_name(request.getParameter("user_name"));
@@ -170,11 +171,13 @@ public class SvcProHandler {
 			if (result == 1) {
 				request.setAttribute("result", result);
 				result = tagDao.updateUserTags(user_id, userTags);
+				userDao.modUserLog(useruser, userDto, useruser.getUser_tags(), userTags);
 			}			
 		}catch(NullPointerException e) {
 			int result = userDao.modifyUser(userDto);
 			if (result == 1) {
 				request.setAttribute("result", result);
+				userDao.modUserLog(useruser, userDto, userTags, userTags);
 			}			
 		}		
 		return new ModelAndView("svc/userModPro");

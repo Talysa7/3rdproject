@@ -76,10 +76,9 @@
 				<div class="form-group row">
 					<div class="text-center">	&nbsp;&nbsp;	
 						${userDto.user_name}님의 평점은  		
-						<c:if test="${average != 'NaN'}"> [평균평점 : ${average}점 (5점만점)] </c:if>
-						<c:if test="${count ne 0}">[게시글 수 : ${count}개]</c:if>
-						<c:if test="${average != 'NaN'} && ${count ne 0}">아직 없습니다</c:if>
-						입니다		
+						<c:if test="${average ne null and average ne 'NaN'}"> [평균평점 : ${average}점 (5점만점)] </c:if>
+						<c:if test="${count ne null and count ne 0}">[게시글 수 : ${count}개]</c:if>
+						<c:if test="${average eq null and count eq null}">아직 없습니다</c:if>		
 					</div>	
 				</div>
 			<br>
