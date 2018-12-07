@@ -99,20 +99,17 @@
 								</form>
 								<div class="container" style="width:100%">
 									<div class="row">
-										<label class="col-2">${trip_schedule}</label> <input
-											type="text" class="col-3" value="${trip.start_date}"
-											readonly="readonly" /> ~ <input type="text" class="col-3"
-											value="${trip.end_date}" readonly="readonly" />
+										<label class="col-2">${trip_schedule}</label>
+										<input type="text" class="col-3" value="${trip.start_date}" readonly="readonly" />
+										 ~ 
+										<input type="text" class="col-3" value="${trip.end_date}" readonly="readonly" />
 										<div class="col-12 offset-2">
 											<div class="loc" name="coord">
-												<input type="text" name="trip_location_${trip.coord_order}"
-													id="address${trip.coord_order}" class="col-8 pt-3"
-													readonly="readonly"> <input type="hidden"
-													name="coord_long" value="${trip.coordinate.coord_long}">
-												<input type="hidden" name="coord_lat"
-													value="${trip.coordinate.coord_lat}"> <input
-													type="hidden" id="country${trip.coord_order}"
-													value="${trip.coordinate.country_name}">
+												<input type="text" name="trip_location_${trip.coord_order}" id="address${trip.coord_order}" 
+													class="col-8 pt-3" readonly="readonly"> 
+												<input type="hidden" name="coord_long" value="${trip.coordinate.coord_long}">
+												<input type="hidden" name="coord_lat" value="${trip.coordinate.coord_lat}">
+												<input type="hidden" id="country${trip.coord_order}" value="${trip.coordinate.country_name}">
 											</div>
 											<!-- 장소 -->
 										</div>
