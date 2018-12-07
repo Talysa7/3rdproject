@@ -175,6 +175,11 @@ aside {
 h1.body-box, h2.body-box, h3.body-box, h4.body-box, h5.body-box, h6.body-box {
 	font-family: "Playfair Display", Georgia, "Times New Roman", serif;
 }
+.thumbnail {
+	margin-top:25px;
+	width:25%;
+	height:auto;
+}
 
 @media ( min-width : 768px) {
 	.display-4 {
