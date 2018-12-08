@@ -52,7 +52,7 @@
 		
 		<div class="collapse navbar-collapse" id="navbarCollapse">
 			<ul class="navbar-nav mr-auto">
-				<c:if test="${sessionScope.user_id ne null}">
+				
 				<li class="nav-item">
 					<a class="nav-link" href="tripList.go">${page_main_eng} 
 					<span class="sr-only">(current)</span></a>
@@ -60,13 +60,17 @@
 				<li class="nav-item"><a class="nav-link" href="tripList.go">${page_board_eng}</a></li>
 				<li class="nav-item"><a class="nav-link" href="album.go">${page_album_eng}</a></li>
 				
-				
+				<c:if test="${sessionScope.user_id ne null}">
 				<li class="nav-item">
 					<a class="nav-link" href="myTrip.go">${page_calendar_eng}</a>
 				</li>
 				</c:if>
 			</ul>
 			
+			<c:if test="${sessionScope.user_id eq null}">
+				<a href="login.go" class="nav-item">${page_login}</a> &nbsp;|&nbsp;
+				<a href="registration.go" class="nav-item">${page_input}</a>
+			</c:if>
 			<c:if test="${sessionScope.user_id ne null && user_level ne 9}">
 				<form class="form-inline mt-2 mt-md-0 login-section" name="serch_trip" method="post" action="searchTrip.go" >
 					<select name="search_type">
@@ -76,11 +80,7 @@
 					<input type="text" class="form-control" name="keyword" placeholder="${search_guide}"> &nbsp;
 					<button type="submit" style="border: none; background: transparent;">
 					<img alt="" src="${project}img/search-m2-24.png"></button> &nbsp;|&nbsp;
-				<c:if test="${sessionScope.user_id eq null}">
-					<a href="login.go" class="nav-item">${page_login}</a> &nbsp;|&nbsp;
-					<a href="registration.go" class="nav-item">${page_input}</a>
-				</c:if>
-				<c:if test="${sessionScope.user_id ne null}">		
+				<c:if test="${sessionScope.user_id ne null}">
 					<a href="myPage.go" class="nav-item">${page_mypage}</a> &nbsp;
 				</c:if>
 				</form>
@@ -89,9 +89,7 @@
 				<a class="nav-item" href="adminTrip.go">${btn_adm}</a> &nbsp;
 				<a class="nav-item" href="logout.go">${btn_logout}</a>
 			</c:if>
-			
 		</div>
-		
 	</nav>
 </body>
 
@@ -109,4 +107,9 @@
 			src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
 			integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
 			crossorigin="anonymous"></script>
+		<link 
+			rel="stylesheet" 
+			href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" 
+			integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
+        	crossorigin="anonymous">
 </html>

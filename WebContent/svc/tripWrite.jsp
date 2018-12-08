@@ -31,7 +31,6 @@
 			<hr size="1px" color="black">
 			<div class="input-box">
 				<input type="hidden" name="user_name" value="${user_name}">
-				
 				<div class="form-group row">
 					<input type="text" name="trip_title" class="col-12 form-control form-control-lg" maxlength="30"
 						placeholder="${trip_title}" autofocus required>
@@ -41,8 +40,8 @@
 					<label for="trip_m_num" class="col-2 col-form-label">${trip_m_num}</label>
 					<input type="number" name="trip_member_num${i}" class="col-2" min="1">
 				</div>
-				
 				<div id="schedule" class="form-group row">
+					<input type="hidden" name="num_counter" value="${i}">
 					<label for="cal_date" name="schedule" class="col-2 col-form-label">${trip_schedule} ${i}</label> 
 					<input type="text" name="start${i}" id="start${i}" maxlength="10" class="col-2" autofocus autocomplete="off" />
 					 ~ 
@@ -51,11 +50,14 @@
 					<input name="place${i}" id="place${i}" type="text" readonly="readonly" placeholder="${trip_location}"> 
 					
 					<button id="btn${i}" class="btn_plus" type="button" onclick="addSchedule(${i})">
-						<img class="btn_img" src="${project}img/addbutton.png">${btn_add_trip}
+						<i class="fas fa-plus-circle"></i>
+						<i class="fas fa-minus-circle"></i>
+						${btn_add_trip}
 					</button>
 					<div id="coordinfo${i}">
 					</div>
 				</div>
+				
 				<div id="schedulediv"></div>
 				<div class="form-group row">
 					<label for="trip_talklink" class="col-2 col-form-label">${trip_talklink}</label>
@@ -74,10 +76,6 @@
 					<div class="pac-card" id="pac-card">
 						<div id="pac-container">
 							<input id="pac-input" type="text" placeholder="Enter a location">
-							<div id="strict-bounds-selector" class="pac-controls">
-								<label for="use-strict-bounds">Strict Bounds</label> 
-								<input type="checkbox" id="use-strict-bounds" value="">
-							</div>
 						</div>
 					</div>
 					<div id="map"></div>
