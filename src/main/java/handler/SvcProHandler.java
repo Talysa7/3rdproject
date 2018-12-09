@@ -680,6 +680,7 @@ public class SvcProHandler {
 		evalDto.setTrip_id(trip_id);
 		evalDto.setUser_review_reg_date( new Timestamp(System.currentTimeMillis()));
 		int result = reviewDao.insertEvaluation(evalDto);
+		logDao.insertPersonReviewLog(evalDto);
 		request.setAttribute("result", result);
 		return new ModelAndView("/svc/reviewPro");		
 	}

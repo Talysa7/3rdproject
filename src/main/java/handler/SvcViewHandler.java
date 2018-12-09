@@ -10,11 +10,14 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import db.AlbumDBBean;
 import db.AlbumDataBean;
@@ -25,6 +28,7 @@ import db.CoordDBBean;
 import db.CoordDataBean;
 import db.CoordReviewDBBean;
 import db.CoordReviewDataBean;
+import db.LogDBBean;
 import db.MemberDBBean;
 import db.MemberDataBean;
 import db.ReviewDBBean;
@@ -60,6 +64,8 @@ public class SvcViewHandler {
 	private ReviewDBBean reviewDao;
 	@Resource
 	private CoordReviewDBBean coordReviewDao;
+	@Resource
+	private LogDBBean logDao;
 
 	//amount of displayed photos in a page
 	private static final int photoPerPage=6;
@@ -370,6 +376,13 @@ public class SvcViewHandler {
 			foundList=boardDao.findPostByKeyword(keyword);
 		} else {
 			foundList=boardDao.findPostByUser(keyword);
+		}
+		//searchTrip Log
+		try {
+			logDao.searchTripLog(selectedType, keyword);
+		} catch (ClassCastException | JsonProcessingException | ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		//count check
 		int count=0;

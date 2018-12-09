@@ -8,17 +8,22 @@ import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.apache.ibatis.session.SqlSession;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import bean.SqlMapClient;
 
 public class LogDBBean {
+	@Resource
+	private BoardDBBean boardDao;
 	SqlSession session=SqlMapClient.getSession();
 	
 	public JSONArray makeBoardLog() throws ParseException, IOException {
@@ -294,4 +299,69 @@ public class LogDBBean {
 		//FIXME : 확인 필요
 		System.out.println(wrapObject);
 	}
+	public void insertPersonReviewLog(ReviewDataBean reviewDto) {
+		JSONObject wrapObject = new JSONObject();
+		JSONArray jsonArray = new JSONArray();
+	
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("user_id", reviewDto.getUser_id());
+		jsonObject.put("reviewer_id", reviewDto.getReviewer_id());
+		jsonObject.put("trip_id", reviewDto.getTrip_id());
+		jsonObject.put("review_comment", reviewDto.getReview_comment());
+		jsonObject.put("review_point", reviewDto.getReview_point());
+		jsonObject.put("user_review_reg_date", reviewDto.getUser_review_reg_date());
+		jsonArray.add(jsonObject);
+		
+		wrapObject.put("result",jsonArray);
+		wrapObject.put("log_type", 5);
+		System.out.println(wrapObject);
+	}
+	
+	public void searchTripLog(String selectedType, String keyword ) throws ClassCastException, JsonProcessingException, ParseException {
+		JSONObject wrapObject = new JSONObject();
+		JSONArray jsonArray = new JSONArray();
+		JSONObject Obj = new JSONObject();
+		JSONObject jsonjson = new JSONObject();
+		JSONObject jsonObj = new JSONObject();
+		ObjectMapper mapper = new ObjectMapper(); 
+		List<BoardDataBean> foundList;
+		//find trips for each type
+		if(selectedType.equals("schedule")) {
+			foundList=boardDao.findPostByKeyword(keyword);
+		} else {
+			foundList=boardDao.findPostByUser(keyword);
+		}
+		
+		for (int i=0; i<foundList.size(); i++) {
+			BoardDataBean postBean = foundList.get(i);
+			List<TagDataBean> boardtags = session.selectList("tag.getPostTags", foundList.get(i).getBoard_no());
+			List<TripDataBean> trips = session.selectList("board.getTripList", foundList.get(i).getBoard_no());
+			postBean.setBoard_tags(boardtags);
+			postBean.setTripLists(trips);
+			
+			JSONObject finalJson = new JSONObject();
+			String templog = "";
+			templog = mapper.writeValueAsString(postBean);
+			JSONParser parser = new JSONParser();
+			Object parseobj = parser.parse(templog);
+			JSONObject object = (JSONObject) parseobj;		//	board까지 json처리 완료
+			jsonArray.add(object);
+		}
+		jsonObj.put("search_data", jsonArray);	
+		jsonObj.put("count", foundList.size());
+		jsonObj.put("keyword", keyword);
+		if(selectedType.equals("schedule")) {
+			jsonObj.put("selectedType", "게시물");
+		}else {
+			jsonObj.put("selectedType", "작성자");
+		}		
+		wrapObject.put("result",jsonObj);
+		wrapObject.put("log_type", 1);
+		//확인용
+		System.out.println(wrapObject);
+		
+	}
+		
+		
+	
 }
