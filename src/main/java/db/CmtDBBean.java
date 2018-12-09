@@ -37,24 +37,6 @@ public class CmtDBBean {
 	public List<CmtDataBean>getComments(Map<String,Integer>map){
 		return session.selectList("board.getComments",map);
 	}
-//	send jsonarray
-	public void insertCommentLog(CmtDataBean cmtDto) {
-		JSONObject wrapObject = new JSONObject();
-		JSONArray jsonArray = new JSONArray();
-	
-		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("comment_id", cmtDto.getComment_id());
-		jsonObject.put("comment_content", cmtDto.getComment_content().toString());
-		jsonObject.put("comment_reg_date", cmtDto.getComment_reg_date());
-		jsonObject.put("board_no", cmtDto.getBoard_no());
-		jsonObject.put("user_id", cmtDto.getUser_id().toString());
-		jsonObject.put("user_name", cmtDto.getUser_name().toString());
-		jsonArray.add(jsonObject);
-		
-		wrapObject.put("result",jsonArray);
-		wrapObject.put("log_type", 4);
-		//FIXME : 확인 필요
-		System.out.println(wrapObject);
-	}
+
 
 }

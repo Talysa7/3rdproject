@@ -101,7 +101,8 @@ public class SvcProHandler {
 	private ReviewDBBean reviewDao;
 	@Resource
 	private CoordReviewDBBean coordReviewDao;
-
+	@Resource
+	private LogDBBean logDao;
 
 	///////////////////////////////// user pages/////////////////////////////////
 
@@ -171,13 +172,13 @@ public class SvcProHandler {
 			if (result == 1) {
 				request.setAttribute("result", result);
 				result = tagDao.updateUserTags(user_id, userTags);
-				userDao.modUserLog(useruser, userDto, useruser.getUser_tags(), userTags);
+				logDao.modUserLog(useruser, userDto, useruser.getUser_tags(), userTags);
 			}			
 		}catch(NullPointerException e) {
 			int result = userDao.modifyUser(userDto);
 			if (result == 1) {
 				request.setAttribute("result", result);
-				userDao.modUserLog(useruser, userDto, useruser.getUser_tags(), userTags);
+				logDao.modUserLog(useruser, userDto, useruser.getUser_tags(), userTags);
 			}			
 		}		
 		return new ModelAndView("svc/userModPro");
@@ -212,10 +213,10 @@ public class SvcProHandler {
 			}
 		} catch(NullPointerException e) {	//만약 아이디가 없을경우 바로 이쪽으로 이동.
 			result = 0;
-			userDao.makeLoginLog(userDto, result, userType, id, passwd);
+			logDao.makeLoginLog(userDto, result, userType, id, passwd);
 			request.setAttribute("result", result);
 		} 
-		userDao.makeLoginLog(userDto, result, userType, id, passwd);
+		logDao.makeLoginLog(userDto, result, userType, id, passwd);
 		request.setAttribute("result", result);
 		request.setAttribute("id", id);
 		
@@ -751,7 +752,7 @@ public class SvcProHandler {
 			cmtDto.setBoard_no(board_no);
 			cmtDto.setComment_content(comment_content);
 			cmtDao.insertComment(cmtDto);
-			cmtDao.insertCommentLog(cmtDto);
+			logDao.insertCommentLog(cmtDto);
 		}
 	}
 
