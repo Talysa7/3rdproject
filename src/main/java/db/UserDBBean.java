@@ -122,47 +122,120 @@ public class UserDBBean {
 			JSONObject jsonObj = new JSONObject();
 			JSONObject jsonObject = new JSONObject();
 			ObjectMapper mapper = new ObjectMapper(); 
-			if(userTags != beforeinfo) { //태그 안 바뀐 경우
+			try {
+			if(list.size()==userTags.size()) {
+				int length = 0;
 				for(int i=0; i<list.size(); i++) {
-					String templog = "";
-					beforeinfo.setUser_tags(list);
-					templog = mapper.writeValueAsString(beforeinfo);
-					JSONParser parser = new JSONParser();
-					Object parseobj = parser.parse(templog);
-					JSONObject userJson = (JSONObject) parseobj;
-					jsonObj.put("before_data", userJson);
+					if(userTags.get(i).getTag_id()== list.get(i).getTag_id()) {
+						length += 1;
+					}
 				}
-				for(int j=0; j<userTags.size(); j++) {
-					String templog = "";
-					userDto.setUser_tags(userTags);
-					templog = mapper.writeValueAsString(userDto);
-					JSONParser parser = new JSONParser();
-					Object parseobj = parser.parse(templog);
-					JSONObject userJson = (JSONObject) parseobj;
-					jsonObject.put("after_data", userJson);
+				if(length == userTags.size()) {
+						for(int i=0; i<list.size(); i++) {
+								String templog = "";
+								beforeinfo.setUser_tags(list);
+								templog = mapper.writeValueAsString(beforeinfo);
+								JSONParser parser = new JSONParser();
+								Object parseobj = parser.parse(templog);
+								JSONObject userJson = (JSONObject) parseobj;
+								jsonObj.put("before_data", userJson);						
+						}
+						jsonjson.put("user_id", userDto.getUser_id());
+						jsonjson.put("passwd", userDto.getPasswd());
+						jsonjson.put("user_name", userDto.getUser_name());
+						jsonjson.put("user_tags", "before_data와 tag일치");
+						jsonObject.put("after_data", jsonjson);
+				} else {
+						for(int i=0; i<list.size(); i++) {
+							String templog = "";
+							beforeinfo.setUser_tags(list);
+							templog = mapper.writeValueAsString(beforeinfo);
+							JSONParser parser = new JSONParser();
+							Object parseobj = parser.parse(templog);
+							JSONObject userJson = (JSONObject) parseobj;
+							jsonObj.put("before_data", userJson);
+						}					
+					
+						for(int j=0; j<userTags.size(); j++) {
+							String templog = "";
+							userDto.setUser_tags(userTags);
+							templog = mapper.writeValueAsString(userDto);
+							JSONParser parser = new JSONParser();
+							Object parseobj = parser.parse(templog);
+							JSONObject userJson = (JSONObject) parseobj;
+							jsonObject.put("after_data", userJson);						
+						}
 				}
 			}else {
-				for(int i=0; i<list.size(); i++) {
-					String templog = "";
-					beforeinfo.setUser_tags(list);
-					templog = mapper.writeValueAsString(beforeinfo);
-					JSONParser parser = new JSONParser();
-					Object parseobj = parser.parse(templog);
-					JSONObject userJson = (JSONObject) parseobj;
-					jsonObj.put("before_data", userJson);
+				if(list.size()>0) {
+					for(int i=0; i<list.size(); i++) {
+						String templog = "";
+						beforeinfo.setUser_tags(list);
+						templog = mapper.writeValueAsString(beforeinfo);
+						JSONParser parser = new JSONParser();
+						Object parseobj = parser.parse(templog);
+						JSONObject userJson = (JSONObject) parseobj;
+						jsonObj.put("before_data", userJson);
+					}
+				}else {
+					Obj.put("user_id", beforeinfo.getUser_id());
+					Obj.put("passwd", beforeinfo.getPasswd());
+					Obj.put("user_name", beforeinfo.getUser_name());
+					Obj.put("user_tags", "tag 없음");
+					jsonObj.put("before_data", Obj);	
 				}
+					if(userTags.size()>0) {
+						for(int j=0; j<userTags.size(); j++) {
+							String templog = "";
+							userDto.setUser_tags(userTags);
+							templog = mapper.writeValueAsString(userDto);
+							JSONParser parser = new JSONParser();
+							Object parseobj = parser.parse(templog);
+							JSONObject userJson = (JSONObject) parseobj;
+							jsonObject.put("after_data", userJson);
+						}
+					}else {
+						jsonjson.put("user_id", userDto.getUser_id());
+						jsonjson.put("passwd", userDto.getPasswd());
+						jsonjson.put("user_name", userDto.getUser_name());
+						jsonjson.put("user_tags", "tag없음");
+						jsonObject.put("after_data", jsonjson);
+					}
+			}
+				JSONObject Object = new JSONObject();	
+				jsonArray.add(jsonObj);
+				jsonArray.add(jsonObject);
+				wrapObject.put("result",jsonArray);
+				wrapObject.put("log_type", 7);
+				//확인용
+				System.out.println(wrapObject);
+			} catch(NullPointerException e) {				
+				Obj.put("user_id", beforeinfo.getUser_id());
+				Obj.put("passwd", beforeinfo.getPasswd());
+				Obj.put("user_name", beforeinfo.getUser_name());
+				Obj.put("user_tags", "tag 없음");
+				jsonObj.put("before_data", Obj);					
 				jsonjson.put("user_id", userDto.getUser_id());
 				jsonjson.put("passwd", userDto.getPasswd());
-				jsonjson.put("user_name", userDto.getUser_name().toString());
+				jsonjson.put("user_name", userDto.getUser_name());
+				jsonjson.put("user_tags", "tag없음");
 				jsonObject.put("after_data", jsonjson);
-			}			
-			JSONObject Object = new JSONObject();	
-			jsonArray.add(jsonObj);
-			jsonArray.add(jsonObject);
-			wrapObject.put("result",jsonArray);
-			wrapObject.put("log_type", 7);
-			//확인용
-			System.out.println(wrapObject);
-		}
+				JSONObject Object = new JSONObject();	
+				jsonArray.add(jsonObj);
+				jsonArray.add(jsonObject);
+				wrapObject.put("result",jsonArray);
+				wrapObject.put("log_type", 7);
+				//확인용
+				System.out.println(wrapObject);
+			}
+				
+			}
+			
+		
+			
+			
+			
+		
+
 }
 

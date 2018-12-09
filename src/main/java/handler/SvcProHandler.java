@@ -177,7 +177,7 @@ public class SvcProHandler {
 			int result = userDao.modifyUser(userDto);
 			if (result == 1) {
 				request.setAttribute("result", result);
-				userDao.modUserLog(useruser, userDto, userTags, userTags);
+				userDao.modUserLog(useruser, userDto, useruser.getUser_tags(), userTags);
 			}			
 		}		
 		return new ModelAndView("svc/userModPro");
