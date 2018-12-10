@@ -704,11 +704,10 @@ function addSchedule(num){
 			schedule+=			'<input type="text" name="end'+num+'" id="end'+num+'" maxlength="10" value="yyyy-MM-dd" class="col-2" autocomplete="off"/>&nbsp;&nbsp;';
 			schedule+=			'<input name="place'+num+'" id="place'+num+'" type="text" readonly>';
 			schedule+=		'<button id="btn'+num+'" class="btn_plus" type="button" onclick="addSchedule('+num+')">';
-			schedule+=			'<img  class="btn_img" src="/Travelers/svc/img/addbutton.png">';
-			schedule+=			'일정추가';
+			schedule+=			'<i class="fas fa-plus-circle"></i>';
 			schedule+=		'</button>';
 			schedule+=		'<button id="btn_del'+num+'" class="btn_del" type="button" onclick="removeSchedule('+num+')">';
-			schedule+=			'<img class="del_img" src="/Travelers/svc/img/trash.png"/>';
+			schedule+=			'<i class="fas fa-minus-circle"></i>';
 			schedule+=		'</button>';
 			schedule+=		'<div id="coordinfo'+num+'">';
 			schedule+=		'</div>';
@@ -716,7 +715,7 @@ function addSchedule(num){
 			$('#schedulediv').append(schedule);
 			loadCal(num);
 			
-			if(num==maxschedule)$('#btn'+num+'').hide();
+			if(num==maxschedule) $('#btn'+num+'').hide();
 			var schedulenum='<input type="hidden" name="schedulenum" value="'+num+'">';
 			$('#schedulenum').empty();
 			$('#schedulenum').append(schedulenum);

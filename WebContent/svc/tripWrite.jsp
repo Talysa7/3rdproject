@@ -31,8 +31,6 @@
 			<hr size="1px" color="black">
 			<div class="input-box">
 				<input type="hidden" name="user_name" value="${user_name}">
-				<input type="hidden" name="schedulenum" value="1">
-				
 				<div class="form-group row">
 					<input type="text" name="trip_title" class="col-12 form-control form-control-lg" maxlength="30"
 						placeholder="${trip_title}" autofocus required>
@@ -45,14 +43,16 @@
 				
 				<div id="schedule" class="form-group row">
 					<label for="cal_date" name="schedule" class="col-2 col-form-label">${trip_schedule} ${i}</label> 
-					<input type="text" name="start${i}" id="start${i}" maxlength="10" value="yyyy-MM-dd" class="col-2" autofocus autocomplete="off" />
+					<input type="text" name="start${i}" id="start${i}" maxlength="10" class="col-2" autofocus autocomplete="off" />
 					 ~ 
-					<input type="text" name="end${i}" id="end${i}" maxlength="10" value="yyyy-MM-dd" class="col-2" autofocus autocomplete="off" /> 
+					<input type="text" name="end${i}" id="end${i}" maxlength="10" class="col-2" autofocus autocomplete="off" /> 
 					&nbsp;&nbsp; 
 					<input name="place${i}" id="place${i}" type="text" readonly="readonly" placeholder="${trip_location}"> 
 					
 					<button id="btn${i}" class="btn_plus" type="button" onclick="addSchedule(${i})">
-						<img class="btn_img" src="${project}img/addbutton.png">${btn_add_trip}
+						<i class="fas fa-plus-circle"></i>
+						<i class="fas fa-minus-circle"></i>
+						${btn_add_trip}
 					</button>
 					<div id="coordinfo${i}">
 					</div>
@@ -115,7 +115,7 @@
 				<input class="btn btn-dark btn-sm" type="button" value="${btn_list}" onclick="location='tripList.go'">
 			</div>
 			<div id="schedulenum">
-				
+				<input type="hidden" name="schedulenum" value="1">
 			</div>
 			<!-- input box -->
 		</form>
