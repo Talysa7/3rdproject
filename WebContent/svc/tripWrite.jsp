@@ -40,8 +40,8 @@
 					<label for="trip_m_num" class="col-2 col-form-label">${trip_m_num}</label>
 					<input type="number" name="trip_member_num${i}" class="col-2" min="1">
 				</div>
-				
 				<div id="schedule" class="form-group row">
+					<input type="hidden" name="num_counter" value="${i}">
 					<label for="cal_date" name="schedule" class="col-2 col-form-label">${trip_schedule} ${i}</label> 
 					<input type="text" name="start${i}" id="start${i}" maxlength="10" class="col-2" autofocus autocomplete="off" />
 					 ~ 
@@ -57,6 +57,7 @@
 					<div id="coordinfo${i}">
 					</div>
 				</div>
+				
 				<div id="schedulediv"></div>
 				<div class="form-group row">
 					<label for="trip_talklink" class="col-2 col-form-label">${trip_talklink}</label>
@@ -74,10 +75,6 @@
 					<div class="pac-card" id="pac-card">
 						<div id="pac-container">
 							<input id="pac-input" type="text" placeholder="Enter a location">
-							<div id="strict-bounds-selector" class="pac-controls">
-								<label for="use-strict-bounds">Strict Bounds</label> 
-								<input type="checkbox" id="use-strict-bounds" value="">
-							</div>
 						</div>
 					</div>
 					<div id="map"></div>
