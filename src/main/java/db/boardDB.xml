@@ -90,9 +90,12 @@
 		select coord_id from pao_trip where trip_id=#{trip_id}
 	</select>
 	<!--/////////////////////////////////////////////////// start-line pao_comment table ///////////////////////////////////////////////////-->
-	<insert id="insertComment" parameterType="db.CmtDataBean">
+	<insert id="insertComment" parameterType="db.CmtDataBean" keyProperty="comment_id">
 		INSERT INTO pao_comment (comment_content, comment_reg_date, board_no, user_id)
 		VALUES(#{comment_content}, now(), #{board_no}, #{user_id})
+		<selectKey keyProperty="comment_id" resultType="int" order="AFTER">
+         SELECT LAST_INSERT_ID()
+      </selectKey>
 	</insert>
 	<update id="updateComment" parameterType="db.CmtDataBean">
 		UPDATE pao_comment

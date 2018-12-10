@@ -24,6 +24,8 @@ import bean.SqlMapClient;
 public class LogDBBean {
 	@Resource
 	private BoardDBBean boardDao;
+	@Resource
+	private MemberDBBean memberDao;
 	SqlSession session=SqlMapClient.getSession();
 	
 	public JSONArray makeBoardLog() throws ParseException, IOException {
@@ -287,13 +289,22 @@ public class LogDBBean {
 	
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("comment_id", cmtDto.getComment_id());
-		jsonObject.put("comment_content", cmtDto.getComment_content().toString());
-		jsonObject.put("comment_reg_date", cmtDto.getComment_reg_date());
+		jsonObject.put("comment_content", cmtDto.getComment_content());
+		jsonObject.put("comment_reg_date", new Timestamp(System.currentTimeMillis()));
 		jsonObject.put("board_no", cmtDto.getBoard_no());
-		jsonObject.put("user_id", cmtDto.getUser_id().toString());
-		jsonObject.put("user_name", cmtDto.getUser_name().toString());
-		jsonArray.add(jsonObject);
+		jsonObject.put("user_id", cmtDto.getUser_id());
 		
+		String user_id = cmtDto.getUser_id();
+		String user_name;
+		if (user_id == null || user_id.equals("")) {
+			user_name = "Ex-User";
+			cmtDto.setUser_name(user_name);
+		} else {
+			user_name = memberDao.getUserName(user_id);
+			cmtDto.setUser_name(user_name);
+		}
+		jsonObject.put("user_name", cmtDto.getUser_name());
+		jsonArray.add(jsonObject);
 		wrapObject.put("result",jsonArray);
 		wrapObject.put("log_type", 4);
 		//FIXME : 확인 필요
