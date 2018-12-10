@@ -184,15 +184,30 @@ public class LogDBBean {
 				}
 			}
 			if(length == userTags.size()) {
+				if(list.size()>0) {
 					for(int i=0; i<list.size(); i++) {
-							String templog = "";
-							beforeinfo.setUser_tags(list);
-							templog = mapper.writeValueAsString(beforeinfo);
-							JSONParser parser = new JSONParser();
-							Object parseobj = parser.parse(templog);
-							JSONObject userJson = (JSONObject) parseobj;
-							jsonObj.put("before_data", userJson);						
+						String templog = "";
+						beforeinfo.setUser_tags(list);
+						templog = mapper.writeValueAsString(beforeinfo);
+						JSONParser parser = new JSONParser();
+						Object parseobj = parser.parse(templog);
+						JSONObject userJson = (JSONObject) parseobj;
+						userJson.put("user_id", beforeinfo.getUser_id());
+						userJson.put("board_id", "mypage");					
+						userJson.remove("gender");
+						userJson.remove("user_level");
+						userJson.remove("user_age");
+						userJson.remove("email");
+						userJson.remove("reg_date");
+						jsonObj.put("before_data", userJson);						
 					}
+				}else {
+					Obj.put("user_id", beforeinfo.getUser_id());
+					Obj.put("passwd", beforeinfo.getPasswd());
+					Obj.put("user_name", beforeinfo.getUser_name());
+					Obj.put("user_tags", "tag 없음");
+					jsonObj.put("before_data", Obj);
+				}
 					jsonjson.put("user_id", userDto.getUser_id());
 					jsonjson.put("passwd", userDto.getPasswd());
 					jsonjson.put("user_name", userDto.getUser_name());
@@ -216,7 +231,14 @@ public class LogDBBean {
 						JSONParser parser = new JSONParser();
 						Object parseobj = parser.parse(templog);
 						JSONObject userJson = (JSONObject) parseobj;
-						jsonObject.put("after_data", userJson);						
+						userJson.put("user_id", beforeinfo.getUser_id());
+						userJson.put("board_id", "mypage");					
+						userJson.remove("gender");
+						userJson.remove("user_level");
+						userJson.remove("user_age");
+						userJson.remove("email");
+						userJson.remove("reg_date");
+						jsonObject.put("after_data", userJson);					
 					}
 			}
 		}else {
@@ -228,6 +250,13 @@ public class LogDBBean {
 					JSONParser parser = new JSONParser();
 					Object parseobj = parser.parse(templog);
 					JSONObject userJson = (JSONObject) parseobj;
+					userJson.put("user_id", beforeinfo.getUser_id());
+					userJson.put("board_id", "mypage");					
+					userJson.remove("gender");
+					userJson.remove("user_level");
+					userJson.remove("user_age");
+					userJson.remove("email");
+					userJson.remove("reg_date");
 					jsonObj.put("before_data", userJson);
 				}
 			}else {
@@ -245,7 +274,15 @@ public class LogDBBean {
 						JSONParser parser = new JSONParser();
 						Object parseobj = parser.parse(templog);
 						JSONObject userJson = (JSONObject) parseobj;
+						userJson.put("user_id", beforeinfo.getUser_id());
+						userJson.put("board_id", "mypage");					
+						userJson.remove("gender");
+						userJson.remove("user_level");
+						userJson.remove("user_age");
+						userJson.remove("email");
+						userJson.remove("reg_date");
 						jsonObject.put("after_data", userJson);
+						
 					}
 				}else {
 					jsonjson.put("user_id", userDto.getUser_id());
@@ -282,7 +319,7 @@ public class LogDBBean {
 			System.out.println(wrapObject);
 		}			
 		}
-//	send jsonarray
+//	댓글 등록
 	public void insertCommentLog(CmtDataBean cmtDto) {
 		JSONObject wrapObject = new JSONObject();
 		JSONArray jsonArray = new JSONArray();
@@ -310,6 +347,7 @@ public class LogDBBean {
 		//FIXME : 확인 필요
 		System.out.println(wrapObject);
 	}
+//평판 등록
 	public void insertPersonReviewLog(ReviewDataBean reviewDto) {
 		JSONObject wrapObject = new JSONObject();
 		JSONArray jsonArray = new JSONArray();
@@ -327,7 +365,7 @@ public class LogDBBean {
 		wrapObject.put("log_type", 5);
 		System.out.println(wrapObject);
 	}
-	
+//검색 로그	
 	public void searchTripLog(String selectedType, String keyword ) throws ClassCastException, JsonProcessingException, ParseException {
 		JSONObject wrapObject = new JSONObject();
 		JSONArray jsonArray = new JSONArray();
