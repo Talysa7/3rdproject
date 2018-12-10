@@ -33,10 +33,10 @@
 				</div>
 				<!--수정/삭제 button -->
 				<c:if test="${boardDto.user_id eq user_id}">
-				<div>
-					<input type="button" class="btn btn-sm" value="${btn_mod}" onclick="modifyBoard(${boardDto.board_no})">
-					<input type="button" class="btn btn-sm" value="${btn_delete}" onclick="deleteBoard(${boardDto.board_no})">
-				</div>
+					<div>
+						<input type="button" class="btn btn-sm" value="${btn_mod}" onclick="modifyBoard(${boardDto.board_no})">
+						<input type="button" class="btn btn-sm" value="${btn_delete}" onclick="deleteBoard(${boardDto.board_no})">
+					</div>
 				</c:if>
 				<c:if test="${user_level eq 9}">
 				<div>
@@ -96,6 +96,7 @@
 								<form name="orderInfo">
 									<input type="hidden" name="order_${trip.trip_id}" value="${trip.coord_order}">
 									<input type="hidden" name="member_count_${trip.trip_id}" value="${trip.trip_member_count}">
+									<input type="hidden" name="countOfSchedule" value="${boardDto.tripLists.size()}">
 								</form>
 								<div class="container" style="width:100%">
 									<div class="row">
@@ -104,6 +105,7 @@
 										 ~ 
 										<input type="text" class="col-3" value="${trip.end_date}" readonly="readonly" />
 										<div class="col-12 offset-2">
+											<!-- 장소 정보 저장 시작 -->
 											<div class="loc" name="coord">
 												<input type="text" name="trip_location_${trip.coord_order}" id="address${trip.coord_order}" 
 													class="col-8 pt-3" readonly="readonly"> 
@@ -111,12 +113,13 @@
 												<input type="hidden" name="coord_lat" value="${trip.coordinate.coord_lat}">
 												<input type="hidden" id="country${trip.coord_order}" value="${trip.coordinate.country_name}">
 											</div>
-											<!-- 장소 -->
+											<!-- 장소 저장 끝 -->
 										</div>
 										<!-- column -->
 										<label class="col-2">${trip_member_list}</label>
 										<div>
 											<div id="trip_member_list_${trip.coord_order}">
+												<c:set var="isMemberOfThisTrip" value="false"/>
 												${trip.trip_members.size()}/${trip.trip_member_count},&nbsp;
 												<c:forEach var="member" items="${trip.trip_members}">
 													${member.user_name}
@@ -151,7 +154,7 @@
 	
 								<!-- tripAlbum -->
 								<div id="albumTab_${trip.trip_id}" style="display: none">
-									<jsp:include page='boardAlbum.go?board_no=${boardDto.board_no}&trip_id=${trip.trip_id}'/>
+									<jsp:include page='boardAlbum.go?board_no=${boardDto.board_no}&trip_id=${trip.trip_id}&isMemberOfThisTrip=${isMemberOfThisTrip}'/>
 								</div>
 								<!--- tripMap -->
 								<input type="hidden" value="${trip.coordinate.coord_lat}" id="lat" /> 
@@ -159,7 +162,6 @@
 								<div id="mapTab_${trip.trip_id}" style="display: none">
 								</div>
 							</div>
-						</div>
 						</c:forEach>
 					
 						<!-- 일정 Container box-->
@@ -177,6 +179,7 @@
 				<!-- id: trip_title -->
 				</section>
 			<br>
+			</div>
 			<!-- End of Post -->
 			</article>
 
@@ -200,7 +203,6 @@
 			<div id="commentList">
 			</div>
 		<!-- comment -->
-		</div>
 	</div>
 </body>
 
