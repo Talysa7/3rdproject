@@ -101,8 +101,17 @@
 	<select id="getCoordId" parameterType="int" resultType="int">
 		select coord_id from pao_trip where trip_id=#{trip_id}
 	</select>
-	<select id="advanceSearch" parameterType="java.util.Map" resultType="db.BoardDataBean">
-		select board_no from pao_trip where between start_date=#{fromDate} and end_date={toDate}
+	<select id="advanceSearchByDate" parameterType="java.util.Map" resultType="db.BoardDataBean">
+		<![CDATA[
+		select * from pao_view_board where board_no in
+		(select board_no from pao_trip where start_date>=STR_TO_DATE(#{fromDate},'%m/%d/%Y') and end_date<=STR_TO_DATE(#{toDate},'%m/%d/%Y'))
+		]]>
+	</select>
+	<select id="advanceSearchByPeriod" parameterType="java.util.Map" resultType="db.BoardDataBean">
+		<![CDATA[
+		select * from pao_view_board where board_no in
+		(select board_no from pao_trip where DATEDIFF(end_date,start_date)=#{searchPeriod} )
+		]]>
 	</select>
 	<!--/////////////////////////////////////////////////// start-line pao_comment table ///////////////////////////////////////////////////-->
 	<insert id="insertComment" parameterType="db.CmtDataBean">

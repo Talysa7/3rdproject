@@ -412,21 +412,27 @@ public class SvcViewHandler {
 	//advance search by site, start date, end date, period, tag
 	@RequestMapping("/advanceSearch")
 	public ModelAndView advanceSearchProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
-	
+		
 		String fromDate = request.getParameter("fromDate");
 		String toDate = request.getParameter("toDate");
 		String searchPeriod = request.getParameter("searchPeriod");
 		String searchTag = request.getParameter("searchTag");
+		System.out.println(fromDate);
+		System.out.println(toDate);
+	
 		
 		if(toDate == "" || toDate == null) {
 			toDate="01/01/2100";
-			searchPeriod = "";
 		}
 		
 		if(fromDate == "" || fromDate == null) {
 			fromDate="01/01/1970";
-			searchPeriod = "";
 		}
+		
+		
+		System.out.println(fromDate);
+		System.out.println(toDate);
+		System.out.println(searchPeriod);
 		
 		java.sql.Timestamp timeStampDateTo;
 		java.sql.Timestamp timeStampDateFrom;
@@ -444,23 +450,38 @@ public class SvcViewHandler {
 		}
 		
 		Map<String, String> searchMap = new HashMap<String, String>();	
-		searchMap.put("fromDate",timeStampDateFrom);
-		searchMap.put("toDate", timeStampDateTo);
+		searchMap.put("fromDate",fromDate);
+		searchMap.put("toDate", toDate);
 		searchMap.put("searchPeriod", searchPeriod);
 		searchMap.put("searchTag", searchTag);
 		
-		Iterator<String> mapIter = searchMap.keySet().iterator();
+//		Iterator<String> mapIter = searchMap.keySet().iterator();
 		 
-	    while(mapIter.hasNext()){
-	    	String key = mapIter.next();
-	        String value = searchMap.get( key );
-	 
-	        System.out.println(key+" : "+value);
-	    }
+//	    while(mapIter.hasNext()){
+//	    	String key = mapIter.next();
+//	        String value = searchMap.get( key );
+//	 
+//	        System.out.println(key+" : "+value);
+//	    }
 	    
-	    boardDao.advanceSearch(searchMap);
-	
-		return new ModelAndView("svc/tripList");
+		if(searchPeriod == "") {
+		    List<BoardDataBean> searchReceive = boardDao.advanceSearchByDate(searchMap);
+		    System.out.println(searchReceive.size());
+		    request.setAttribute("searchReceive", searchReceive);
+		    
+		}else if(searchPeriod != "") {
+			List<BoardDataBean> searchReceive = boardDao.advanceSearchByPeriod(searchMap);
+		    System.out.println(searchReceive.size());
+		    request.setAttribute("searchReceive", searchReceive);
+		}else {
+			
+		}
+	    
+		if(searchTag != "") {
+			
+		}
+	    	
+	    return new ModelAndView("svc/advanceSearch");
 }
 	/////////////////////////////////album pages/////////////////////////////////
 

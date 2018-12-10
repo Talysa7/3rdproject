@@ -56,7 +56,7 @@
 					<!-- board list start -->
 					<div class="board-list" id="board-list">
 						<c:if test="${postList.size() ne 0}">
-							<c:forEach var="post" items="${postList}">
+							<c:forEach var="post" items="${searchReceive}">
 								<!-- left row start -->
 								<div class="row">
 									<!-- col-md-11 start -->
@@ -117,26 +117,26 @@
 						<form method="post" action="advanceSearch.go">
 							<!-- pac-card start -->
 							<div class="pac-card" id="pac-card">
-								GOOGLEMAP TITLE
-								<div id="title">
+							<!-- GOOGLEMAP TITLE -->	
+							<!-- <div id="title">
 									여행 장소 검색
-								</div>
-								GOOGLEMAP RADIO BUTTON
+								</div>	 -->	
+							<!-- GOOGLEMAP RADIO BUTTON  -->	
 								<div id="type-selector" class="pac-controls">
 									<input type="radio" name="type" id="changetype-all" checked="checked">
 									<label for="changetype-all">All</label>
-									<input type="radio" name="type" id="changetype-establishment">
+							<!--	<input type="radio" name="type" id="changetype-establishment">
 									<label for="changetype-establishment">Establishments</label>
 							     	<input type="radio" name="type" id="changetype-address">
 							     	<label for="changetype-address">Addresses</label>
 									<input type="radio" name="type" id="changetype-geocode">
-									<label for="changetype-geocode">Geocodes</label>
+									<label for="changetype-geocode">Geocodes</label>	  -->	
 								</div>
-								<div id="strict-bounds-selector" class="pac-controls">
+						<!-- 	<div id="strict-bounds-selector" class="pac-controls">
 									<input type="checkbox" id="use-strict-bounds" value="">
 									<label for="use-strict-bounds">Strict Bounds</label>
-								</div>
-							  	GOOGLEMAP LOCATION TEXTAREA
+								</div>	 -->	
+							<!-- 	GOOGLEMAP LOCATION TEXTAREA  -->  
 								<div id="pac-container">
 									<input id="pac-input" type="text" placeholder="Enter a location">
 								</div>
@@ -166,12 +166,12 @@
 							</div>
 							<label>기간</label>
 							<div  class="row" style="padding: 0px 0px 10px 14px;">
-								<input name="period" type="text" class="form-control col-md-9" placeholder="일 단위로 입력하세요">	&nbsp;	
+								<input type="text" class="form-control col-md-9" name="searchPeriod" placeholder="일 단위로 입력하세요">	&nbsp;	
 								<input type="submit" class="btn btn-secondary" value="검색">
 							</div>
 							<label>태그</label>
 							<div class="row" style="padding: 0px 0px 0px 14px;">
-								<input type="text" class="form-control col-md-9" placeholder="검색할 태그를 입력하세요">&nbsp;
+								<input type="text" class="form-control col-md-9" name="searchTag" placeholder="검색할 태그를 입력하세요">&nbsp;
 							 	<input type="submit" class="btn btn-secondary" value="검색">
 							</div>
 						</form>
