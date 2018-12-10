@@ -175,74 +175,13 @@ public class LogDBBean {
 		JSONObject jsonObj = new JSONObject();
 		JSONObject jsonObject = new JSONObject();
 		ObjectMapper mapper = new ObjectMapper(); 
-		try {
-		if(list.size()==userTags.size()) {
-			int length = 0;
-			for(int i=0; i<list.size(); i++) {
-				if(userTags.get(i).getTag_id()== list.get(i).getTag_id()) {
-					length += 1;
-				}
-			}
-			if(length == userTags.size()) {
-				if(list.size()>0) {
-					for(int i=0; i<list.size(); i++) {
-						String templog = "";
-						beforeinfo.setUser_tags(list);
-						templog = mapper.writeValueAsString(beforeinfo);
-						JSONParser parser = new JSONParser();
-						Object parseobj = parser.parse(templog);
-						JSONObject userJson = (JSONObject) parseobj;
-						userJson.put("user_id", beforeinfo.getUser_id());
-						userJson.put("board_id", "mypage");					
-						userJson.remove("gender");
-						userJson.remove("user_level");
-						userJson.remove("user_age");
-						userJson.remove("email");
-						userJson.remove("reg_date");
-						jsonObj.put("before_data", userJson);						
-					}
-				}else {
-					Obj.put("user_id", beforeinfo.getUser_id());
-					Obj.put("passwd", beforeinfo.getPasswd());
-					Obj.put("user_name", beforeinfo.getUser_name());
-					Obj.put("user_tags", "tag 없음");
-					jsonObj.put("before_data", Obj);
-				}
-					jsonjson.put("user_id", userDto.getUser_id());
-					jsonjson.put("passwd", userDto.getPasswd());
-					jsonjson.put("user_name", userDto.getUser_name());
-					jsonjson.put("user_tags", "before_data와 tag일치");
-					jsonObject.put("after_data", jsonjson);
-			} else {
-					for(int i=0; i<list.size(); i++) {
-						String templog = "";
-						beforeinfo.setUser_tags(list);
-						templog = mapper.writeValueAsString(beforeinfo);
-						JSONParser parser = new JSONParser();
-						Object parseobj = parser.parse(templog);
-						JSONObject userJson = (JSONObject) parseobj;
-						jsonObj.put("before_data", userJson);
-					}					
-				
-					for(int j=0; j<userTags.size(); j++) {
-						String templog = "";
-						userDto.setUser_tags(userTags);
-						templog = mapper.writeValueAsString(userDto);
-						JSONParser parser = new JSONParser();
-						Object parseobj = parser.parse(templog);
-						JSONObject userJson = (JSONObject) parseobj;
-						userJson.put("user_id", beforeinfo.getUser_id());
-						userJson.put("board_id", "mypage");					
-						userJson.remove("gender");
-						userJson.remove("user_level");
-						userJson.remove("user_age");
-						userJson.remove("email");
-						userJson.remove("reg_date");
-						jsonObject.put("after_data", userJson);					
-					}
-			}
-		}else {
-			if(list.size()>0) {
+			if(list.size()==0) {
+				Obj.put("user_id", beforeinfo.getUser_id());
+				Obj.put("passwd", beforeinfo.getPasswd());
+				Obj.put("user_name", beforeinfo.getUser_name());
+				Obj.put("user_tags", "tag 없음");
+				jsonObj.put("before_data", Obj);
+			}else {
 				for(int i=0; i<list.size(); i++) {
 					String templog = "";
 					beforeinfo.setUser_tags(list);
@@ -259,39 +198,34 @@ public class LogDBBean {
 					userJson.remove("reg_date");
 					jsonObj.put("before_data", userJson);
 				}
-			}else {
-				Obj.put("user_id", beforeinfo.getUser_id());
-				Obj.put("passwd", beforeinfo.getPasswd());
-				Obj.put("user_name", beforeinfo.getUser_name());
-				Obj.put("user_tags", "tag 없음");
-				jsonObj.put("before_data", Obj);	
 			}
-				if(userTags.size()>0) {
-					for(int j=0; j<userTags.size(); j++) {
-						String templog = "";
-						userDto.setUser_tags(userTags);
-						templog = mapper.writeValueAsString(userDto);
-						JSONParser parser = new JSONParser();
-						Object parseobj = parser.parse(templog);
-						JSONObject userJson = (JSONObject) parseobj;
-						userJson.put("user_id", beforeinfo.getUser_id());
-						userJson.put("board_id", "mypage");					
-						userJson.remove("gender");
-						userJson.remove("user_level");
-						userJson.remove("user_age");
-						userJson.remove("email");
-						userJson.remove("reg_date");
-						jsonObject.put("after_data", userJson);
-						
-					}
-				}else {
-					jsonjson.put("user_id", userDto.getUser_id());
-					jsonjson.put("passwd", userDto.getPasswd());
-					jsonjson.put("user_name", userDto.getUser_name());
-					jsonjson.put("user_tags", "tag없음");
-					jsonObject.put("after_data", jsonjson);
+			
+			if(userTags.size() == 0) {
+				jsonjson.put("user_id", userDto.getUser_id());
+				jsonjson.put("passwd", userDto.getPasswd());
+				jsonjson.put("user_name", userDto.getUser_name());
+				jsonjson.put("user_tags", "tag없음");
+				jsonjson.put("reg_date", new Timestamp(System.currentTimeMillis()));
+				jsonObject.put("after_data", jsonjson);
+			}else {
+				for(int j=0; j<userTags.size(); j++) {
+					String templog = "";
+					userDto.setUser_tags(userTags);
+					templog = mapper.writeValueAsString(userDto);
+					JSONParser parser = new JSONParser();
+					Object parseobj = parser.parse(templog);
+					JSONObject userJson = (JSONObject) parseobj;
+					userJson.put("user_id", beforeinfo.getUser_id());
+					userJson.put("board_id", "mypage");					
+					userJson.remove("gender");
+					userJson.remove("user_level");
+					userJson.remove("user_age");
+					userJson.remove("email");
+					userJson.put("reg_date", new Timestamp(System.currentTimeMillis()));
+					jsonObject.put("after_data", userJson);
+					
 				}
-		}
+			}
 			JSONObject Object = new JSONObject();	
 			jsonArray.add(jsonObj);
 			jsonArray.add(jsonObject);
@@ -299,25 +233,7 @@ public class LogDBBean {
 			wrapObject.put("log_type", 7);
 			//확인용
 			System.out.println(wrapObject);
-		} catch(NullPointerException e) {				
-			Obj.put("user_id", beforeinfo.getUser_id());
-			Obj.put("passwd", beforeinfo.getPasswd());
-			Obj.put("user_name", beforeinfo.getUser_name());
-			Obj.put("user_tags", "tag 없음");
-			jsonObj.put("before_data", Obj);					
-			jsonjson.put("user_id", userDto.getUser_id());
-			jsonjson.put("passwd", userDto.getPasswd());
-			jsonjson.put("user_name", userDto.getUser_name());
-			jsonjson.put("user_tags", "tag없음");
-			jsonObject.put("after_data", jsonjson);
-			JSONObject Object = new JSONObject();	
-			jsonArray.add(jsonObj);
-			jsonArray.add(jsonObject);
-			wrapObject.put("result",jsonArray);
-			wrapObject.put("log_type", 7);
-			//확인용
-			System.out.println(wrapObject);
-		}			
+		
 		}
 //	댓글 등록
 	public void insertCommentLog(CmtDataBean cmtDto) {
