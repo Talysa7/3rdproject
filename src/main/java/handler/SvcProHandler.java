@@ -179,6 +179,7 @@ public class SvcProHandler {
 			int result = userDao.modifyUser(userDto);
 			if (result == 1) {
 				request.setAttribute("result", result);
+				tagDao.updateUserTags(user_id, userTags);
 				logDao.modUserLog(useruser, userDto, useruser.getUser_tags(), userTags);
 			}			
 		}		

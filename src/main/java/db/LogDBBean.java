@@ -175,6 +175,7 @@ public class LogDBBean {
 		JSONObject jsonObj = new JSONObject();
 		JSONObject jsonObject = new JSONObject();
 		ObjectMapper mapper = new ObjectMapper(); 
+		try {
 			if(list.size()==0) {
 				Obj.put("user_id", beforeinfo.getUser_id());
 				Obj.put("passwd", beforeinfo.getPasswd());
@@ -190,7 +191,7 @@ public class LogDBBean {
 					Object parseobj = parser.parse(templog);
 					JSONObject userJson = (JSONObject) parseobj;
 					userJson.put("user_id", beforeinfo.getUser_id());
-					userJson.put("board_id", "mypage");					
+					userJson.remove("board_id");					
 					userJson.remove("gender");
 					userJson.remove("user_level");
 					userJson.remove("user_age");
@@ -199,7 +200,9 @@ public class LogDBBean {
 					jsonObj.put("before_data", userJson);
 				}
 			}
-			
+		}catch(NullPointerException e) {
+			e.printStackTrace();
+		}
 			if(userTags.size() == 0) {
 				jsonjson.put("user_id", userDto.getUser_id());
 				jsonjson.put("passwd", userDto.getPasswd());
@@ -216,7 +219,7 @@ public class LogDBBean {
 					Object parseobj = parser.parse(templog);
 					JSONObject userJson = (JSONObject) parseobj;
 					userJson.put("user_id", beforeinfo.getUser_id());
-					userJson.put("board_id", "mypage");					
+					userJson.remove("board_id");					
 					userJson.remove("gender");
 					userJson.remove("user_level");
 					userJson.remove("user_age");

@@ -310,6 +310,7 @@ function IdCheck() {
 var genck = 0;
 function NameCheck() {
 	var user_name = $("#name_val").val();
+	var nickck = $("#nickck").val();
 	if (user_name) {
 		$.ajax({
 			async : true,
@@ -321,9 +322,11 @@ function NameCheck() {
 			success : function(data) {
 				if (data.countName > 0) {
 					$('#NameCheckMessage').html("닉네임이 존재합니다.")
+					nickck = 1;
 				} else {
 					$('#NameCheckMessage').html("사용가능한 닉네임입니다.")
 					genck = 1; // 닉네임 중복체크시 1이됨
+					nickck=0;
 				}
 			},
 			error : function(error) {
@@ -361,6 +364,20 @@ function confirmeMail(authNum){
 		self.close();
 	}
 }
+//userModify 폼 
+function userModCheck(){
+	var nickck = $("#nickck").val();
+	var pass1 = $("#userPassword1").val();
+	var pass2 = $("#userPassword2").val();
+	var chk = $("input:checkbox[name='tags']").is(":checked");
+	if(genck == 0){
+		alert('닉네임 중복체크를 해주세요');
+		return false;
+	}else if(pass1 != pass2){
+		alert('비밀번호확인을 해주세요');
+		return false;
+	}
+}
 
 function inputcheck() {
 	if (confirm("회원가입을 하시겠습니까?")) {
@@ -369,7 +386,7 @@ function inputcheck() {
 			return false;
 		} else if (genck == 0) {
 			alert('닉네임 중복체크를 해주세요');
-			return false;
+			return false;			
 //		} else if (inputform.confirm.value == 0){
 //			alert('이메일 인증을해주세요');
 //			return false;
