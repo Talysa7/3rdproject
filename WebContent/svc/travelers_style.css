@@ -244,13 +244,13 @@ div.right {
 }
 /*===tripList's GOOGLE MAP===*/
 .pac-card {
-  margin: 55px 0 0 30px;
+  margin: 5px 0 0 5px;
   border-radius: 2px 0 0 2px;
   outline: none;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
   background-color: #fff;
   font-family: Roboto;
-  width:96%;
+  width:98%;
   overflow:hidden;
 }
 

@@ -413,6 +413,12 @@ public class SvcViewHandler {
 	@RequestMapping("/advanceSearch")
 	public ModelAndView advanceSearchProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		
+		try {
+			request.setCharacterEncoding("utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
 		String fromDate = request.getParameter("fromDate");
 		String toDate = request.getParameter("toDate");
 		String searchPeriod = request.getParameter("searchPeriod");
@@ -433,6 +439,7 @@ public class SvcViewHandler {
 		System.out.println(fromDate);
 		System.out.println(toDate);
 		System.out.println(searchPeriod);
+		System.out.println(searchTag);
 		
 		java.sql.Timestamp timeStampDateTo;
 		java.sql.Timestamp timeStampDateFrom;
@@ -456,7 +463,7 @@ public class SvcViewHandler {
 		searchMap.put("searchTag", searchTag);
 		
 //		Iterator<String> mapIter = searchMap.keySet().iterator();
-		 
+//		 
 //	    while(mapIter.hasNext()){
 //	    	String key = mapIter.next();
 //	        String value = searchMap.get( key );

@@ -156,7 +156,7 @@
 							            uiLibrary: 'bootstrap4'
 							        });
 								</script>
-								&nbsp;
+								&nbsp;&nbsp;&nbsp;&nbsp;
 								<input id="toDate" name="toDate" width="45%"/>
 								<script>
 							        $('#toDate').datepicker({
@@ -170,7 +170,7 @@
 								<input type="submit" class="btn btn-secondary" value="검색">
 							</div>
 							<label>태그</label>
-							<div class="row" style="padding: 0px 0px 0px 14px;">
+							<div class="row" style="padding: 0px 0px 10px 14px;">
 								<input type="text" class="form-control col-md-9" name="searchTag" placeholder="검색할 태그를 입력하세요">&nbsp;
 							 	<input type="submit" class="btn btn-secondary" value="검색">
 							</div>

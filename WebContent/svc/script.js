@@ -865,7 +865,8 @@ function absent(trip_id) {
 function initMap() {
 	  var map = new google.maps.Map(document.getElementById('map'), {
 	    center: {lat: -33.8688, lng: 151.2195},
-	    zoom: 13
+	    zoom: 13,
+	    disableDefaultUI: true
 	  });
 	  var card = document.getElementById('pac-card');
 	  var input = document.getElementById('pac-input');
@@ -949,7 +950,6 @@ function initMap() {
 	        autocomplete.setOptions({strictBounds: this.checked});
 	      });
 	}
-
 
 ///////////////////////////////////////////////////////이민재//////////////////////////////////////////////////////
 /*
