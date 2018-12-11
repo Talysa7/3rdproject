@@ -478,7 +478,9 @@ public class SvcViewHandler {
 		}
 	    
 		if(searchTag != "") {
-			
+			List<BoardDataBean> searchReceive = boardDao.advanceSearchByTag(searchMap);
+		    System.out.println(searchReceive.size());
+		    request.setAttribute("searchReceive", searchReceive);
 		}
 	    	
 	    return new ModelAndView("svc/advanceSearch");
