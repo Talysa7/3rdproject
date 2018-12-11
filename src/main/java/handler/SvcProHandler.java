@@ -806,14 +806,19 @@ public class SvcProHandler {
 		memberDto.setUser_id(user_id);
 
 		boolean memberCheck = memberDao.isTripMember(memberDto);
-
-		if (!memberCheck) {
-			int addMemberResult = memberDao.addTripMember(memberDto);
-			request.setAttribute("addMemberResult", addMemberResult);
-			if(addMemberResult>=1) request.setAttribute("isMember", true);
-			else request.setAttribute("isMember", false);
+		TripDataBean trip=tripDao.getTrip(trip_id);
+		trip.setTrip_members(trip_id);
+		if(trip.getTrip_member_count()!=trip.getTrip_members().size()) {
+			if (!memberCheck) {
+				int addMemberResult = memberDao.addTripMember(memberDto);
+				request.setAttribute("addMemberResult", addMemberResult);
+				if(addMemberResult>=1) request.setAttribute("isMember", true);
+				else request.setAttribute("isMember", false);
+			}
+		} else {
+			return null;
 		}
-
+		
 		List<MemberDataBean> memberList = memberDao.getMembers(trip_id);
 		return memberList;
 	}
