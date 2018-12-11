@@ -374,7 +374,7 @@ function userModCheck(){
 		alert('닉네임 중복체크를 해주세요');
 		return false;
 	}else if(pass1 != pass2){
-		alert('비밀번호확인을 해주세요');
+		alert('비밀번호가 일치하지 않습니다');
 		return false;
 	}
 }
