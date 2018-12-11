@@ -201,7 +201,11 @@ public class LogDBBean {
 				}
 			}
 		}catch(NullPointerException e) {
-			e.printStackTrace();
+			Obj.put("user_id", beforeinfo.getUser_id());
+			Obj.put("passwd", beforeinfo.getPasswd());
+			Obj.put("user_name", beforeinfo.getUser_name());
+			Obj.put("user_tags", "tag 없음");
+			jsonObj.put("before_data", Obj);
 		}
 			if(userTags.size() == 0) {
 				jsonjson.put("user_id", userDto.getUser_id());
@@ -213,12 +217,14 @@ public class LogDBBean {
 			}else {
 				for(int j=0; j<userTags.size(); j++) {
 					String templog = "";
+					String user_id = userDto.getUser_id();
 					userDto.setUser_tags(userTags);
+					userDto.getUser_tags().get(j).setUser_id(user_id);
 					templog = mapper.writeValueAsString(userDto);
 					JSONParser parser = new JSONParser();
 					Object parseobj = parser.parse(templog);
 					JSONObject userJson = (JSONObject) parseobj;
-					userJson.put("user_id", beforeinfo.getUser_id());
+					userJson.put("user_id", user_id);
 					userJson.remove("board_id");					
 					userJson.remove("gender");
 					userJson.remove("user_level");
