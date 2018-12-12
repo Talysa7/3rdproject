@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -144,7 +146,7 @@ public class LogDBBean {
 		if(userDto != null) {
 			jsonObject.put("user_id", userDto.getUser_id());
 			jsonObject.put("passwd", userDto.getPasswd());
-			jsonObject.put("reg_date", userDto.getReg_date());
+			jsonObject.put("reg_date", userDto.getReg_date().getTime());
 			jsonObject.put("user_age", userDto.getUser_age());
 			jsonObject.put("user_level", userType);
 			jsonObject.put("user_name", userDto.getUser_name().toString());
@@ -159,7 +161,7 @@ public class LogDBBean {
 		jsonArray.add(Object);
 		JSONObject jsonjson = new JSONObject();
 		jsonjson.put("login_success", result);
-		jsonjson.put("login_time", new Timestamp(System.currentTimeMillis()));
+		jsonjson.put("login_time", LocalDateTime.now());
 		jsonArray.add(jsonjson);
 		wrapObject.put("result",jsonArray);
 		wrapObject.put("log_type", 6);
@@ -212,7 +214,7 @@ public class LogDBBean {
 				jsonjson.put("passwd", userDto.getPasswd());
 				jsonjson.put("user_name", userDto.getUser_name());
 				jsonjson.put("user_tags", "tag없음");
-				jsonjson.put("reg_date", new Timestamp(System.currentTimeMillis()));
+				jsonjson.put("reg_date", LocalDateTime.now());
 				jsonObject.put("after_data", jsonjson);
 			}else {
 				for(int j=0; j<userTags.size(); j++) {
@@ -230,7 +232,7 @@ public class LogDBBean {
 					userJson.remove("user_level");
 					userJson.remove("user_age");
 					userJson.remove("email");
-					userJson.put("reg_date", new Timestamp(System.currentTimeMillis()));
+					userJson.put("reg_date", LocalDateTime.now());
 					jsonObject.put("after_data", userJson);
 					
 				}
@@ -252,7 +254,7 @@ public class LogDBBean {
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("comment_id", cmtDto.getComment_id());
 		jsonObject.put("comment_content", cmtDto.getComment_content());
-		jsonObject.put("comment_reg_date", new Timestamp(System.currentTimeMillis()));
+		jsonObject.put("comment_reg_date", LocalDateTime.now());
 		jsonObject.put("board_no", cmtDto.getBoard_no());
 		jsonObject.put("user_id", cmtDto.getUser_id());
 		

@@ -705,6 +705,7 @@ public class SvcProHandler {
 		coordreDto.setReview_comment(comment);
 		coordreDto.setReview_point(grade);
 		coordreDto.setUser_id(user_id);
+		coordreDto.setUser_review_reg_date(new Timestamp(System.currentTimeMillis()));
 		int result = coordReviewDao.insertCoordReview(coordreDto);
 		request.setAttribute("result", result);
 		return new ModelAndView("/svc/placeWritePro");	

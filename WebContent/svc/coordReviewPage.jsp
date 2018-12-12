@@ -69,20 +69,20 @@
 		<div id="page">
 				<c:if test="${count ne 0}">
 					<c:if test="${startPage gt pageBlock}">
-						<a href="coordReview.go">[◀◀] </a>
-						<a href="coordReview.go?pageNum=${startPage-pageBlock}">[◀] </a>
+						<a href="coordReviewPage.go">[◀◀] </a>
+						<a href="coordReviewPage.go?pageNum=${startPage-pageBlock}">[◀] </a>
 					</c:if>
 					<c:forEach var="i" begin="${startPage}" end="${endPage}">
 						<c:if test="${i eq currentPage}">
 							<p>[${i}]<p>
 						</c:if>
 						<c:if test="${i ne currentPage}">					
-							<a href="coordReview.go?pageNum=${i}">[${i}] </a>
+							<a href="coordReviewPage.go?pageNum=${i}">[${i}] </a>
 						</c:if>	
 					</c:forEach>
 					<c:if test="${pageCount gt endPage}">
-						<a href ="coordReview.go?pageNum=${startPage+pageBlock}">[▶]</a>
-						<a href ="coordReview.go?pageNum=${pageCount}">[▶▶]</a>
+						<a href ="coordReviewPage.go?pageNum=${startPage+pageBlock}">[▶]</a>
+						<a href ="coordReviewPage.go?pageNum=${pageCount}">[▶▶]</a>
 					</c:if>	
 				</c:if>
 			<div class="mx-auto">

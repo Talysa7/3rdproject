@@ -197,6 +197,13 @@
 		select * from pao_coord_review where coord_id=#{coord_id}
 	</select>
 	<insert id="insertCoordReview" parameterType="db.CoordReviewDataBean">
-		insert into pao_coord_review values(#{coord_id}, #{user_id}, #{review_point}, #{review_comment})
+		insert into pao_coord_review values(#{coord_id}, #{user_id}, #{review_point}, #{review_comment}, #{user_review_reg_date})
 	</insert>
+	<select id="countCoordReview" resultType="int">
+		select count(*) from pao_coord_review; 
+	</select>
+	<select id="getAll" resultType="db.CoordReviewDataBean">
+		select * from pao_coord_review 
+		limit #{start}, #{end}
+	</select>
 </mapper>

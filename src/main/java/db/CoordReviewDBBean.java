@@ -13,6 +13,12 @@ public class CoordReviewDBBean {
 		return session.selectList("location.getCoordReview", coord_id);
 	}
 	public int insertCoordReview(CoordReviewDataBean coordreDto) {
-		return session.insert("location.getCoordReview", coordreDto);
+		return session.insert("location.insertCoordReview", coordreDto);
+	}
+	public int getCoordReviewCount() {
+		return session.selectOne("location.countCoordReview");
+	}
+	public List<CoordReviewDataBean> getAll(Map<String, Object> user) {
+		return session.selectList("location.getAll", user);
 	}
 }

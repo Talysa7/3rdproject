@@ -181,6 +181,13 @@ public class SvcViewHandler {
 		int coord_id = Integer.parseInt(request.getParameter("coord_id"));
 		List<CoordReviewDataBean> review = coordReviewDao.getCoordReview(coord_id);
 		request.setAttribute("review", review);
+		List<CoordReviewDataBean> coord = new ArrayList<CoordReviewDataBean>();
+		for(int i=0; i<review.size(); i++) {
+			CoordReviewDataBean coordreDto = review.get(i);
+			coordreDto.setCoordinate(coord_id);
+			coord.add(coordreDto);
+		}
+		request.setAttribute("coord", coord);
 		return new ModelAndView("svc/coordReview");
 	}
 	@RequestMapping("/memberReview")
@@ -198,11 +205,13 @@ public class SvcViewHandler {
 		for(int i=0; i<member.size(); i++) {
 			String memId = member.get(i).getUser_id();
 			user.put("user_id", memId);
+			List<ReviewDataBean> bean = new ArrayList<ReviewDataBean>();
 			List<ReviewDataBean>recentTo = reviewDao.getRecent(user);
 			ReviewDataBean bestTo = reviewDao.getBest(user);
-			recentTo.add(bestTo);
-			recentTo.add(reviewDao.getWorst(user));
-			users.add(recentTo);
+			bean.add(bestTo);
+			bean.addAll(recentTo);
+			bean.add(reviewDao.getWorst(user));
+			users.add(bean);
 			
 		}
 
@@ -293,6 +302,32 @@ public class SvcViewHandler {
 			}
 		}
 		return new ModelAndView("svc/reviewPage");
+	}
+	@RequestMapping("/coordReviewPage")
+	public ModelAndView SvcCoordReviewPageProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
+		String user_id = (String) request.getSession().getAttribute("user_id");
+		Map<String, Object> user = new HashMap<String, Object>();				
+		user.put("user_id", user_id);
+		int count = 0;
+		String pageNum = request.getParameter("pageNum");
+		if(pageNum == null || pageNum.equals("")){
+			pageNum = "1";
+		}
+	
+		count = coordReviewDao.getCoordReviewCount();			
+		setReviewLogic(request, pageNum, count, start, end);
+		user.put("start", start);
+		user.put("end", postPerPage);
+		List<CoordReviewDataBean> review = coordReviewDao.getAll(user);
+		List<CoordReviewDataBean> coord = new ArrayList<CoordReviewDataBean>();
+		for(int i=0; i<review.size(); i++) {
+			CoordReviewDataBean coordreDto = review.get(i);
+			coordreDto.setCoordinate(coordreDto.getCoord_id());
+			coord.add(coordreDto);
+		}		
+		request.setAttribute("review", coord);		
+	
+		return new ModelAndView("svc/coordReviewPage");
 	}
 	/////////////////////////////////board pages/////////////////////////////////
 
