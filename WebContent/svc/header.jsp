@@ -39,7 +39,7 @@
 </head>
 <body>
 	<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-		<a class="navbar-brand" href="main.go"> 
+		<a class="navbar-brand" href="tripList.go"> 
 		<img src="${project}img/logo_c.png" width="30" height="30" class="d-inline-block align-top">
 		 Travelers
 		</a>
