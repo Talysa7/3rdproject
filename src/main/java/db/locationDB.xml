@@ -141,8 +141,8 @@
 		SELECT coord_lat FROM pao_coordinate WHERE coord_id=#{coord_id}
 	</select>
 	<select id="getCountryName" parameterType="int" resultType="String">
-		SELECT country_name FROM pao_country WHERE country_id=
-		(SELECT country_id FROM pao_coordinate WHERE coord_id=#{coord_id})
+		SELECT country_kor_name FROM pao_country WHERE country_code=
+		(SELECT country_code FROM pao_coordinate WHERE coord_id=#{coord_id})
 	</select>
 	<!-- FIXME : 여기까지 getTripDetail -->
 	
@@ -193,8 +193,9 @@
 	</select>
 	
 	<!-- CoordReview 에서 쓰는 sql문 -->
-	<select id="getCoordReview" parameterType="int" resultType="db.CoordReviewDataBean">
+	<select id="getCoordReview" parameterType="java.util.Map" resultType="db.CoordReviewDataBean">
 		select * from pao_coord_review where coord_id=#{coord_id}
+		limit #{start}, #{end}
 	</select>
 	<insert id="insertCoordReview" parameterType="db.CoordReviewDataBean">
 		insert into pao_coord_review values(#{coord_id}, #{user_id}, #{review_point}, #{review_comment}, #{user_review_reg_date})
@@ -202,8 +203,18 @@
 	<select id="countCoordReview" resultType="int">
 		select count(*) from pao_coord_review; 
 	</select>
+	<select id="getCReviewCount" parameterType="java.util.Map" resultType="int">
+		select count(*) from pao_coord_review where coord_id=#{coord_id}
+	</select>
+	<select id="getCReviewSum" parameterType="java.util.Map" resultType="int">
+		select review_point from pao_coord_review where coord_id=#{coord_id}
+	</select>
 	<select id="getAll" resultType="db.CoordReviewDataBean">
 		select * from pao_coord_review 
 		limit #{start}, #{end}
+	</select>
+	<!-- sql statement for providing place information -->
+	<select id="getTripListByCoord" parameterType="int" resultType="db.TripDataBean">
+		select * from pao_trip where coord_id=#{coord_id}
 	</select>
 </mapper>

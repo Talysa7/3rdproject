@@ -7,6 +7,28 @@ public class CountryDataBean {
 	//FK
 	private int region_id;					//int (8), not null, on delete cascade
 	
+	private String country_code;
+	private String country_eng_name;
+	private String country_kor_name;
+	
+	public String getCountry_code() {
+		return country_code;
+	}
+	public void setCountry_code(String country_code) {
+		this.country_code = country_code;
+	}
+	public String getCountry_eng_name() {
+		return country_eng_name;
+	}
+	public void setCountry_eng_name(String country_eng_name) {
+		this.country_eng_name = country_eng_name;
+	}
+	public String getCountry_kor_name() {
+		return country_kor_name;
+	}
+	public void setCountry_kor_name(String country_kor_name) {
+		this.country_kor_name = country_kor_name;
+	}
 	public int getCountry_id() {
 		return country_id;
 	}

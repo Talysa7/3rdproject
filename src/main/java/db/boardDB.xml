@@ -145,4 +145,8 @@
 		select * from pao_view_board
 	</select>
 	<!-- ////////////////////////////////////////////////임시쿼리 끝. 추후 삭제 예정 ///////////////////////////////////////////////// -->
+	<!--  LOG INSERT 문-->
+	<insert id="insertLog" parameterType="String">
+	 	insert into pao_log(log_str) values(#{wrapObject})
+	</insert>
 </mapper>

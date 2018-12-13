@@ -59,7 +59,7 @@
 				</li>
 				<li class="nav-item"><a class="nav-link" href="tripList.go">${page_board_eng}</a></li>
 				<li class="nav-item"><a class="nav-link" href="album.go">${page_album_eng}</a></li>
-				
+				<li class="nav-item"><a class="nav-link" href="coordPage.go">Place</a></li>
 				<c:if test="${sessionScope.user_id ne null}">
 				<li class="nav-item">
 					<a class="nav-link" href="myTrip.go">${page_calendar_eng}</a>

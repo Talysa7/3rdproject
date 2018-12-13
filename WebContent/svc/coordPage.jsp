@@ -22,8 +22,8 @@
 </head>
 
 <body>
-	<div class="container">			
-			<!-- mid area row start -->
+	<div class="container">		
+		<!-- mid area row start -->
 			<div class="row">
 			
 				<!-- left area start -->
@@ -48,10 +48,16 @@
 							<!-- card body start -->
 							<div class="card-body">
 								<div class="mb-1 text-muted text-right">
-									<i><b>장소</b></i>&nbsp; ${coord.coord_name}
+									<i><b>장소</b></i>&nbsp; ${review.coordinate.coord_name}
 								</div>
 								<strong class="d-inline-block mb-2">
-						<label>평가점수 : </label>${review.review_point }<br>
+						<label>평가점수 : </label><c:choose>
+											<c:when test="${review.review_point eq 1}"> ★ </c:when>
+											<c:when test="${review.review_point eq 2}"> ★★  </c:when>
+											<c:when test="${review.review_point eq 3}"> ★★★  </c:when>
+											<c:when test="${review.review_point eq 4}"> ★★★★    </c:when>
+											<c:when test="${review.review_point eq 5}"> ★★★★★     </c:when>
+										</c:choose><br>
 								</strong>
 								<h3 class="mb-0">
 						<label>평가 내용: </label> ${review.review_comment}<br>
@@ -90,6 +96,8 @@
 			</div>
 	</div>
 	<!-- body box -->
+	</div>
+	</div>
 	
 			</div>
 	<!-- Footer -->

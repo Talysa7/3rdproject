@@ -89,7 +89,16 @@ public class TripDBBean {
 			return session.insert("board.insertTrip",tripDto);
 		}
 //////////////////////////////////////////////////////2018-11-05 이민재 트립 insert 추가 //////////////////////////////////////////////
-
-		
+////////////////////////////////////////////////////장소 정보 관련 
+		public List<TripDataBean> getTripListByCoord(int coord_id) {		//modified method name to divide
+			List<TripDataBean> boardTripList=session.selectList("location.getTripListByCoord", coord_id);
+			//set members user_name to each trip, for convenience
+			if(boardTripList.size()>0) {
+				for(TripDataBean trip:boardTripList) {
+					trip.setTrip_members(trip.getTrip_id());
+				}
+			}
+			return boardTripList;
+		}	
 
 }

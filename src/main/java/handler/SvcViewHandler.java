@@ -28,9 +28,12 @@ import db.CoordDBBean;
 import db.CoordDataBean;
 import db.CoordReviewDBBean;
 import db.CoordReviewDataBean;
+import db.CountryDBBean;
+import db.CountryDataBean;
 import db.LogDBBean;
 import db.MemberDBBean;
 import db.MemberDataBean;
+import db.RegionDataBean;
 import db.ReviewDBBean;
 import db.ReviewDataBean;
 import db.TagDBBean;
@@ -66,6 +69,8 @@ public class SvcViewHandler {
 	private CoordReviewDBBean coordReviewDao;
 	@Resource
 	private LogDBBean logDao;
+	@Resource
+	private CountryDBBean countryDao;
 
 	//amount of displayed photos in a page
 	private static final int photoPerPage=6;
@@ -179,15 +184,23 @@ public class SvcViewHandler {
 	@RequestMapping("/coordReview")
 	public ModelAndView SvcCoordReviewProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		int coord_id = Integer.parseInt(request.getParameter("coord_id"));
-		List<CoordReviewDataBean> review = coordReviewDao.getCoordReview(coord_id);
-		request.setAttribute("review", review);
+		String pageNum = request.getParameter("pageNum");
+		if(pageNum == null || pageNum.equals("")){
+			pageNum = "1";
+		}		
+		int count = 0;
+		Map<String, Object>user = new HashMap<String, Object>();
+		user.put("coord_id", coord_id);
+		count = coordReviewDao.getReviewCount(user);			
+		setReviewLogic(request, pageNum, count, start, end);
+		user.put("start", start);
+		user.put("end", postPerPage);
+		List<CoordReviewDataBean> review = coordReviewDao.getCoordReview(user);
 		List<CoordReviewDataBean> coord = new ArrayList<CoordReviewDataBean>();
-		for(int i=0; i<review.size(); i++) {
-			CoordReviewDataBean coordreDto = review.get(i);
-			coordreDto.setCoordinate(coord_id);
-			coord.add(coordreDto);
-		}
-		request.setAttribute("coord", coord);
+		
+		CoordDataBean coordDto = coordDao.getCoordinate(coord_id);		
+		request.setAttribute("review", review);
+		request.setAttribute("coord", coordDto);
 		return new ModelAndView("svc/coordReview");
 	}
 	@RequestMapping("/memberReview")
@@ -303,7 +316,7 @@ public class SvcViewHandler {
 		}
 		return new ModelAndView("svc/reviewPage");
 	}
-	@RequestMapping("/coordReviewPage")
+	@RequestMapping("/coordPage")
 	public ModelAndView SvcCoordReviewPageProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		String user_id = (String) request.getSession().getAttribute("user_id");
 		Map<String, Object> user = new HashMap<String, Object>();				
@@ -313,20 +326,93 @@ public class SvcViewHandler {
 		if(pageNum == null || pageNum.equals("")){
 			pageNum = "1";
 		}
-	
+		
 		count = coordReviewDao.getCoordReviewCount();			
 		setReviewLogic(request, pageNum, count, start, end);
 		user.put("start", start);
-		user.put("end", postPerPage);
+		user.put("end", postPerPage);		
+		
 		List<CoordReviewDataBean> review = coordReviewDao.getAll(user);
 		List<CoordReviewDataBean> coord = new ArrayList<CoordReviewDataBean>();
 		for(int i=0; i<review.size(); i++) {
 			CoordReviewDataBean coordreDto = review.get(i);
 			coordreDto.setCoordinate(coordreDto.getCoord_id());
 			coord.add(coordreDto);
-		}		
+			int coord_id =  coordreDto.getCoord_id();
+			user.put("coord_id", coord_id);
+			//AVERAGE-POINT
+			Double reviewCount = (double) count;
+			request.setAttribute("count", count);
+			Double point = (double) coordReviewDao.getCReviewSum(user);
+			Double divide = 0.0;
+			try {
+				divide =(double) (point/reviewCount);						
+				divide = Double.parseDouble(String.format("%.2f",divide));
+			}catch(ArithmeticException e) {
+				divide = 0.0;
+			}					
+			request.setAttribute("average", divide);
+			/*
+			// country info
+			CoordDataBean coordDto = coordDao.getCoordinate(coord_id);
+			String country_code = coordDto.getCountry_code();			
+			CountryDataBean country = new CountryDataBean();
+			country.setCountry_code(country_code);
+			request.setAttribute("country", country);
+			//region info
+			int region_id = country.getRegion_id();
+			RegionDataBean regionDto = new RegionDataBean();
+			regionDto.setRegion_id(region_id);
+			request.setAttribute("region", regionDto);*/
+			
+			//coord info
+			CoordDataBean coordDto = coordDao.getCoordinate(coord_id);
+			// country info
+			String countryname = countryDao.getCountryName(coord_id);
+			List<TripDataBean>tripDto = tripDao.getTripListByCoord(coord_id);
+			int board_no = tripDto.get(i).getBoard_no();
+			List<TagDataBean> tags = boardDao.getPost(board_no).getBoard_tags();
 		request.setAttribute("review", coord);		
-	
+		}
+		return new ModelAndView("svc/coordPage");
+	}
+	@RequestMapping("/searchPlace")
+	public ModelAndView svcSearchPlaceProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException, UnsupportedEncodingException {
+		try {
+			request.setCharacterEncoding("utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		String pageNum = request.getParameter("pageNum");
+		if(pageNum == null || pageNum.equals("")){
+			pageNum = "1";
+		}
+		Map<String, Object> user = new HashMap<String, Object>();
+		//get the type and keyword of searching
+		String keyword=request.getParameter("keyword");
+		request.setAttribute("keyword", keyword);
+		//set List
+		List<CoordReviewDataBean> foundList = null;
+		//find trips for each type
+		List<CoordDataBean> coord = coordDao.coordAutoComplete(keyword);
+		int count = coord.size();
+		setReviewLogic(request, pageNum, count, start, end);
+		user.put("start", start);
+		user.put("end", postPerPage);		
+		for(int i=0; i<coord.size();i++) {
+			int coord_id = coord.get(i).getCoord_id();
+			user.put("coord_id", coord_id);
+			List<CoordReviewDataBean> list = coordReviewDao.getCoordReview(user);
+			list.get(i).setCoordinate(coord_id);
+			foundList.addAll(list);
+		}
+		
+		//count check		
+		if(foundList.size()>0) {
+			count=foundList.size();
+		}
+		request.setAttribute("review", foundList);
+		request.setAttribute("count", count);
 		return new ModelAndView("svc/coordReviewPage");
 	}
 	/////////////////////////////////board pages/////////////////////////////////
