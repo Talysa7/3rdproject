@@ -18,7 +18,7 @@ function initMap() {
 
 	var autocomplete = new google.maps.places.Autocomplete(input);
 	autocomplete.bindTo('bounds', map);
-	autocomplete.setFields([ 'address_components', 'geometry', 'icon', 'name' ]);
+	autocomplete.setFields([ 'address_components', 'formatted_phone_number', 'geometry', 'icon', 'name', 'photos', 'vicinity' ]);
 
 	var infowindow = new google.maps.InfoWindow();
 	infowindow.setContent(infowindowContent);
