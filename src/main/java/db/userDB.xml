@@ -121,8 +121,9 @@
 	</insert>
 
 	<select id="checkId" parameterType="String" resultType="int">
-		select
-		count(*) from pao_user where user_id=#{user_id}
+		SELECT COUNT(*) 
+		FROM pao_user 
+		WHERE user_id=#{user_id}
 	</select>
 
 	<select id="emailCheck" parameterType="String" resultType="int">

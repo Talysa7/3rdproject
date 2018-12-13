@@ -39,7 +39,7 @@
 </head>
 <body>
 	<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-		<a class="navbar-brand" href="main.go"> 
+		<a class="navbar-brand" href="tripList.go"> 
 		<img src="${project}img/logo_c.png" width="30" height="30" class="d-inline-block align-top">
 		 Travelers
 		</a>
@@ -96,9 +96,12 @@
 		<!-- Bootstrap core JavaScript (**Essential for Toggler action)
 	================================================== -->
 		<!-- Placed at the end of the document so the pages load faster -->
+<!-- 	jQuery 동일 버전을 파일로 갖고 있어서(slim 차이는 있지만) 주석처리하고 내부 파일 사용함	
 		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
 			integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-			crossorigin="anonymous"></script>
+			crossorigin="anonymous"></script> 
+-->
+		<script src="../jquery-3.3.1.js"></script>
 		<script
 			src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
 			integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
@@ -112,4 +115,5 @@
 			href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" 
 			integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
         	crossorigin="anonymous">
+        <script src="../jquery.serialize-object.min.js"></script>
 </html>
