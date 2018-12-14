@@ -378,9 +378,6 @@ public class SvcViewHandler {
 					if(boardTags.get(j).getTag_id()!= boardTags.get(k).getTag_id()) {
 						int tag_id = boardTags.get(j).getTag_id();
 						tagInt[j] = tag_id;
-					}else {
-						j--;
-						break;
 					}
 				}			
 				if(tagInt[j]!= 0) {

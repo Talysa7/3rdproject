@@ -53,10 +53,6 @@
 						<label>장소 : </label>${coord.coord_name}<br>
 								</strong>
 								<h6 class="mb-0">
-						<c:forEach var="tags" items="${coord.boardtags}" varStatus="stat">
-						<label>태그 : ${tags.tag_value}</label><br>
-						</c:forEach>
-
 						<c:forEach var="review" items="${coord.coordReview}" varStatus="status" begin="0" end="2">
 						<label>${status.count}번째 평가</label><br>
 						<label>평가점수 : </label><c:choose>
@@ -70,6 +66,9 @@
 						<c:if test="${status.index ge 3 }">
 							<a href="coordReview.go?coord_id=${coord.coord_id}">평판보기</a>
 						</c:if>
+						</c:forEach>
+						<c:forEach var="tag" items="${coord.boardtags}">
+							<label class="btn btn-sm taglist"> # ${tag.tag_value} </label>
 						</c:forEach>
 								</h6>
 							</div>
