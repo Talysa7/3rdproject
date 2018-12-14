@@ -1,5 +1,6 @@
 package db;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
@@ -68,12 +69,15 @@ public class TripDBBean {
 	public List<TripDataBean> getUserTripList(String user_id) {
 		List<TripDataBean> userTripList=session.selectList("user.getUserTripList", user_id);
 		//set members user_name to each trip, for convenience
+		List<TripDataBean> trip = new ArrayList<TripDataBean>();
 		if(userTripList.size()>0) {
-			for(TripDataBean trip:userTripList) {
-				trip.setTrip_members(trip.getTrip_id());
-			}
+			for(int i=0; i<userTripList.size(); i++) {
+			TripDataBean tripDto = userTripList.get(i);
+			tripDto.setTrip_members(userTripList.get(i).getTrip_id());
+			trip.add(tripDto);
+			}			
 		}
-		return userTripList;
+		return trip;
 	}
 	
 	//Here was a method 'isOwner' testing 'Is this user the owner of this article?'

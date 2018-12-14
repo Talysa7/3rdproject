@@ -55,9 +55,13 @@ import db.CmtDBBean;
 import db.CmtDataBean;
 import db.CoordDBBean;
 import db.CoordDataBean;
+import db.CoordReviewDBBean;
+import db.CoordReviewDataBean;
+import db.ReviewDataBean;
 import db.LogDBBean;
 import db.MemberDBBean;
 import db.MemberDataBean;
+import db.ReviewDBBean;
 import db.TagDBBean;
 import db.TagDataBean;
 import db.BoardDBBean;
@@ -91,6 +95,10 @@ public class SvcProHandler {
 	private BoardDBBean boardDao;
 	@Resource
 	private MemberDBBean memberDao; 
+	@Resource
+	private ReviewDBBean reviewDao;
+	@Resource
+	private CoordReviewDBBean coordReviewDao;
 
 
 	///////////////////////////////// user pages/////////////////////////////////
@@ -353,7 +361,6 @@ public class SvcProHandler {
 		for (int i = 1; i <= schedulenum; i++) {
 			TripDataBean tripDto = new TripDataBean();
 			String coord_name = request.getParameter("place"+i);
-			System.out.println(coord_name);
 			List<CoordDataBean> coords = coordDao.checkCoordName(coord_name);	//	 같은이름의 coord가 있나 체크.
 			int coord_id=-1;	//	coord_id 초기값.
 			
@@ -364,9 +371,11 @@ public class SvcProHandler {
 				String country_code = request.getParameter("country_code" + i + "");
 				double coord_lat = Double.parseDouble(request.getParameter("lat" + i + ""));
 				double coord_long = Double.parseDouble(request.getParameter("lng" + i + ""));
-				
+				System.out.println(country_code);
+				System.out.println(coord_lat);
+				System.out.println(coord_long);
 				coordDto.setCoord_name(coord_name);
-				coordDto.setCountry_id(country_code);
+				coordDto.setCountry_code(country_code);
 				coordDto.setCoord_lat(coord_lat);
 				coordDto.setCoord_long(coord_long);
 				
@@ -640,7 +649,57 @@ public class SvcProHandler {
 		response.getOutputStream().flush();
 		response.getOutputStream().close();
 	}
-
+	/////////////////////////review ////////////////////
+	@RequestMapping("/reviewPro")
+	public ModelAndView evaluationProcess(HttpServletRequest request, HttpServletResponse response)
+	 		throws HandlerException, IOException{
+		try {
+			request.setCharacterEncoding("utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		String user_name = request.getParameter("sel2");
+		user_name = user_name.split("/")[1];
+		System.out.println(user_name);
+		String evaluation = request.getParameter("textarea");
+		int grade = Integer.parseInt(request.getParameter("grade"));
+		int trip_id = Integer.parseInt(request.getParameter("sel1"));
+		String user_id = (String) request.getSession().getAttribute("user_id");
+		
+		ReviewDataBean evalDto = new ReviewDataBean();
+		evalDto.setReview_comment(evaluation);
+		evalDto.setReview_point(grade);
+		evalDto.setReviewer_id(user_id);
+		evalDto.setUser_id(user_name);
+		evalDto.setTrip_id(trip_id);
+		evalDto.setUser_review_reg_date( new Timestamp(System.currentTimeMillis()));
+		int result = reviewDao.insertEvaluation(evalDto);
+		request.setAttribute("result", result);
+		return new ModelAndView("/svc/reviewPro");		
+	}
+	/////////////////////////Coordreview  placeWritePro ////////////////////
+	@RequestMapping("/placeWritePro")
+	public ModelAndView placeWriteProcess(HttpServletRequest request, HttpServletResponse response)
+	throws HandlerException, IOException{
+		try {
+			request.setCharacterEncoding("utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		String comment = request.getParameter("textarea");
+		int grade = Integer.parseInt(request.getParameter("grade"));
+		int coord_id = Integer.parseInt(request.getParameter("sel1"));
+		String user_id = (String) request.getSession().getAttribute("user_id");
+		
+		CoordReviewDataBean coordreDto = new CoordReviewDataBean();
+		coordreDto.setCoord_id(coord_id);
+		coordreDto.setReview_comment(comment);
+		coordreDto.setReview_point(grade);
+		coordreDto.setUser_id(user_id);
+		int result = coordReviewDao.insertCoordReview(coordreDto);
+		request.setAttribute("result", result);
+		return new ModelAndView("/svc/placeWritePro");	
+	}
 	///////////////////////////////// ajax list/////////////////////////////////
 
 	@RequestMapping(value = "/checkId.go", method = RequestMethod.POST, produces = "application/json")

@@ -12,7 +12,15 @@ public class CoordDataBean {
 	// guest parameter from pao_region_match
 	private List<String> region_types;			// Array of region_type, varchar (30)
 												// region types of this coordinate
+	private String country_code;			//varchar (2)
 	
+	
+	public String getCountry_code() {
+		return country_code;
+	}
+	public void setCountry_code(String country_code) {
+		this.country_code = country_code;
+	}
 	public int getCoord_id() {
 		return coord_id;
 	}
