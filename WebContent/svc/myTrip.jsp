@@ -22,29 +22,45 @@
 </head>
 
 <body>
-	<div class="container">
-		<c:choose>
-			<c:when test="${myTrips.size() eq 0}">
-				<center>
-					<h6>${search_no_result}</h6>
-					<br>
-					<img src="${project}img/paori.png">
-				</center>
-			</c:when>
-			<c:otherwise>
-				<c:forEach var="trip" items="${myTrips}">
-						<label>게시물 보기 : </label><a href="/3rdProject/trip.go?board_no=${trip.board_no}">link</a><br>
-						<label>가는 곳 : </label> ${trip.coord_name}<br>
-						<label>날짜 : </label>${trip.start_date}~${trip.end_date}<br>
-						<label>평가 : </label><a href="/3rdProject/coordReview.go?coord_id=${trip.coord_id}">link</a><br>
-						<c:set var = "now" value = "<%= new java.util.Date()%>" />	
-						<c:if test="${now lt trip.end_date }">					
-						<label>평판보기 : </label><a href="/3rdProject/memberReview.go?trip_id=${trip.trip_id}">link</a><br>
-						</c:if>
-					<hr size="1px" color="black" noshade>
-				</c:forEach>
-			</c:otherwise>
-		</c:choose>
+	<div class="body-box">
+		<div class="container">
+			<c:choose>
+				<c:when test="${myTrips.size() eq 0}">
+					<center>
+						<h6>${search_no_result}</h6>
+						<br>
+						<img src="${project}img/paori.png">
+					</center>
+				</c:when>
+				<c:otherwise>
+					<div class="row">
+						<c:forEach var="trip" items="${myTrips}">
+							<div class="col-md-3">
+								<div class="card mb-3 shadow-sm">
+									<img class="card-img-top" src="${trip.thumbnail}">
+									<div class="card-body">
+										<h3 class="card-title">
+											<a href="/3rdProject/trip.go?board_no=${trip.board_no}">${trip.coord_name}</a>
+										</h3>
+										<div class="text-muted text-right"><i>${trip.start_date}~${trip.end_date}</i></div><br>
+										<label> 멤버 : 
+											<c:forEach var="member" items="${trip.trip_members}">
+												${member.user_name}
+											</c:forEach>
+										</label><br>
+										<label>평가 : </label><a href="/3rdProject/coordReview.go?coord_id=${trip.coord_id}">link</a><br>
+										<c:set var = "now" value = "<%= new java.util.Date()%>" />
+										<c:if test="${now lt trip.end_date }">
+											<label>평판보기 : </label><a href="/3rdProject/memberReview.go?trip_id=${trip.trip_id}">link</a><br>
+										</c:if>
+									</div>
+								</div>
+							</div>
+						</c:forEach>
+					</div>
+				</c:otherwise>
+			</c:choose>
+		</div>
 	</div>
 </body>
 </html>
