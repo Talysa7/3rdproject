@@ -423,10 +423,8 @@ public class SvcViewHandler {
 		String toDate = request.getParameter("toDate");
 		String searchPeriod = request.getParameter("searchPeriod");
 		String searchTag = request.getParameter("searchTag");
-		System.out.println(fromDate);
-		System.out.println(toDate);
-	
-		
+		String searchSite = request.getParameter("searchSite");
+
 		if(toDate == "" || toDate == null) {
 			toDate="01/01/2100";
 		}
@@ -435,11 +433,11 @@ public class SvcViewHandler {
 			fromDate="01/01/1970";
 		}
 		
-		
-		System.out.println(fromDate);
-		System.out.println(toDate);
-		System.out.println(searchPeriod);
-		System.out.println(searchTag);
+		System.out.println("시작일 : "+fromDate);
+		System.out.println("종료일 : "+toDate);
+		System.out.println("기간 : "+searchPeriod);
+		System.out.println("태그 : "+searchTag);
+		System.out.println("장소 : "+searchSite);
 		
 		java.sql.Timestamp timeStampDateTo;
 		java.sql.Timestamp timeStampDateFrom;
@@ -461,6 +459,7 @@ public class SvcViewHandler {
 		searchMap.put("toDate", toDate);
 		searchMap.put("searchPeriod", searchPeriod);
 		searchMap.put("searchTag", searchTag);
+		searchMap.put("searchSite", searchSite);
 		
 //		Iterator<String> mapIter = searchMap.keySet().iterator();
 //		 
@@ -473,12 +472,12 @@ public class SvcViewHandler {
 	    
 		if(searchPeriod == "") {
 		    List<BoardDataBean> searchReceive = boardDao.advanceSearchByDate(searchMap);
-		    System.out.println(searchReceive.size());
+		    System.out.println("검색결과 개수 기간x: "+searchReceive.size()+"\n");
 		    request.setAttribute("searchReceive", searchReceive);
 		    
 		}else if(searchPeriod != "") {
 			List<BoardDataBean> searchReceive = boardDao.advanceSearchByPeriod(searchMap);
-		    System.out.println(searchReceive.size());
+		    System.out.println("검색결과 개수 기간o: "+searchReceive.size()+"\n");
 		    request.setAttribute("searchReceive", searchReceive);
 		}else {
 			
@@ -486,10 +485,16 @@ public class SvcViewHandler {
 	    
 		if(searchTag != "") {
 			List<BoardDataBean> searchReceive = boardDao.advanceSearchByTag(searchMap);
-		    System.out.println(searchReceive.size());
+		    System.out.println("검색결과 개수 태그: "+searchReceive.size()+"\n");
 		    request.setAttribute("searchReceive", searchReceive);
 		}
-	    	
+		
+		if(searchSite != "") {
+			List<BoardDataBean> searchReceive = boardDao.advanceSearchBySite(searchMap);
+		    System.out.println("검색결과 개수 장소: "+searchReceive.size()+"\n");
+		    request.setAttribute("searchReceive", searchReceive);
+		}
+
 	    return new ModelAndView("svc/advanceSearch");
 }
 	/////////////////////////////////album pages/////////////////////////////////

@@ -138,7 +138,7 @@
 								</div>	 -->	
 							<!-- 	GOOGLEMAP LOCATION TEXTAREA  -->  
 								<div id="pac-container">
-									<input id="pac-input" type="text" placeholder="Enter a location">
+									<input id="pac-input" name="searchSite" type="text" placeholder="Enter a location">
 								</div>
 							</div>
 							<!-- pac card end -->

@@ -154,5 +154,8 @@ public class BoardDBBean {
 		return session.selectList("board.advanceSearchByTag",searchMap);
 	}
 	
+	public List<BoardDataBean> advanceSearchBySite(Map<String,String> searchMap){
+		return session.selectList("board.advanceSearchBySite",searchMap);
+	}
 	
 }
