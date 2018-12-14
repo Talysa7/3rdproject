@@ -1,6 +1,9 @@
 package db;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 //database table : pao_coordinate
 public class CoordDataBean {
@@ -13,7 +16,10 @@ public class CoordDataBean {
 	private List<String> region_types;			// Array of region_type, varchar (30)
 												// region types of this coordinate
 	private String country_code;			//varchar (2)
-	
+	//using this to show place information
+	private List<CoordReviewDataBean> coordReview;	
+	private List<TagDataBean> boardtags;
+	private String country_name;
 	
 	public String getCountry_code() {
 		return country_code;
@@ -62,4 +68,34 @@ public class CoordDataBean {
 	public void setRegion_types(List<String> region_types) {
 		this.region_types = region_types;
 	}
+	public List<CoordReviewDataBean> getCoordReview() {
+		return coordReview;
+	}
+	public void setCoordReview(List<CoordReviewDataBean> list) {
+		this.coordReview = list;
+	}
+	public void setCoordReview(int coord_id) {
+		CoordReviewDBBean coordReviewDao=new CoordReviewDBBean();
+		setCoordReview(coordReviewDao.coordReview(coord_id));
+	}
+	public List<TagDataBean> getBoardtags() {
+		return boardtags;
+	}
+	public void setBoardtags(List<TagDataBean> boardtags) {
+		this.boardtags = boardtags;
+	}
+	public void setBoardtags(int coord_id) {
+		TripDBBean tripDto = new TripDBBean();
+		List<TripDataBean>trip = tripDto.getTripListByCoord(coord_id);
+		List<TagDataBean> boardTags = new ArrayList<TagDataBean>();
+		for(int i=0; i<trip.size(); i++) {
+			int board_no = trip.get(i).getBoard_no();
+			BoardDBBean board = new BoardDBBean();
+			BoardDataBean boardDto = board.getPost(board_no);
+			List<TagDataBean> tags = boardDto.getBoard_tags();
+			boardTags.addAll(tags);
+		}
+		setBoardtags(boardTags);
+	}
+	
 }

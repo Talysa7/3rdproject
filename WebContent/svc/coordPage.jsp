@@ -30,7 +30,7 @@
 				<div id="left">
 				<div class="coordReview-list" id="coordReview-list">
 				<c:choose>
-				<c:when test="${review.size() eq 0}">
+				<c:when test="${coord.size() eq 0}">
 					<center>
 						<h6>${search_no_result}</h6>
 						<br>
@@ -38,7 +38,7 @@
 					</center>
 				</c:when>
 				<c:otherwise>
-				<c:forEach var="review" items="${review}">
+				<c:forEach var="coord" items="${coord}" varStatus="var">
 					<!-- left row start -->
 				<div class="row">
 					<!-- col-md-11 start -->
@@ -47,10 +47,18 @@
 						<div class="card flex-md-row mb-3 shadow-sm h-md-250">
 							<!-- card body start -->
 							<div class="card-body">
-								<div class="mb-1 text-muted text-right">
-									<i><b>장소</b></i>&nbsp; ${review.coordinate.coord_name}
-								</div>
+								
 								<strong class="d-inline-block mb-2">
+						
+						<label>장소 : </label>${coord.coord_name}<br>
+								</strong>
+								<h6 class="mb-0">
+						<c:forEach var="tags" items="${coord.boardtags}" varStatus="stat">
+						<label>태그 : ${tags.tag_value}</label><br>
+						</c:forEach>
+
+						<c:forEach var="review" items="${coord.coordReview}" varStatus="status" begin="0" end="2">
+						<label>${status.count}번째 평가</label><br>
 						<label>평가점수 : </label><c:choose>
 											<c:when test="${review.review_point eq 1}"> ★ </c:when>
 											<c:when test="${review.review_point eq 2}"> ★★  </c:when>
@@ -58,43 +66,22 @@
 											<c:when test="${review.review_point eq 4}"> ★★★★    </c:when>
 											<c:when test="${review.review_point eq 5}"> ★★★★★     </c:when>
 										</c:choose><br>
-								</strong>
-								<h3 class="mb-0">
 						<label>평가 내용: </label> ${review.review_comment}<br>
-								</h3>
+						<c:if test="${status.index ge 3 }">
+							<a href="coordReview.go?coord_id=${coord.coord_id}">평판보기</a>
+						</c:if>
+						</c:forEach>
+								</h6>
 							</div>
 						</div>
 					</div>
 				</div>		
-				</c:forEach>
+								
+			</c:forEach>
 			</c:otherwise>
 		</c:choose>
 	</div>
-<div id="trace">
-		</div>
-		<div id="page">
-				<c:if test="${count ne 0}">
-					<c:if test="${startPage gt pageBlock}">
-						<a href="coordReviewPage.go">[◀◀] </a>
-						<a href="coordReviewPage.go?pageNum=${startPage-pageBlock}">[◀] </a>
-					</c:if>
-					<c:forEach var="i" begin="${startPage}" end="${endPage}">
-						<c:if test="${i eq currentPage}">
-							<p>[${i}]<p>
-						</c:if>
-						<c:if test="${i ne currentPage}">					
-							<a href="coordReviewPage.go?pageNum=${i}">[${i}] </a>
-						</c:if>	
-					</c:forEach>
-					<c:if test="${pageCount gt endPage}">
-						<a href ="coordReviewPage.go?pageNum=${startPage+pageBlock}">[▶]</a>
-						<a href ="coordReviewPage.go?pageNum=${pageCount}">[▶▶]</a>
-					</c:if>	
-				</c:if>
-			<div class="mx-auto">
-				<button type="button" class="btn btn-secondary btn-sm" onclick="goback()">이전페이지로</button>
-			</div>
-	</div>
+
 	<!-- body box -->
 	</div>
 	</div>

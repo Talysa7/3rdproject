@@ -146,7 +146,10 @@
 	</select>
 	<!-- ////////////////////////////////////////////////임시쿼리 끝. 추후 삭제 예정 ///////////////////////////////////////////////// -->
 	<!--  LOG INSERT 문-->
-	<insert id="insertLog" parameterType="String">
-	 	insert into pao_log(log_str) values(#{wrapObject})
+	<insert id="insertLog" parameterType="java.util.Map" keyProperty="log_id">
+	 	insert into pao_log(log_str) values(#{log_str})
+	 	<selectKey keyProperty="log_id" resultType="int" order="AFTER">
+         SELECT LAST_INSERT_ID()
+      </selectKey>
 	</insert>
 </mapper>

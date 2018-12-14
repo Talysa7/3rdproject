@@ -40,4 +40,7 @@ public class CoordReviewDBBean {
 
 		return hap;
 	}
+	public List<CoordReviewDataBean> coordReview(int coord_id) {
+		return session.selectList("location.coordReview", coord_id);
+	}
 }

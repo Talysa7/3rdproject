@@ -8,7 +8,9 @@ import java.nio.file.Paths;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -167,7 +169,9 @@ public class LogDBBean {
 		wrapObject.put("log_type", 6);
 		//확인용
 		System.out.println(wrapObject);
-		session.insert("board.insertLog",wrapObject);
+		Map<String, Object> map = new HashMap<String, Object>(	);
+		map.put("log_str", wrapObject.toJSONString());
+		session.insert("board.insertLog",map);
 	}
 	
 	public void modUserLog(UserDataBean beforeinfo, UserDataBean userDto, List<TagDataBean> list, List<TagDataBean> userTags) throws ClassCastException, ParseException, IOException{
@@ -245,7 +249,9 @@ public class LogDBBean {
 			wrapObject.put("log_type", 7);
 			//확인용
 			System.out.println(wrapObject);
-			session.insert("board.insertLog",wrapObject);
+			Map<String, Object> map = new HashMap<String, Object>(	);
+			map.put("log_str", wrapObject.toJSONString());
+			session.insert("board.insertLog",map);
 		}
 //	댓글 등록
 	public void insertCommentLog(CmtDataBean cmtDto) {
@@ -274,7 +280,9 @@ public class LogDBBean {
 		wrapObject.put("log_type", 4);
 		//FIXME : 확인 필요
 		System.out.println(wrapObject);
-		session.insert("board.insertLog",wrapObject);
+		Map<String, Object> map = new HashMap<String, Object>(	);
+		map.put("log_str", wrapObject.toJSONString());
+		session.insert("board.insertLog",map);
 	}
 //평판 등록
 	public void insertPersonReviewLog(ReviewDataBean reviewDto) {
@@ -293,7 +301,9 @@ public class LogDBBean {
 		wrapObject.put("result",jsonArray);
 		wrapObject.put("log_type", 5);
 		System.out.println(wrapObject);
-		session.insert("board.insertLog",wrapObject);
+		Map<String, Object> map = new HashMap<String, Object>(	);
+		map.put("log_str", wrapObject.toJSONString());
+		session.insert("board.insertLog",map);
 	}
 //검색 로그	
 	public void searchTripLog(String selectedType, String keyword ) throws ClassCastException, JsonProcessingException, ParseException {
@@ -338,11 +348,16 @@ public class LogDBBean {
 		wrapObject.put("log_type", 1);
 		//확인용
 		System.out.println(wrapObject);
-		session.insert("board.insertLog",wrapObject);
+		
+		Map<String, Object> map = new HashMap<String, Object>(	);
+		map.put("log_str", wrapObject.toJSONString());
+		session.insert("board.insertLog",map);
 	}
 		
 	public int insertLog(JSONObject wrapObject) {
-		return session.insert("board.insertLog",wrapObject);
+		Map<String, Object> map = new HashMap<String, Object>(	);
+		map.put("log_str", wrapObject.toJSONString());		
+		return session.insert("board.insertLog",map);
 	}	
 	
 }

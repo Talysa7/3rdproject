@@ -240,6 +240,7 @@ public class SvcViewHandler {
 	// 게시판 연산 로직
 		private int start;
 		private int end;
+		private Object[] tagInt ;
 		public void setReviewLogic(HttpServletRequest request, String pageNum, int count, int start, int end){
 			int currentPage = Integer.parseInt(pageNum);
 			int pageCount = count / pageSize + (count % pageSize>0 ? 1:0 );
@@ -326,23 +327,26 @@ public class SvcViewHandler {
 		if(pageNum == null || pageNum.equals("")){
 			pageNum = "1";
 		}
+		//get the type and keyword of searching
+		String keyword=request.getParameter("keyword");
+		request.setAttribute("keyword", keyword);
+			
+		//find trips for each type
+		List<CoordDataBean> coord = coordDao.coordAll();
 		
-		count = coordReviewDao.getCoordReviewCount();			
-		setReviewLogic(request, pageNum, count, start, end);
-		user.put("start", start);
-		user.put("end", postPerPage);		
-		
-		List<CoordReviewDataBean> review = coordReviewDao.getAll(user);
-		List<CoordReviewDataBean> coord = new ArrayList<CoordReviewDataBean>();
-		for(int i=0; i<review.size(); i++) {
-			CoordReviewDataBean coordreDto = review.get(i);
-			coordreDto.setCoordinate(coordreDto.getCoord_id());
-			coord.add(coordreDto);
-			int coord_id =  coordreDto.getCoord_id();
+		for(int i=0; i<coord.size();i++) {
+			int coord_id = coord.get(i).getCoord_id();
 			user.put("coord_id", coord_id);
+			count = coordReviewDao.getReviewCount(user);
+			setReviewLogic(request, pageNum, count, start, end);
+			user.put("start", start);
+			user.put("end", postPerPage);
+			//review add
+			coord.get(i).setCoordReview(coord_id);
+			
+			List<CoordReviewDataBean> list = coordReviewDao.getCoordReview(user);
 			//AVERAGE-POINT
 			Double reviewCount = (double) count;
-			request.setAttribute("count", count);
 			Double point = (double) coordReviewDao.getCReviewSum(user);
 			Double divide = 0.0;
 			try {
@@ -352,69 +356,45 @@ public class SvcViewHandler {
 				divide = 0.0;
 			}					
 			request.setAttribute("average", divide);
-			/*
-			// country info
-			CoordDataBean coordDto = coordDao.getCoordinate(coord_id);
-			String country_code = coordDto.getCountry_code();			
-			CountryDataBean country = new CountryDataBean();
-			country.setCountry_code(country_code);
-			request.setAttribute("country", country);
-			//region info
-			int region_id = country.getRegion_id();
-			RegionDataBean regionDto = new RegionDataBean();
-			regionDto.setRegion_id(region_id);
-			request.setAttribute("region", regionDto);*/
-			
-			//coord info
-			CoordDataBean coordDto = coordDao.getCoordinate(coord_id);
+			request.setAttribute("list", list);
 			// country info
 			String countryname = countryDao.getCountryName(coord_id);
-			List<TripDataBean>tripDto = tripDao.getTripListByCoord(coord_id);
-			int board_no = tripDto.get(i).getBoard_no();
-			List<TagDataBean> tags = boardDao.getPost(board_no).getBoard_tags();
-		request.setAttribute("review", coord);		
-		}
+			request.setAttribute("country", countryname);
+			//tags add
+			List<TripDataBean>trip = tripDao.getTripListByCoord(coord_id);
+			List<TagDataBean> boardTags = new ArrayList<TagDataBean>();
+			for(int k=0; k<trip.size(); k++) {
+				int board_no = trip.get(k).getBoard_no();
+				BoardDBBean board = new BoardDBBean();
+				BoardDataBean boardDto = board.getPost(board_no);
+				List<TagDataBean> tags = boardDto.getBoard_tags();
+				boardTags.addAll(tags);
+			}	
+			List<TagDataBean> tagtag = new ArrayList<TagDataBean>();
+			int tagInt[] = new int [boardTags.size()];
+			for(int j=0; j<boardTags.size(); j++) {
+				for(int k=1; k<boardTags.size(); k++) {	
+					tagInt[j]= 0;
+					if(boardTags.get(j).getTag_id()!= boardTags.get(k).getTag_id()) {
+						int tag_id = boardTags.get(j).getTag_id();
+						tagInt[j] = tag_id;
+					}else {
+						j--;
+						break;
+					}
+				}			
+				if(tagInt[j]!= 0) {
+					TagDataBean tagDto = tagDao.getTag(tagInt[j]);
+					tagtag.add(tagDto);		
+				}
+			}
+			coord.get(i).setBoardtags(tagtag);
+		}		
+		
+		request.setAttribute("coord", coord);	
 		return new ModelAndView("svc/coordPage");
 	}
-	@RequestMapping("/searchPlace")
-	public ModelAndView svcSearchPlaceProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException, UnsupportedEncodingException {
-		try {
-			request.setCharacterEncoding("utf-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		String pageNum = request.getParameter("pageNum");
-		if(pageNum == null || pageNum.equals("")){
-			pageNum = "1";
-		}
-		Map<String, Object> user = new HashMap<String, Object>();
-		//get the type and keyword of searching
-		String keyword=request.getParameter("keyword");
-		request.setAttribute("keyword", keyword);
-		//set List
-		List<CoordReviewDataBean> foundList = null;
-		//find trips for each type
-		List<CoordDataBean> coord = coordDao.coordAutoComplete(keyword);
-		int count = coord.size();
-		setReviewLogic(request, pageNum, count, start, end);
-		user.put("start", start);
-		user.put("end", postPerPage);		
-		for(int i=0; i<coord.size();i++) {
-			int coord_id = coord.get(i).getCoord_id();
-			user.put("coord_id", coord_id);
-			List<CoordReviewDataBean> list = coordReviewDao.getCoordReview(user);
-			list.get(i).setCoordinate(coord_id);
-			foundList.addAll(list);
-		}
-		
-		//count check		
-		if(foundList.size()>0) {
-			count=foundList.size();
-		}
-		request.setAttribute("review", foundList);
-		request.setAttribute("count", count);
-		return new ModelAndView("svc/coordReviewPage");
-	}
+	
 	/////////////////////////////////board pages/////////////////////////////////
 
 	//get board posts
