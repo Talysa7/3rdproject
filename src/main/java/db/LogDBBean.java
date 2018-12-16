@@ -61,7 +61,7 @@ public class LogDBBean {
 			
 			finalJson.put("result", postJson);
 			finalJson.put("log_type", 3);
-			br.write("%%" + finalJson.toString() + "%%" + "\r\n");
+			br.write( finalJson.toString()+ "\r\n");
 			br.flush();
 			
 			jsonPosts.add(finalJson);
@@ -104,7 +104,7 @@ public class LogDBBean {
 			finalJson.put("log_type", 8);
 			finalJson.put("result", tempJson);
 			
-			br.write("%%"+finalJson.toString() + "%%" + "\r\n");
+			br.write(finalJson.toString() + "\r\n");
 			br.flush();
 				
 			members.add(finalJson);
