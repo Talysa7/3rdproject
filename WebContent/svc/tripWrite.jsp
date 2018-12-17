@@ -147,48 +147,83 @@
 }
  --%>
 	<div class="container" style="width: 800px;">
-		<form id="tripForm" class="form" method="post">
+		<form id="tripForm" class="form" method="post" action="tripWritePro.go">	<!-- TODO : onsubmit에 writeCheck() 일단 무시함. 새로 제작 필요 -->
 			<div class="input-box">	
 				<div class="board_part">
 					<input type="hidden" name="board[]">
-						<div class="form-group row">
-							<input type="text" class="board_title " name="board[title]" placeholder="제목">
-						</div>
-						<div class="form-group row"><label for="board_content">글내용</label>
-							<textarea class="board_content" name="board[content]" placeholder="내용을 입력하세요">
-							</textarea>
-						</div>
-						<div class="form-group row"><label for="board_contact">대화링크</label>
-							<input type="text" class="board_contact" name="board[contact]">
-						</div>
-						<div class="form-group row">
-							<input type="checkbox" class="board_tag" name="board[tag][]" value="tag1">태그1
-							<input type="checkbox" class="board_tag" name="board[tag][]" value="tag2">태그2
-							<input type="checkbox" class="board_tag" name="board[tag][]" value="tag3">태그3
-						</div>
+					<div class="form-group row">
+						<input type="text" class="board_title col-12 form-control form-control-lg" name="board[title]" placeholder="제목" maxlength="30">
+					</div>
 				</div>
 				<div class="trip_part">
-					<input type="hidden" name="trip[]">
-					<div class="form-group row">
-						<label for="trip_member_count">참여인원</label>
-						<input type="number" class="trip_member_count" name="trip[][member_count]" placeholder="n명">
+					<div class="trip_chips">
+						<input type="hidden" name="trip[]">
+						<div class="form-group row">
+							<label for="trip_member_count" class="col-2 col-form-label">참여인원</label>
+							<input type="number" class="trip_member_count col-2" name="trip[][member_count]" min="1" placeholder="n명">
+						</div>
+						<div class="form-group row">
+							<label for="trip_start_date" class="col-2 col-form-label">일정</label>
+							<input type="text" class="trip_start_date" name="trip[][start_date]" placeholder="시작일">
+							~
+							<input type="text" class="trip_end_date" name="trip[][end_date]" placeholder="종료일">
+							
+						</div>
+							<input type="hidden" name="trip[][coord_id]">
+								<input type="hidden" class="trip_place_name" name="trip[][coord_id][place_name]">
+								<input type="hidden" class="trip_country_code" name="trip[][coord_id][country_code]">
+								<input type="hidden" class="trip_long" name="trip[][coord_id][long]">
+								<input type="hidden" class="trip_lat" name="trip[][coord_id][lat]">
+							<input type="hidden" class="trip_order" name="trip[][trip_order]" value="1">
 					</div>
-					<div class="form-group row">
-						<input type="text" class="trip_start_date" name="trip[][start_date]" placeholder="시작일">
-						~
-						<input type="text" class="trip_end_date" name="trip[][end_date]" placeholder="종료일">
-					</div>
-						<input type="hidden" name="trip[][coord_id]">
-							<input type="hidden" class="trip_place_name" name="trip[][coord_id][place_name]">
-							<input type="hidden" class="trip_country_code" name="trip[][coord_id][country_code]">
-							<input type="hidden" class="trip_long" name="trip[][coord_id][long]">
-							<input type="hidden" class="trip_lat" name="trip[][coord_id][lat]">
-						<input type="hidden" class="trip_order" name="trip[][trip_order]" value="1">
+					<button id="add_btn">추가</button>
+					<button id="del_btn">삭제</button>
 				</div>
+
+				<div class="googleMap">
+					<div class="pac-card" id="pac-card">
+						<input id="pac-input" type="text" placeholder="장소를 입력하세요">
+					</div>
+					<div id="map"></div>
+					<div id="infowindow-content">
+						<span id="place-name" class="title"></span><br> 
+						<span id="place-address"></span><br> 
+						<span id="place-location"></span><br>
+					</div>
+				</div>
+
+				<div class="board_part">	
+					<div class="form-group row">
+						<label for="board_content" class="col-2 col-form-label">글내용</label>
+						<textarea class="board_content" name="board[content]" placeholder="내용을 입력하세요">
+						</textarea>
+					</div>
+					<div class="form-group row">
+						<label class="col-2 col-form-label">여행 태그</label>
+						<c:if test="${styleTags.size() ne 0}">
+							<c:forEach var="tagCnt" items="${styleTags}">
+							<label class="btn btn-secondary"> 
+								<input type="checkbox" class="board_tag" name="board[tag][]" value="${tagCnt.tag_id}">${tagCnt.tag_value}
+							</label>
+							</c:forEach>
+						</c:if>
+					</div>
+					<div class="form-group row">
+						<label for="board_contact" class="col-2 col-form-label">대화링크</label>
+						<input type="text" class="board_contact col-10" name="board[contact]">
+					</div>
+				</div>
+				<input class="btn btn-dark btn-sm" type="submit" value="${trip_write}"> 
+				<input class="btn btn-dark btn-sm" type="button" value="${btn_list}" onclick="location='tripList.go'">
 			</div>
-			<input type="submit" value="전송">
 		</form>
+		
 	</div>
+	
+	
+	
+	
+</body>
 
 
 
