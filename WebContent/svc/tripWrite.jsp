@@ -23,6 +23,10 @@
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="./jquery.serialize-object.min.js"></script>
+<!-- Map Search API -->
+<script
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAoC3t0xr7YieFKGY9nIAH366PT6JyaiEg&libraries=places">
+</script>
 </head>
 <body>
 <%-- 	
