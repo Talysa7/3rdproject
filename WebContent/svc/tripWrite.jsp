@@ -229,6 +229,71 @@
 	
 </body>
 <script type="text/javascript">
+	var infowindowContent = document.getElementById('infowindow-content');
+	var zoom = 13;
+	var after_zoom = 17;
+	var map_opt = {
+			center : {
+				lat : 37.4864,
+				lng : 127.0207
+			},
+			zoom : zoom
+		};
+	var map = new google.maps.Map(document.getElementById('map'), map_opt);
+	var input = document.getElementsByClassName('pac-input').item(0);
+	setAutoComplete(input, map);
+	var infowindow = new google.maps.InfoWindow();
+	infowindow.setContent(infowindowContent);
+
+	var marker = new google.maps.Marker({
+		map : map,
+		anchorPoint : new google.maps.Point(0, -29)
+	});
+
+function setAutoComplete( item, map ){
+	var autocomplete = new google.maps.places.Autocomplete(item);
+	autocomplete.bindTo('bounds', map)
+	autocomplete.setFields([ 'address_components', 'formatted_phone_number', 'geometry', 'icon', 'name', 'photos', 'vicinity' ])
+	autocomplete.addListener('place_changed', function() {
+		infowindow.close();
+		marker.setVisible(false);
+		var place = autocomplete.getPlace();
+		if (!place.geometry) {
+			window.alert("찾으시는 '"+ place.name + "' 에 대한 결과가 없습니다 \n"
+			+ "다른 검색어를 입력 해주세요");
+			return;
+		}
+
+		if (place.geometry.viewport) {
+			map.fitBounds(place.geometry.viewport);
+		} else {
+			map.setCenter(place.geometry.location);
+			map.setZoom(after_zoom); 
+		}
+		marker.setPosition(place.geometry.location);
+		marker.setVisible(true);
+
+		var address = '';
+		if (place.address_components) {
+			address = [
+				(place.address_components[0]
+					&& place.address_components[0].short_name || ''),
+				(place.address_components[1]
+					&& place.address_components[1].short_name || ''),
+				(place.address_components[2]
+					&& place.address_components[2].short_name || '') ]
+				.join(' ');
+		}
+
+		infowindowContent.children['place-name'].textContent = place.name;
+		infowindowContent.children['place-address'].textContent = address;
+		infowindowContent.children['place-location'].textContent = 
+			place.geometry.location.lat() + place.geometry.location.lng();
+		infowindow.open(map, marker);
+	});
+}
+
+
 $(function(){
 	var trip_cnt = 1;
 	var start_end = '.trip_start_date, .trip_end_date';
