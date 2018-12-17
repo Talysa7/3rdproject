@@ -652,85 +652,85 @@ function loadMoreList(next_row) {
 	});
 }
 //달력 불러오기 //순서대로 입력 받기
-function loadCal(num){ 
-	if(num==1){
-		$("#start"+num+"").datepicker({
-			minDate:0
-		});
-	}else if(num>1){
-		var beforeStart=$('#start'+(num-1)+'').val();
-		$("#start"+num+"").datepicker({
-			minDate:beforeStart
-		});
-	}
-	 $("#start"+num+"").datepicker("option", "onClose", function ( selectedDate ) {
-	        $("#end"+num+"").datepicker( "option", "minDate", selectedDate );
-	    });
-	 
-	$("#end"+num+"").datepicker();
-	$("#end"+num+"").datepicker("option", "minDate", $("#start"+num+"").val()); 
-	$("#end"+num+"").datepicker("option", "onClose", function () {	 
-        $("#address").focus();
-    });
-
-} 
+//function loadCal(num){ 
+//	if(num==1){
+//		$("#start"+num+"").datepicker({
+//			minDate:0
+//		});
+//	}else if(num>1){
+//		var beforeStart=$('#start'+(num-1)+'').val();
+//		$("#start"+num+"").datepicker({
+//			minDate:beforeStart
+//		});
+//	}
+//	 $("#start"+num+"").datepicker("option", "onClose", function ( selectedDate ) {
+//	        $("#end"+num+"").datepicker( "option", "minDate", selectedDate );
+//	    });
+//	 
+//	$("#end"+num+"").datepicker();
+//	$("#end"+num+"").datepicker("option", "minDate", $("#start"+num+"").val()); 
+//	$("#end"+num+"").datepicker("option", "onClose", function () {	 
+//        $("#address").focus();
+//    });
+//
+//} 
 //add schedule-일정 추가//한글 처리
-function addSchedule(num){
-	var start=$('input[name=start'+num+']');
-	var end=$('input[name=end'+num+']');
-	var place=$('input[name=place'+num+']');
-	if(!start.val()||!end.val()){//일정날짜가 없는 경우는 일정 추가 x
-		alert(noscheduleerror);
-		if(!start.val())start.focus();
-		else end.focus();
-	}else if(!place.val()){
-		alert(noplaceerror);
-		$('#address').focus();
-	}else{
-		$('#schedulediv').append(schedule);
-		if(num>=maxschedule){
-			alert(schedulesizeerror);
-		}else{
-			$('#address').val('');
-			$('#btn_del'+num+'').hide();
-			var schedule="";
-			$('#btn'+num+'').hide();//btn 숨기기
-			num++;
-			schedule+= 	'<div id="schedule'+num+'" class="form-group row">';
-			schedule+=		'<input type="hidden" name="num_counter" value="'+num+'">';	  
-			schedule+= 		'<label for="cal_date" class="col-2 col-form-label">일정 '+num+'</label>';         
-			schedule+=      	'<input type="text" name="start'+num+'" id="start'+num+'" maxlength="10" value="yyyy-MM-dd" class="col-2" autocomplete="off"/>';
-			schedule+=			'~';
-			schedule+=			'<input type="text" name="end'+num+'" id="end'+num+'" maxlength="10" value="yyyy-MM-dd" class="col-2" autocomplete="off"/>&nbsp;&nbsp;';
-			schedule+=			'<input name="place'+num+'" id="place'+num+'" type="text" readonly>';
-			schedule+=		'<button id="btn'+num+'" class="btn_plus" type="button" onclick="addSchedule('+num+')">';
-			schedule+=			'<i class="fas fa-plus-circle"></i>';
-			schedule+=		'</button>';
-			schedule+=		'<button id="btn_del'+num+'" class="btn_del" type="button" onclick="removeSchedule('+num+')">';
-			schedule+=			'<i class="fas fa-minus-circle"></i>';
-			schedule+=		'</button>';
-			schedule+=		'<div id="coordinfo'+num+'">';
-			schedule+=		'</div>';
-			schedule+=	'</div>';
-			$('#schedulediv').append(schedule);
-			loadCal(num);
-			
-			if(num==maxschedule) $('#btn'+num+'').hide();
-			var schedulenum='<input type="hidden" name="schedulenum" value="'+num+'">';
-			$('#schedulenum').empty();
-			$('#schedulenum').append(schedulenum);
-		}		
-	}
-}
-function removeSchedule(num){
-	$('#address').val('');
-	$('#schedule'+num+'').remove();
-	num--;
-	$('#btn'+num+'').show();//btn 보여주기
-	$('#btn_del'+num+'').show();//btn 보여주기
-	$('#schedulenum').empty();
-	$("#schedulenum").val(num);//minus schedule num
-}
+//function addSchedule(num){
+//	var start=$('input[name=start'+num+']');
+//	var end=$('input[name=end'+num+']');
+//	var place=$('input[name=place'+num+']');
+//	if(!start.val()||!end.val()){//일정날짜가 없는 경우는 일정 추가 x
+//		alert(noscheduleerror);
+//		if(!start.val())start.focus();
+//		else end.focus();
+//	}else if(!place.val()){
+//		alert(noplaceerror);
+//		$('#address').focus();
+//	}else{
+//		$('#schedulediv').append(schedule);
+//		if(num>=maxschedule){
+//			alert(schedulesizeerror);
+//		}else{
+//			$('#address').val('');
+//			$('#btn_del'+num+'').hide();
+//			var schedule="";
+//			$('#btn'+num+'').hide();//btn 숨기기
+//			num++;
+//			schedule+= 	'<div id="schedule'+num+'" class="form-group row">';
+//			schedule+=		'<input type="hidden" name="num_counter" value="'+num+'">';	  
+//			schedule+= 		'<label for="cal_date" class="col-2 col-form-label">일정 '+num+'</label>';         
+//			schedule+=      	'<input type="text" name="start'+num+'" id="start'+num+'" maxlength="10" value="yyyy-MM-dd" class="col-2" autocomplete="off"/>';
+//			schedule+=			'~';
+//			schedule+=			'<input type="text" name="end'+num+'" id="end'+num+'" maxlength="10" value="yyyy-MM-dd" class="col-2" autocomplete="off"/>&nbsp;&nbsp;';
+//			schedule+=			'<input name="place'+num+'" id="place'+num+'" type="text" readonly>';
+//			schedule+=		'<button id="btn'+num+'" class="btn_plus" type="button" onclick="addSchedule('+num+')">';
+//			schedule+=			'<i class="fas fa-plus-circle"></i>';
+//			schedule+=		'</button>';
+//			schedule+=		'<button id="btn_del'+num+'" class="btn_del" type="button" onclick="removeSchedule('+num+')">';
+//			schedule+=			'<i class="fas fa-minus-circle"></i>';
+//			schedule+=		'</button>';
+//			schedule+=		'<div id="coordinfo'+num+'">';
+//			schedule+=		'</div>';
+//			schedule+=	'</div>';
+//			$('#schedulediv').append(schedule);
+//			loadCal(num);
+//			
+//			if(num==maxschedule) $('#btn'+num+'').hide();
+//			var schedulenum='<input type="hidden" name="schedulenum" value="'+num+'">';
+//			$('#schedulenum').empty();
+//			$('#schedulenum').append(schedulenum);
+//		}		
+//	}
+//}
+//function removeSchedule(num){
+//	$('#address').val('');
+//	$('#schedule'+num+'').remove();
+//	num--;
+//	$('#btn'+num+'').show();//btn 보여주기
+//	$('#btn_del'+num+'').show();//btn 보여주기
+//	$('#schedulenum').empty();
+//	$("#schedulenum").val(num);//minus schedule num
+//}
 //whenever searching address, update address-장소추가-검색할때 마다 장소갱신
 function showPlace(country_code,full_address,lat,lng){
 	var num=$('#schedulenum').find('input[name=schedulenum]').val();
