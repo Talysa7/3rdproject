@@ -358,10 +358,6 @@ $(function(){
 
 </script>
 
-<!-- Map Search API -->
-<script
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAoC3t0xr7YieFKGY9nIAH366PT6JyaiEg&libraries=places&callback=initMap"
-	async defer></script>
 
 </html>
 
