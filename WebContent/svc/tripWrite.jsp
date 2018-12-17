@@ -120,6 +120,30 @@
 	</div>
 	<!-- container --> 
 --%>
+<%-- tripWrite submit 시 나오는 자료구조
+	board.tag 와
+	trip 은 배열 형태로 늘어나서 붙는다.
+{
+	"board":{
+		"title":"title",
+		"content":"content",
+		"contact":"contact",
+		"tag":["tag1","tag2","tag3", ...]
+	},
+	"trip":[{
+		"member_count":"member_count",
+		"coord_id":{
+			"place_name":"place_name",
+			"country_code":"country_code",
+			"long":"long",
+			"lat":"lat"
+		},
+		"start_date":"start_date",
+		"end_date":"end_date",
+		"trip_order":"trip_order"
+	}]
+}
+ --%>
 	<div class="container" style="width: 800px;">
 		<form id="tripForm" class="form" method="post">
 			<div class="input-box">	
