@@ -234,6 +234,30 @@
 			selectOtherMonths: true
 		});
 	})
+		
+	// add_btn /  trip 추가
+	$('#add_btn').on('click', function(){
+		var $last = $('.trip_chips:last');
+		var $clone = $last.clone(false);
+		$last.after($clone);
+		$('.trip_chips:last input, .trip_chips:last select').val('');
+		$clone.find('input.trip_start_date')
+			.removeClass('hasDatepicker')
+			.removeData('datepicker')
+			.attr('id', 'change_id' + Math.random())
+			.unbind()
+			.datepicker();
+		$clone.find('input.trip_end_date')
+			.removeClass('hasDatepicker')
+			.removeData('datepicker')
+			.attr('id', 'change_id' + Math.random())
+			.unbind()
+			.datepicker();
+		trip_cnt += 1;		// trip_order 값 수정
+		$('.trip_order')
+			.last()
+			.val(trip_cnt);
+	});
 
 
 
