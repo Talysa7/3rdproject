@@ -224,6 +224,16 @@
 	
 	
 </body>
+	var start_end = '.trip_start_date, .trip_end_date';
+	$(document).on('focus', start_end, function(){
+		$(this).datepicker({
+			minDate: 0,
+			changeMonth: true,
+			changeYear: true,
+			showOtherMonths: true,
+			selectOtherMonths: true
+		});
+	})
 
 
 
