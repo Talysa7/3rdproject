@@ -173,12 +173,17 @@
 							<input type="text" class="trip_end_date" name="trip[][end_date]" placeholder="종료일">
 							
 						</div>
+							
+						<div class="form-group row">
+							<label for="pac-input" class="col-2 col-form-label">장소</label>
+							<input type="text" id="pac-input" class="pac-input" placeholder="장소를 입력하세요">
 							<input type="hidden" name="trip[][coord_id]">
 								<input type="hidden" class="trip_place_name" name="trip[][coord_id][place_name]">
 								<input type="hidden" class="trip_country_code" name="trip[][coord_id][country_code]">
 								<input type="hidden" class="trip_long" name="trip[][coord_id][long]">
 								<input type="hidden" class="trip_lat" name="trip[][coord_id][lat]">
 							<input type="hidden" class="trip_order" name="trip[][trip_order]" value="1">
+						</div>
 					</div>
 					<button id="add_btn">추가</button>
 					<button id="del_btn">삭제</button>
