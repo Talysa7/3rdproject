@@ -305,6 +305,7 @@ function setAutoComplete( item, map ){
 $(function(){
 	var trip_cnt = 1;
 	var start_end = '.trip_start_date, .trip_end_date';
+	// datepicker 세팅
 	$(document).on('focus', start_end, function(){
 		$(this).datepicker({
 			minDate: 0,
