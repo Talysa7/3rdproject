@@ -193,9 +193,6 @@
 				</div>
 
 				<div class="googleMap">
-					<div class="pac-card" id="pac-card">
-						<input id="pac-input" type="text" placeholder="장소를 입력하세요">
-					</div>
 					<div id="map"></div>
 					<div id="infowindow-content">
 						<span id="place-name" class="title"></span><br> 
