@@ -85,9 +85,7 @@
 												<p class="card-text mb-auto">${post.board_content}</p>
 												<hr style="width: 100%" noshade>
 												<div class="mb-1 text-muted">
-													조회수:${post.board_view_count}
-												</div>
-												<div class="p-2">
+													<label>조회수:${post.board_view_count}</label>
 													<c:forEach var="tag" items="${post.board_tags}">
 														<label class="btn btn-sm taglist"> # ${tag.tag_value} </label>
 													</c:forEach>
