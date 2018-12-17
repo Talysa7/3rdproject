@@ -258,6 +258,14 @@
 			.last()
 			.val(trip_cnt);
 	});
+	// del_btn / trip 삭제
+	$('#del_btn').on('click', function(){
+		$('.trip_chips')
+			.last()
+			.remove();
+		
+		trip_cnt -= 1;		// del 에서는 add 에서처럼 trip_order 값 수정
+	});
 
 
 
