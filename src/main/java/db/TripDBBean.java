@@ -73,9 +73,11 @@ public class TripDBBean {
 		if(userTripList.size()>0) {
 			for(int i=0; i<userTripList.size(); i++) {
 			TripDataBean tripDto = userTripList.get(i);
-			tripDto.setTrip_members(userTripList.get(i).getTrip_id());
+			tripDto.setTrip_members(tripDto.getTrip_id());
+			String thumbnail=session.selectOne("album.getThumbnail", tripDto.getBoard_no());
+			tripDto.setThumbnail(thumbnail);
 			trip.add(tripDto);
-			}			
+			}
 		}
 		return trip;
 	}
