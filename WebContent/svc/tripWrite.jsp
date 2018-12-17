@@ -224,6 +224,9 @@
 	
 	
 </body>
+<script type="text/javascript">
+$(function(){
+	var trip_cnt = 1;
 	var start_end = '.trip_start_date, .trip_end_date';
 	$(document).on('focus', start_end, function(){
 		$(this).datepicker({
@@ -274,6 +277,15 @@
 	});
 
 });
+
+</script>
+
+<!-- Map Search API -->
+<script
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAoC3t0xr7YieFKGY9nIAH366PT6JyaiEg&libraries=places&callback=initMap"
+	async defer></script>
+</html>
+
 
 
 
