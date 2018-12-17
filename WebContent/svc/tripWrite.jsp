@@ -23,14 +23,15 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 </head>
 <body>
-	<c:set var="i" value="1" />
+<%-- 	
+<c:set var="i" value="1" />
 
 	<div class="container" style="width: 800px;">
 		<form id="tripForm" class="form-horizontal" method="post" action="tripWritePro.go" onsubmit="return writeCheck()">
-<%-- 			<h4>${page_write}</h4>
-			<hr size="1px" color="black"> --%>
+			<h4>${page_write}</h4>
+			<hr size="1px" color="black">
 			<div class="input-box"> <!-- input-box 클래스는 css 먹일 때 쓰이는 용도로 확인 -->
-<%-- 				<input type="hidden" name="user_name" value="${user_name}"> --%>
+				<input type="hidden" name="user_name" value="${user_name}">
 				<div class="form-group row">
 					<input type="text" name="trip_title" class="col-12 form-control form-control-lg" maxlength="30"
 						placeholder="${trip_title}" autofocus required>
@@ -64,13 +65,13 @@
 					<input type="text" name="trip_talklink" class="col-10">
 				</div>
 				<div class="form-group row">
-					<%-- 
+					
 					<label for="trip_location" class="col-2 col-form-label">${trip_location}</label>
 					<div id="floating-panel" class="col-10">
 						<input id="address" type="text" autocomplete=off /> 
 						<input id="addSubmit" type="button" class="btn btn-dark btn-sm" value="${btn_search}" />
 					</div>
-					 --%>
+					
 					<!--/////////// google MAP API 파트 ///////////-->
 					<div class="pac-card" id="pac-card">
 						<div id="pac-container">
@@ -117,17 +118,8 @@
 			<!-- input box -->
 		</form>
 	</div>
-	<!-- container -->
-</body>
-
-<!-- Map Search API -->
-<script
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAoC3t0xr7YieFKGY9nIAH366PT6JyaiEg&libraries=places&callback=initMap"
-	async defer></script>
-</html>
-
-
-
+	<!-- container --> 
+--%>
 	<div class="container" style="width: 800px;">
 		<form id="tripForm" class="form" method="post">
 			<div class="input-box">	
