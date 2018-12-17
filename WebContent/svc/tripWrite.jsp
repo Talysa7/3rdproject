@@ -11,7 +11,7 @@
 <script src="${project}script.js"></script>
 
 <link rel="stylesheet" href="${project}googleAPI_style.css">
-<script src="${project}googleAPI.js"></script>
+<%-- <script src="${project}googleAPI.js"></script> --%>
 
 <!-- Custom style for this template (Font API & Our UI)-->
 <link href="https://fonts.googleapis.com/css?family=Work+Sans"
