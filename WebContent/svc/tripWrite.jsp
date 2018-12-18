@@ -194,6 +194,7 @@ function setAutoComplete( item, map ){
 					&& place.address_components[2].short_name || '') ]
 				.join(' ');
 		}
+		var addr_comp = place.address_components;
 		var lng = place.geometry.location.lng().toString();
 		var lat = place.geometry.location.lat().toString();
 		
@@ -204,6 +205,11 @@ function setAutoComplete( item, map ){
 		infowindowContent.children['place-address'].textContent = address;
 		infowindowContent.children['place-location'].textContent = 
 			place.geometry.location.lat() + place.geometry.location.lng();
+		for( var i in addr_comp){
+			if(addr_comp[i].types[0] == 'country'){
+				$(item).siblings('.trip_country_code').val(addr_comp[i].short_name);
+			} 
+		}
 		$(item).siblings('.trip_long').val(lng);
 		$(item).siblings('.trip_lat').val(lat);
 		infowindow.open(map, marker);
