@@ -253,6 +253,8 @@ $(function(){
 			.unbind()
 			.datepicker();
 
+		input = document.getElementsByClassName('pac-input').item(trip_cnt);
+		setAutoComplete(input, map);
 		
 		trip_cnt += 1;		// trip_order 값 수정
 		$('.trip_order')
