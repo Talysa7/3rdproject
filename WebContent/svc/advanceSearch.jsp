@@ -175,14 +175,18 @@
 					<input type="hidden" name="next_row" value="${next_row}">
 				</form>
 				<!-- board data -->
+				<div id="show"></div>
 				<button type="button" class="btn btn-dark btn-block"
-				onclick="loadMoreList(${next_row})">Load more...</button>
+				onclick="loadList(${next_row})">Load more...</button>
 			</div>
 			<!-- loading button end -->
 			
 		</div>
 		<!-- container area end -->
 		
+		<div class="mx-auto">
+				<button type="button" class="btn btn-secondary btn-sm" onclick="goback()">이전페이지로</button>
+		</div>
 	</div>
 	<!-- body box end-->
 </body>

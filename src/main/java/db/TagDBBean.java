@@ -104,20 +104,29 @@ public class TagDBBean {
 			//tester to check whether user already has that tag
 			boolean hasTag=false;
 			//Did user have this tag?
-			for(TagDataBean tagDto:userTags) {
-				hasTag=false;
-				for(TagDataBean otb:oldUserTags) {
-					//if user didn't have such like a tag
-					if(otb.getTag_id()==(tagDto.getTag_id())) {
-						hasTag=true;
+			try {
+				for(TagDataBean tagDto:userTags) {
+					hasTag=false;
+					for(TagDataBean otb:oldUserTags) {
+						//if user didn't have such like a tag
+						if(otb.getTag_id()==(tagDto.getTag_id())) {
+							hasTag=true;
+						}
+					}
+					//if user didn't have this tag, insert it!
+					if(!hasTag) {
+						tagSetter=new HashMap<String, String>();
+						tagSetter.put("user_id", user_id);
+						tagSetter.put("tag_id", String.valueOf(tagDto.getTag_id()));
+						result=session.update("tag.updateUserTag", tagSetter);
 					}
 				}
-				//if user didn't have this tag, insert it!
-				if(!hasTag) {
-					tagSetter=new HashMap<String, String>();
-					tagSetter.put("user_id", user_id);
-					tagSetter.put("tag_id", String.valueOf(tagDto.getTag_id()));
-					result=session.update("tag.updateUserTag", tagSetter);
+			}catch(NullPointerException e) {
+				for(TagDataBean otb:oldUserTags) {
+				tagSetter=new HashMap<String, String>();
+				tagSetter.put("user_id", user_id);
+				tagSetter.put("tag_id", String.valueOf(otb.getTag_id()));
+				result=session.delete("tag.deleteUserTag", tagSetter);
 				}
 			}
 			//user had that tag, but not anymore! 
@@ -136,6 +145,7 @@ public class TagDBBean {
 					result=session.delete("tag.deleteUserTag", tagSetter);
 				}
 			}
+			
 			return result;
 		}
 		public String getTagValue(int tag_id) {

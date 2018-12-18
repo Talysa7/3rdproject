@@ -110,9 +110,12 @@
 		]]>
 	</select>
 	<!--/////////////////////////////////////////////////// start-line pao_comment table ///////////////////////////////////////////////////-->
-	<insert id="insertComment" parameterType="db.CmtDataBean">
+	<insert id="insertComment" parameterType="db.CmtDataBean" keyProperty="comment_id">
 		INSERT INTO pao_comment (comment_content, comment_reg_date, board_no, user_id)
 		VALUES(#{comment_content}, now(), #{board_no}, #{user_id})
+		<selectKey keyProperty="comment_id" resultType="int" order="AFTER">
+         SELECT LAST_INSERT_ID()
+      </selectKey>
 	</insert>
 	<update id="updateComment" parameterType="db.CmtDataBean">
 		UPDATE pao_comment
@@ -162,4 +165,11 @@
 		select * from pao_view_board
 	</select>
 	<!-- ////////////////////////////////////////////////임시쿼리 끝. 추후 삭제 예정 ///////////////////////////////////////////////// -->
+	<!--  LOG INSERT 문-->
+	<insert id="insertLog" parameterType="java.util.Map" keyProperty="log_id">
+	 	insert into pao_log(log_str) values(#{log_str})
+	 	<selectKey keyProperty="log_id" resultType="int" order="AFTER">
+         SELECT LAST_INSERT_ID()
+      </selectKey>
+	</insert>
 </mapper>

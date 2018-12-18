@@ -46,7 +46,14 @@ function erroralert( msg ) {
 	alert( msg );
 	history.back();
 }
+
+
+function goback(){
+	history.back();
+}
+
 //////////////////////////////////////////////////////////////// Google Map 관련 ////////////////////////////////////////////////////////////////
+
 // Initialize and add the map
 var boardmarkers=[];
 var boardmarker;
@@ -76,6 +83,7 @@ var map;
 // 		location[i]= {lat: coord_lat[i], lng: coord_long[i]};
 // 	});
 // 	var centerLat = centerLatSum / coord.length ; 
+
 //    var centerLng = centerLngSum / coord.length ;   
 // 	var center={lat:centerLat,lng:centerLng};
 // 	  // The map, centered at allPlace
@@ -302,6 +310,7 @@ function IdCheck() {
 var genck = 0;
 function NameCheck() {
 	var user_name = $("#name_val").val();
+	var nickck = $("#nickck").val();
 	if (user_name) {
 		$.ajax({
 			async : true,
@@ -313,9 +322,11 @@ function NameCheck() {
 			success : function(data) {
 				if (data.countName > 0) {
 					$('#NameCheckMessage').html("닉네임이 존재합니다.")
+					nickck = 1;
 				} else {
 					$('#NameCheckMessage').html("사용가능한 닉네임입니다.")
 					genck = 1; // 닉네임 중복체크시 1이됨
+					nickck=0;
 				}
 			},
 			error : function(error) {
@@ -353,6 +364,20 @@ function confirmeMail(authNum){
 		self.close();
 	}
 }
+//userModify 폼 
+function userModCheck(){
+	var nickck = $("#nickck").val();
+	var pass1 = $("#userPassword1").val();
+	var pass2 = $("#userPassword2").val();
+	var chk = $("input:checkbox[name='tags']").is(":checked");
+	if(genck == 0){
+		alert('닉네임 중복체크를 해주세요');
+		return false;
+	}else if(pass1 != pass2){
+		alert('비밀번호가 일치하지 않습니다');
+		return false;
+	}
+}
 
 function inputcheck() {
 	if (confirm("회원가입을 하시겠습니까?")) {
@@ -361,7 +386,7 @@ function inputcheck() {
 			return false;
 		} else if (genck == 0) {
 			alert('닉네임 중복체크를 해주세요');
-			return false;
+			return false;			
 //		} else if (inputform.confirm.value == 0){
 //			alert('이메일 인증을해주세요');
 //			return false;
@@ -594,7 +619,56 @@ function commentDelete(comment_id){
         }
     });
 }
-
+function loadList(next_row){
+	$.ajax({
+		type : 'get',
+		data : {next_row : next_row},
+		url : "loadMoreList.go",
+		success : function(data) {
+			if(data.length>0){
+				var list="";
+				$.each(data, function(key, additionalList){
+					next_row=next_row+1;
+					list+='<c:forEach var="post" items="${searchReceive}">';
+					list+='	<div class="row">';
+					list+='	<div class="col-md-11">';
+					list+=' <div class="card flex-md-row mb-3 shadow-sm h-md-250">';
+					list+='	<div class="card-body">';
+					list+='<strong class="d-inline-block mb-2">' ;
+					list+='<c:forEach var="trip" items="${post.tripLists}">';
+					list+= '${trip.coord_name}';
+					list+= '</c:forEach></strong> <h3 class="mb-0">';
+					list+=  '<a class="text-dark" href="trip.go?board_no=${post.board_no}">';
+					list+='	<c:if test="${post.board_level eq 1}">';
+					list+='${trip_notice_1}';
+					list+='</c:if>';
+					list+='${post.board_title}';
+					list+='</a>	</h3>';
+					list+='<div class="mb-1 text-muted text-right">';
+					list+='<i><b>With</b></i>&nbsp; ${post.user_name}';
+					list+='</div><hr style="width: 100%" noshade>';
+					list+='<p class="card-text mb-auto">${post.board_content}</p>';
+					list+='<hr style="width: 100%" noshade></div>';
+					list+='<div class="card-center justify-content-center">';
+					list+='<div class="p-2">';
+					list+='조회수: ${post.board_view_count}';
+					list+='</div><div class="p-2">';
+					list+='<c:forEach var="tag" items="${post.board_tags}">';
+					list+='<label class="btn btn-sm taglist"> # ${tag.tag_value} </label>';
+					list+='</c:forEach>	</div></div></div></div></div></c:forEach>'
+				});
+	            $("#board-list").append(list);
+	            var newButton='<button type="button" class="btn btn-dark col-md-12" onclick="loadList('+next_row_after+')">Load more...</button>';
+	            $("#loading-button").html(newButton);
+			} else {
+				alert('더 이상 불러올 글이 없습니다.');
+			}
+		},
+		error : function(error) {
+			alert('글 불러오기에 실패했습니다.'+error);
+		}
+	});
+}
 function loadMoreList(next_row) {
 	$.ajax({
 		type : 'get',
@@ -1055,47 +1129,4 @@ function openSchedule(coord_order) {
 
 
 
-/////////////////////////////////////////////최혜원////////////////////////////////////////////
-function loadUserReviewList(next_row) {
-	
-	
-	$.ajax({
-		type : 'get',
-		data : {next_row : next_row},
-		url : "loadUserReviewList.go",
-		success : function(data) {
-			if(data.length>0){
-				var AppendList="";
-				$.each(data, function(key, review){
-					next_row=next_row+1;
-					AppendList+='<div class="form-group row">'				
-					AppendList+='<label for="reviewer" class="control-label col-sm-2" >평가자 </label>'
-					AppendList+=	'<div class="col-sm-8">&nbsp;'+review.reviewer_id+'</div>'
-					AppendList+='</div>'
-					AppendList+='<div class="form-group row">'		
-					AppendList+='<label for="point" class="control-label col-sm-2" >평가점수</label>'
-					AppendList+=	'<div class="col-sm-8">'
-					AppendList+=	'&nbsp;' + review.review_point + '점'
-					AppendList+=	'</div>'
-					AppendList+='</div>'
-					AppendList+='<div class="form-group row">'
-					AppendList+='<label for="comment" class="control-label col-sm-2" >평가 내용</label>'
-					AppendList+=	'<div class="col-sm-8">&nbsp;'+review.review_comment +'</div>'
-					AppendList+='</div>'
-					AppendList+='<br>'
-					
-	            });
-	            $("#trace").append(AppendList);
-	            var newButton='<button type="button" class="btn btn-dark col-md-12" onclick="loadList('+next_row_after+')">Load more...</button>';
-	            $("#loading-button").html(newButton);
-			} else {
-				alert('더 이상 불러올 글이 없습니다.');
-			}
-		},
-		error : function(error) {
-			alert('글 불러오기에 실패했습니다.'+error);
-		}
-	});
-	
-}
 
