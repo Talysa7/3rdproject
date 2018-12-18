@@ -161,8 +161,9 @@
 
 function setAutoComplete( item, map ){
 	var autocomplete = new google.maps.places.Autocomplete(item);
-	autocomplete.bindTo('bounds', map)
-	autocomplete.setFields([ 'address_components', 'formatted_phone_number', 'geometry', 'icon', 'name', 'photos', 'vicinity' ])
+	
+	autocomplete.bindTo('bounds', map);
+	autocomplete.setFields([ 'address_components', 'formatted_phone_number', 'geometry', 'icon', 'name', 'photos', 'vicinity' ]);
 	autocomplete.addListener('place_changed', function() {
 		infowindow.close();
 		marker.setVisible(false);
@@ -216,7 +217,8 @@ $(function(){
 			selectOtherMonths: true
 		});
 	})
-		
+	
+	
 	// add_btn /  trip 추가
 	$('#add_btn').on('click', function(){
 		var $last = $('.trip_chips:last');
@@ -256,22 +258,6 @@ $(function(){
 		var data_parse = JSON.parse($('form#tripForm').serializeJSON());
 		console.log(data_parse);
 	});
-
-	
 });
-
 </script>
-
-
 </html>
-
-
-
-
-
-
-
-
-
-
-
