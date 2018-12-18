@@ -202,9 +202,10 @@ function setAutoComplete( item, map ){
 		lat = lat.substring( 0, (parseInt(lat.indexOf('.')) + 7) );
 
 		infowindowContent.children['place-name'].textContent = place.name;
-		infowindowContent.children['place-address'].textContent = address;
-		infowindowContent.children['place-location'].textContent = 
-			place.geometry.location.lat() + place.geometry.location.lng();
+//		infowindowContent.children['place-address'].textContent = address;
+//		infowindowContent.children['place-location'].textContent = 
+//			place.geometry.location.lat();
+		
 		for( var i in addr_comp){
 			if(addr_comp[i].types[0] == 'country'){
 				$(item).siblings('.trip_country_code').val(addr_comp[i].short_name);
