@@ -116,7 +116,9 @@
 			<div class="form-group row">
 				<div class="col-sm-2"></div>
 				<div class="col-sm-8">
+				<c:if test="${size ne 0}">
 				<button type="button" class="btn btn-lg btn-secondary btn-block" onclick="location='placeWrite.go'">여행지를 평가해주세요</button>				
+				</c:if>
 				<button type="button" class="btn btn-lg btn-secondary btn-block" onclick="location='reviewPage.go'">평판불러오기</button>				
 				<c:if test="${catchNum ne 0 and catchNum ne null}">
 					<button type="button" class="btn btn-lg btn-secondary btn-block" onclick="location='review.go'">작성해야 할 평판이 있습니다</button>

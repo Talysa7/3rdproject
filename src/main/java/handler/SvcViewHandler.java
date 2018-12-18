@@ -113,7 +113,8 @@ public class SvcViewHandler {
 							
 			Map<String, Object> userT = new HashMap<String, Object>();				
 			userT.put("user_id", user_id);
-			
+			List<TripDataBean> usertrip = tripDao.getReviewList(user_id);
+			request.setAttribute("size", usertrip.size());
 			List<Integer> tripid = memberDao.getMemTripId(user_id);
 			for(int j=0; j<tripid.size(); j++) {
 				int trip = tripid.get(j);

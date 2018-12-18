@@ -186,7 +186,7 @@ public class SvcFormHandler {
 		request.setAttribute("user_id", user_id);
 		List<Integer> trip_id = memberDao.getMemTripId(user_id);
 		request.setAttribute("trip_id", trip_id);
-		List<TripDataBean> usertrip = tripDao.getUserTripList(user_id);
+		List<TripDataBean> usertrip = tripDao.getReviewList(user_id);
 		List<TripDataBean> trip = new ArrayList<TripDataBean>();
 		for(int i=0; i<usertrip.size(); i++) {		
 			TripDataBean tripDto = usertrip.get(i);

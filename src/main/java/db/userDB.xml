@@ -150,6 +150,23 @@
 			)
 		order by end_date desc
 	</select>
+	<select id="getReviewList" parameterType="String" resultType="db.TripDataBean">
+		select *
+		from pao_view_trip
+		where trip_id in (
+				select trip_id
+				from pao_members
+				where user_id=#{user_id}
+			)
+		and trip_id not in (
+				select trip_id 
+				from pao_trip 
+				where coord_id in (
+							select coord_id 
+							from pao_coord_review
+							where user_id=#{user_id}))
+		order by end_date desc
+	</select>
 	<select id="getMemberNames" parameterType="int" resultType="java.util.List">
 		select user_name
 		from pao_view_trip
