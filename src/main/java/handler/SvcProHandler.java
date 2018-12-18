@@ -191,7 +191,9 @@ public class SvcProHandler {
 		int userType = 1;
 		String id = request.getParameter("user_id");
 		String passwd = request.getParameter("passwd");
+		String user_name = null;
 		UserDataBean userDto = userDao.getUser(id);
+		
 		int result = 0;
 
 		try {
@@ -206,7 +208,7 @@ public class SvcProHandler {
 			if (result == 1) {
 				int user_level = userDto.getUser_level();
 				if (user_level == ADMIN) {
-					userType = 9;									
+					userType = ADMIN;									
 				}
 				request.setAttribute("userType", userType);
 			}
@@ -218,10 +220,12 @@ public class SvcProHandler {
 			logDao.makeLoginLog(userDto, result, userType, id, passwd);
 			request.setAttribute("result", result);
 		} 
+
 		logDao.makeLoginLog(userDto, result, userType, id, passwd);
+		user_name = userDto.getUser_name();
 		request.setAttribute("result", result);
 		request.setAttribute("id", id);
-		
+		request.setAttribute("user_name", user_name);
 		return new ModelAndView("svc/loginPro");
 		
 	}
@@ -231,6 +235,7 @@ public class SvcProHandler {
 			throws HandlerException {
 		request.getSession().removeAttribute("user_id");
 		request.getSession().removeAttribute("user_level");
+		request.getSession().removeAttribute("user_name");
 		// send user to main page
 		// but we don't have a main page yet, so send him to board list, temporary
 		return new ModelAndView("svc/login");
@@ -817,14 +822,19 @@ public class SvcProHandler {
 		memberDto.setUser_id(user_id);
 
 		boolean memberCheck = memberDao.isTripMember(memberDto);
-
-		if (!memberCheck) {
-			int addMemberResult = memberDao.addTripMember(memberDto);
-			request.setAttribute("addMemberResult", addMemberResult);
-			if(addMemberResult>=1) request.setAttribute("isMember", true);
-			else request.setAttribute("isMember", false);
+		TripDataBean trip=tripDao.getTrip(trip_id);
+		trip.setTrip_members(trip_id);
+		if(trip.getTrip_member_count()!=trip.getTrip_members().size()) {
+			if (!memberCheck) {
+				int addMemberResult = memberDao.addTripMember(memberDto);
+				request.setAttribute("addMemberResult", addMemberResult);
+				if(addMemberResult>=1) request.setAttribute("isMember", true);
+				else request.setAttribute("isMember", false);
+			}
+		} else {
+			return null;
 		}
-
+		
 		List<MemberDataBean> memberList = memberDao.getMembers(trip_id);
 		return memberList;
 	}

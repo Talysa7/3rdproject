@@ -27,10 +27,10 @@
 
 	<div class="container" style="width: 800px;">
 		<form id="tripForm" class="form-horizontal" method="post" action="tripWritePro.go" onsubmit="return writeCheck()">
-			<h4>${page_write}</h4>
-			<hr size="1px" color="black">
-			<div class="input-box">
-				<input type="hidden" name="user_name" value="${user_name}">
+<%-- 			<h4>${page_write}</h4>
+			<hr size="1px" color="black"> --%>
+			<div class="input-box"> <!-- input-box 클래스는 css 먹일 때 쓰이는 용도로 확인 -->
+<%-- 				<input type="hidden" name="user_name" value="${user_name}"> --%>
 				<div class="form-group row">
 					<input type="text" name="trip_title" class="col-12 form-control form-control-lg" maxlength="30"
 						placeholder="${trip_title}" autofocus required>
@@ -125,3 +125,59 @@
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAoC3t0xr7YieFKGY9nIAH366PT6JyaiEg&libraries=places&callback=initMap"
 	async defer></script>
 </html>
+
+
+
+	<div class="container" style="width: 800px;">
+		<form id="tripForm" class="form" method="post">
+			<div class="input-box">	
+				<div class="board_part">
+					<input type="hidden" name="board[]">
+						<div class="form-group row">
+							<input type="text" class="board_title " name="board[title]" placeholder="제목">
+						</div>
+						<div class="form-group row"><label for="board_content">글내용</label>
+							<textarea class="board_content" name="board[content]" placeholder="내용을 입력하세요">
+							</textarea>
+						</div>
+						<div class="form-group row"><label for="board_contact">대화링크</label>
+							<input type="text" class="board_contact" name="board[contact]">
+						</div>
+						<div class="form-group row">
+							<input type="checkbox" class="board_tag" name="board[tag][]" value="tag1">태그1
+							<input type="checkbox" class="board_tag" name="board[tag][]" value="tag2">태그2
+							<input type="checkbox" class="board_tag" name="board[tag][]" value="tag3">태그3
+						</div>
+				</div>
+				<div class="trip_part">
+					<input type="hidden" name="trip[]">
+					<div class="form-group row">
+						<label for="trip_member_count">참여인원</label>
+						<input type="number" class="trip_member_count" name="trip[][member_count]" placeholder="n명">
+					</div>
+					<div class="form-group row">
+						<input type="text" class="trip_start_date" name="trip[][start_date]" placeholder="시작일">
+						~
+						<input type="text" class="trip_end_date" name="trip[][end_date]" placeholder="종료일">
+					</div>
+						<input type="hidden" name="trip[][coord_id]">
+							<input type="hidden" class="trip_place_name" name="trip[][coord_id][place_name]">
+							<input type="hidden" class="trip_country_code" name="trip[][coord_id][country_code]">
+							<input type="hidden" class="trip_long" name="trip[][coord_id][long]">
+							<input type="hidden" class="trip_lat" name="trip[][coord_id][lat]">
+						<input type="hidden" class="trip_order" name="trip[][trip_order]" value="1">
+				</div>
+			</div>
+			<input type="submit" value="전송">
+		</form>
+	</div>
+
+
+
+
+
+
+
+
+
+

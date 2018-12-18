@@ -632,37 +632,39 @@ function loadMoreList(next_row) {
 					next_row=next_row+1;
 					
 					listForAppend+='<div class="row">';
-					listForAppend+=		'<div class="col-md-12">';
-					listForAppend+=			'<div class="card flex-md-row mb-3 shadow-sm h-md-250">';
-					listForAppend+=				'<div class="card-body d-flex flex-column align-items-start">';
-					listForAppend+=					'<strong class="d-inline-block mb-2">';
-																	if(additionalList.tripLists) {
-																		$.each(additionalList.tripLists, function(key, tripLists) {
-																			additionalList.coord_name;
-																		});
-																	}
-					listForAppend+=					'</strong>';
-					listForAppend+=					'<h3 class="mb-0">';
-					listForAppend+=						'<a class="text-dark" href="trip.go?board_no='+additionalList.board_no+'">'+additionalList.board_title+'</a>';
-					listForAppend+=					'</h3>';
-					listForAppend+=					'<div class="mb-1 text-muted text-right">';
-					listForAppend+=						'<i><b>With</b></i>&nbsp;'+additionalList.user_name;
-					listForAppend+=					'</div>';
-					listForAppend+=					'<hr size="1px" color="black" noshade>';
-					listForAppend+=					'<p class="card-text mb-auto">'+additionalList.board_content+'</p>';
-					listForAppend+=					'<hr style="width: 100%">';
-					listForAppend+=					'<div class="d-flex justify-content-center">';
-					listForAppend+=						'<div class="p-2">조회수:'+additionalList.board_view_count+'</div>';
-					listForAppend+=						'<div class="p-2"><label class="btn btn-sm taglist">';
-																		$.each(additionalList.board_tags, function(key, board_tags) {
-																			additionalList.tag_value;
-																		});
-					listForAppend+=						'</label></div>';
-					listForAppend+=					'</div>';
-					listForAppend+=				'</div>';
+					listForAppend+='<div class="col-md-11">';
+					listForAppend+=	'<div class="card flex-md-row mb-3 shadow-sm h-md-250">';
+					listForAppend+=		'<div class="card-body">';
+					listForAppend+=			'<strong class="d-inline-block mb-2">';
+															if(additionalList.tripLists) {
+																$.each(additionalList.tripLists, function(key, tripLists) {
+					listForAppend+=												tripLists.coord_name+' ';
+																});
+															};
+					listForAppend+=			'</strong>';
+					listForAppend+=			'<h3 class="mb-0">';
+					listForAppend+=				'<a class="text-dark" href="trip.go?board_no='+additionalList.board_no+'">';
+					listForAppend+=				additionalList.board_title;
+					listForAppend+=			'</h3>';
+					listForAppend+=			'<div class="mb-1 text-muted text-right">';
+					listForAppend+=				'<i><b>With</b></i>'+additionalList.user_name;
 					listForAppend+=			'</div>';
-					listForAppend+=		'</div>';
-					listForAppend+=	'</div>';
+					listForAppend+=			'<hr style="width: 100%" noshade>';
+					listForAppend+=			'<p class="card-text mb-auto">'+additionalList.board_content+'</p>';
+					listForAppend+=			'<hr style="width: 100%" noshade>';
+					listForAppend+=			'<div class="mb-1 text-muted">';
+					listForAppend+=				'<label>조회수:'+additionalList.board_view_count+'&nbsp;</label>';
+					listForAppend+=				'<c:forEach var="tag" items="${post.board_tags}">';
+																	$.each(additionalList.board_tags, function(key, board_tags) {
+					listForAppend+=							'<label class="btn btn-sm taglist"> # '+board_tags.tag_value+'</label>';
+																	});
+					listForAppend+=				'</c:forEach>';
+					listForAppend+=			'</div></div>';
+					listForAppend+=		'<div class="thumbnail">';
+														if(additionalList.thumbnail != null) {
+					listForAppend+=				'<img src="'+additionalList.thumbnail+'" class="img-fluid">';
+														};
+					listForAppend+=		'</div></div></div></div>';
 	            });
 	            $("#board-list").append(listForAppend);
 	            var newButton='<button type="button" class="btn btn-dark col-md-12" onclick="loadMoreList('+next_row_after+')">Load more...</button>';
