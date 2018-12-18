@@ -101,18 +101,6 @@
 	<select id="getCoordId" parameterType="int" resultType="int">
 		select coord_id from pao_trip where trip_id=#{trip_id}
 	</select>
-	<select id="advanceSearchByDate" parameterType="java.util.Map" resultType="db.BoardDataBean">
-		<![CDATA[
-		select * from pao_view_board where board_no in
-		(select board_no from pao_trip where start_date>=STR_TO_DATE(#{fromDate},'%m/%d/%Y') and end_date<=STR_TO_DATE(#{toDate},'%m/%d/%Y'))
-		]]>
-	</select>
-	<select id="advanceSearchByPeriod" parameterType="java.util.Map" resultType="db.BoardDataBean">
-		<![CDATA[
-		select * from pao_view_board where board_no in
-		(select board_no from pao_trip where DATEDIFF(end_date,start_date)=#{searchPeriod} )
-		]]>
-	</select>
 	<select id="advanceSearchByTag" parameterType="java.util.Map" resultType="db.BoardDataBean">
 		<![CDATA[
 		select * from pao_view_board where board_no in
@@ -125,6 +113,11 @@
 		select * from pao_view_board where board_no in
 		(select board_no from pao_trip where coord_id in
 		(select coord_id from pao_coordinate where coord_name=#{searchSite}))
+		]]>
+	</select>
+	<select id="advanceSearchByDatePeriod" parameterType="java.util.Map" resultType="db.BoardDataBean">
+		<![CDATA[
+		${query}
 		]]>
 	</select>
 	<!--/////////////////////////////////////////////////// start-line pao_comment table ///////////////////////////////////////////////////-->

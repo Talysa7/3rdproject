@@ -899,10 +899,6 @@ function initMap() {
 	    marker.setVisible(false);
 	    var place = autocomplete.getPlace();
 	    if (!place.geometry) {
-	      // User entered the name of a Place that was not suggested and
-	      // pressed the Enter key, or the Place Details request failed.
-	      // window.alert("No details available for input: '" + place.name + "'");
-	      // window.alert("검색한 장소를 클릭해주세요");
 	      return;
 	    }
 
@@ -950,7 +946,7 @@ function initMap() {
 	        console.log('Checkbox clicked! New state=' + this.checked);
 	        autocomplete.setOptions({strictBounds: this.checked});
 	      });
-	}
+}
 
 ///////////////////////////////////////////////////////이민재//////////////////////////////////////////////////////
 /*

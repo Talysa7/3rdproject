@@ -117,25 +117,11 @@
 						<form method="post" action="advanceSearch.go">
 							<!-- pac-card start -->
 							<div class="pac-card" id="pac-card">
-							<!-- GOOGLEMAP TITLE -->	
-							<!-- <div id="title">
-									여행 장소 검색
-								</div>	 -->	
 							<!-- GOOGLEMAP RADIO BUTTON  -->	
 								<div id="type-selector" class="pac-controls">
 									<input type="radio" name="type" id="changetype-all" checked="checked">
 									<label for="changetype-all">All</label>
-							<!--	<input type="radio" name="type" id="changetype-establishment">
-									<label for="changetype-establishment">Establishments</label>
-							     	<input type="radio" name="type" id="changetype-address">
-							     	<label for="changetype-address">Addresses</label>
-									<input type="radio" name="type" id="changetype-geocode">
-									<label for="changetype-geocode">Geocodes</label>	  -->	
 								</div>
-						<!-- 	<div id="strict-bounds-selector" class="pac-controls">
-									<input type="checkbox" id="use-strict-bounds" value="">
-									<label for="use-strict-bounds">Strict Bounds</label>
-								</div>	 -->	
 							<!-- 	GOOGLEMAP LOCATION TEXTAREA  -->  
 								<div id="pac-container">
 									<input id="pac-input" type="text" placeholder="Enter a location">

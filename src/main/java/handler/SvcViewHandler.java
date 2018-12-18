@@ -3,7 +3,6 @@ package handler;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Calendar;
@@ -461,26 +460,37 @@ public class SvcViewHandler {
 		searchMap.put("searchTag", searchTag);
 		searchMap.put("searchSite", searchSite);
 		
-//		Iterator<String> mapIter = searchMap.keySet().iterator();
-//		 
-//	    while(mapIter.hasNext()){
-//	    	String key = mapIter.next();
-//	        String value = searchMap.get( key );
-//	 
-//	        System.out.println(key+" : "+value);
-//	    }
-	    
-		if(searchPeriod == "") {
-		    List<BoardDataBean> searchReceive = boardDao.advanceSearchByDate(searchMap);
-		    System.out.println("검색결과 개수 기간x: "+searchReceive.size()+"\n");
+		String queryHead = "select * from pao_view_board where board_no in (select board_no from pao_trip";
+		
+		String queryDate = "";
+		if(toDate != null || fromDate != null) {
+			queryDate += " where start_date>=STR_TO_DATE(#{fromDate},'%m/%d/%Y') and end_date<=STR_TO_DATE(#{toDate},'%m/%d/%Y')";
+		}
+		
+		String queryPeriod = "";
+		if(searchPeriod == null || searchPeriod == "") {
+			queryPeriod += "";
+		}else if(searchPeriod != null) {
+			queryPeriod += " and DATEDIFF(end_date,start_date)=#{searchPeriod})";
+		}
+
+		String query = queryHead + queryDate + queryPeriod;
+		System.out.println(query);
+		if(searchPeriod == null || searchPeriod == "") {
+			query += ")";
+		}
+		
+		searchMap.put("query", query);
+		
+		if(query != null) {
+			List<BoardDataBean> searchReceive = boardDao.advanceSearchByDatePeriod(searchMap);
+			request.setAttribute("searchReceive", searchReceive);
+		}
+	
+		if(searchSite != "") {
+			List<BoardDataBean> searchReceive = boardDao.advanceSearchBySite(searchMap);
+		    System.out.println("검색결과 개수 장소: "+searchReceive.size()+"\n");
 		    request.setAttribute("searchReceive", searchReceive);
-		    
-		}else if(searchPeriod != "") {
-			List<BoardDataBean> searchReceive = boardDao.advanceSearchByPeriod(searchMap);
-		    System.out.println("검색결과 개수 기간o: "+searchReceive.size()+"\n");
-		    request.setAttribute("searchReceive", searchReceive);
-		}else {
-			
 		}
 	    
 		if(searchTag != "") {
@@ -489,13 +499,7 @@ public class SvcViewHandler {
 		    request.setAttribute("searchReceive", searchReceive);
 		}
 		
-		if(searchSite != "") {
-			List<BoardDataBean> searchReceive = boardDao.advanceSearchBySite(searchMap);
-		    System.out.println("검색결과 개수 장소: "+searchReceive.size()+"\n");
-		    request.setAttribute("searchReceive", searchReceive);
-		}
-
-	    return new ModelAndView("svc/advanceSearch");
+		return new ModelAndView("svc/advanceSearch");
 }
 	/////////////////////////////////album pages/////////////////////////////////
 
