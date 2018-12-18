@@ -235,7 +235,7 @@ $(function(){
 	// add_btn /  trip 추가
 	$('#add_btn').on('click', function(){
 		var $last = $('.trip_chips:last');
-		var $clone = $last.clone(false);
+		var $clone = $last.clone(true);
 		$last.after($clone);
 		$('.trip_chips:last input, .trip_chips:last select').val('');
 		$clone.find('input.trip_start_date')
