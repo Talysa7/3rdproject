@@ -194,11 +194,18 @@ function setAutoComplete( item, map ){
 					&& place.address_components[2].short_name || '') ]
 				.join(' ');
 		}
+		var lng = place.geometry.location.lng().toString();
+		var lat = place.geometry.location.lat().toString();
+		
+		lng = lng.substring( 0, (parseInt(lng.indexOf('.')) + 7) );
+		lat = lat.substring( 0, (parseInt(lat.indexOf('.')) + 7) );
 
 		infowindowContent.children['place-name'].textContent = place.name;
 		infowindowContent.children['place-address'].textContent = address;
 		infowindowContent.children['place-location'].textContent = 
 			place.geometry.location.lat() + place.geometry.location.lng();
+		$(item).siblings('.trip_long').val(lng);
+		$(item).siblings('.trip_lat').val(lat);
 		infowindow.open(map, marker);
 	});
 }
