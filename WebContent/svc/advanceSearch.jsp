@@ -56,7 +56,7 @@
 					<!-- board list start -->
 					<div class="board-list" id="board-list">
 						<c:if test="${postList.size() ne 0}">
-							<c:forEach var="post" items="${postList}">
+							<c:forEach var="post" items="${searchReceive}">
 								<!-- left row start -->
 								<div class="row">
 									<!-- col-md-11 start -->
@@ -65,7 +65,7 @@
 										<div class="card flex-md-row mb-3 shadow-sm h-md-250">
 											<!-- card body start -->
 											<div class="card-body">
-												<strong class="d-inline-block mb-2">
+												<strong class="d-inline-block mb-2"> 
 												<c:forEach var="trip" items="${post.tripLists}">
 								              		${trip.coord_name}
 								              	</c:forEach>
@@ -84,19 +84,20 @@
 												<hr style="width: 100%" noshade>
 												<p class="card-text mb-auto">${post.board_content}</p>
 												<hr style="width: 100%" noshade>
-												<div class="mb-1 text-muted">
-													<label>조회수:${post.board_view_count}</label>
+											</div>
+											<!-- card body end -->
+											<!-- card center start -->
+											<div class="card-center justify-content-center">
+												<div class="p-2">
+													조회수:${post.board_view_count}
+												</div>
+												<div class="p-2">
 													<c:forEach var="tag" items="${post.board_tags}">
 														<label class="btn btn-sm taglist"> # ${tag.tag_value} </label>
 													</c:forEach>
 												</div>
 											</div>
-											<!-- thumbnail start -->
-											<div class="thumbnail">
-												<img src="${post.thumbnail}" class="img-fluid">
-											</div>
-											<!-- thumbnail end -->
-											<!-- card body end -->
+											<!-- card center end-->
 										</div>
 										<!-- left card end -->
 									</div>
@@ -120,10 +121,10 @@
 								<div id="type-selector" class="pac-controls">
 									<input type="radio" name="type" id="changetype-all" checked="checked">
 									<label for="changetype-all">All</label>
-								</div>
+								</div>	
 							<!-- 	GOOGLEMAP LOCATION TEXTAREA  -->  
 								<div id="pac-container">
-									<input id="pac-input" type="text" placeholder="Enter a location">
+									<input id="pac-input" name="searchSite" type="text" placeholder="Enter a location">
 								</div>
 							</div>
 							<!-- pac card end -->
@@ -151,12 +152,12 @@
 							</div>
 							<label>기간</label>
 							<div  class="row" style="padding: 0px 0px 10px 14px;">
-								<input name="period" type="text" class="form-control col-md-9" placeholder="일 단위로 입력하세요">	&nbsp;	
+								<input type="text" class="form-control col-md-9" name="searchPeriod" placeholder="일 단위로 입력하세요">	&nbsp;	
 								<input type="submit" class="btn btn-secondary" value="검색">
 							</div>
 							<label>태그</label>
 							<div class="row" style="padding: 0px 0px 10px 14px;">
-								<input type="text" class="form-control col-md-9" placeholder="검색할 태그를 입력하세요">&nbsp;
+								<input type="text" class="form-control col-md-9" name="searchTag" placeholder="검색할 태그를 입력하세요">&nbsp;
 							 	<input type="submit" class="btn btn-secondary" value="검색">
 							</div>
 						</form>

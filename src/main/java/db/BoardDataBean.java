@@ -24,7 +24,7 @@ public class BoardDataBean {
 										//If there is no thumbnail, set it to default image's url
 	private List<TagDataBean> board_tags;		//article's tag value list
 	private List<TripDataBean> tripLists;	// 관련된 TripData들을 가져와 보관하기 위함.
-
+	
 	public int getBoard_no() {
 		return board_no;
 	}
