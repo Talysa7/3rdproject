@@ -211,6 +211,7 @@ function setAutoComplete( item, map ){
 				$(item).siblings('.trip_country_code').val(addr_comp[i].short_name);
 			} 
 		}
+		$(item).siblings('.trip_place_name').val(place.name);
 		$(item).siblings('.trip_long').val(lng);
 		$(item).siblings('.trip_lat').val(lat);
 		infowindow.open(map, marker);
