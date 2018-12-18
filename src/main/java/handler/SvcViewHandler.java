@@ -5,6 +5,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Calendar;
+import java.util.Date;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -417,6 +423,7 @@ public class SvcViewHandler {
 		} else {
 			request.setAttribute("next_row", 0);
 		}
+
 		request.setAttribute("postList", postList);
 		return new ModelAndView("svc/tripList");
 	}
@@ -493,7 +500,100 @@ public class SvcViewHandler {
 		request.setAttribute("count", count);
 		return new ModelAndView("svc/foundList");
 	}
+	
+	//advance search by site, start date, end date, period, tag
+	@RequestMapping("/advanceSearch")
+	public ModelAndView advanceSearchProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
+		
+		try {
+			request.setCharacterEncoding("utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		String fromDate = request.getParameter("fromDate");
+		String toDate = request.getParameter("toDate");
+		String searchPeriod = request.getParameter("searchPeriod");
+		String searchTag = request.getParameter("searchTag");
+		String searchSite = request.getParameter("searchSite");
 
+		if(toDate == "" || toDate == null) {
+			toDate="01/01/2100";
+		}
+		
+		if(fromDate == "" || fromDate == null) {
+			fromDate="01/01/1970";
+		}
+		
+		System.out.println("시작일 : "+fromDate);
+		System.out.println("종료일 : "+toDate);
+		System.out.println("기간 : "+searchPeriod);
+		System.out.println("태그 : "+searchTag);
+		System.out.println("장소 : "+searchSite);
+		
+		java.sql.Timestamp timeStampDateTo;
+		java.sql.Timestamp timeStampDateFrom;
+		try {
+			DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+			Date dateTo = formatter.parse(fromDate);
+			Date dateFrom = formatter.parse(toDate);
+			timeStampDateTo = new Timestamp(dateTo.getTime());
+			timeStampDateFrom = new Timestamp(dateFrom.getTime());
+			//System.out.println(timeStampDateTo);
+			//System.out.println(timeStampDateFrom);
+		}catch (ParseException e) {
+			System.out.println("Exception :" + e);
+			    return null;
+		}
+		
+		Map<String, String> searchMap = new HashMap<String, String>();	
+		searchMap.put("fromDate",fromDate);
+		searchMap.put("toDate", toDate);
+		searchMap.put("searchPeriod", searchPeriod);
+		searchMap.put("searchTag", searchTag);
+		searchMap.put("searchSite", searchSite);
+		
+		String queryHead = "select * from pao_view_board where board_no in (select board_no from pao_trip";
+		
+		String queryDate = "";
+		if(toDate != null || fromDate != null) {
+			queryDate += " where start_date>=STR_TO_DATE(#{fromDate},'%m/%d/%Y') and end_date<=STR_TO_DATE(#{toDate},'%m/%d/%Y')";
+		}
+		
+		String queryPeriod = "";
+		if(searchPeriod == null || searchPeriod == "") {
+			queryPeriod += "";
+		}else if(searchPeriod != null) {
+			queryPeriod += " and DATEDIFF(end_date,start_date)=#{searchPeriod})";
+		}
+
+		String query = queryHead + queryDate + queryPeriod;
+		System.out.println(query);
+		if(searchPeriod == null || searchPeriod == "") {
+			query += ")";
+		}
+		
+		searchMap.put("query", query);
+		
+		if(query != null) {
+			List<BoardDataBean> searchReceive = boardDao.advanceSearchByDatePeriod(searchMap);
+			request.setAttribute("searchReceive", searchReceive);
+		}
+	
+		if(searchSite != "") {
+			List<BoardDataBean> searchReceive = boardDao.advanceSearchBySite(searchMap);
+		    System.out.println("검색결과 개수 장소: "+searchReceive.size()+"\n");
+		    request.setAttribute("searchReceive", searchReceive);
+		}
+	    
+		if(searchTag != "") {
+			List<BoardDataBean> searchReceive = boardDao.advanceSearchByTag(searchMap);
+		    System.out.println("검색결과 개수 태그: "+searchReceive.size()+"\n");
+		    request.setAttribute("searchReceive", searchReceive);
+		}
+		
+		return new ModelAndView("svc/advanceSearch");
+}
 	/////////////////////////////////album pages/////////////////////////////////
 
 	@RequestMapping("/album")

@@ -47,6 +47,7 @@
 	</delete>
 
 	<select id="getTripList" parameterType="int" resultType="db.TripDataBean">
+
 		SELECT * 
 		FROM pao_view_trip 
 		WHERE board_no=#{board_no}
@@ -88,6 +89,25 @@
 	</delete>	
 	<select id="getCoordId" parameterType="int" resultType="int">
 		select coord_id from pao_trip where trip_id=#{trip_id}
+	</select>
+	<select id="advanceSearchByTag" parameterType="java.util.Map" resultType="db.BoardDataBean">
+		<![CDATA[
+		select * from pao_view_board where board_no in
+		(select board_no from pao_view_board_tags where tag_id in
+		(select tag_id from pao_tag where tag_value=#{searchTag}))
+		]]>
+	</select>
+	<select id="advanceSearchBySite" parameterType="java.util.Map" resultType="db.BoardDataBean">
+		<![CDATA[
+		select * from pao_view_board where board_no in
+		(select board_no from pao_trip where coord_id in
+		(select coord_id from pao_coordinate where coord_name=#{searchSite}))
+		]]>
+	</select>
+	<select id="advanceSearchByDatePeriod" parameterType="java.util.Map" resultType="db.BoardDataBean">
+		<![CDATA[
+		${query}
+		]]>
 	</select>
 	<!--/////////////////////////////////////////////////// start-line pao_comment table ///////////////////////////////////////////////////-->
 	<insert id="insertComment" parameterType="db.CmtDataBean" keyProperty="comment_id">
