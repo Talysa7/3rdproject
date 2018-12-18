@@ -16,7 +16,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -45,7 +44,6 @@ import db.ReviewDataBean;
 import db.TagDBBean;
 import db.TagDataBean;
 import db.BoardDBBean;
-import db.BoardDataBean;
 import db.TripDBBean;
 import db.TripDataBean;
 import db.UserDBBean;
@@ -487,7 +485,7 @@ public class SvcViewHandler {
 		//searchTrip Log
 		try {
 			logDao.searchTripLog(selectedType, keyword);
-		} catch (ClassCastException | JsonProcessingException | ParseException e) {
+		} catch (ClassCastException | JsonProcessingException | org.json.simple.parser.ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -566,7 +564,7 @@ public class SvcViewHandler {
 		}else if(searchPeriod != null) {
 			queryPeriod += " and DATEDIFF(end_date,start_date)=#{searchPeriod})";
 		}
-
+		
 		String query = queryHead + queryDate + queryPeriod;
 		System.out.println(query);
 		if(searchPeriod == null || searchPeriod == "") {
@@ -575,8 +573,20 @@ public class SvcViewHandler {
 		
 		searchMap.put("query", query);
 		
+		String next_row = request.getParameter("next_row");
+		if(next_row == null || next_row.equals("")){
+			next_row = "1";
+		}
 		if(query != null) {
 			List<BoardDataBean> searchReceive = boardDao.advanceSearchByDatePeriod(searchMap);
+			 if(searchReceive.size()>=postPerPage) {
+					request.setAttribute("next_row", postPerPage+1);
+				} else if(searchReceive.size()>0&&searchReceive.size()<postPerPage) {
+					request.setAttribute("next_row", searchReceive.size()+1);
+				} else {
+					request.setAttribute("next_row", 0);
+				}
+			setReviewLogic(request, next_row, searchReceive.size(), start, end);
 			request.setAttribute("searchReceive", searchReceive);
 		}
 	
@@ -584,12 +594,28 @@ public class SvcViewHandler {
 			List<BoardDataBean> searchReceive = boardDao.advanceSearchBySite(searchMap);
 		    System.out.println("검색결과 개수 장소: "+searchReceive.size()+"\n");
 		    request.setAttribute("searchReceive", searchReceive);
+		    if(searchReceive.size()>=postPerPage) {
+				request.setAttribute("next_row", postPerPage+1);
+			} else if(searchReceive.size()>0&&searchReceive.size()<postPerPage) {
+				request.setAttribute("next_row", searchReceive.size()+1);
+			} else {
+				request.setAttribute("next_row", 0);
+			}
+		    setReviewLogic(request, next_row, searchReceive.size(), start, end);
 		}
 	    
 		if(searchTag != "") {
 			List<BoardDataBean> searchReceive = boardDao.advanceSearchByTag(searchMap);
 		    System.out.println("검색결과 개수 태그: "+searchReceive.size()+"\n");
 		    request.setAttribute("searchReceive", searchReceive);
+		    if(searchReceive.size()>=postPerPage) {
+				request.setAttribute("next_row", postPerPage+1);
+			} else if(searchReceive.size()>0&&searchReceive.size()<postPerPage) {
+				request.setAttribute("next_row", searchReceive.size()+1);
+			} else {
+				request.setAttribute("next_row", 0);
+			}
+		    setReviewLogic(request, next_row, searchReceive.size(), start, end);
 		}
 		
 		return new ModelAndView("svc/advanceSearch");
