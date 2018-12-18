@@ -36,6 +36,7 @@ import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,6 +46,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import db.AlbumDBBean;
@@ -56,6 +58,7 @@ import db.CoordDataBean;
 import db.CoordReviewDBBean;
 import db.CoordReviewDataBean;
 import db.ReviewDataBean;
+import db.LogDBBean;
 import db.MemberDBBean;
 import db.MemberDataBean;
 import db.ReviewDBBean;
@@ -180,7 +183,9 @@ public class SvcProHandler {
 		int userType = 1;
 		String id = request.getParameter("user_id");
 		String passwd = request.getParameter("passwd");
+		String user_name = null;
 		UserDataBean userDto = userDao.getUser(id);
+		
 		int result = 0;
 
 		try {
@@ -195,7 +200,7 @@ public class SvcProHandler {
 			if (result == 1) {
 				int user_level = userDto.getUser_level();
 				if (user_level == ADMIN) {
-					userType = 9;									
+					userType = ADMIN;									
 				}
 				request.setAttribute("userType", userType);
 			}
@@ -205,10 +210,11 @@ public class SvcProHandler {
 		} catch(NullPointerException e) {	//만약 아이디가 없을경우 바로 이쪽으로 이동.
 			
 		} 
+		user_name = userDto.getUser_name();
 		
 		request.setAttribute("result", result);
 		request.setAttribute("id", id);
-		
+		request.setAttribute("user_name", user_name);
 		return new ModelAndView("svc/loginPro");
 		
 	}
@@ -218,6 +224,7 @@ public class SvcProHandler {
 			throws HandlerException {
 		request.getSession().removeAttribute("user_id");
 		request.getSession().removeAttribute("user_level");
+		request.getSession().removeAttribute("user_name");
 		// send user to main page
 		// but we don't have a main page yet, so send him to board list, temporary
 		return new ModelAndView("svc/login");
@@ -803,14 +810,19 @@ public class SvcProHandler {
 		memberDto.setUser_id(user_id);
 
 		boolean memberCheck = memberDao.isTripMember(memberDto);
-
-		if (!memberCheck) {
-			int addMemberResult = memberDao.addTripMember(memberDto);
-			request.setAttribute("addMemberResult", addMemberResult);
-			if(addMemberResult>=1) request.setAttribute("isMember", true);
-			else request.setAttribute("isMember", false);
+		TripDataBean trip=tripDao.getTrip(trip_id);
+		trip.setTrip_members(trip_id);
+		if(trip.getTrip_member_count()!=trip.getTrip_members().size()) {
+			if (!memberCheck) {
+				int addMemberResult = memberDao.addTripMember(memberDto);
+				request.setAttribute("addMemberResult", addMemberResult);
+				if(addMemberResult>=1) request.setAttribute("isMember", true);
+				else request.setAttribute("isMember", false);
+			}
+		} else {
+			return null;
 		}
-
+		
 		List<MemberDataBean> memberList = memberDao.getMembers(trip_id);
 		return memberList;
 	}
@@ -926,6 +938,15 @@ public class SvcProHandler {
 			return true;
 		}
 		return false;
+	}
+	
+	@RequestMapping("/makeLog")	
+	public ModelAndView makeLog(HttpServletRequest request, HttpServletResponse response)
+			throws HandlerException, ParseException, IOException {
+		LogDBBean logDao = new LogDBBean();
+		JSONArray jsonPosts = logDao.makeMemberLog();
+		request.setAttribute("json", jsonPosts);
+		return new ModelAndView("googleAPI/makeLog");
 	}
 
 }

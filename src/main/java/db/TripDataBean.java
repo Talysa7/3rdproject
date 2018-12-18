@@ -27,7 +27,8 @@ public class TripDataBean {
 	private CoordDataBean coordinate;			//varchar (20), not null
 	//we need below value to get unreviewed members
 	private List<MemberDataBean> review_members;
-	
+	//One photo from its coordinate
+	private String thumbnail;
 	
 	public int getTrip_id() {
 		return trip_id;
@@ -127,5 +128,11 @@ public class TripDataBean {
 	public void setReview_members(Map<String, Object> user) {
 		ReviewDBBean reviewDao = new ReviewDBBean();
 		this.review_members=reviewDao.getReview(user);
+	}
+	public String getThumbnail() {
+		return thumbnail;
+	}
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
 	}
 }

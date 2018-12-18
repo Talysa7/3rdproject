@@ -47,107 +47,107 @@ function erroralert( msg ) {
 	history.back();
 }
 //////////////////////////////////////////////////////////////// Google Map 관련 ////////////////////////////////////////////////////////////////
-//Initialize and add the map
-//var boardmarkers=[];
-//var boardmarker;
-//var boardmap;
-//var coord_lats=[];
-//var coord_lngs=[];
-//var country_codes=[];
-//var markers=[];
-//var marker;
-//var map;
-//
-////Map for board
-//function initMap() {//trip.jsp에서 좌표로 마커 표시
-//	var coord=$('div[name=coord]');
-//	var coord_lat=[];
-//	var coord_long=[];
-//	var centerLatSum=0;
-//	var centerLngSum=0;
-//	var location=[];
-//		coord.each(function(i){
-//		coord_lat[i]=parseFloat(coord.eq(i).find('input[name=coord_lat]').val());
-//		coord_long[i]=parseFloat(coord.eq(i).find('input[name=coord_long]').val());
-//		
-//		centerLatSum+=coord_lat[i];
-//		centerLngSum+=coord_long[i];
-//		//location
-//		location[i]= {lat: coord_lat[i], lng: coord_long[i]};
-//	});
-//	var centerLat = centerLatSum / coord.length ; 
+// Initialize and add the map
+var boardmarkers=[];
+var boardmarker;
+var boardmap;
+var coord_lats=[];
+var coord_lngs=[];
+var country_codes=[];
+var markers=[];
+var marker;
+var map;
+
+//Map for board
+// function initMap() {//trip.jsp에서 좌표로 마커 표시
+// 	var coord=$('div[name=coord]');
+// 	var coord_lat=[];
+// 	var coord_long=[];
+// 	var centerLatSum=0;
+// 	var centerLngSum=0;
+// 	var location=[];
+// 		coord.each(function(i){
+// 		coord_lat[i]=parseFloat(coord.eq(i).find('input[name=coord_lat]').val());
+// 		coord_long[i]=parseFloat(coord.eq(i).find('input[name=coord_long]').val());
+		
+// 		centerLatSum+=coord_lat[i];
+// 		centerLngSum+=coord_long[i];
+// 		//location
+// 		location[i]= {lat: coord_lat[i], lng: coord_long[i]};
+// 	});
+// 	var centerLat = centerLatSum / coord.length ; 
 //    var centerLng = centerLngSum / coord.length ;   
-//	var center={lat:centerLat,lng:centerLng};
-//	  // The map, centered at allPlace
-//	boardmap = new google.maps.Map(
+// 	var center={lat:centerLat,lng:centerLng};
+// 	  // The map, centered at allPlace
+// 	boardmap = new google.maps.Map(
 //      document.getElementById('map'), {zoom: 3, center:center});
 //   for(var i=0;i<coord.length;i++){
-//	  addMarker(location[i],i,boardmap);  
+// 	  addMarker(location[i],i,boardmap);  
 //   }
 //   if(isSameCountry()==1)boardmap.setZoom(6); 
-//}
-////Adds a marker to the map.
-//function addMarker(location, num,boardmap) {
-//	num++;
-//	var geocoder = new google.maps.Geocoder();
-//	geocoder.geocode({'location': location}, function(results, status) {
-//	   if (status === 'OK') {
-//	     if (results[0]) {
-//	    	 var address=results[0].formatted_address;
-//	       	 boardmarker = new google.maps.Marker({
-//	         position: location,
-//	         map: boardmap,
-//	         title:address,
-//	 	     label:''+num+'',
-//	         animation:google.maps.Animation.DROP,
-//	       });
-//	       	//input에 주소 붙이기   		
-//	       $('#address'+num+'').val(address);
-//	     } else {
-//	       window.alert(noplaceresult);
-//	     }
-//	   } else {
-//	   }
-//	});
-//}
-//function isSameCountry(){
-//	var result=1;
-//	num=$('div[name=coord]').length;
-//	for(var i=2;i<=num;i++){
-//		if($('#country1').val()!=$('#country'+i+'').val()){
-//			result=0;break;
-//		}
-//	}
-//	return result;
-//}
-//function focusMarker(order,lng,lat){
-//	boardmap.setZoom(12);
-//	boardmap.setCenter({lat:parseFloat(lat),lng:parseFloat(lng)});
-//}
-////Map for writing
-////지도 주소검색
-//
-//function searchMap() {
-//	map = new google.maps.Map(document.getElementById('searchmap'), {
-//		zoom: 8,
-//		center: {lat: -34.397, lng: 150.644}
+// }
+//Adds a marker to the map.
+// function addMarker(location, num,boardmap) {
+// 	num++;
+// 	var geocoder = new google.maps.Geocoder();
+// 	geocoder.geocode({'location': location}, function(results, status) {
+// 	   if (status === 'OK') {
+// 	     if (results[0]) {
+// 	    	 var address=results[0].formatted_address;
+// 	       	 boardmarker = new google.maps.Marker({
+// 	         position: location,
+// 	         map: boardmap,
+// 	         title:address,
+// 	 	     label:''+num+'',
+// 	         animation:google.maps.Animation.DROP,
+// 	       });
+// 	       	//input에 주소 붙이기   		
+// 	       $('#address'+num+'').val(address);
+// 	     } else {
+// 	       window.alert(noplaceresult);
+// 	     }
+// 	   } else {
+// 	   }
+// 	});
+// }
+// function isSameCountry(){
+// 	var result=1;
+// 	num=$('div[name=coord]').length;
+// 	for(var i=2;i<=num;i++){
+// 		if($('#country1').val()!=$('#country'+i+'').val()){
+// 			result=0;break;
+// 		}
+// 	}
+// 	return result;
+// }
+// function focusMarker(order,lng,lat){
+// 	boardmap.setZoom(12);
+// 	boardmap.setCenter({lat:parseFloat(lat),lng:parseFloat(lng)});
+// }
+// //Map for writing
+// //지도 주소검색
+
+// function searchMap() {
+// 	map = new google.maps.Map(document.getElementById('searchmap'), {
+// 		zoom: 8,
+// 		center: {lat: -34.397, lng: 150.644}
 //    });
 //    var geocoder = new google.maps.Geocoder();
-//    
+   
 //    document.getElementById('addSubmit').addEventListener('click', function() {
 //      geocodeAddress(geocoder, map);
 //    });
 //  }
-////주소로 좌표 표시
-//function geocodeAddress(geocoder, resultsMap) {
+// //주소로 좌표 표시
+// function geocodeAddress(geocoder, resultsMap) {
 //  var address = document.getElementById('address').value;
 //  geocoder.geocode({'address': address}, function(results, status) {
 //    if (status === 'OK') {
-//		for(var i =0; i<results.length; i++){
-//		alert(results[i]);
-//		}
+// 		for(var i =0; i<results.length; i++){
+// 		alert(results[i]);
+// 		}
 //      resultsMap.setCenter(results[0].geometry.location);
-//
+
 //      //국가-jason 값 가져오기
 //      var country=results[0].address_components.filter(
 //      		function(component){
@@ -156,19 +156,19 @@ function erroralert( msg ) {
 //      var country_code=country[0].short_name;
 //      var country_name=country[0].long_name;
 //      var full_address=results[0].formatted_address;
-//      
+     
 //      var searchmarker = new google.maps.Marker({
 //        map: resultsMap,
 //        position: results[0].geometry.location,
 //        title:full_address,
 //      });	
-//      
+     
 //      //좌표 받기
 //      var lat=searchmarker.position.lat();//위도 
 //      var lng=searchmarker.position.lng();//경도
-//      
+     
 //      var infowindow = new google.maps.InfoWindow;
-//       
+      
 //      geocodeLatLng({lat: lat, lng: lng},geocoder, resultsMap,infowindow); 
 //      searchmarker.setMap(null);  
 //      showPlace(country_code,full_address,lat,lng);
@@ -176,9 +176,9 @@ function erroralert( msg ) {
 //      alert(locationerror);
 //    }
 //  });
-//}
-////좌표로 주소 띄우기(coordinate->address)
-//function geocodeLatLng(latlng, geocoder, map, infowindow) {
+// }
+// //좌표로 주소 띄우기(coordinate->address)
+// function geocodeLatLng(latlng, geocoder, map, infowindow) {
 // geocoder.geocode({'location': latlng}, function(results, status) {
 //   if (status === 'OK') {
 //     if (results[0]) {
@@ -189,27 +189,26 @@ function erroralert( msg ) {
 //         title:results[0].formatted_address,
 //         animation:google.maps.Animation.DROP,
 //       });
-//       var num=$('#schedulenum').find('input[name=schedulenum]').val();
-//       updateMarker(marker,num);
+//        updateMarker(marker,num);
 //     } else {
 //       window.alert(noPlaceresult);
 //     }
 //   } else {
 //   }
 // });
-//}
-////push marker to the array.
-//function updateMarker(marker,num){
-//	markers.push(marker);
-//	marker.setLabel(''+num+'');
-//	deleteMarkers(num);
-//}
-//// Removes the markers 
-//function deleteMarkers(num) {
-//	for (var i = 0; i < markers.length-1; i++) {
-//		markers[i].setMap(null);
-//	}	
-//}
+// }
+// //push marker to the array.
+// function updateMarker(marker,num){
+// 	markers.push(marker);
+// 	marker.setLabel(''+num+'');
+// 	deleteMarkers(num);
+// }
+// // Removes the markers 
+// function deleteMarkers(num) {
+// 	for (var i = 0; i < markers.length-1; i++) {
+// 		markers[i].setMap(null);
+// 	}	
+// }
 //////////////////////////////////////////////////////////////// Google Map 끝 ////////////////////////////////////////////////////////////////
 //trip view-button event-map
 function showMap(trip_id){
@@ -608,37 +607,39 @@ function loadMoreList(next_row) {
 					next_row=next_row+1;
 					
 					listForAppend+='<div class="row">';
-					listForAppend+=		'<div class="col-md-12">';
-					listForAppend+=			'<div class="card flex-md-row mb-3 shadow-sm h-md-250">';
-					listForAppend+=				'<div class="card-body d-flex flex-column align-items-start">';
-					listForAppend+=					'<strong class="d-inline-block mb-2">';
-																	if(additionalList.tripLists) {
-																		$.each(additionalList.tripLists, function(key, tripLists) {
-																			additionalList.coord_name;
-																		});
-																	}
-					listForAppend+=					'</strong>';
-					listForAppend+=					'<h3 class="mb-0">';
-					listForAppend+=						'<a class="text-dark" href="trip.go?board_no='+additionalList.board_no+'">'+additionalList.board_title+'</a>';
-					listForAppend+=					'</h3>';
-					listForAppend+=					'<div class="mb-1 text-muted text-right">';
-					listForAppend+=						'<i><b>With</b></i>&nbsp;'+additionalList.user_name;
-					listForAppend+=					'</div>';
-					listForAppend+=					'<hr size="1px" color="black" noshade>';
-					listForAppend+=					'<p class="card-text mb-auto">'+additionalList.board_content+'</p>';
-					listForAppend+=					'<hr style="width: 100%">';
-					listForAppend+=					'<div class="d-flex justify-content-center">';
-					listForAppend+=						'<div class="p-2">조회수:'+additionalList.board_view_count+'</div>';
-					listForAppend+=						'<div class="p-2"><label class="btn btn-sm taglist">';
-																		$.each(additionalList.board_tags, function(key, board_tags) {
-																			additionalList.tag_value;
-																		});
-					listForAppend+=						'</label></div>';
-					listForAppend+=					'</div>';
-					listForAppend+=				'</div>';
+					listForAppend+='<div class="col-md-11">';
+					listForAppend+=	'<div class="card flex-md-row mb-3 shadow-sm h-md-250">';
+					listForAppend+=		'<div class="card-body">';
+					listForAppend+=			'<strong class="d-inline-block mb-2">';
+															if(additionalList.tripLists) {
+																$.each(additionalList.tripLists, function(key, tripLists) {
+					listForAppend+=												tripLists.coord_name+' ';
+																});
+															};
+					listForAppend+=			'</strong>';
+					listForAppend+=			'<h3 class="mb-0">';
+					listForAppend+=				'<a class="text-dark" href="trip.go?board_no='+additionalList.board_no+'">';
+					listForAppend+=				additionalList.board_title;
+					listForAppend+=			'</h3>';
+					listForAppend+=			'<div class="mb-1 text-muted text-right">';
+					listForAppend+=				'<i><b>With</b></i>'+additionalList.user_name;
 					listForAppend+=			'</div>';
-					listForAppend+=		'</div>';
-					listForAppend+=	'</div>';
+					listForAppend+=			'<hr style="width: 100%" noshade>';
+					listForAppend+=			'<p class="card-text mb-auto">'+additionalList.board_content+'</p>';
+					listForAppend+=			'<hr style="width: 100%" noshade>';
+					listForAppend+=			'<div class="mb-1 text-muted">';
+					listForAppend+=				'<label>조회수:'+additionalList.board_view_count+'&nbsp;</label>';
+					listForAppend+=				'<c:forEach var="tag" items="${post.board_tags}">';
+																	$.each(additionalList.board_tags, function(key, board_tags) {
+					listForAppend+=							'<label class="btn btn-sm taglist"> # '+board_tags.tag_value+'</label>';
+																	});
+					listForAppend+=				'</c:forEach>';
+					listForAppend+=			'</div></div>';
+					listForAppend+=		'<div class="thumbnail">';
+														if(additionalList.thumbnail != null) {
+					listForAppend+=				'<img src="'+additionalList.thumbnail+'" class="img-fluid">';
+														};
+					listForAppend+=		'</div></div></div></div>';
 	            });
 	            $("#board-list").append(listForAppend);
 	            var newButton='<button type="button" class="btn btn-dark col-md-12" onclick="loadMoreList('+next_row_after+')">Load more...</button>';
@@ -697,18 +698,18 @@ function addSchedule(num){
 			var schedule="";
 			$('#btn'+num+'').hide();//btn 숨기기
 			num++;
-			schedule+= 	'<div id="schedule'+num+'" class="form-group row">';	  
+			schedule+= 	'<div id="schedule'+num+'" class="form-group row">';
+			schedule+=		'<input type="hidden" name="num_counter" value="'+num+'">';	  
 			schedule+= 		'<label for="cal_date" class="col-2 col-form-label">일정 '+num+'</label>';         
 			schedule+=      	'<input type="text" name="start'+num+'" id="start'+num+'" maxlength="10" value="yyyy-MM-dd" class="col-2" autocomplete="off"/>';
 			schedule+=			'~';
 			schedule+=			'<input type="text" name="end'+num+'" id="end'+num+'" maxlength="10" value="yyyy-MM-dd" class="col-2" autocomplete="off"/>&nbsp;&nbsp;';
 			schedule+=			'<input name="place'+num+'" id="place'+num+'" type="text" readonly>';
 			schedule+=		'<button id="btn'+num+'" class="btn_plus" type="button" onclick="addSchedule('+num+')">';
-			schedule+=			'<img  class="btn_img" src="/Travelers/svc/img/addbutton.png">';
-			schedule+=			'일정추가';
+			schedule+=			'<i class="fas fa-plus-circle"></i>';
 			schedule+=		'</button>';
 			schedule+=		'<button id="btn_del'+num+'" class="btn_del" type="button" onclick="removeSchedule('+num+')">';
-			schedule+=			'<img class="del_img" src="/Travelers/svc/img/trash.png"/>';
+			schedule+=			'<i class="fas fa-minus-circle"></i>';
 			schedule+=		'</button>';
 			schedule+=		'<div id="coordinfo'+num+'">';
 			schedule+=		'</div>';
@@ -716,7 +717,7 @@ function addSchedule(num){
 			$('#schedulediv').append(schedule);
 			loadCal(num);
 			
-			if(num==maxschedule)$('#btn'+num+'').hide();
+			if(num==maxschedule) $('#btn'+num+'').hide();
 			var schedulenum='<input type="hidden" name="schedulenum" value="'+num+'">';
 			$('#schedulenum').empty();
 			$('#schedulenum').append(schedulenum);

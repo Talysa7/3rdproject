@@ -31,7 +31,9 @@
 		select photo_url from pao_album where trip_id=#{trip_id}
 	</select>
 	
-	<select id="getThumbnail" parameterType="String" resultType="String">
-		select photo_url from pao_thumbnail where b_id=#{b_id}
+	<select id="getThumbnail" parameterType="int" resultType="String">
+		select photo_url from pao_album where trip_id in
+		(select trip_id from pao_trip where board_no=#{board_no})
+		limit 1
 	</select>
 </mapper>

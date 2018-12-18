@@ -77,6 +77,10 @@
 		from pao_view_members
 		where user_id=#{user_id}
 	</select>
+	<!--  임시 -->
+	<select id="getMem" resultType="db.MemberDataBean">
+		select * from pao_members
+	</select>
 <!-- Tag -->
 	<select id="getUserTags" parameterType="String" resultType="java.util.List">
 		select tag_value from pao_tag where tag_id in
@@ -117,8 +121,9 @@
 	</insert>
 
 	<select id="checkId" parameterType="String" resultType="int">
-		select
-		count(*) from pao_user where user_id=#{user_id}
+		SELECT COUNT(*) 
+		FROM pao_user 
+		WHERE user_id=#{user_id}
 	</select>
 
 	<select id="emailCheck" parameterType="String" resultType="int">

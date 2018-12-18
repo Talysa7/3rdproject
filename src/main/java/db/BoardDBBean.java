@@ -134,6 +134,10 @@ public class BoardDBBean {
 				//set Tags
 				List<TagDataBean> board_tags=session.selectList("tag.getPostTags", boardDto.getBoard_no());
 				boardDto.setBoard_tags(board_tags);
+				
+				//set Thumbnail
+				String thumbnail=session.selectOne("album.getThumbnail", boardDto.getBoard_no());
+				boardDto.setThumbnail(thumbnail);
 			}
 		}
 		return postList;
