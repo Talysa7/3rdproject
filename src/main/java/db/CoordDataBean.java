@@ -20,6 +20,8 @@ public class CoordDataBean {
 	private List<CoordReviewDataBean> coordReview;	
 	private List<TagDataBean> boardtags;
 	private String country_name;
+	private double average;
+	private Map<String, Integer> map;
 	
 	public String getCountry_code() {
 		return country_code;
@@ -96,6 +98,24 @@ public class CoordDataBean {
 			boardTags.addAll(tags);
 		}
 		setBoardtags(boardTags);
+	}
+	public double getAverage() {
+		return average;
+	}
+	public void setAverage(Double divide) {
+		this.average = divide;
+	}
+	public Map<String, Integer> getMap() {
+		return map;
+	}
+	public void setMap(Map<String, Integer> map) {
+		this.map = map;
+	}
+	public String getCountry_name() {
+		return country_name;
+	}
+	public void setCountry_name(String country_name) {
+		this.country_name = country_name;
 	}
 	
 }

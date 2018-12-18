@@ -42,38 +42,35 @@
 					<!-- left row start -->
 				<div class="row">
 					<!-- col-md-11 start -->
-					<div class="col-md-11">
+					<div class="col-md-5">
 						<!-- left card start -->
-						<div class="card flex-md-row mb-3 shadow-sm h-md-250">
+						<div class="card flex-row mb-2 shadow-sm h-md-250">
 							<!-- card body start -->
-							<div class="card-body">
-								
-								<strong class="d-inline-block mb-2">
-						
-						<label>장소 : </label>${coord.coord_name}<br>
+							<div class="card-body">								
+								<strong class="d-inline-block mb-2">						
+						  			<label>장소 : </label>${coord.coord_name}<br>
+						  			&nbsp;&nbsp; ㄴ<label>나라 : </label>${coord.country_name}<br>
 								</strong>
-								<h6 class="mb-0">
-						<c:forEach var="review" items="${coord.coordReview}" varStatus="status" begin="0" end="2">
-						<label>${status.count}번째 평가</label><br>
-						<label>평가점수 : </label><c:choose>
-											<c:when test="${review.review_point eq 1}"> ★ </c:when>
-											<c:when test="${review.review_point eq 2}"> ★★  </c:when>
-											<c:when test="${review.review_point eq 3}"> ★★★  </c:when>
-											<c:when test="${review.review_point eq 4}"> ★★★★    </c:when>
-											<c:when test="${review.review_point eq 5}"> ★★★★★     </c:when>
-										</c:choose><br>
-						<label>평가 내용: </label> ${review.review_comment}<br>
-						<c:if test="${status.index ge 3 }">
-							<a href="coordReview.go?coord_id=${coord.coord_id}">평판보기</a>
-						</c:if>
-						</c:forEach>
-						<c:forEach var="tag" items="${coord.boardtags}">
-							<label class="btn btn-sm taglist"> # ${tag.tag_value} </label>
-						</c:forEach>
+								<h6 class="mb-0"></h6>
+								<c:if test="${coord.average ne 'NaN' or coord.average ne null }">
+									<label>평균평점 : </label>${coord.average} <br>
+								</c:if>
+									
+									<c:forEach var="entry" items="${coord.map}">
+										<label class="btn btn-sm taglist">${entry.key} # ${entry.value}번  사용됨</label>
+									</c:forEach>
+									<c:forEach var="review" items="${coord.coordReview}" varStatus="status">					
+										<button type="button" class="btn btn-sm btn-secondary btn-block" onclick="location='coordReview.go?coord_id=${coord.coord_id}'">평판보기</button>								
+									</c:forEach>
 								</h6>
 							</div>
 						</div>
 					</div>
+					<!-- thumbnail start -->
+					<div class="thumbnail">
+						<img src="${post.thumbnail}" class="img-fluid">
+					</div>
+					<!-- thumbnail end -->
 				</div>		
 								
 			</c:forEach>
@@ -81,7 +78,7 @@
 		</c:choose>
 	</div>
 
-	<!-- body box -->
+	<!-- left area end -->
 	</div>
 	</div>
 	

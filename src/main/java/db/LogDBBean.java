@@ -151,8 +151,8 @@ public class LogDBBean {
 			jsonObject.put("reg_date", userDto.getReg_date().getTime());
 			jsonObject.put("user_age", userDto.getUser_age());
 			jsonObject.put("user_level", userType);
-			jsonObject.put("user_name", userDto.getUser_name().toString());
-			jsonObject.put("email", userDto.getEmail().toString());
+			jsonObject.put("user_name", userDto.getUser_name());
+			jsonObject.put("email", userDto.getEmail());
 			jsonObject.put("gender", userDto.getGender());
 		}else {
 			jsonObject.put("user_id",id);
@@ -163,7 +163,7 @@ public class LogDBBean {
 		jsonArray.add(Object);
 		JSONObject jsonjson = new JSONObject();
 		jsonjson.put("login_success", result);
-		jsonjson.put("login_time", LocalDateTime.now());
+		jsonjson.put("login_time", new Timestamp(System.currentTimeMillis()).getTime());
 		jsonArray.add(jsonjson);
 		wrapObject.put("result",jsonArray);
 		wrapObject.put("log_type", 6);
@@ -219,7 +219,7 @@ public class LogDBBean {
 				jsonjson.put("passwd", userDto.getPasswd());
 				jsonjson.put("user_name", userDto.getUser_name());
 				jsonjson.put("user_tags", "tag없음");
-				jsonjson.put("reg_date", LocalDateTime.now());
+				jsonjson.put("reg_date", new Timestamp(System.currentTimeMillis()).getTime());
 				jsonObject.put("after_data", jsonjson);
 			}else {
 				for(int j=0; j<userTags.size(); j++) {
@@ -237,7 +237,7 @@ public class LogDBBean {
 					userJson.remove("user_level");
 					userJson.remove("user_age");
 					userJson.remove("email");
-					userJson.put("reg_date", LocalDateTime.now());
+					userJson.put("reg_date",new Timestamp(System.currentTimeMillis()).getTime());
 					jsonObject.put("after_data", userJson);
 					
 				}
@@ -261,7 +261,7 @@ public class LogDBBean {
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("comment_id", cmtDto.getComment_id());
 		jsonObject.put("comment_content", cmtDto.getComment_content());
-		jsonObject.put("comment_reg_date", LocalDateTime.now());
+		jsonObject.put("comment_reg_date", new Timestamp(System.currentTimeMillis()).getTime());
 		jsonObject.put("board_no", cmtDto.getBoard_no());
 		jsonObject.put("user_id", cmtDto.getUser_id());
 		
@@ -295,7 +295,7 @@ public class LogDBBean {
 		jsonObject.put("trip_id", reviewDto.getTrip_id());
 		jsonObject.put("review_comment", reviewDto.getReview_comment());
 		jsonObject.put("review_point", reviewDto.getReview_point());
-		jsonObject.put("user_review_reg_date", reviewDto.getUser_review_reg_date());
+		jsonObject.put("user_review_reg_date", reviewDto.getUser_review_reg_date().getTime());
 		jsonArray.add(jsonObject);
 		
 		wrapObject.put("result",jsonArray);

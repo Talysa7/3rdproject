@@ -354,12 +354,11 @@ public class SvcViewHandler {
 				divide = Double.parseDouble(String.format("%.2f",divide));
 			}catch(ArithmeticException e) {
 				divide = 0.0;
-			}					
-			request.setAttribute("average", divide);
-			request.setAttribute("list", list);
+			}		
+			coord.get(i).setAverage(divide);
 			// country info
 			String countryname = countryDao.getCountryName(coord_id);
-			request.setAttribute("country", countryname);
+			coord.get(i).setCountry_name(countryname);
 			//tags add
 			List<TripDataBean>trip = tripDao.getTripListByCoord(coord_id);
 			List<TagDataBean> boardTags = new ArrayList<TagDataBean>();
@@ -370,22 +369,25 @@ public class SvcViewHandler {
 				List<TagDataBean> tags = boardDto.getBoard_tags();
 				boardTags.addAll(tags);
 			}	
+			List<String>tagValue = new ArrayList<String>();
 			List<TagDataBean> tagtag = new ArrayList<TagDataBean>();
 			int tagInt[] = new int [boardTags.size()];
 			for(int j=0; j<boardTags.size(); j++) {
-				for(int k=1; k<boardTags.size(); k++) {	
-					tagInt[j]= 0;
-					if(boardTags.get(j).getTag_id()!= boardTags.get(k).getTag_id()) {
-						int tag_id = boardTags.get(j).getTag_id();
-						tagInt[j] = tag_id;
+				try {
+				tagValue.add(boardTags.get(j).getTag_value());	
+				Map<String, Integer> map = new HashMap<>();
+					for(String temp : tagValue) {
+						 Integer counttag = map.get(temp);
+					     map.put(temp, (counttag == null) ? 1 : counttag + 1);
+					     coord.get(i).setMap(map);
 					}
-				}			
-				if(tagInt[j]!= 0) {
-					TagDataBean tagDto = tagDao.getTag(tagInt[j]);
-					tagtag.add(tagDto);		
+				}catch(NullPointerException e) {
+					e.printStackTrace();
 				}
 			}
 			coord.get(i).setBoardtags(tagtag);
+			
+			
 		}		
 		
 		request.setAttribute("coord", coord);	
