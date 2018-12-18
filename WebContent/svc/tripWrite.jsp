@@ -11,18 +11,19 @@
 <script src="${project}script.js"></script>
 
 <link rel="stylesheet" href="${project}googleAPI_style.css">
-<%-- <script src="${project}googleAPI.js"></script> --%>
 
 <!-- Custom style for this template (Font API & Our UI)-->
 <link href="https://fonts.googleapis.com/css?family=Work+Sans"
 	rel="stylesheet">
 <link rel="stylesheet" href="${project}travelers_style.css">
+
 <!-- Calendar API -->
 <link rel="stylesheet"
 	href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="./jquery.serialize-object.min.js"></script>
+
 <!-- Map Search API -->
 <script
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAoC3t0xr7YieFKGY9nIAH366PT6JyaiEg&libraries=places">
