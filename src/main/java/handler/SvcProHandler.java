@@ -55,10 +55,13 @@ import db.CmtDBBean;
 import db.CmtDataBean;
 import db.CoordDBBean;
 import db.CoordDataBean;
+
+
 import db.CoordReviewDBBean;
 import db.CoordReviewDataBean;
-import db.ReviewDataBean;
 import db.LogDBBean;
+import db.ReviewDataBean;
+
 import db.MemberDBBean;
 import db.MemberDataBean;
 import db.ReviewDBBean;
@@ -99,7 +102,8 @@ public class SvcProHandler {
 	private ReviewDBBean reviewDao;
 	@Resource
 	private CoordReviewDBBean coordReviewDao;
-
+	@Resource
+	private LogDBBean logDao;
 
 	///////////////////////////////// user pages/////////////////////////////////
 
@@ -145,7 +149,7 @@ public class SvcProHandler {
 
 	@RequestMapping("/userModPro")
 	public ModelAndView UserModifyprocess(HttpServletRequest request, HttpServletResponse response)
-			throws HandlerException {
+			throws HandlerException, ParseException, IOException {
 		try {
 			request.setCharacterEncoding("utf-8");
 		} catch (UnsupportedEncodingException e) {
@@ -153,6 +157,7 @@ public class SvcProHandler {
 		}
 		UserDataBean userDto = new UserDataBean();
 		String user_id = (String) request.getSession().getAttribute("user_id");
+		UserDataBean useruser = userDao.getUser(user_id);
 		userDto.setUser_id(user_id);
 		userDto.setPasswd(request.getParameter("passwd"));
 		userDto.setUser_name(request.getParameter("user_name"));
@@ -168,11 +173,14 @@ public class SvcProHandler {
 			if (result == 1) {
 				request.setAttribute("result", result);
 				result = tagDao.updateUserTags(user_id, userTags);
+				logDao.modUserLog(useruser, userDto, useruser.getUser_tags(), userTags);
 			}			
 		}catch(NullPointerException e) {
 			int result = userDao.modifyUser(userDto);
 			if (result == 1) {
 				request.setAttribute("result", result);
+				tagDao.updateUserTags(user_id, userTags);
+				logDao.modUserLog(useruser, userDto, useruser.getUser_tags(), userTags);
 			}			
 		}		
 		return new ModelAndView("svc/userModPro");
@@ -194,7 +202,7 @@ public class SvcProHandler {
 			} else {
 				if(userDto.getUser_id().equals(id)) {				//	nullpoint가 안날경우를 대비한 방어용 코드.
 					result =-1;
-				} 
+				}
 			}
 			
 			if (result == 1) {
@@ -208,10 +216,13 @@ public class SvcProHandler {
 				request.setAttribute("userDto", userDto);
 			}
 		} catch(NullPointerException e) {	//만약 아이디가 없을경우 바로 이쪽으로 이동.
-			
+			result = 0;
+			logDao.makeLoginLog(userDto, result, userType, id, passwd);
+			request.setAttribute("result", result);
 		} 
+
+		logDao.makeLoginLog(userDto, result, userType, id, passwd);
 		user_name = userDto.getUser_name();
-		
 		request.setAttribute("result", result);
 		request.setAttribute("id", id);
 		request.setAttribute("user_name", user_name);
@@ -663,8 +674,6 @@ public class SvcProHandler {
 			e.printStackTrace();
 		}
 		String user_name = request.getParameter("sel2");
-		user_name = user_name.split("/")[1];
-		System.out.println(user_name);
 		String evaluation = request.getParameter("textarea");
 		int grade = Integer.parseInt(request.getParameter("grade"));
 		int trip_id = Integer.parseInt(request.getParameter("sel1"));
@@ -678,6 +687,7 @@ public class SvcProHandler {
 		evalDto.setTrip_id(trip_id);
 		evalDto.setUser_review_reg_date( new Timestamp(System.currentTimeMillis()));
 		int result = reviewDao.insertEvaluation(evalDto);
+		logDao.insertPersonReviewLog(evalDto);
 		request.setAttribute("result", result);
 		return new ModelAndView("/svc/reviewPro");		
 	}
@@ -700,6 +710,7 @@ public class SvcProHandler {
 		coordreDto.setReview_comment(comment);
 		coordreDto.setReview_point(grade);
 		coordreDto.setUser_id(user_id);
+		coordreDto.setUser_review_reg_date(new Timestamp(System.currentTimeMillis()));
 		int result = coordReviewDao.insertCoordReview(coordreDto);
 		request.setAttribute("result", result);
 		return new ModelAndView("/svc/placeWritePro");	
@@ -749,7 +760,8 @@ public class SvcProHandler {
 			cmtDto.setUser_id(user_id);
 			cmtDto.setBoard_no(board_no);
 			cmtDto.setComment_content(comment_content);
-			cmtDao.insertComment(cmtDto);
+			cmtDao.insertComment(cmtDto);			
+			logDao.insertCommentLog(cmtDto);
 		}
 	}
 

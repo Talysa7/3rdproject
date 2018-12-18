@@ -15,6 +15,7 @@ import db.BoardDBBean;
 import db.TripDBBean;
 import db.UserDBBean;
 import db.CountryDBBean;
+import db.LogDBBean;
 import db.MemberDBBean;
 import db.RegionDBBean;
 import db.ReviewDBBean;
@@ -68,6 +69,10 @@ public class CreateBean {
 	@Bean
 	public CoordReviewDBBean coordReviewDao() {
 		return new CoordReviewDBBean();
+	}
+	@Bean
+	public LogDBBean logDao() {
+		return new LogDBBean();
 	}
 	@Bean
 	public ViewResolver viewResolver() {
