@@ -345,86 +345,86 @@ public class SvcProHandler {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
+//
+//		int schedulenum=Integer.parseInt(request.getParameter("schedulenum"));//일정개수
+//		//insert gg_trip_board 
+//		String user_id = (String) (request.getSession().getAttribute("user_id"));
+//		
+//		BoardDataBean boardDto = new BoardDataBean();
+//
+//		boardDto.setUser_id(user_id);
+//		boardDto.setBoard_title(request.getParameter("trip_title"));
+//		boardDto.setBoard_content(request.getParameter("content"));
+//		boardDto.setBoard_contact(request.getParameter("board_contact"));
+//		boardDao.insertBoard_no(boardDto);
+//		
+//		int board_no = boardDto.getBoard_no();// board_no
+//		request.setAttribute("board_no", board_no);
+//
+//		CoordDataBean coordDto = new CoordDataBean();
+//		for (int i = 1; i <= schedulenum; i++) {
+//			TripDataBean tripDto = new TripDataBean();
+//			String coord_name = request.getParameter("place"+i);
+//			List<CoordDataBean> coords = coordDao.checkCoordName(coord_name);	//	 같은이름의 coord가 있나 체크.
+//			int coord_id=-1;	//	coord_id 초기값.
+//			
+//			if(coords.size() > 0) {	//검색했는데 같은이름의 검색경로가 있으면 이미 있는 놈의 coord_id를 씀.
+//				coord_id = coords.get(0).getCoord_id();
+//				tripDto.setCoord_id(coord_id);//	tripDto에 대입
+//			} else {		// 없으면!
+//				String country_code = request.getParameter("country_code" + i + "");
+//				double coord_lat = Double.parseDouble(request.getParameter("lat" + i + ""));
+//				double coord_long = Double.parseDouble(request.getParameter("lng" + i + ""));
+//				System.out.println(country_code);
+//				System.out.println(coord_lat);
+//				System.out.println(coord_long);
+//				coordDto.setCoord_name(coord_name);
+//				coordDto.setCountry_code(country_code);
+//				coordDto.setCoord_lat(coord_lat);
+//				coordDto.setCoord_long(coord_long);
+//				
+//				coordDao.insertCoord(coordDto);// locDto의 coord_id에 좌표값 저장한 후 생성된 coord_id저장 됨
+//				coord_id = coordDto.getCoord_id();
+//			}
+//			
+//			tripDto.setCoord_id(coord_id);
+//			tripDto.setBoard_no(board_no);
+//			
+//			String [] start = request.getParameter("start"+i).split("/");
+//			LocalDate ldt = LocalDate.of(Integer.parseInt(start[0]), Integer.parseInt(start[1]), Integer.parseInt(start[2]));
+//			Date start_date = new Date(ldt.toEpochDay());
+//		
+//			String [] end = request.getParameter("end"+i).split("/");
+//			ldt = LocalDate.of(Integer.parseInt(end[0]), Integer.parseInt(end[1]), Integer.parseInt(end[2]));
+//			Date end_date = new Date(ldt.toEpochDay());
+//			//start , end Date타입으로 변환. 확인 필수!
+//			
+//			tripDto.setStart_date(start_date);
+//			tripDto.setEnd_date(end_date);
+//			tripDto.setTrip_member_count(Integer.parseInt(request.getParameter("trip_member_count"+i)));
+//
+//			tripDao.insertTrip(tripDto);
+//			int trip_id = tripDto.getTrip_id();
+//			
+//			MemberDataBean memberDto = new MemberDataBean();
+//			memberDto.setUser_id(user_id);
+//			memberDto.setTrip_id(trip_id);
+//			memberDao.addTripMember(memberDto);
+//
+//			}
+//
+//		// get tags
+//		String[] tags = request.getParameterValues("tag");
+//		if (tags != null) {// tag를 선택한 경우에만 실행
+//			// put them in a Map and call db update
+//			Map<String, Integer> tagSetter = new HashMap<String, Integer>();
+//			for (String tag : tags) {
+//				tagSetter.put("board_no", board_no);
+//				tagSetter.put("tag_id", Integer.parseInt(tag));
+//				tagDao.setTripTag(tagSetter);	//	FIXME: 태그 후일 정리 부분.
+//			}
+//		}
 
-		int schedulenum=Integer.parseInt(request.getParameter("schedulenum"));//일정개수
-		//insert gg_trip_board 
-		String user_id = (String) (request.getSession().getAttribute("user_id"));
-		
-		BoardDataBean boardDto = new BoardDataBean();
-
-		boardDto.setUser_id(user_id);
-		boardDto.setBoard_title(request.getParameter("trip_title"));
-		boardDto.setBoard_content(request.getParameter("content"));
-		boardDto.setBoard_contact(request.getParameter("board_contact"));
-		boardDao.insertBoard_no(boardDto);
-		
-		int board_no = boardDto.getBoard_no();// board_no
-		request.setAttribute("board_no", board_no);
-
-		CoordDataBean coordDto = new CoordDataBean();
-		for (int i = 1; i <= schedulenum; i++) {
-			TripDataBean tripDto = new TripDataBean();
-			String coord_name = request.getParameter("place"+i);
-			List<CoordDataBean> coords = coordDao.checkCoordName(coord_name);	//	 같은이름의 coord가 있나 체크.
-			int coord_id=-1;	//	coord_id 초기값.
-			
-			if(coords.size() > 0) {	//검색했는데 같은이름의 검색경로가 있으면 이미 있는 놈의 coord_id를 씀.
-				coord_id = coords.get(0).getCoord_id();
-				tripDto.setCoord_id(coord_id);//	tripDto에 대입
-			} else {		// 없으면!
-				String country_code = request.getParameter("country_code" + i + "");
-				double coord_lat = Double.parseDouble(request.getParameter("lat" + i + ""));
-				double coord_long = Double.parseDouble(request.getParameter("lng" + i + ""));
-				System.out.println(country_code);
-				System.out.println(coord_lat);
-				System.out.println(coord_long);
-				coordDto.setCoord_name(coord_name);
-				coordDto.setCountry_code(country_code);
-				coordDto.setCoord_lat(coord_lat);
-				coordDto.setCoord_long(coord_long);
-				
-				coordDao.insertCoord(coordDto);// locDto의 coord_id에 좌표값 저장한 후 생성된 coord_id저장 됨
-				coord_id = coordDto.getCoord_id();
-			}
-			
-			tripDto.setCoord_id(coord_id);
-			tripDto.setBoard_no(board_no);
-			
-			String [] start = request.getParameter("start"+i).split("/");
-			LocalDate ldt = LocalDate.of(Integer.parseInt(start[0]), Integer.parseInt(start[1]), Integer.parseInt(start[2]));
-			Date start_date = new Date(ldt.toEpochDay());
-		
-			String [] end = request.getParameter("end"+i).split("/");
-			ldt = LocalDate.of(Integer.parseInt(end[0]), Integer.parseInt(end[1]), Integer.parseInt(end[2]));
-			Date end_date = new Date(ldt.toEpochDay());
-			//start , end Date타입으로 변환. 확인 필수!
-			
-			tripDto.setStart_date(start_date);
-			tripDto.setEnd_date(end_date);
-			tripDto.setTrip_member_count(Integer.parseInt(request.getParameter("trip_member_count"+i)));
-
-			tripDao.insertTrip(tripDto);
-			int trip_id = tripDto.getTrip_id();
-			
-			MemberDataBean memberDto = new MemberDataBean();
-			memberDto.setUser_id(user_id);
-			memberDto.setTrip_id(trip_id);
-			memberDao.addTripMember(memberDto);
-
-			}
-
-		// get tags
-		String[] tags = request.getParameterValues("tag");
-		if (tags != null) {// tag를 선택한 경우에만 실행
-			// put them in a Map and call db update
-			Map<String, Integer> tagSetter = new HashMap<String, Integer>();
-			for (String tag : tags) {
-				tagSetter.put("board_no", board_no);
-				tagSetter.put("tag_id", Integer.parseInt(tag));
-				tagDao.setTripTag(tagSetter);	//	FIXME: 태그 후일 정리 부분.
-			}
-		}
-		
 		return new ModelAndView("svc/tripWritePro");
 	}
 
