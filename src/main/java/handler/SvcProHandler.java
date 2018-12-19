@@ -73,6 +73,7 @@ import db.TripDBBean;
 import db.TripDataBean;
 import db.UserDBBean;
 import db.UserDataBean;
+import db.WriteDataBean;
 
 @Controller
 public class SvcProHandler {
@@ -348,9 +349,10 @@ public class SvcProHandler {
 	}
 
 	///////////////////////////////// board pages/////////////////////////////////
-	@RequestMapping("/tripWritePro")
-	public ModelAndView svcTripWriteProProcess(HttpServletRequest request, HttpServletResponse response)
-			throws HandlerException {
+	@RequestMapping(value = "/tripWritePro", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	public ModelAndView svcTripWriteProProcess(@RequestBody WriteDataBean writeDto, HttpServletRequest request)
+			throws HandlerException, JsonProcessingException {
 		try {
 			request.setCharacterEncoding("utf-8");
 		} catch (UnsupportedEncodingException e) {
@@ -404,6 +406,10 @@ public class SvcProHandler {
 //			String [] start = request.getParameter("start"+i).split("/");
 //			LocalDate ldt = LocalDate.of(Integer.parseInt(start[0]), Integer.parseInt(start[1]), Integer.parseInt(start[2]));
 //			Date start_date = new Date(ldt.toEpochDay());
+//		@RequestBody 로 받아서 받아보기
+		ObjectMapper mapper = new ObjectMapper();
+		System.out.println(mapper.writeValueAsString(writeDto));
+		
 //		
 //			String [] end = request.getParameter("end"+i).split("/");
 //			ldt = LocalDate.of(Integer.parseInt(end[0]), Integer.parseInt(end[1]), Integer.parseInt(end[2]));
