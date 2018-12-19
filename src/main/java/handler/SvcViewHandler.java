@@ -332,11 +332,7 @@ public class SvcViewHandler {
 		if(pageNum == null || pageNum.equals("")){
 			pageNum = "1";
 		}
-		//get the type and keyword of searching
-		String keyword=request.getParameter("keyword");
-		request.setAttribute("keyword", keyword);
-			
-		//find trips for each type
+		
 		List<CoordDataBean> coord = coordDao.coordAll();
 		
 		for(int i=0; i<coord.size();i++) {
@@ -523,13 +519,7 @@ public class SvcViewHandler {
 		if(fromDate == "" || fromDate == null) {
 			fromDate="01/01/1970";
 		}
-		
-		System.out.println("시작일 : "+fromDate);
-		System.out.println("종료일 : "+toDate);
-		System.out.println("기간 : "+searchPeriod);
-		System.out.println("태그 : "+searchTag);
-		System.out.println("장소 : "+searchSite);
-		
+			
 		java.sql.Timestamp timeStampDateTo;
 		java.sql.Timestamp timeStampDateFrom;
 		try {
@@ -538,14 +528,12 @@ public class SvcViewHandler {
 			Date dateFrom = formatter.parse(toDate);
 			timeStampDateTo = new Timestamp(dateTo.getTime());
 			timeStampDateFrom = new Timestamp(dateFrom.getTime());
-			//System.out.println(timeStampDateTo);
-			//System.out.println(timeStampDateFrom);
+			
 		}catch (ParseException e) {
-			System.out.println("Exception :" + e);
 			    return null;
 		}
 		
-		Map<String, String> searchMap = new HashMap<String, String>();	
+		Map<String, Object> searchMap = new HashMap<String, Object>();	
 		searchMap.put("fromDate",fromDate);
 		searchMap.put("toDate", toDate);
 		searchMap.put("searchPeriod", searchPeriod);
@@ -556,7 +544,7 @@ public class SvcViewHandler {
 		
 		String queryDate = "";
 		if(toDate != null || fromDate != null) {
-			queryDate += " where start_date>=STR_TO_DATE(#{fromDate},'%m/%d/%Y') and end_date<=STR_TO_DATE(#{toDate},'%m/%d/%Y')";
+			queryDate += " where start_date>=STR_TO_DATE(#{fromDate}, '%m/%d/%Y') and end_date<=STR_TO_DATE(#{toDate},'%m/%d/%Y')";
 		}
 		
 		String queryPeriod = "";
@@ -567,17 +555,18 @@ public class SvcViewHandler {
 		}
 		
 		String query = queryHead + queryDate + queryPeriod;
-		System.out.println(query);
+		
 		if(searchPeriod == null || searchPeriod == "") {
 			query += ")";
 		}
 		
 		searchMap.put("query", query);
 		
-		String next_row = request.getParameter("next_row");
-		if(next_row == null || next_row.equals("")){
-			next_row = "1";
+		String pageNum = request.getParameter("pageNum");
+		if(pageNum == null || pageNum.equals("")){
+			pageNum = "1";
 		}
+		
 		if(query != null) {
 			List<BoardDataBean> searchReceive = boardDao.advanceSearchByDatePeriod(searchMap);
 			 if(searchReceive.size()>=postPerPage) {
@@ -587,14 +576,21 @@ public class SvcViewHandler {
 				} else {
 					request.setAttribute("next_row", 0);
 				}
-			setReviewLogic(request, next_row, searchReceive.size(), start, end);
+			setReviewLogic(request, pageNum, searchReceive.size(), start, end);
+			searchMap.put("start", start);
+			searchMap.put("end", postPerPage);
+			String querylimit = ") limit #{start}, #{end}";
+			query = queryHead + queryDate + queryPeriod + querylimit;			
+			searchMap.put("query", query);
+			System.out.println(query);
+			searchReceive = boardDao.advanceSearchByDatePeriod(searchMap);
 			request.setAttribute("searchReceive", searchReceive);
 		}
 	
 		if(searchSite != "") {
 			List<BoardDataBean> searchReceive = boardDao.advanceSearchBySite(searchMap);
 		    System.out.println("검색결과 개수 장소: "+searchReceive.size()+"\n");
-		    request.setAttribute("searchReceive", searchReceive);
+		   
 		    if(searchReceive.size()>=postPerPage) {
 				request.setAttribute("next_row", postPerPage+1);
 			} else if(searchReceive.size()>0&&searchReceive.size()<postPerPage) {
@@ -602,13 +598,17 @@ public class SvcViewHandler {
 			} else {
 				request.setAttribute("next_row", 0);
 			}
-		    setReviewLogic(request, next_row, searchReceive.size(), start, end);
+		    setReviewLogic(request, pageNum, searchReceive.size(), start, end);
+		    searchMap.put("start", start);
+			searchMap.put("end", postPerPage);
+			searchReceive = boardDao.advanceSearchBySite(searchMap);
+			request.setAttribute("searchReceive", searchReceive);
 		}
 	    
 		if(searchTag != "") {
 			List<BoardDataBean> searchReceive = boardDao.advanceSearchByTag(searchMap);
 		    System.out.println("검색결과 개수 태그: "+searchReceive.size()+"\n");
-		    request.setAttribute("searchReceive", searchReceive);
+		  
 		    if(searchReceive.size()>=postPerPage) {
 				request.setAttribute("next_row", postPerPage+1);
 			} else if(searchReceive.size()>0&&searchReceive.size()<postPerPage) {
@@ -616,7 +616,12 @@ public class SvcViewHandler {
 			} else {
 				request.setAttribute("next_row", 0);
 			}
-		    setReviewLogic(request, next_row, searchReceive.size(), start, end);
+		    setReviewLogic(request, pageNum, searchReceive.size(), start, end);
+		    searchMap.put("start", start);
+			searchMap.put("end", postPerPage);
+			searchReceive = boardDao.advanceSearchByTag(searchMap);
+			System.out.println(query);
+			request.setAttribute("searchReceive", searchReceive);
 		}
 		
 		return new ModelAndView("svc/advanceSearch");

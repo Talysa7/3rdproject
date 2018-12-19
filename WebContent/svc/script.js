@@ -620,10 +620,11 @@ function commentDelete(comment_id){
     });
 }
 function loadList(next_row){
+	var next_row = $('input[name=next_row]').val();
 	$.ajax({
 		type : 'get',
 		data : {next_row : next_row},
-		url : "loadMoreList.go",
+		url : "advanceSearch.go?pageNum='${next_row}'",
 		success : function(data) {
 			if(data.length>0){
 				var list="";
