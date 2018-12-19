@@ -223,19 +223,22 @@ $(function(){
 	var trip_cnt = 1;
 	var start_end = '.trip_start_date, .trip_end_date';
 	// datepicker 세팅
+	var dp_opt = {
+		minDate: 0,
+		changeMonth: true,
+		changeYear: true,
+		showOtherMonths: true,
+		selectOtherMonths: true,
+		dateFormat: "yy-mm-dd"
+	}
 	$(document).on('focus', start_end, function(){
-		$(this).datepicker({
-			minDate: 0,
-			changeMonth: true,
-			changeYear: true,
-			showOtherMonths: true,
-			selectOtherMonths: true
-		});
+		$(this).datepicker(dp_opt);
 	})
 	
 	
 	// add_btn /  trip 추가
-	$('#add_btn').on('click', function(){
+	$('#add_btn').on('click', function(event){
+		
 		var $last = $('.trip_chips:last');
 		var $clone = $last.clone(true);
 		$last.after($clone);
@@ -245,13 +248,13 @@ $(function(){
 			.removeData('datepicker')
 			.attr('id', 'change_id' + Math.random())
 			.unbind()
-			.datepicker();
+			.datepicker(dp_opt);
 		$clone.find('input.trip_end_date')
 			.removeClass('hasDatepicker')
 			.removeData('datepicker')
 			.attr('id', 'change_id' + Math.random())
 			.unbind()
-			.datepicker();
+			.datepicker(dp_opt);
 
 		input = document.getElementsByClassName('pac-input').item(trip_cnt);
 		setAutoComplete(input, map);
@@ -260,6 +263,7 @@ $(function(){
 		$('.trip_order')
 			.last()
 			.val(trip_cnt);
+		return false;
 	});
 	// del_btn / trip 삭제
 	$('#del_btn').on('click', function(){
@@ -267,6 +271,7 @@ $(function(){
 			.last()
 			.remove();
 		trip_cnt -= 1;		// del 에서는 add 에서처럼 trip_order 값 수정
+		return false;
 	});
 
 	// 데이터 submit 
