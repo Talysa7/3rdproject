@@ -52,16 +52,13 @@
 						  			&nbsp;&nbsp; ㄴ<label>나라 : </label>${coord.country_name}<br>
 								</strong>
 								<h6 class="mb-0"></h6>
-								<c:if test="${coord.average ne 'NaN' or coord.average ne null }">
+								<c:if test="${coord.average ne 'NaN'}">
 									<label>평균평점 : </label>${coord.average} <br>
-								</c:if>
-									
-									<c:forEach var="entry" items="${coord.map}">
-										<label class="btn btn-sm taglist">${entry.key} # ${entry.value}번  사용됨</label>
-									</c:forEach>
-									<c:forEach var="review" items="${coord.coordReview}" varStatus="status">					
-										<button type="button" class="btn btn-sm btn-secondary btn-block" onclick="location='coordReview.go?coord_id=${coord.coord_id}'">평판보기</button>								
-									</c:forEach>
+								</c:if>									
+								<c:forEach var="entry" items="${coord.map}">
+									<label class="btn btn-sm taglist">${entry.key} # ${entry.value}번  사용됨</label>
+								</c:forEach>													
+								<button type="button" class="btn btn-sm btn-secondary btn-block" onclick="location='coordReview.go?coord_id=${coord.coord_id}'">평판보기</button>								
 								</h6>
 							</div>
 						</div>

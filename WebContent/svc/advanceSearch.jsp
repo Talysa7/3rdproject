@@ -176,8 +176,24 @@
 				</form>
 				<!-- board data -->
 				<div id="show"></div>
-				<button type="button" class="btn btn-dark btn-block"
-				onclick="loadList(${next_row})">Load more...</button>
+				<c:if test="${count ne 0}">
+					<c:forEach var="i" begin="${startPage}" end="${endPage}">
+						<c:if test="${i eq currentPage}">
+							<button type="button" class="btn btn-dark btn-block">
+									더 이상 불러올 글이 없습니다</button>
+						</c:if>
+						<c:if test="${i ne currentPage}">					
+							<button type="button" class="btn btn-dark btn-block"
+				onclick="loadList(${i})">Load more...</button>
+						</c:if>	
+					</c:forEach>
+					<c:if test="${pageCount gt endPage}">
+						<button type="button" class="btn btn-dark btn-block"
+				onclick="loadList(${i})">Load more...</button></a>
+					</c:if>	
+				</c:if>
+		</div>
+				
 			</div>
 			<!-- loading button end -->
 			
