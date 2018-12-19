@@ -619,11 +619,11 @@ function commentDelete(comment_id){
         }
     });
 }
-function loadList(next_row){
+function loadList(i){
 	var next_row = $('input[name=next_row]').val();
 	$.ajax({
 		type : 'get',
-		data : {next_row : next_row},
+		data : {next_row : i},
 		url : "advanceSearch.go?pageNum='${next_row}'",
 		success : function(data) {
 			if(data.length>0){

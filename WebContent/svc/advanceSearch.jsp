@@ -175,26 +175,15 @@
 					<input type="hidden" name="next_row" value="${next_row}">
 				</form>
 				<!-- board data -->
-				<div id="show"></div>
-				<c:if test="${count ne 0}">
-					<c:forEach var="i" begin="${startPage}" end="${endPage}">
-						<c:if test="${i eq currentPage}">
-							<button type="button" class="btn btn-dark btn-block">
-									더 이상 불러올 글이 없습니다</button>
-						</c:if>
-						<c:if test="${i ne currentPage}">					
-							<button type="button" class="btn btn-dark btn-block"
-				onclick="loadList(${i})">Load more...</button>
-						</c:if>	
-					</c:forEach>
+			    <c:if test="${count ne 0}">
 					<c:if test="${pageCount gt endPage}">
 						<button type="button" class="btn btn-dark btn-block"
-				onclick="loadList(${i})">Load more...</button></a>
+				onclick="loadList(${startPage+pageBlock})">Load more...</button>
 					</c:if>	
-				</c:if>
-		</div>
-				
+				</c:if>				
 			</div>
+				
+		</div>
 			<!-- loading button end -->
 			
 		</div>
@@ -203,7 +192,6 @@
 		<div class="mx-auto">
 				<button type="button" class="btn btn-secondary btn-sm" onclick="goback()">이전페이지로</button>
 		</div>
-	</div>
 	<!-- body box end-->
 </body>
 
