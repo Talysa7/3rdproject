@@ -81,6 +81,9 @@ public class TripDBBean {
 		}
 		return trip;
 	}
+	public List<TripDataBean> getReviewList(String user_id){
+		return session.selectList("user.getReviewList", user_id);
+	}
 	
 	//Here was a method 'isOwner' testing 'Is this user the owner of this article?'
 	//This method should be moved to BoardDBBean or Handler, maybe we don't need this!
