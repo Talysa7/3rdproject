@@ -36,59 +36,59 @@
 		그러나 html 태그만 봐서는 한번에 알아보기 힘들기 때문에 참고할 수 있는 자료구조를 따로 첨부함.
 	
 {
-	"board":{
-		"title":"title",
-		"content":"content",
-		"contact":"contact",
-		"tag":["tag1","tag2","tag3", ...]
+	"boardDto":{
+		"board_title":"board_title",
+		"board_content":"board_content",
+		"board_contact":"board_contact",
+		"tagList":["tag_id1","tag_id2","tag_id3", ...]
 	},
-	"trip":[{
-		"member_count":"member_count",
-		"coord_id":{
-			"place_name":"place_name",
+	"tripDtoList":[{
+		"trip_member_count":"trip_member_count",
+		"coordList":{
+			"coord_name":"coord_name",
 			"country_code":"country_code",
-			"long":"long",
-			"lat":"lat"
+			"coord_long":"coord_long",
+			"coord_lat":"coord_lat"
 		},
 		"start_date":"start_date",
 		"end_date":"end_date",
-		"trip_order":"trip_order"
+		"coord_order":"coord_order"
 	}]
 }
  --%>
 	<div class="container" style="width: 800px;">
-		<form id="tripForm" class="form" method="post" action="tripWritePro.go">	<!-- TODO : onsubmit에 writeCheck() 일단 무시함. 새로 제작 필요 -->
+		<form id="tripForm" class="form" method="POST" action="tripWritePro.go">	<!-- TODO : onsubmit에 writeCheck() 일단 무시함. 새로 제작 필요 -->
 			<div class="input-box">	
 				<div class="board_part">
-					<input type="hidden" name="board[]">
+					<input type="hidden" name="boardDto[]">
 					<div class="form-group row">
-						<input type="text" class="board_title col-12 form-control form-control-lg" name="board[title]" placeholder="제목" maxlength="30">
+						<input type="text" class="board_title col-12 form-control form-control-lg" name="boardDto[board_title]" placeholder="제목" maxlength="30">
 					</div>
 				</div>
 				<div class="trip_part">
 					<div class="trip_chips">
-						<input type="hidden" name="trip[]">
+						<input type="hidden" name="tripDtoList[]">
 						<div class="form-group row">
 							<label for="trip_member_count" class="col-2 col-form-label">참여인원</label>
-							<input type="number" class="trip_member_count col-2" name="trip[][member_count]" min="1" placeholder="n명">
+							<input type="number" class="trip_member_count col-2" name="tripDtoList[][trip_member_count]" min="1" placeholder="n명">
 						</div>
 						<div class="form-group row">
 							<label for="trip_start_date" class="col-2 col-form-label">일정</label>
-							<input type="text" class="trip_start_date" name="trip[][start_date]" placeholder="시작일">
+							<input type="text" class="trip_start_date" name="tripDtoList[][start_date]" placeholder="시작일">
 							~
-							<input type="text" class="trip_end_date" name="trip[][end_date]" placeholder="종료일">
+							<input type="text" class="trip_end_date" name="tripDtoList[][end_date]" placeholder="종료일">
 							
 						</div>
 							
 						<div class="form-group row">
 							<label for="pac-input" class="col-2 col-form-label">장소</label>
 							<input type="text" id="pac-input" class="pac-input" placeholder="장소를 입력하세요">
-							<input type="hidden" name="trip[][coord_id]">
-								<input type="hidden" class="trip_place_name" name="trip[][coord_id][place_name]">
-								<input type="hidden" class="trip_country_code" name="trip[][coord_id][country_code]">
-								<input type="hidden" class="trip_long" name="trip[][coord_id][long]">
-								<input type="hidden" class="trip_lat" name="trip[][coord_id][lat]">
-							<input type="hidden" class="trip_order" name="trip[][trip_order]" value="1">
+							<input type="hidden" name="tripDtoList[][coordList]">
+								<input type="hidden" class="trip_coord_name" name="tripDtoList[][coordList][coord_name]">
+								<input type="hidden" class="trip_country_code" name="tripDtoList[][coordList][country_code]">
+								<input type="hidden" class="trip_long" name="tripDtoList[][coordList][coord_long]">
+								<input type="hidden" class="trip_lat" name="tripDtoList[][coordList][coord_lat]">
+							<input type="hidden" class="coord_order" name="tripDtoList[][coord_order]" value="1">
 						</div>
 					</div>
 					<button id="add_btn">추가</button>
@@ -107,7 +107,7 @@
 				<div class="board_part">	
 					<div class="form-group row">
 						<label for="board_content" class="col-2 col-form-label">글내용</label>
-						<textarea class="board_content" name="board[content]" placeholder="내용을 입력하세요">
+						<textarea class="board_content" name="boardDto[board_content]" placeholder="내용을 입력하세요">
 						</textarea>
 					</div>
 					<div class="form-group row">
@@ -115,14 +115,14 @@
 						<c:if test="${styleTags.size() ne 0}">
 							<c:forEach var="tagCnt" items="${styleTags}">
 							<label class="btn btn-secondary"> 
-								<input type="checkbox" class="board_tag" name="board[tag][]" value="${tagCnt.tag_id}">${tagCnt.tag_value}
+								<input type="checkbox" class="board_tag" name="boardDto[tagList][]" value="${tagCnt.tag_id}">${tagCnt.tag_value}
 							</label>
 							</c:forEach>
 						</c:if>
 					</div>
 					<div class="form-group row">
 						<label for="board_contact" class="col-2 col-form-label">대화링크</label>
-						<input type="text" class="board_contact col-10" name="board[contact]">
+						<input type="text" class="board_contact col-10" name="boardDto[board_contact]">
 					</div>
 				</div>
 				<input class="btn btn-dark btn-sm" type="submit" value="${trip_write}"> 
@@ -210,7 +210,7 @@ function setAutoComplete( item, map ){
 				$(item).siblings('.trip_country_code').val(addr_comp[i].short_name);
 			} 
 		}
-		$(item).siblings('.trip_place_name').val(place.name);
+		$(item).siblings('.trip_coord_name').val(place.name);
 		$(item).siblings('.trip_long').val(lng);
 		$(item).siblings('.trip_lat').val(lat);
 		infowindow.open(map, marker);
@@ -258,8 +258,8 @@ $(function(){
 		input = document.getElementsByClassName('pac-input').item(trip_cnt);
 		setAutoComplete(input, map);
 		
-		trip_cnt += 1;		// trip_order 값 수정
-		$('.trip_order')
+		trip_cnt += 1;		// coord_order 값 수정
+		$('.coord_order')
 			.last()
 			.val(trip_cnt);
 		return false;
@@ -269,7 +269,7 @@ $(function(){
 		$('.trip_chips')
 			.last()
 			.remove();
-		trip_cnt -= 1;		// del 에서는 add 에서처럼 trip_order 값 수정
+		trip_cnt -= 1;		// del 에서는 add 에서처럼 coord_order 값 수정
 		return false;
 	});
 
