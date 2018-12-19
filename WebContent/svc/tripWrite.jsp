@@ -277,7 +277,21 @@ $(function(){
 	$('form#tripForm').on('submit', function(){
 		event.preventDefault();		// 폼 처리를 완전히 jQuery 안에서 한다면, 페이지 다시 불러오기 방지
 		var data_parse = JSON.parse($('form#tripForm').serializeJSON());
-		console.log(data_parse);
+		// console.log(data_parse);
+		$.ajax({
+			url: 'tripWritePro.go',
+			type: 'POST',
+			data: JSON.stringify(data_parse),
+			dataType: 'json',
+			contentType: 'application/json',
+			mimeType: 'application/json',
+			success: function(data){
+				console.log('성공'+ data.result);
+			},
+			error: function(request, status, error){
+				console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+			},
+		})
 	});
 });
 </script>
