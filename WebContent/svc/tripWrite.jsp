@@ -164,7 +164,7 @@ function setAutoComplete( item, map ){
 	var autocomplete = new google.maps.places.Autocomplete(item);
 	
 	autocomplete.bindTo('bounds', map);
-	autocomplete.setFields([ 'address_components', 'formatted_phone_number', 'geometry', 'icon', 'name', 'photos', 'vicinity' ]);
+//	autocomplete.setFields([ 'address_components', 'formatted_phone_number', 'geometry', 'icon', 'name', 'photos', 'vicinity' ]);
 	autocomplete.addListener('place_changed', function() {
 		infowindow.close();
 		marker.setVisible(false);
