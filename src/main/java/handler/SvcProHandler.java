@@ -7,9 +7,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.sql.Date;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +44,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import db.AlbumDBBean;
@@ -73,6 +70,7 @@ import db.TripDBBean;
 import db.TripDataBean;
 import db.UserDBBean;
 import db.UserDataBean;
+import db.WriteCoordDataBean;
 import db.WriteDataBean;
 
 @Controller
@@ -352,38 +350,14 @@ public class SvcProHandler {
 	@RequestMapping(value = "/tripWritePro", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
 	@ResponseBody
 	public ModelAndView svcTripWriteProProcess(@RequestBody WriteDataBean writeDto, HttpServletRequest request)
-			throws HandlerException, JsonProcessingException {
+			throws HandlerException, IOException, ParseException {
 		try {
 			request.setCharacterEncoding("utf-8");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-//		@RequestBody 로 받아서 받아보기
 		ObjectMapper mapper = new ObjectMapper();
-		System.out.println(mapper.writeValueAsString(writeDto));
-		
-//		request 를 그냥 받아서 하나하나 뜯어서 사용하는 방법
-//		Enumeration<String> reqParams = request.getParameterNames();
-//		Map<String, String[]> map = request.getParameterMap();
-//		
-//		while(reqParams.hasMoreElements()) {
-//			String keys = reqParams.nextElement();
-//			String[] values = map.get(keys);
-//			
-//			System.out.println( keys + "에 해당하는 params 들은 : ");
-//			
-//			for(int i=0; i < values.length; i++) {
-//				String value = values[i];
-//				System.out.print(value);
-//
-//				if(i == (values.length - 1)) {
-//				} else {
-//					System.out.print(", ");
-//				}
-//			}
-//			System.out.println();
-//		}
-		//		return new ModelAndView("svc/tripWritePro");
+		mapper.writerWithDefaultPrettyPrinter().writeValueAsString(writeDto);
 		return new ModelAndView("");
 	}
 
@@ -886,7 +860,7 @@ public class SvcProHandler {
 	//////////////////////////////////////ajax추가분 이민재 2018.11.15 /////////////////////////////////////
 	//////////////////////////////////////ajax추가분 황준호 2018.21.21 ///////////////////////////////////////////
 	@RequestMapping(value = "setCoordinate", produces="application/json")
-	@ResponseBody
+	@ResponseBody	private void setCoordinate(@RequestBody WriteCoordDataBean coordDto,HttpServletRequest request, HttpServletResponse response ) throws Exception {
 		BoardDBBean boardDao = new BoardDBBean();
 		if(boardDao.countCoord(coordDto) == 0) {
 			boardDao.insertCoord(coordDto);
