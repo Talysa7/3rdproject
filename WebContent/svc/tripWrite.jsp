@@ -203,6 +203,7 @@ function setAutoComplete( item, map ){
 		lng = lng.substring( 0, (parseInt(lng.indexOf('.')) + 7) );
 		lat = lat.substring( 0, (parseInt(lat.indexOf('.')) + 7) );
 
+		infowindowContent.children['place-name'].textContent = name;
 //		infowindowContent.children['place-address'].textContent = address;
 //		infowindowContent.children['place-location'].textContent = 
 //			place.geometry.location.lat();
