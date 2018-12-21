@@ -1,16 +1,32 @@
 package db;
 
+import java.sql.Timestamp;
+
 public class WriteTripDataBean {
-	private String trip_member_count;
-	private WriteCoordDataBean coordList;
-	private String start_date;;
-	private String end_date;
-	private String coord_order;
+	private int board_no;	// board_no 	WrtieBoardDataBean / selectKey로 받은 값 -> 사용
+	private int trip_id;	// trip_id 		auto_increment / selectKey로 값 받기 -> pao_coord 에서 필요로 함
+	private int trip_member_count;
+	private WriteCoordDataBean coordList;	// coord_id 필요
+	private Timestamp start_date;
+	private Timestamp end_date;
+	private int coord_order;
 	
-	public String getTrip_member_count() {
+	public int getBoard_no() {
+		return board_no;
+	}
+	public void setBoard_no(int board_no) {
+		this.board_no = board_no;
+	}
+	public int getTrip_id() {
+		return trip_id;
+	}
+	public void setTrip_id(int trip_id) {
+		this.trip_id = trip_id;
+	}
+	public int getTrip_member_count() {
 		return trip_member_count;
 	}
-	public void setTrip_member_count(String trip_member_count) {
+	public void setTrip_member_count(int trip_member_count) {
 		this.trip_member_count = trip_member_count;
 	}
 	public WriteCoordDataBean getCoordList() {
@@ -19,22 +35,22 @@ public class WriteTripDataBean {
 	public void setCoordList(WriteCoordDataBean coordList) {
 		this.coordList = coordList;
 	}
-	public String getStart_date() {
+	public Timestamp getStart_date() {
 		return start_date;
 	}
-	public void setStart_date(String start_date) {
+	public void setStart_date(Timestamp start_date) {
 		this.start_date = start_date;
 	}
-	public String getEnd_date() {
+	public Timestamp getEnd_date() {
 		return end_date;
 	}
-	public void setEnd_date(String end_date) {
+	public void setEnd_date(Timestamp end_date) {
 		this.end_date = end_date;
 	}
-	public String getCoord_order() {
+	public int getCoord_order() {
 		return coord_order;
 	}
-	public void setCoord_order(String coord_order) {
+	public void setCoord_order(int coord_order) {
 		this.coord_order = coord_order;
 	}
 }
