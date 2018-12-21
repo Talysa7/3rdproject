@@ -37,6 +37,7 @@
 	
 {
 	"boardDto":{
+		"user_id":"user_id"
 		"board_title":"board_title",
 		"board_content":"board_content",
 		"board_contact":"board_contact",
@@ -61,6 +62,7 @@
 			<div class="input-box">	
 				<div class="board_part">
 					<input type="hidden" name="boardDto[]">
+					<input type="hidden" name="boardDto[user_id]" value="${user_id}">
 					<div class="form-group row">
 						<input type="text" class="board_title col-12 form-control form-control-lg" name="boardDto[board_title]" placeholder="제목" maxlength="30">
 					</div>
@@ -196,11 +198,11 @@ function setAutoComplete( item, map ){
 		var addr_comp = place.address_components;
 		var lng = place.geometry.location.lng().toString();
 		var lat = place.geometry.location.lat().toString();
-		
+		var country_code;
+		var name = place.name;
 		lng = lng.substring( 0, (parseInt(lng.indexOf('.')) + 7) );
 		lat = lat.substring( 0, (parseInt(lat.indexOf('.')) + 7) );
 
-		infowindowContent.children['place-name'].textContent = place.name;
 //		infowindowContent.children['place-address'].textContent = address;
 //		infowindowContent.children['place-location'].textContent = 
 //			place.geometry.location.lat();
@@ -208,8 +210,30 @@ function setAutoComplete( item, map ){
 		for( var i in addr_comp){
 			if(addr_comp[i].types[0] == 'country'){
 				$(item).siblings('.trip_country_code').val(addr_comp[i].short_name);
+				country_code = addr_comp[i].short_name;
 			} 
 		}
+		var coordinate_json = {
+			coord_name : name,
+			coord_long : lng,
+			coord_lat : lat,
+			country_code : country_code
+		}
+		$.ajax({
+			url: 'setCoordinate.go',
+			type: 'POST',
+			data: JSON.stringify(coordinate_json),
+			dataType: 'json',
+			contentType: 'application/json',
+			mimeType: 'application/json',
+			success: function(data){
+				console.log('성공'+ data.result);
+			},
+			error: function(request, status, error){
+				console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+			},
+		});
+		console.log(coordinate_json);
 		$(item).siblings('.trip_coord_name').val(place.name);
 		$(item).siblings('.trip_long').val(lng);
 		$(item).siblings('.trip_lat').val(lat);
