@@ -166,7 +166,13 @@ public class BoardDBBean {
 		return session.selectList("board.advanceSearchByDatePeriod",searchMap);
 	}
 	
+	public int countCoord (WriteCoordDataBean coordDto) {
+		return session.selectOne("board.countCoord", coordDto);
+	}
 	
+	public int insertCoord (WriteCoordDataBean coordDto) {
+		return session.insert("board.insertCoord", coordDto);
+	}
 	
 	
 	

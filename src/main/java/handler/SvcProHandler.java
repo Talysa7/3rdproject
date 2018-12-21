@@ -884,6 +884,15 @@ public class SvcProHandler {
 		return jsonCoord;
 	}
 	//////////////////////////////////////ajax추가분 이민재 2018.11.15 /////////////////////////////////////
+	//////////////////////////////////////ajax추가분 황준호 2018.21.21 ///////////////////////////////////////////
+	@RequestMapping(value = "setCoordinate", produces="application/json")
+	@ResponseBody
+		BoardDBBean boardDao = new BoardDBBean();
+		if(boardDao.countCoord(coordDto) == 0) {
+			boardDao.insertCoord(coordDto);
+		}
+	}
+	//////////////////////////////////////ajax추가분 황준호 ///////////////////////////////////////////
 	///////////////////////////////// etc/////////////////////////////////
 	public static String getRandomString() {
 		return UUID.randomUUID().toString().replaceAll("-", "");
