@@ -1,17 +1,22 @@
 package db;
 
 import java.sql.Timestamp;
-import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class WriteBoardDataBean {
+	@JsonIgnore
 	private int board_no;			// board_no = auto_increment -> pao_trip 에서 필요로 함 / selectKey
 	private String board_title;
 	private String board_content;
+	@JsonIgnore
 	private int board_view_count;	// board_view_count = default / 0
+	@JsonIgnore
 	private int board_level;		// board_level = not null / user_level 확인 후 1 혹은 9
 	private String board_contact;
+	@JsonIgnore
 	private Timestamp board_reg_date;
-	private List<TagDataBean> tagList;
+	private String[] tagList;
 	private String user_id;
 	
 	public int getBoard_no() {
@@ -56,10 +61,10 @@ public class WriteBoardDataBean {
 	public void setBoard_reg_date(Timestamp board_reg_date) {
 		this.board_reg_date = board_reg_date;
 	}
-	public List<TagDataBean> getTagList() {
+	public String[] getTagList() {
 		return tagList;
 	}
-	public void setTagList(List<TagDataBean> tagList) {
+	public void setTagList(String[] tagList) {
 		this.tagList = tagList;
 	}
 	public String getUser_id() {
