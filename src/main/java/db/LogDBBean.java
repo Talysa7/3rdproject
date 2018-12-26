@@ -360,4 +360,29 @@ public class LogDBBean {
 		return session.insert("board.insertLog",map);
 	}	
 	
+	public void makeAdvanceSearchLog(BoardDataBean boardDto) {
+		JSONObject wrapObject = new JSONObject();
+		JSONArray jsonArray = new JSONArray();
+		JSONObject jsonObject = new JSONObject();
+		
+		jsonObject.put("fromDate", boardDto.getUser_id());
+		jsonObject.put("toDate", boardDto.getToDate());
+		jsonObject.put("searchPeriod", boardDto.getSearchPeriod());
+		jsonObject.put("searchTag", boardDto.getSearchTag());
+		jsonObject.put("searchSite", boardDto.getSearchSite());
+				
+		JSONObject Object = new JSONObject();
+		Object.put("advanceqSearch_data", jsonObject);
+		jsonArray.add(Object);
+		JSONObject jsonjson = new JSONObject();
+		jsonArray.add(jsonjson);
+		wrapObject.put("result",jsonArray);
+		wrapObject.put("log_type", 2);
+		//확인용
+		System.out.println(wrapObject);
+		Map<String, Object> map = new HashMap<String, Object>(	);
+		map.put("log_str", wrapObject.toJSONString());
+		session.insert("board.insertLog",map);
+	}
+	
 }

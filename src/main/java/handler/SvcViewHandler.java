@@ -405,11 +405,12 @@ public class SvcViewHandler {
 		//admin page needs this
 		int rowNumber;
 		int startPage=0;
-		if(startPage>0) {
-			rowNumber=startPage*postPerPage;
-		} else {
+		//if(startPage>0) {
+		//	rowNumber=startPage*postPerPage;
+	//	} else {
 			rowNumber=0;
-		}
+		//}
+		
 		List<BoardDataBean> postList=boardDao.getPostList(rowNumber, postPerPage);
 		//set count and next row info for 'load more list'
 		if(postList.size()>=postPerPage) {
@@ -541,18 +542,25 @@ public class SvcViewHandler {
 		searchMap.put("searchTag", searchTag);
 		searchMap.put("searchSite", searchSite);
 		
+		BoardDataBean boardDto = new BoardDataBean();
+		boardDto.setFromDate(fromDate);
+		boardDto.setToDate(toDate);
+		boardDto.setSearchPeriod(searchPeriod);
+		boardDto.setSearchTag(searchTag);
+		boardDto.setSearchSite(searchSite);
+		
 		String queryHead = "select * from pao_view_board where board_no in (select board_no from pao_trip";
 		
 		String queryDate = "";
 		if(toDate != null || fromDate != null) {
-			queryDate += " where start_date>=STR_TO_DATE(#{fromDate}, '%m/%d/%Y') and end_date<=STR_TO_DATE(#{toDate},'%m/%d/%Y')";
+			queryDate += " where start_date>=STR_TO_DATE("+"'"+fromDate+"'"+", '%m/%d/%Y') and end_date<=STR_TO_DATE("+"'"+toDate+"'"+",'%m/%d/%Y')";
 		}
 		
 		String queryPeriod = "";
 		if(searchPeriod == null || searchPeriod == "") {
 			queryPeriod += "";
 		}else if(searchPeriod != null) {
-			queryPeriod += " and DATEDIFF(end_date,start_date)=#{searchPeriod})";
+			queryPeriod += " and DATEDIFF(end_date,start_date)="+"'"+searchPeriod+"')";
 		}
 		
 		String query = queryHead + queryDate + queryPeriod;
@@ -567,14 +575,41 @@ public class SvcViewHandler {
 			pageNum = "1";
 		}
 		
-		List<BoardDataBean> searchReceive = new ArrayList<BoardDataBean>();
+		
 		if(query != null) {
-			searchReceive = boardDao.advanceSearchByDatePeriod(searchMap);
-			setReviewLogic(request, (pageNum), searchReceive.size(), start, end);
-			searchMap.put("start", Integer.parseInt(pageNum));
-			searchMap.put("end", pageBlock);
-			String querylimit = ") limit #{start}, #{end}";
-			query = queryHead + queryDate + queryPeriod + querylimit;			
+			List<BoardDataBean> searchReceive = boardDao.advanceSearchByDatePeriod(searchMap);
+			
+			int rowNumber;
+			int startPage=0;
+			if(startPage>0) {
+				rowNumber=startPage*postPerPage;
+			} else {
+				rowNumber=0;
+			}
+			
+			int startRowNumber = rowNumber;
+			int endRowNumber = postPerPage;
+			
+			searchMap.put("startRowNumber", rowNumber);
+			searchMap.put("endRowNumber", rowNumber*postPerPage);
+			
+			if(searchReceive.size()>=postPerPage) {
+					request.setAttribute("next_row", postPerPage+1);
+				} else if(searchReceive.size()>0&&searchReceive.size()<postPerPage) {
+					request.setAttribute("next_row", searchReceive.size()+1);
+				} else {
+					request.setAttribute("next_row", 0);
+				}
+			
+			boardDto.setStartRowNumber(rowNumber);
+			boardDto.setEndRowNumber(rowNumber*postPerPage);
+	
+			System.out.println(rowNumber);		
+			
+		//	String querylimit = " limit "+startRowNumber+", "+endRowNumber+"";
+			System.out.println("kki");
+	//		query += querylimit;			
+
 			searchMap.put("query", query);
 			System.out.println(query);
 			searchReceive = boardDao.advanceSearchByDatePeriod(searchMap);
@@ -582,24 +617,74 @@ public class SvcViewHandler {
 			
 		}
 	
-		if(searchSite != "") {
-			searchReceive = boardDao.advanceSearchBySite(searchMap);
-			setReviewLogic(request, (pageNum), searchReceive.size(), start, end);
+
+		if(searchSite != "" && searchSite != null) {
+			List<BoardDataBean> searchReceive = boardDao.advanceSearchBySite(searchMap);
 		    System.out.println("검색결과 개수 장소: "+searchReceive.size()+"\n");
-		    searchMap.put("start", Integer.parseInt(pageNum));
-			searchMap.put("end", pageBlock);
+		    
+			int rowNumber;
+			int startPage=0;
+			if(startPage>0) {
+				rowNumber=startPage*postPerPage;
+			} else {
+				rowNumber=0;
+			}
+	
+			int startRowNumber = rowNumber;
+			int endRowNumber = postPerPage;
+			
+			searchMap.put("startRowNumber", rowNumber);
+			searchMap.put("endRowNumber", rowNumber*postPerPage);
+		   
+		    if(searchReceive.size()>=postPerPage) {
+				request.setAttribute("next_row", postPerPage+1);
+			} else if(searchReceive.size()>0&&searchReceive.size()<postPerPage) {
+				request.setAttribute("next_row", searchReceive.size()+1);
+			} else {
+				request.setAttribute("next_row", 0);
+			}
+		    boardDto.setStartRowNumber(rowNumber);
+			boardDto.setEndRowNumber(rowNumber*postPerPage);
+	
+			System.out.println(rowNumber);		
+			System.out.println("kki2");
+
 			searchReceive = boardDao.advanceSearchBySite(searchMap);
 			request.setAttribute("searchReceive", searchReceive);
 		}
 	    
-		if(searchTag != "") {
-			searchReceive = boardDao.advanceSearchByTag(searchMap);
-			setReviewLogic(request, (pageNum), searchReceive.size(), start, end);
+		if(searchTag != "" && searchTag != null) {
+			List<BoardDataBean> searchReceive = boardDao.advanceSearchByTag(searchMap);
 		    System.out.println("검색결과 개수 태그: "+searchReceive.size()+"\n");
-		    searchMap.put("start", Integer.parseInt(pageNum));
-			searchMap.put("end", pageBlock);
-			searchReceive = boardDao.advanceSearchByTag(searchMap);
+		    
+			int rowNumber;
+			int startPage=0;
+			if(startPage>0) {
+				rowNumber=startPage*postPerPage;
+			} else {
+				rowNumber=0;
+			}
+			
+			int startRowNumber = rowNumber;
+			int endRowNumber = postPerPage;
+						
+			searchMap.put("startRowNumber", rowNumber);
+			searchMap.put("endRowNumber", rowNumber*postPerPage);
+		  
+		    if(searchReceive.size()>=postPerPage) {
+				request.setAttribute("next_row", postPerPage+1);
+			} else if(searchReceive.size()>0&&searchReceive.size()<postPerPage) {
+				request.setAttribute("next_row", searchReceive.size()+1);
+			} else {
+				request.setAttribute("next_row", 0);
+			}
+		    boardDto.setStartRowNumber(rowNumber);
+			boardDto.setEndRowNumber(rowNumber*postPerPage);
+	
+			System.out.println(rowNumber);		
+
 			System.out.println(query);
+			searchReceive = boardDao.advanceSearchByTag(searchMap);
 			request.setAttribute("searchReceive", searchReceive);
 			
 		}
