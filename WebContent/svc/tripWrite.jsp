@@ -300,9 +300,9 @@ $(function(){
 
 	// 데이터 submit 
 	$('form#tripForm').on('submit', function(){
-		event.preventDefault();		// 폼 처리를 완전히 jQuery 안에서 한다면, 페이지 다시 불러오기 방지
+//		event.preventDefault();		// 폼 처리를 완전히 jQuery 안에서 한다면, 페이지 다시 불러오기 방지
 		var data_parse = JSON.parse($('form#tripForm').serializeJSON());
-		// console.log(data_parse);
+		console.log(data_parse);
 		$.ajax({
 			url: 'tripWritePro.go',
 			type: 'POST',
