@@ -370,12 +370,14 @@ public class SvcProHandler {
 		} else {
 			String[] tagList = boardDto.getTagList();
 			int board_no = boardDto.getBoard_no();
-			
-			for(int i=0; i<tagList.length; i++) {
-				Map<String, Object> tag_map = new HashMap<>();
-				tag_map.put("board_no", board_no);
-				tag_map.put("tag_id", tagList[i]);
-				boardDao.insertTagList(tag_map);
+			try {
+				for(int i=0; i<tagList.length; i++) {
+					Map<String, Object> tag_map = new HashMap<>();
+					tag_map.put("board_no", board_no);
+					tag_map.put("tag_id", tagList[i]);
+					boardDao.insertTagList(tag_map);
+				}
+			} catch(Exception e) {
 			}
 		
 			List<WriteTripDataBean> tripDtoList = writeDto.getTripDtoList();
