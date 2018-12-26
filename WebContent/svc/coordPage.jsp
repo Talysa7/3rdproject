@@ -55,7 +55,7 @@
 								<c:if test="${coord.average ne 'NaN'}">
 									<label>평균평점 : </label>${coord.average} <br>
 								</c:if>									
-								<c:forEach var="entry" items="${coord.map}">
+								<c:forEach var="entry" items="${coord.map}" begin="0" end="4">
 									<label class="btn btn-sm taglist">${entry.key} # ${entry.value}번  사용됨</label>
 								</c:forEach>													
 								<button type="button" class="btn btn-sm btn-secondary btn-block" onclick="location='coordReview.go?coord_id=${coord.coord_id}'">평판보기</button>								

@@ -3,9 +3,11 @@ package handler;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -381,8 +383,11 @@ public class SvcViewHandler {
 					for(String temp : tagValue) {
 						 Integer counttag = map.get(temp);
 					     map.put(temp, (counttag == null) ? 1 : counttag + 1);
-					     coord.get(i).setMap(map);
 					}
+					LinkedHashMap<String, Integer> reverseSortedMap = new LinkedHashMap<>();
+			        map.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+			                .forEachOrdered(x -> reverseSortedMap.put(x.getKey(), x.getValue()));
+			        coord.get(i).setMap(reverseSortedMap);
 				}catch(NullPointerException e) {
 					e.printStackTrace();
 				}
