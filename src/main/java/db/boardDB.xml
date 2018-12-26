@@ -185,10 +185,20 @@
 	<select id="getCoord_id" resultType="int" parameterType="db.WriteCoordDataBean">
 		SELECT coord_id
 		FROM pao_coordinate
-		WHERE coord_name = #{coord_name}
-		AND country_code = #{country_code}
-		AND coord_long = #{coord_long}
-		AND coord_lat = #{coord_lat}
+		<where>
+			<if test="#{coord_name} != null">
+				coord_name = #{coord_name}
+			</if>
+			<if test="#{country_code} != null">
+				AND country_code = #{country_code}
+			</if>
+			<if test="#{coord_long}">
+				AND coord_long = #{coord_long}
+			</if>
+			<if test="#{coord_lat}">
+				AND coord_lat = #{coord_lat}
+			</if>
+		</where>
 	</select>
 	<insert id="insertCoord" useGeneratedKeys="true" keyProperty="coord_id" parameterType="db.WriteCoordDataBean">
 		INSERT INTO pao_coordinate (
