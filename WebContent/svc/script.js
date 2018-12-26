@@ -46,7 +46,14 @@ function erroralert( msg ) {
 	alert( msg );
 	history.back();
 }
+
+
+function goback(){
+	history.back();
+}
+
 //////////////////////////////////////////////////////////////// Google Map 관련 ////////////////////////////////////////////////////////////////
+
 // Initialize and add the map
 var boardmarkers=[];
 var boardmarker;
@@ -76,6 +83,7 @@ var map;
 // 		location[i]= {lat: coord_lat[i], lng: coord_long[i]};
 // 	});
 // 	var centerLat = centerLatSum / coord.length ; 
+
 //    var centerLng = centerLngSum / coord.length ;   
 // 	var center={lat:centerLat,lng:centerLng};
 // 	  // The map, centered at allPlace
@@ -302,6 +310,7 @@ function IdCheck() {
 var genck = 0;
 function NameCheck() {
 	var user_name = $("#name_val").val();
+	var nickck = $("#nickck").val();
 	if (user_name) {
 		$.ajax({
 			async : true,
@@ -313,9 +322,11 @@ function NameCheck() {
 			success : function(data) {
 				if (data.countName > 0) {
 					$('#NameCheckMessage').html("닉네임이 존재합니다.")
+					nickck = 1;
 				} else {
 					$('#NameCheckMessage').html("사용가능한 닉네임입니다.")
 					genck = 1; // 닉네임 중복체크시 1이됨
+					nickck=0;
 				}
 			},
 			error : function(error) {
@@ -353,6 +364,20 @@ function confirmeMail(authNum){
 		self.close();
 	}
 }
+//userModify 폼 
+function userModCheck(){
+	var nickck = $("#nickck").val();
+	var pass1 = $("#userPassword1").val();
+	var pass2 = $("#userPassword2").val();
+	var chk = $("input:checkbox[name='tags']").is(":checked");
+	if(genck == 0){
+		alert('닉네임 중복체크를 해주세요');
+		return false;
+	}else if(pass1 != pass2){
+		alert('비밀번호가 일치하지 않습니다');
+		return false;
+	}
+}
 
 function inputcheck() {
 	if (confirm("회원가입을 하시겠습니까?")) {
@@ -361,7 +386,7 @@ function inputcheck() {
 			return false;
 		} else if (genck == 0) {
 			alert('닉네임 중복체크를 해주세요');
-			return false;
+			return false;			
 //		} else if (inputform.confirm.value == 0){
 //			alert('이메일 인증을해주세요');
 //			return false;
@@ -594,7 +619,57 @@ function commentDelete(comment_id){
         }
     });
 }
-
+function loadList(i){
+	var next_row = $('input[name=next_row]').val();
+	$.ajax({
+		type : 'get',
+		data : {next_row : i},
+		url : "advanceSearch.go?pageNum='${next_row}'",
+		success : function(data) {
+			if(data.length>0){
+				var list="";
+				$.each(data, function(key, additionalList){
+					next_row=next_row+1;
+					list+='<c:forEach var="post" items="${searchReceive}">';
+					list+='	<div class="row">';
+					list+='	<div class="col-md-11">';
+					list+=' <div class="card flex-md-row mb-3 shadow-sm h-md-250">';
+					list+='	<div class="card-body">';
+					list+='<strong class="d-inline-block mb-2">' ;
+					list+='<c:forEach var="trip" items="${post.tripLists}">';
+					list+= '${trip.coord_name}';
+					list+= '</c:forEach></strong> <h3 class="mb-0">';
+					list+=  '<a class="text-dark" href="trip.go?board_no=${post.board_no}">';
+					list+='	<c:if test="${post.board_level eq 1}">';
+					list+='${trip_notice_1}';
+					list+='</c:if>';
+					list+='${post.board_title}';
+					list+='</a>	</h3>';
+					list+='<div class="mb-1 text-muted text-right">';
+					list+='<i><b>With</b></i>&nbsp; ${post.user_name}';
+					list+='</div><hr style="width: 100%" noshade>';
+					list+='<p class="card-text mb-auto">${post.board_content}</p>';
+					list+='<hr style="width: 100%" noshade></div>';
+					list+='<div class="card-center justify-content-center">';
+					list+='<div class="p-2">';
+					list+='조회수: ${post.board_view_count}';
+					list+='</div><div class="p-2">';
+					list+='<c:forEach var="tag" items="${post.board_tags}">';
+					list+='<label class="btn btn-sm taglist"> # ${tag.tag_value} </label>';
+					list+='</c:forEach>	</div></div></div></div></div></c:forEach>'
+				});
+	            $("#board-list").append(list);
+	            var newButton='<button type="button" class="btn btn-dark col-md-12" onclick="loadList('+next_row_after+')">Load more...</button>';
+	            $("#loading-button").html(newButton);
+			} else {
+				alert('더 이상 불러올 글이 없습니다.');
+			}
+		},
+		error : function(error) {
+			alert('글 불러오기에 실패했습니다.'+error);
+		}
+	});
+}
 function loadMoreList(next_row) {
 	$.ajax({
 		type : 'get',
@@ -607,37 +682,39 @@ function loadMoreList(next_row) {
 					next_row=next_row+1;
 					
 					listForAppend+='<div class="row">';
-					listForAppend+=		'<div class="col-md-12">';
-					listForAppend+=			'<div class="card flex-md-row mb-3 shadow-sm h-md-250">';
-					listForAppend+=				'<div class="card-body d-flex flex-column align-items-start">';
-					listForAppend+=					'<strong class="d-inline-block mb-2">';
-																	if(additionalList.tripLists) {
-																		$.each(additionalList.tripLists, function(key, tripLists) {
-																			additionalList.coord_name;
-																		});
-																	}
-					listForAppend+=					'</strong>';
-					listForAppend+=					'<h3 class="mb-0">';
-					listForAppend+=						'<a class="text-dark" href="trip.go?board_no='+additionalList.board_no+'">'+additionalList.board_title+'</a>';
-					listForAppend+=					'</h3>';
-					listForAppend+=					'<div class="mb-1 text-muted text-right">';
-					listForAppend+=						'<i><b>With</b></i>&nbsp;'+additionalList.user_name;
-					listForAppend+=					'</div>';
-					listForAppend+=					'<hr size="1px" color="black" noshade>';
-					listForAppend+=					'<p class="card-text mb-auto">'+additionalList.board_content+'</p>';
-					listForAppend+=					'<hr style="width: 100%">';
-					listForAppend+=					'<div class="d-flex justify-content-center">';
-					listForAppend+=						'<div class="p-2">조회수:'+additionalList.board_view_count+'</div>';
-					listForAppend+=						'<div class="p-2"><label class="btn btn-sm taglist">';
-																		$.each(additionalList.board_tags, function(key, board_tags) {
-																			additionalList.tag_value;
-																		});
-					listForAppend+=						'</label></div>';
-					listForAppend+=					'</div>';
-					listForAppend+=				'</div>';
+					listForAppend+='<div class="col-md-11">';
+					listForAppend+=	'<div class="card flex-md-row mb-3 shadow-sm h-md-250">';
+					listForAppend+=		'<div class="card-body">';
+					listForAppend+=			'<strong class="d-inline-block mb-2">';
+															if(additionalList.tripLists) {
+																$.each(additionalList.tripLists, function(key, tripLists) {
+					listForAppend+=												tripLists.coord_name+' ';
+																});
+															};
+					listForAppend+=			'</strong>';
+					listForAppend+=			'<h3 class="mb-0">';
+					listForAppend+=				'<a class="text-dark" href="trip.go?board_no='+additionalList.board_no+'">';
+					listForAppend+=				additionalList.board_title;
+					listForAppend+=			'</h3>';
+					listForAppend+=			'<div class="mb-1 text-muted text-right">';
+					listForAppend+=				'<i><b>With</b></i>'+additionalList.user_name;
 					listForAppend+=			'</div>';
-					listForAppend+=		'</div>';
-					listForAppend+=	'</div>';
+					listForAppend+=			'<hr style="width: 100%" noshade>';
+					listForAppend+=			'<p class="card-text mb-auto">'+additionalList.board_content+'</p>';
+					listForAppend+=			'<hr style="width: 100%" noshade>';
+					listForAppend+=			'<div class="mb-1 text-muted">';
+					listForAppend+=				'<label>조회수:'+additionalList.board_view_count+'&nbsp;</label>';
+					listForAppend+=				'<c:forEach var="tag" items="${post.board_tags}">';
+																	$.each(additionalList.board_tags, function(key, board_tags) {
+					listForAppend+=							'<label class="btn btn-sm taglist"> # '+board_tags.tag_value+'</label>';
+																	});
+					listForAppend+=				'</c:forEach>';
+					listForAppend+=			'</div></div>';
+					listForAppend+=		'<div class="thumbnail">';
+														if(additionalList.thumbnail != null) {
+					listForAppend+=				'<img src="'+additionalList.thumbnail+'" class="img-fluid">';
+														};
+					listForAppend+=		'</div></div></div></div>';
 	            });
 	            $("#board-list").append(listForAppend);
 	            var newButton='<button type="button" class="btn btn-dark col-md-12" onclick="loadMoreList('+next_row_after+')">Load more...</button>';
@@ -652,85 +729,85 @@ function loadMoreList(next_row) {
 	});
 }
 //달력 불러오기 //순서대로 입력 받기
-function loadCal(num){ 
-	if(num==1){
-		$("#start"+num+"").datepicker({
-			minDate:0
-		});
-	}else if(num>1){
-		var beforeStart=$('#start'+(num-1)+'').val();
-		$("#start"+num+"").datepicker({
-			minDate:beforeStart
-		});
-	}
-	 $("#start"+num+"").datepicker("option", "onClose", function ( selectedDate ) {
-	        $("#end"+num+"").datepicker( "option", "minDate", selectedDate );
-	    });
-	 
-	$("#end"+num+"").datepicker();
-	$("#end"+num+"").datepicker("option", "minDate", $("#start"+num+"").val()); 
-	$("#end"+num+"").datepicker("option", "onClose", function () {	 
-        $("#address").focus();
-    });
-
-} 
+//function loadCal(num){ 
+//	if(num==1){
+//		$("#start"+num+"").datepicker({
+//			minDate:0
+//		});
+//	}else if(num>1){
+//		var beforeStart=$('#start'+(num-1)+'').val();
+//		$("#start"+num+"").datepicker({
+//			minDate:beforeStart
+//		});
+//	}
+//	 $("#start"+num+"").datepicker("option", "onClose", function ( selectedDate ) {
+//	        $("#end"+num+"").datepicker( "option", "minDate", selectedDate );
+//	    });
+//	 
+//	$("#end"+num+"").datepicker();
+//	$("#end"+num+"").datepicker("option", "minDate", $("#start"+num+"").val()); 
+//	$("#end"+num+"").datepicker("option", "onClose", function () {	 
+//        $("#address").focus();
+//    });
+//
+//} 
 //add schedule-일정 추가//한글 처리
-function addSchedule(num){
-	var start=$('input[name=start'+num+']');
-	var end=$('input[name=end'+num+']');
-	var place=$('input[name=place'+num+']');
-	if(!start.val()||!end.val()){//일정날짜가 없는 경우는 일정 추가 x
-		alert(noscheduleerror);
-		if(!start.val())start.focus();
-		else end.focus();
-	}else if(!place.val()){
-		alert(noplaceerror);
-		$('#address').focus();
-	}else{
-		$('#schedulediv').append(schedule);
-		if(num>=maxschedule){
-			alert(schedulesizeerror);
-		}else{
-			$('#address').val('');
-			$('#btn_del'+num+'').hide();
-			var schedule="";
-			$('#btn'+num+'').hide();//btn 숨기기
-			num++;
-			schedule+= 	'<div id="schedule'+num+'" class="form-group row">';
-			schedule+=		'<input type="hidden" name="num_counter" value="'+num+'">';	  
-			schedule+= 		'<label for="cal_date" class="col-2 col-form-label">일정 '+num+'</label>';         
-			schedule+=      	'<input type="text" name="start'+num+'" id="start'+num+'" maxlength="10" value="yyyy-MM-dd" class="col-2" autocomplete="off"/>';
-			schedule+=			'~';
-			schedule+=			'<input type="text" name="end'+num+'" id="end'+num+'" maxlength="10" value="yyyy-MM-dd" class="col-2" autocomplete="off"/>&nbsp;&nbsp;';
-			schedule+=			'<input name="place'+num+'" id="place'+num+'" type="text" readonly>';
-			schedule+=		'<button id="btn'+num+'" class="btn_plus" type="button" onclick="addSchedule('+num+')">';
-			schedule+=			'<i class="fas fa-plus-circle"></i>';
-			schedule+=		'</button>';
-			schedule+=		'<button id="btn_del'+num+'" class="btn_del" type="button" onclick="removeSchedule('+num+')">';
-			schedule+=			'<i class="fas fa-minus-circle"></i>';
-			schedule+=		'</button>';
-			schedule+=		'<div id="coordinfo'+num+'">';
-			schedule+=		'</div>';
-			schedule+=	'</div>';
-			$('#schedulediv').append(schedule);
-			loadCal(num);
-			
-			if(num==maxschedule) $('#btn'+num+'').hide();
-			var schedulenum='<input type="hidden" name="schedulenum" value="'+num+'">';
-			$('#schedulenum').empty();
-			$('#schedulenum').append(schedulenum);
-		}		
-	}
-}
-function removeSchedule(num){
-	$('#address').val('');
-	$('#schedule'+num+'').remove();
-	num--;
-	$('#btn'+num+'').show();//btn 보여주기
-	$('#btn_del'+num+'').show();//btn 보여주기
-	$('#schedulenum').empty();
-	$("#schedulenum").val(num);//minus schedule num
-}
+//function addSchedule(num){
+//	var start=$('input[name=start'+num+']');
+//	var end=$('input[name=end'+num+']');
+//	var place=$('input[name=place'+num+']');
+//	if(!start.val()||!end.val()){//일정날짜가 없는 경우는 일정 추가 x
+//		alert(noscheduleerror);
+//		if(!start.val())start.focus();
+//		else end.focus();
+//	}else if(!place.val()){
+//		alert(noplaceerror);
+//		$('#address').focus();
+//	}else{
+//		$('#schedulediv').append(schedule);
+//		if(num>=maxschedule){
+//			alert(schedulesizeerror);
+//		}else{
+//			$('#address').val('');
+//			$('#btn_del'+num+'').hide();
+//			var schedule="";
+//			$('#btn'+num+'').hide();//btn 숨기기
+//			num++;
+//			schedule+= 	'<div id="schedule'+num+'" class="form-group row">';
+//			schedule+=		'<input type="hidden" name="num_counter" value="'+num+'">';	  
+//			schedule+= 		'<label for="cal_date" class="col-2 col-form-label">일정 '+num+'</label>';         
+//			schedule+=      	'<input type="text" name="start'+num+'" id="start'+num+'" maxlength="10" value="yyyy-MM-dd" class="col-2" autocomplete="off"/>';
+//			schedule+=			'~';
+//			schedule+=			'<input type="text" name="end'+num+'" id="end'+num+'" maxlength="10" value="yyyy-MM-dd" class="col-2" autocomplete="off"/>&nbsp;&nbsp;';
+//			schedule+=			'<input name="place'+num+'" id="place'+num+'" type="text" readonly>';
+//			schedule+=		'<button id="btn'+num+'" class="btn_plus" type="button" onclick="addSchedule('+num+')">';
+//			schedule+=			'<i class="fas fa-plus-circle"></i>';
+//			schedule+=		'</button>';
+//			schedule+=		'<button id="btn_del'+num+'" class="btn_del" type="button" onclick="removeSchedule('+num+')">';
+//			schedule+=			'<i class="fas fa-minus-circle"></i>';
+//			schedule+=		'</button>';
+//			schedule+=		'<div id="coordinfo'+num+'">';
+//			schedule+=		'</div>';
+//			schedule+=	'</div>';
+//			$('#schedulediv').append(schedule);
+//			loadCal(num);
+//			
+//			if(num==maxschedule) $('#btn'+num+'').hide();
+//			var schedulenum='<input type="hidden" name="schedulenum" value="'+num+'">';
+//			$('#schedulenum').empty();
+//			$('#schedulenum').append(schedulenum);
+//		}		
+//	}
+//}
+//function removeSchedule(num){
+//	$('#address').val('');
+//	$('#schedule'+num+'').remove();
+//	num--;
+//	$('#btn'+num+'').show();//btn 보여주기
+//	$('#btn_del'+num+'').show();//btn 보여주기
+//	$('#schedulenum').empty();
+//	$("#schedulenum").val(num);//minus schedule num
+//}
 //whenever searching address, update address-장소추가-검색할때 마다 장소갱신
 function showPlace(country_code,full_address,lat,lng){
 	var num=$('#schedulenum').find('input[name=schedulenum]').val();
@@ -864,7 +941,8 @@ function absent(trip_id) {
 function initMap() {
 	  var map = new google.maps.Map(document.getElementById('map'), {
 	    center: {lat: -33.8688, lng: 151.2195},
-	    zoom: 13
+	    zoom: 13,
+	    disableDefaultUI: true
 	  });
 	  var card = document.getElementById('pac-card');
 	  var input = document.getElementById('pac-input');
@@ -897,9 +975,6 @@ function initMap() {
 	    marker.setVisible(false);
 	    var place = autocomplete.getPlace();
 	    if (!place.geometry) {
-	      // User entered the name of a Place that was not suggested and
-	      // pressed the Enter key, or the Place Details request failed.
-	      window.alert("No details available for input: '" + place.name + "'");
 	      return;
 	    }
 
@@ -947,8 +1022,7 @@ function initMap() {
 	        console.log('Checkbox clicked! New state=' + this.checked);
 	        autocomplete.setOptions({strictBounds: this.checked});
 	      });
-	}
-
+}
 
 ///////////////////////////////////////////////////////이민재//////////////////////////////////////////////////////
 /*
@@ -1056,47 +1130,4 @@ function openSchedule(coord_order) {
 
 
 
-/////////////////////////////////////////////최혜원////////////////////////////////////////////
-function loadUserReviewList(next_row) {
-	
-	
-	$.ajax({
-		type : 'get',
-		data : {next_row : next_row},
-		url : "loadUserReviewList.go",
-		success : function(data) {
-			if(data.length>0){
-				var AppendList="";
-				$.each(data, function(key, review){
-					next_row=next_row+1;
-					AppendList+='<div class="form-group row">'				
-					AppendList+='<label for="reviewer" class="control-label col-sm-2" >평가자 </label>'
-					AppendList+=	'<div class="col-sm-8">&nbsp;'+review.reviewer_id+'</div>'
-					AppendList+='</div>'
-					AppendList+='<div class="form-group row">'		
-					AppendList+='<label for="point" class="control-label col-sm-2" >평가점수</label>'
-					AppendList+=	'<div class="col-sm-8">'
-					AppendList+=	'&nbsp;' + review.review_point + '점'
-					AppendList+=	'</div>'
-					AppendList+='</div>'
-					AppendList+='<div class="form-group row">'
-					AppendList+='<label for="comment" class="control-label col-sm-2" >평가 내용</label>'
-					AppendList+=	'<div class="col-sm-8">&nbsp;'+review.review_comment +'</div>'
-					AppendList+='</div>'
-					AppendList+='<br>'
-					
-	            });
-	            $("#trace").append(AppendList);
-	            var newButton='<button type="button" class="btn btn-dark col-md-12" onclick="loadList('+next_row_after+')">Load more...</button>';
-	            $("#loading-button").html(newButton);
-			} else {
-				alert('더 이상 불러올 글이 없습니다.');
-			}
-		},
-		error : function(error) {
-			alert('글 불러오기에 실패했습니다.'+error);
-		}
-	});
-	
-}
 

@@ -121,8 +121,9 @@
 	</insert>
 
 	<select id="checkId" parameterType="String" resultType="int">
-		select
-		count(*) from pao_user where user_id=#{user_id}
+		SELECT COUNT(*) 
+		FROM pao_user 
+		WHERE user_id=#{user_id}
 	</select>
 
 	<select id="emailCheck" parameterType="String" resultType="int">
@@ -147,6 +148,23 @@
 				from pao_members
 				where user_id=#{user_id}
 			)
+		order by end_date desc
+	</select>
+	<select id="getReviewList" parameterType="String" resultType="db.TripDataBean">
+		select *
+		from pao_view_trip
+		where trip_id in (
+				select trip_id
+				from pao_members
+				where user_id=#{user_id}
+			)
+		and trip_id not in (
+				select trip_id 
+				from pao_trip 
+				where coord_id in (
+							select coord_id 
+							from pao_coord_review
+							where user_id=#{user_id}))
 		order by end_date desc
 	</select>
 	<select id="getMemberNames" parameterType="int" resultType="java.util.List">
@@ -211,9 +229,9 @@
 		select * from pao_members where trip_id=#{trip_id}
 		and user_id not in 
 		(select user_id from pao_user_review where trip_id=#{trip_id})
-		intersect
+		except
 		select * from pao_members where trip_id=#{trip_id}
-		and not user_id=#{user_id};
+		and user_id=#{user_id};
 	</select>
 	<select id="getBest" parameterType="map" resultType="db.ReviewDataBean">
 		select * from pao_user_review where user_id=#{user_id}

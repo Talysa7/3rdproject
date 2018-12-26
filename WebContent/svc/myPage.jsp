@@ -75,11 +75,12 @@
 			<div id="reputation">			
 				<div class="form-group row">
 					<div class="text-center">	&nbsp;&nbsp;	
-						${userDto.user_name}님의 평점은  		
-						<c:if test="${average != 'NaN'}"> [평균평점 : ${average}점 (5점만점)] </c:if>
-						<c:if test="${count ne 0}">[게시글 수 : ${count}개]</c:if>
-						<c:if test="${average != 'NaN'} && ${count ne 0}">아직 없습니다</c:if>
-						입니다		
+						<c:if test="${count ne null and count ne 0} or ${average ne null and average ne 'NaN'}">
+							{${userDto.user_name}님의 평점은  		
+						</c:if>
+						<c:if test="${average ne null and average ne 'NaN'}"> [평균평점 : ${average}점 (5점만점)] </c:if>
+						<c:if test="${count ne null and count ne 0}">[게시글 수 : ${count}개]</c:if>
+						<c:if test="${average eq null and count eq null}">아직 없습니다</c:if>		
 					</div>	
 				</div>
 			<br>
@@ -115,18 +116,17 @@
 			<div class="form-group row">
 				<div class="col-sm-2"></div>
 				<div class="col-sm-8">
-				<button type="button" class="btn btn-lg btn-secondary btn-block" onclick="location='placeWrite.go'">여행지를 평가해주세요</button>
-				
-			<button type="button" class="btn btn-lg btn-secondary btn-block" onclick="location='reviewPage.go'">평판불러오기</button>
-			
-			<c:if test="${catchNum ne 0}">
-			<button type="button" class="btn btn-lg btn-secondary btn-block" onclick="location='review.go'">작성해야 할 평판이 있습니다</button>
-			</c:if>
-			
+				<c:if test="${size ne 0}">
+				<button type="button" class="btn btn-lg btn-secondary btn-block" onclick="location='placeWrite.go'">여행지를 평가해주세요</button>				
+				</c:if>
+				<button type="button" class="btn btn-lg btn-secondary btn-block" onclick="location='reviewPage.go'">평판불러오기</button>				
+				<c:if test="${catchNum ne 0 and catchNum ne null}">
+					<button type="button" class="btn btn-lg btn-secondary btn-block" onclick="location='review.go'">작성해야 할 평판이 있습니다</button>
+				</c:if>				
 					<button type="button" class="btn btn-lg btn-secondary btn-block" onclick="location='userModPassCheck.go'">${btn_modify}</button>
-					<c:if test="${userDto.user_level ne 9}">
+				<c:if test="${userDto.user_level ne 9}">
 					<button type="button" class="btn btn-lg btn-secondary btn-block" onclick="location='userLeave.go'">${btn_user_delete}</button>
-					</c:if>
+				</c:if>
 					<button type="button" class="btn btn-lg btn-secondary btn-block" onclick="location='logout.go'">${btn_logout}</button>
 				</div>
 			</div>

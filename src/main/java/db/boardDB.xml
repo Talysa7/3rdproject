@@ -47,6 +47,7 @@
 	</delete>
 
 	<select id="getTripList" parameterType="int" resultType="db.TripDataBean">
+
 		SELECT * 
 		FROM pao_view_trip 
 		WHERE board_no=#{board_no}
@@ -89,10 +90,32 @@
 	<select id="getCoordId" parameterType="int" resultType="int">
 		select coord_id from pao_trip where trip_id=#{trip_id}
 	</select>
+	<select id="advanceSearchByTag" parameterType="java.util.Map" resultType="db.BoardDataBean">
+		<![CDATA[
+		select * from pao_view_board where board_no in
+		(select board_no from pao_view_board_tags where tag_id in
+		(select tag_id from pao_tag where tag_value=#{searchTag}))
+		]]>
+	</select>
+	<select id="advanceSearchBySite" parameterType="java.util.Map" resultType="db.BoardDataBean">
+		<![CDATA[
+		select * from pao_view_board where board_no in
+		(select board_no from pao_trip where coord_id in
+		(select coord_id from pao_coordinate where coord_name=#{searchSite})) 
+		]]>
+	</select>
+	<select id="advanceSearchByDatePeriod" parameterType="java.util.Map" resultType="db.BoardDataBean">
+		<![CDATA[
+		${query}
+		]]>
+	</select>
 	<!--/////////////////////////////////////////////////// start-line pao_comment table ///////////////////////////////////////////////////-->
-	<insert id="insertComment" parameterType="db.CmtDataBean">
+	<insert id="insertComment" parameterType="db.CmtDataBean" keyProperty="comment_id">
 		INSERT INTO pao_comment (comment_content, comment_reg_date, board_no, user_id)
 		VALUES(#{comment_content}, now(), #{board_no}, #{user_id})
+		<selectKey keyProperty="comment_id" resultType="int" order="AFTER">
+         SELECT LAST_INSERT_ID()
+      </selectKey>
 	</insert>
 	<update id="updateComment" parameterType="db.CmtDataBean">
 		UPDATE pao_comment
@@ -142,4 +165,11 @@
 		select * from pao_view_board
 	</select>
 	<!-- ////////////////////////////////////////////////임시쿼리 끝. 추후 삭제 예정 ///////////////////////////////////////////////// -->
+	<!--  LOG INSERT 문-->
+	<insert id="insertLog" parameterType="java.util.Map" keyProperty="log_id">
+	 	insert into pao_log(log_str) values(#{log_str})
+	 	<selectKey keyProperty="log_id" resultType="int" order="AFTER">
+         SELECT LAST_INSERT_ID()
+      </selectKey>
+	</insert>
 </mapper>

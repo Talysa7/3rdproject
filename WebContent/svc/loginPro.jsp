@@ -23,6 +23,7 @@
 </c:if>
 <c:if test="${result eq 1}">
 	${sessionScope.user_id = id}
+	${sessionScope.user_name = user_name}
 	<c:if test="${userType eq 9}">
 		${sessionScope.user_level = 9}
 		<c:redirect url="adminTrip.go"/>

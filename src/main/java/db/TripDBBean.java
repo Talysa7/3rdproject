@@ -73,11 +73,16 @@ public class TripDBBean {
 		if(userTripList.size()>0) {
 			for(int i=0; i<userTripList.size(); i++) {
 			TripDataBean tripDto = userTripList.get(i);
-			tripDto.setTrip_members(userTripList.get(i).getTrip_id());
+			tripDto.setTrip_members(tripDto.getTrip_id());
+			String thumbnail=session.selectOne("album.getThumbnail", tripDto.getBoard_no());
+			tripDto.setThumbnail(thumbnail);
 			trip.add(tripDto);
-			}			
+			}
 		}
 		return trip;
+	}
+	public List<TripDataBean> getReviewList(String user_id){
+		return session.selectList("user.getReviewList", user_id);
 	}
 	
 	//Here was a method 'isOwner' testing 'Is this user the owner of this article?'
@@ -89,7 +94,16 @@ public class TripDBBean {
 			return session.insert("board.insertTrip",tripDto);
 		}
 //////////////////////////////////////////////////////2018-11-05 이민재 트립 insert 추가 //////////////////////////////////////////////
-
-		
+////////////////////////////////////////////////////장소 정보 관련 
+		public List<TripDataBean> getTripListByCoord(int coord_id) {		//modified method name to divide
+			List<TripDataBean> boardTripList=session.selectList("location.getTripListByCoord", coord_id);
+			//set members user_name to each trip, for convenience
+			if(boardTripList.size()>0) {
+				for(TripDataBean trip:boardTripList) {
+					trip.setTrip_members(trip.getTrip_id());
+				}
+			}
+			return boardTripList;
+		}	
 
 }

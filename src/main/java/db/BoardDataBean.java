@@ -20,11 +20,64 @@ public class BoardDataBean {
 										//If user_id is null, set it 'Ex-User'
 	//guest value from database table : pao_album
 	private String thumbnail;			//varchar (10)
-										//Thumnail image of this article
+										//Thumbnail image of this article
 										//If there is no thumbnail, set it to default image's url
 	private List<TagDataBean> board_tags;		//article's tag value list
 	private List<TripDataBean> tripLists;	// 관련된 TripData들을 가져와 보관하기 위함.
-
+	
+	
+	private int startRowNumber;
+	private int endRowNumber;
+	
+	// log용 variable
+	private String searchSite;
+	private String searchTag;
+	private String searchPeriod;
+	private String toDate;
+	private String fromDate;
+	
+	public int getStartRowNumber() {
+		return startRowNumber;
+	}
+	public void setStartRowNumber(int startRowNumber) {
+		this.startRowNumber = startRowNumber;
+	}
+	public int getEndRowNumber() {
+		return endRowNumber;
+	}
+	public void setEndRowNumber(int endRowNumber) {
+		this.endRowNumber = endRowNumber;
+	}	
+	public String getSearchSite() {
+		return searchSite;
+	}
+	public void setSearchSite(String searchSite) {
+		this.searchSite = searchSite;
+	}
+	public String getSearchTag() {
+		return searchTag;
+	}
+	public void setSearchTag(String searchTag) {
+		this.searchTag = searchTag;
+	}
+	public String getSearchPeriod() {
+		return searchPeriod;
+	}
+	public void setSearchPeriod(String searchPeriod) {
+		this.searchPeriod = searchPeriod;
+	}
+	public String getToDate() {
+		return toDate;
+	}
+	public void setToDate(String toDate) {
+		this.toDate = toDate;
+	}
+	public String getFromDate() {
+		return fromDate;
+	}
+	public void setFromDate(String fromDate) {
+		this.fromDate = fromDate;
+	}
 	public int getBoard_no() {
 		return board_no;
 	}

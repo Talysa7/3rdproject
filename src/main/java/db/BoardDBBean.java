@@ -145,4 +145,29 @@ public class BoardDBBean {
 	public BoardDataBean getBoard(int board_no) {
 		return session.selectOne("board.getBoard", board_no);
 	}
+	
+	public List<BoardDataBean> advanceSearchByDate(Map<String,String> searchMap){
+		return session.selectList("board.advanceSearchByDate",searchMap);
+	}
+	
+	public List<BoardDataBean> advanceSearchByPeriod(Map<String,String> searchMap){
+		return session.selectList("board.advanceSearchByPeriod",searchMap);
+	}
+	
+	public List<BoardDataBean> advanceSearchByTag(Map<String, Object> searchMap){
+		return session.selectList("board.advanceSearchByTag",searchMap);
+	}
+	
+	public List<BoardDataBean> advanceSearchBySite(Map<String, Object> searchMap){
+		return session.selectList("board.advanceSearchBySite",searchMap);
+	}
+	
+	public List<BoardDataBean> advanceSearchByDatePeriod(Map<String, Object> searchMap){
+		return session.selectList("board.advanceSearchByDatePeriod",searchMap);
+	}
+	
+	
+	
+	
+	
 }

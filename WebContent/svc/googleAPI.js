@@ -3,22 +3,22 @@ function initMap() {
 	var input = document.getElementById('pac-input');
 	var types = document.getElementById('type-selector');
 	var infowindowContent = document.getElementById('infowindow-content');
-	var zoom = 13
-	var after_zoom = 17
+	var zoom = 13;
+	var after_zoom = 17;
 	var map_opt = {
 			center : {
 				lat : 37.4864,
 		        lng : 127.0207
 			},
 			zoom : zoom
-		}
+		};
 	var map = new google.maps.Map(document.getElementById('map'), map_opt);
 	
 	map.controls[google.maps.ControlPosition.TOP_RIGHT].push(card);
 
 	var autocomplete = new google.maps.places.Autocomplete(input);
 	autocomplete.bindTo('bounds', map);
-	autocomplete.setFields([ 'address_components', 'geometry', 'icon', 'name' ]);
+	autocomplete.setFields([ 'address_components', 'formatted_phone_number', 'geometry', 'icon', 'name', 'photos', 'vicinity' ]);
 
 	var infowindow = new google.maps.InfoWindow();
 	infowindow.setContent(infowindowContent);
@@ -30,7 +30,7 @@ function initMap() {
 	
 //	마커 이벤트
 	google.maps.event.addListener(marker,'click',function() {
-		after_zoom++
+		after_zoom++;
 		map.setZoom(after_zoom);
 		map.setCenter(marker.getPosition());
 	});
@@ -70,7 +70,7 @@ function initMap() {
 		infowindowContent.children['place-address'].textContent = address;
 		infowindowContent.children['place-location'].textContent = 
 			place.geometry.location.lat() + place.geometry.location.lng();
-		var num = $("input[name=num_counter]")
+		var num = $("input[name=num_counter]");
 		$("#place"+num).val( place.name );
 		
 		infowindow.open(map, marker);
