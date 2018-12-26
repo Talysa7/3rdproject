@@ -351,7 +351,8 @@ public class SvcProHandler {
 
 	///////////////////////////////// board pages/////////////////////////////////
 	@RequestMapping(value = "/tripWritePro", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-	public ModelAndView svcTripWriteProProcess(@RequestBody WriteDataBean writeDto, HttpServletRequest request, HttpServletResponse response)
+	@ResponseBody
+	public String svcTripWriteProProcess(@RequestBody WriteDataBean writeDto, HttpServletRequest request, HttpServletResponse response)
 			throws HandlerException, IOException, ParseException {
 		try {
 			request.setCharacterEncoding("utf-8");
@@ -392,7 +393,8 @@ public class SvcProHandler {
 			request.setAttribute("board_no", board_no);
 			request.setAttribute("result", boardResult);
 		}
-		return new ModelAndView("svc/tripWritePro");
+		
+		return "1";
 	}
 
 	@RequestMapping("/tripModPro")
