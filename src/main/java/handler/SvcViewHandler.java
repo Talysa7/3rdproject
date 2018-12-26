@@ -270,6 +270,7 @@ public class SvcViewHandler {
 			request.setAttribute( "endPage", endPage );
 			request.setAttribute( "pageCount", pageCount );
 			request.setAttribute( "pageBlock", pageBlock );
+			
 		}
 	@RequestMapping("/reviewPage")
 	public ModelAndView SvcReviewProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
@@ -497,7 +498,7 @@ public class SvcViewHandler {
 	}
 	
 	//advance search by site, start date, end date, period, tag
-	@RequestMapping("/advanceSearch")
+	@RequestMapping("advanceSearch")
 	public ModelAndView advanceSearchProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		
 		try {
@@ -561,70 +562,49 @@ public class SvcViewHandler {
 		}
 		
 		searchMap.put("query", query);
-		
 		String pageNum = request.getParameter("pageNum");
 		if(pageNum == null || pageNum.equals("")){
 			pageNum = "1";
 		}
 		
+		List<BoardDataBean> searchReceive = new ArrayList<BoardDataBean>();
 		if(query != null) {
-			List<BoardDataBean> searchReceive = boardDao.advanceSearchByDatePeriod(searchMap);
-			 if(searchReceive.size()>=postPerPage) {
-					request.setAttribute("next_row", postPerPage+1);
-				} else if(searchReceive.size()>0&&searchReceive.size()<postPerPage) {
-					request.setAttribute("next_row", searchReceive.size()+1);
-				} else {
-					request.setAttribute("next_row", 0);
-				}
-			setReviewLogic(request, pageNum, searchReceive.size(), start, end);
-			searchMap.put("start", start);
-			searchMap.put("end", postPerPage);
+			searchReceive = boardDao.advanceSearchByDatePeriod(searchMap);
+			setReviewLogic(request, (pageNum), searchReceive.size(), start, end);
+			searchMap.put("start", Integer.parseInt(pageNum));
+			searchMap.put("end", pageBlock);
 			String querylimit = ") limit #{start}, #{end}";
 			query = queryHead + queryDate + queryPeriod + querylimit;			
 			searchMap.put("query", query);
 			System.out.println(query);
 			searchReceive = boardDao.advanceSearchByDatePeriod(searchMap);
 			request.setAttribute("searchReceive", searchReceive);
+			
 		}
 	
 		if(searchSite != "") {
-			List<BoardDataBean> searchReceive = boardDao.advanceSearchBySite(searchMap);
+			searchReceive = boardDao.advanceSearchBySite(searchMap);
+			setReviewLogic(request, (pageNum), searchReceive.size(), start, end);
 		    System.out.println("검색결과 개수 장소: "+searchReceive.size()+"\n");
-		   
-		    if(searchReceive.size()>=postPerPage) {
-				request.setAttribute("next_row", postPerPage+1);
-			} else if(searchReceive.size()>0&&searchReceive.size()<postPerPage) {
-				request.setAttribute("next_row", searchReceive.size()+1);
-			} else {
-				request.setAttribute("next_row", 0);
-			}
-		    setReviewLogic(request, pageNum, searchReceive.size(), start, end);
-		    searchMap.put("start", start);
-			searchMap.put("end", postPerPage);
+		    searchMap.put("start", Integer.parseInt(pageNum));
+			searchMap.put("end", pageBlock);
 			searchReceive = boardDao.advanceSearchBySite(searchMap);
 			request.setAttribute("searchReceive", searchReceive);
 		}
 	    
 		if(searchTag != "") {
-			List<BoardDataBean> searchReceive = boardDao.advanceSearchByTag(searchMap);
+			searchReceive = boardDao.advanceSearchByTag(searchMap);
+			setReviewLogic(request, (pageNum), searchReceive.size(), start, end);
 		    System.out.println("검색결과 개수 태그: "+searchReceive.size()+"\n");
-		  
-		    if(searchReceive.size()>=postPerPage) {
-				request.setAttribute("next_row", postPerPage+1);
-			} else if(searchReceive.size()>0&&searchReceive.size()<postPerPage) {
-				request.setAttribute("next_row", searchReceive.size()+1);
-			} else {
-				request.setAttribute("next_row", 0);
-			}
-		    setReviewLogic(request, pageNum, searchReceive.size(), start, end);
-		    searchMap.put("start", start);
-			searchMap.put("end", postPerPage);
+		    searchMap.put("start", Integer.parseInt(pageNum));
+			searchMap.put("end", pageBlock);
 			searchReceive = boardDao.advanceSearchByTag(searchMap);
 			System.out.println(query);
 			request.setAttribute("searchReceive", searchReceive);
+			
 		}
-		
 		return new ModelAndView("svc/advanceSearch");
+		
 }
 	/////////////////////////////////album pages/////////////////////////////////
 

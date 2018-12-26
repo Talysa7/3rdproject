@@ -619,47 +619,50 @@ function commentDelete(comment_id){
         }
     });
 }
+function load(i){
+	$("#board-list").load("advanceSearch.go?pageNum="+i);
+}
 function loadList(i){
 	var next_row = $('input[name=next_row]').val();
 	$.ajax({
 		type : 'get',
-		data : {next_row : i},
-		url : "advanceSearch.go?pageNum='${next_row}'",
+		data : {pageNum : i},
+		url : "advanceSearch.go?pageNum=${pageNum}",
 		success : function(data) {
-			if(data.length>0){
+			if(data){				
+				var next_after = i+5;
+	     
 				var list="";
-				$.each(data, function(key, additionalList){
-					next_row=next_row+1;
-					list+='<c:forEach var="post" items="${searchReceive}">';
-					list+='	<div class="row">';
-					list+='	<div class="col-md-11">';
-					list+=' <div class="card flex-md-row mb-3 shadow-sm h-md-250">';
-					list+='	<div class="card-body">';
-					list+='<strong class="d-inline-block mb-2">' ;
-					list+='<c:forEach var="trip" items="${post.tripLists}">';
-					list+= '${trip.coord_name}';
-					list+= '</c:forEach></strong> <h3 class="mb-0">';
-					list+=  '<a class="text-dark" href="trip.go?board_no=${post.board_no}">';
-					list+='	<c:if test="${post.board_level eq 1}">';
-					list+='${trip_notice_1}';
-					list+='</c:if>';
-					list+='${post.board_title}';
-					list+='</a>	</h3>';
-					list+='<div class="mb-1 text-muted text-right">';
-					list+='<i><b>With</b></i>&nbsp; ${post.user_name}';
-					list+='</div><hr style="width: 100%" noshade>';
-					list+='<p class="card-text mb-auto">${post.board_content}</p>';
-					list+='<hr style="width: 100%" noshade></div>';
-					list+='<div class="card-center justify-content-center">';
-					list+='<div class="p-2">';
-					list+='조회수: ${post.board_view_count}';
-					list+='</div><div class="p-2">';
-					list+='<c:forEach var="tag" items="${post.board_tags}">';
-					list+='<label class="btn btn-sm taglist"> # ${tag.tag_value} </label>';
-					list+='</c:forEach>	</div></div></div></div></div></c:forEach>'
-				});
-	            $("#board-list").append(list);
-	            var newButton='<button type="button" class="btn btn-dark col-md-12" onclick="loadList('+next_row_after+')">Load more...</button>';
+				list+='<c:forEach var="post" items="${searchReceive}">';
+				list+='	<div class="row">';
+				list+='	<div class="col-md-11">';
+				list+=' <div class="card flex-md-row mb-3 shadow-sm h-md-250">';
+				list+='	<div class="card-body">';
+				list+='<strong class="d-inline-block mb-2">' ;
+				list+='<c:forEach var="trip" items="${post.tripLists}">';
+				list+= '${trip.coord_name}';
+				list+= '</c:forEach></strong> <h3 class="mb-0">';
+				list+=  '<a class="text-dark" href="trip.go?board_no=${post.board_no}">';
+				list+='	<c:if test="${post.board_level eq 1}">';
+				list+='${trip_notice_1}';
+				list+='</c:if>';
+				list+='${post.board_title}';
+				list+='</a>	</h3>';
+				list+='<div class="mb-1 text-muted text-right">';
+				list+='<i><b>With</b></i>&nbsp; ${post.user_name}';
+				list+='</div><hr style="width: 100%" noshade>';
+				list+='<p class="card-text mb-auto">${post.board_content}</p>';
+				list+='<hr style="width: 100%" noshade></div>';
+				list+='<div class="card-center justify-content-center">';
+				list+='<div class="p-2">';
+				list+='조회수: ${post.board_view_count}';
+				list+='</div><div class="p-2">';
+				list+='<c:forEach var="tag" items="${post.board_tags}">';
+				list+='<label class="btn btn-sm taglist"> # ${tag.tag_value} </label>';
+				list+='</c:forEach>	</div></div></div></div></div></c:forEach>'
+					 $("#board-list").append(list);
+				
+	            var newButton='<button type="button" class="btn btn-dark col-md-12" onclick="loadList('+next_after+')">Load more...</button>';
 	            $("#loading-button").html(newButton);
 			} else {
 				alert('더 이상 불러올 글이 없습니다.');
