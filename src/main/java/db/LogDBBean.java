@@ -48,17 +48,37 @@ public class LogDBBean {
 			JSONObject finalJson = new JSONObject();
 			
 			templog = mapper.writeValueAsString(postBean);
-			JSONParser parser = new JSONParser();
+			  m parser = new JSONParser();
 			Object parseobj = parser.parse(templog);
 			JSONObject postJson = (JSONObject) parseobj;		//	board까지 json처리 완료
+			postJson.remove("thumbnail");
+			postJson.remove("board_view_count");
+			JSONArray jaboardtags = (JSONArray) postJson.get("board_tags");
+			postJson.remove("board_tags");
+			JSONArray reboardtags = new JSONArray();
+			for (int j = 0; j<jaboardtags.size(); j++) {
+				JSONObject jaboardtag = (JSONObject) jaboardtags.get(j);
+				jaboardtag.remove("board_id");
+				jaboardtag.remove("user_id");
+				reboardtags.add(jaboardtag);
+			}
+			postJson.put("board_tags",reboardtags);
 			
 			
 			List<TagDataBean> usertags = session.selectList("tag.getUserTags", postBean.getUser_id());
 			templog = mapper.writeValueAsString(usertags);
 			parseobj = parser.parse(templog);
 			JSONArray usertagJson = (JSONArray) parseobj;
-			postJson.put("user_tags", usertagJson);					// boardtag 추가
-			
+			JSONArray reusertags = new JSONArray();
+			for (int j=0; j<usertagJson.size(); j++) {
+				JSONObject jausertag = (JSONObject) usertagJson.get(j);
+				jausertag.remove("coordinate");
+				jausertag.remove("board_no");
+				jausertag.remove("trip_members");
+				jausertag.remove("trip_member_count");
+				reusertags.add(jausertag);
+			}
+			postJson.put("user_tags", reusertags);					// boardtag 추가
 			finalJson.put("result", postJson);
 			finalJson.put("log_type", 3);
 			br.write( finalJson.toString()+ "\r\n");
@@ -88,6 +108,10 @@ public class LogDBBean {
 			JSONParser parser = new JSONParser();
 			Object parseobj = parser.parse(templog);
 			JSONObject tripJson = (JSONObject) parseobj;		//	트립정보 제이슨 처리.
+			tripJson.remove("coordinate");
+			tripJson.remove("board_no");
+			tripJson.remove("trip_members");
+			tripJson.remove("trip_member_count");
 			
 			UserDataBean user = session.selectOne("user.getUser", memInfo.getUser_id());		
 			List<TagDataBean> usertags = session.selectList("tag.getUserTags", memInfo.getUser_id());
@@ -97,6 +121,17 @@ public class LogDBBean {
 			parser = new JSONParser();
 			parseobj = parser.parse(templog);
 			JSONObject userJson = (JSONObject) parseobj;		//	유저정보 제이슨 처리.
+			JSONArray jauserTags = (JSONArray) userJson.get("user_tags");
+			userJson.remove("user_tags");
+			
+			JSONArray reuserTags = new JSONArray();
+			for (int j=0; j<jauserTags.size(); j++) {
+				JSONObject jauserTag = (JSONObject) jauserTags.get(i);
+				jauserTag.remove("user_id");
+				jauserTag.remove("board_id");
+				reuserTags.add(jauserTag);
+			}
+			userJson.put("user_tags",reuserTags) ;
 			
 			tempJson.put("trip_data", tripJson);
 			tempJson.put("user_data", userJson);
