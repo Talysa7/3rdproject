@@ -217,4 +217,13 @@
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 	</insert>
+	<insert id="insertTagList" parameterType="java.util.Map">
+		insert into pao_board_tag (
+			board_no,
+			tag_id
+		) values (
+			#{board_no},
+			#{tag_id}
+		)
+	</insert>
 </mapper>
