@@ -33,8 +33,8 @@
 				</center>
 			</c:when>
 			<c:otherwise>			
-			<c:forEach var="user" items="${users}">
-				<c:forEach var="best" items="${user}" varStatus="status">
+			
+				<c:forEach var="best" items="${bean}" varStatus="status">
 				<c:choose>
 					<c:when test="${status.first}">
 						<h6> ${best.user_id}의 최고 평판</h6>	
@@ -56,8 +56,7 @@
 							   </c:choose><br>
 						<label for="comment" class="control-label col-sm-2" >평판내용 : </label>${best.review_comment}<br>									
 				</c:forEach>
-				<hr size="1px" color="black" noshade>	
-			</c:forEach>											
+				<hr size="1px" color="black" noshade>													
 			</c:otherwise>
 		</c:choose>
 	</div>

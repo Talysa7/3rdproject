@@ -213,13 +213,10 @@ public class SvcViewHandler {
 	@RequestMapping("/memberReview")
 	public ModelAndView SvcMemberReviewProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		String user_id=(String)request.getSession().getAttribute("user_id");
-		request.setAttribute("user", user_id);
+		
 		int trip_id = Integer.parseInt(request.getParameter("trip_id"));
 		Map<String, Object>user = new HashMap<String, Object>();
 		List<MemberDataBean>member = memberDao.getMembers(trip_id);
-		List<ReviewDataBean> recent = new ArrayList<ReviewDataBean>();
-		List<ReviewDataBean> worst = new ArrayList<ReviewDataBean>();
-		List<ReviewDataBean> best = new ArrayList<ReviewDataBean>();
 		ArrayList<List <ReviewDataBean>> users  = new ArrayList<List <ReviewDataBean>>();
 		
 		for(int i=0; i<member.size(); i++) {
@@ -228,18 +225,16 @@ public class SvcViewHandler {
 			List<ReviewDataBean> bean = new ArrayList<ReviewDataBean>();
 			List<ReviewDataBean>recentTo = reviewDao.getRecent(user);
 			ReviewDataBean bestTo = reviewDao.getBest(user);
+			ReviewDataBean worstTo = reviewDao.getWorst(user);
 			bean.add(bestTo);
 			bean.addAll(recentTo);
-			bean.add(reviewDao.getWorst(user));
-			users.add(bean);
+			bean.add(worstTo);
+			request.setAttribute("bean", bean);
+			users.add(bean);	
 			
 		}
 
 		request.setAttribute("users", users);
-		request.setAttribute("best", best);
-		request.setAttribute("wst", worst);
-		request.setAttribute("recent", recent);
-		
 		return new ModelAndView("svc/memberReview");
 	}
 	private static final int pageSize=10;
