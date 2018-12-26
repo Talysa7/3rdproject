@@ -169,12 +169,20 @@ public class BoardDBBean {
 	public int countCoord (WriteCoordDataBean coordDto) {
 		return session.selectOne("board.countCoord", coordDto);
 	}
-	
+	public int getCoord_id (WriteCoordDataBean coordDto) {
+		return session.selectOne("board.getCoord_id", coordDto);
+	}
 	public int insertCoord (WriteCoordDataBean coordDto) {
 		return session.insert("board.insertCoord", coordDto);
 	}
 	public int insertBoardDto (WriteBoardDataBean boardDto) {
 		return session.insert("board.insertBoardDto", boardDto);
+	}
+	public int insertTripDto (WriteTripDataBean tripDto) {
+		return session.insert("board.insertTripDto", tripDto);
+	}
+	public int insertTagList (Map<String, Object> tag_map) {
+		return session.insert("board.insertTagList", tag_map);
 	}
 	
 }

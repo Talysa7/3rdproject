@@ -29,6 +29,7 @@ import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.swing.plaf.synth.SynthSeparatorUI;
 
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
@@ -70,8 +71,10 @@ import db.TripDBBean;
 import db.TripDataBean;
 import db.UserDBBean;
 import db.UserDataBean;
+import db.WriteBoardDataBean;
 import db.WriteCoordDataBean;
 import db.WriteDataBean;
+import db.WriteTripDataBean;
 
 @Controller
 public class SvcProHandler {
@@ -348,8 +351,7 @@ public class SvcProHandler {
 
 	///////////////////////////////// board pages/////////////////////////////////
 	@RequestMapping(value = "/tripWritePro", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-	@ResponseBody
-	public ModelAndView svcTripWriteProProcess(@RequestBody WriteDataBean writeDto, HttpServletRequest request)
+	public ModelAndView svcTripWriteProProcess(@RequestBody WriteDataBean writeDto, HttpServletRequest request, HttpServletResponse response)
 			throws HandlerException, IOException, ParseException {
 		try {
 			request.setCharacterEncoding("utf-8");
@@ -375,6 +377,20 @@ public class SvcProHandler {
 				tag_map.put("tag_id", tagList[i]);
 				boardDao.insertTagList(tag_map);
 			}
+		
+			List<WriteTripDataBean> tripDtoList = writeDto.getTripDtoList();
+			for(int i=0; i<tripDtoList.size(); i++) {
+				WriteTripDataBean tripDto = tripDtoList.get(i);
+				tripDto.setBoard_no(board_no);
+				WriteCoordDataBean coordDto = tripDto.getCoordList();
+				int coord_id = boardDao.getCoord_id(coordDto);
+				tripDto.setCoord_id(coord_id);
+				boardDao.insertTripDto(tripDto);
+			}
+			request.setAttribute("board_no", board_no);
+			request.setAttribute("result", boardResult);
+		}
+		return new ModelAndView("svc/tripWritePro");
 	}
 
 	@RequestMapping("/tripModPro")
