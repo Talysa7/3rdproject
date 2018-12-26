@@ -173,7 +173,8 @@ public class BoardDBBean {
 	public int insertCoord (WriteCoordDataBean coordDto) {
 		return session.insert("board.insertCoord", coordDto);
 	}
-	
-	
+	public int insertBoardDto (WriteBoardDataBean boardDto) {
+		return session.insert("board.insertBoardDto", boardDto);
+	}
 	
 }

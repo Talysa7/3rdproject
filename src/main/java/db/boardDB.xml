@@ -197,4 +197,24 @@
 			#{coord_lat}
 		)
 	</insert>
+	<insert id="insertBoardDto" useGeneratedKeys="true" keyProperty="board_no" parameterType="db.WriteBoardDataBean">
+		INSERT INTO pao_board (
+			board_title,
+			board_content,
+			board_level,
+			board_contact,
+			board_reg_date,
+			user_id
+		) VALUES (
+			#{board_title},
+			#{board_content},
+			#{board_level},
+			#{board_contact},
+			current_timestamp,
+			#{user_id}
+		)
+		<selectKey keyProperty="board_no" resultType="int" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
 </mapper>

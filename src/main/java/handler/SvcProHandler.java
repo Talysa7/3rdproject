@@ -356,9 +356,25 @@ public class SvcProHandler {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.writerWithDefaultPrettyPrinter().writeValueAsString(writeDto);
-		return new ModelAndView("");
+		BoardDBBean boardDao = new BoardDBBean();
+		UserDBBean userDao = new UserDBBean();
+		
+		WriteBoardDataBean boardDto = writeDto.getBoardDto();
+		boardDto.setBoard_level(10 - userDao.getUserLevel(boardDto.getUser_id()));
+		int boardResult = boardDao.insertBoardDto(boardDto);
+		if(boardResult == 0 ) {
+			// error 상황
+			request.setAttribute("result", boardResult);
+		} else {
+			String[] tagList = boardDto.getTagList();
+			int board_no = boardDto.getBoard_no();
+			
+			for(int i=0; i<tagList.length; i++) {
+				Map<String, Object> tag_map = new HashMap<>();
+				tag_map.put("board_no", board_no);
+				tag_map.put("tag_id", tagList[i]);
+				boardDao.insertTagList(tag_map);
+			}
 	}
 
 	@RequestMapping("/tripModPro")
