@@ -127,7 +127,7 @@
 						<input type="text" class="board_contact col-10" name="boardDto[board_contact]">
 					</div>
 				</div>
-				<input class="btn btn-dark btn-sm" type="submit" value="${trip_write}"> 
+				<input class="btn btn-dark btn-sm" type="button" id="submit" value="${trip_write}"> 
 				<input class="btn btn-dark btn-sm" type="button" value="${btn_list}" onclick="location='tripList.go'">
 			</div>
 		</form>
@@ -299,7 +299,7 @@ $(function(){
 	});
 
 	// 데이터 submit 
-	$('form#tripForm').on('submit', function(){
+	$('#submit').on('click', function(){
 //		event.preventDefault();		// 폼 처리를 완전히 jQuery 안에서 한다면, 페이지 다시 불러오기 방지
 		var data_parse = JSON.parse($('form#tripForm').serializeJSON());
 		console.log(data_parse);
@@ -311,7 +311,7 @@ $(function(){
 			contentType: 'application/json',
 			mimeType: 'application/json',
 			success: function(data){
-				console.log('성공'+ data.result);
+				window.location.replace("tripList.go");
 			},
 			error: function(request, status, error){
 				console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
