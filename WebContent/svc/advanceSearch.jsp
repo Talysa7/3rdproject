@@ -175,10 +175,15 @@
 					<input type="hidden" name="next_row" value="${next_row}">
 				</form>
 				<!-- board data -->
-				<div id="show"></div>
-				<button type="button" class="btn btn-dark btn-block"
-				onclick="loadList(${next_row})">Load more...</button>
+			    <c:if test="${count ne 0}">
+					<c:if test="${pageCount gt endPage}">
+						<button type="button" class="btn btn-dark btn-block"
+				onclick="loadList(${startPage+pageBlock})">Load more...</button>
+					</c:if>	
+				</c:if>				
 			</div>
+				
+		</div>
 			<!-- loading button end -->
 			
 		</div>
@@ -187,7 +192,6 @@
 		<div class="mx-auto">
 				<button type="button" class="btn btn-secondary btn-sm" onclick="goback()">이전페이지로</button>
 		</div>
-	</div>
 	<!-- body box end-->
 </body>
 

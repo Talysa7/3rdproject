@@ -101,7 +101,7 @@
 		<![CDATA[
 		select * from pao_view_board where board_no in
 		(select board_no from pao_trip where coord_id in
-		(select coord_id from pao_coordinate where coord_name=#{searchSite}))
+		(select coord_id from pao_coordinate where coord_name=#{searchSite})) 
 		]]>
 	</select>
 	<select id="advanceSearchByDatePeriod" parameterType="java.util.Map" resultType="db.BoardDataBean">

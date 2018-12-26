@@ -28,7 +28,7 @@
 	<span>일정</span>	
 	<span><select id="sel1" name="sel1">	
 	<c:forEach var="trip" items="${trip}">	
-	<option value="${trip.coord_id}">${trip.coordinate.coord_name}</option>
+	<option value="${trip.coord_id}">${trip.coordinate.coord_name}#${trip.start_date}~${trip.end_date}</option>
 	</c:forEach>			
 	</select> </span>			
 	</div>	
