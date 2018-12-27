@@ -697,7 +697,10 @@ function loadMoreList(next_row) {
 					listForAppend+=			'</strong>';
 					listForAppend+=			'<h3 class="mb-0">';
 					listForAppend+=				'<a class="text-dark" href="trip.go?board_no='+additionalList.board_no+'">';
-					listForAppend+=				additionalList.board_title;
+															if(additionalList.board_level == 1) {
+					listForAppend+=								'[공지] ';
+															}
+					listForAppend+=								additionalList.board_title;
 					listForAppend+=			'</h3>';
 					listForAppend+=			'<div class="mb-1 text-muted text-right">';
 					listForAppend+=				'<i><b>With</b></i>'+additionalList.user_name;

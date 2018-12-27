@@ -7,9 +7,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.sql.Date;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +29,7 @@ import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.swing.plaf.synth.SynthSeparatorUI;
 
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
@@ -46,7 +45,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import db.AlbumDBBean;
@@ -73,6 +71,10 @@ import db.TripDBBean;
 import db.TripDataBean;
 import db.UserDBBean;
 import db.UserDataBean;
+import db.WriteBoardDataBean;
+import db.WriteCoordDataBean;
+import db.WriteDataBean;
+import db.WriteTripDataBean;
 
 @Controller
 public class SvcProHandler {
@@ -348,95 +350,51 @@ public class SvcProHandler {
 	}
 
 	///////////////////////////////// board pages/////////////////////////////////
-	@RequestMapping("/tripWritePro")
-	public ModelAndView svcTripWriteProProcess(HttpServletRequest request, HttpServletResponse response)
-			throws HandlerException {
+	@RequestMapping(value = "/tripWritePro", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	public String svcTripWriteProProcess(@RequestBody WriteDataBean writeDto, HttpServletRequest request, HttpServletResponse response)
+			throws HandlerException, IOException, ParseException {
 		try {
 			request.setCharacterEncoding("utf-8");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-
-		int schedulenum=Integer.parseInt(request.getParameter("schedulenum"));//일정개수
-		//insert gg_trip_board 
-		String user_id = (String) (request.getSession().getAttribute("user_id"));
+		BoardDBBean boardDao = new BoardDBBean();
+		UserDBBean userDao = new UserDBBean();
 		
-		BoardDataBean boardDto = new BoardDataBean();
-
-		boardDto.setUser_id(user_id);
-		boardDto.setBoard_title(request.getParameter("trip_title"));
-		boardDto.setBoard_content(request.getParameter("content"));
-		boardDto.setBoard_contact(request.getParameter("board_contact"));
-		boardDao.insertBoard_no(boardDto);
+		WriteBoardDataBean boardDto = writeDto.getBoardDto();
+		boardDto.setBoard_level(10 - userDao.getUserLevel(boardDto.getUser_id()));
+		int boardResult = boardDao.insertBoardDto(boardDto);
+		if(boardResult == 0 ) {
+			// error 상황
+			request.setAttribute("result", boardResult);
+		} else {
+			String[] tagList = boardDto.getTagList();
+			int board_no = boardDto.getBoard_no();
+			try {
+				for(int i=0; i<tagList.length; i++) {
+					Map<String, Object> tag_map = new HashMap<>();
+					tag_map.put("board_no", board_no);
+					tag_map.put("tag_id", tagList[i]);
+					boardDao.insertTagList(tag_map);
+				}
+			} catch(Exception e) {
+			}
 		
-		int board_no = boardDto.getBoard_no();// board_no
-		request.setAttribute("board_no", board_no);
-
-		CoordDataBean coordDto = new CoordDataBean();
-		for (int i = 1; i <= schedulenum; i++) {
-			TripDataBean tripDto = new TripDataBean();
-			String coord_name = request.getParameter("place"+i);
-			List<CoordDataBean> coords = coordDao.checkCoordName(coord_name);	//	 같은이름의 coord가 있나 체크.
-			int coord_id=-1;	//	coord_id 초기값.
-			
-			if(coords.size() > 0) {	//검색했는데 같은이름의 검색경로가 있으면 이미 있는 놈의 coord_id를 씀.
-				coord_id = coords.get(0).getCoord_id();
-				tripDto.setCoord_id(coord_id);//	tripDto에 대입
-			} else {		// 없으면!
-				String country_code = request.getParameter("country_code" + i + "");
-				double coord_lat = Double.parseDouble(request.getParameter("lat" + i + ""));
-				double coord_long = Double.parseDouble(request.getParameter("lng" + i + ""));
-				System.out.println(country_code);
-				System.out.println(coord_lat);
-				System.out.println(coord_long);
-				coordDto.setCoord_name(coord_name);
-				coordDto.setCountry_code(country_code);
-				coordDto.setCoord_lat(coord_lat);
-				coordDto.setCoord_long(coord_long);
-				
-				coordDao.insertCoord(coordDto);// locDto의 coord_id에 좌표값 저장한 후 생성된 coord_id저장 됨
-				coord_id = coordDto.getCoord_id();
+			List<WriteTripDataBean> tripDtoList = writeDto.getTripDtoList();
+			for(int i=0; i<tripDtoList.size(); i++) {
+				WriteTripDataBean tripDto = tripDtoList.get(i);
+				tripDto.setBoard_no(board_no);
+				WriteCoordDataBean coordDto = tripDto.getCoordList();
+				int coord_id = boardDao.getCoord_id(coordDto);
+				tripDto.setCoord_id(coord_id);
+				boardDao.insertTripDto(tripDto);
 			}
-			
-			tripDto.setCoord_id(coord_id);
-			tripDto.setBoard_no(board_no);
-			
-			String [] start = request.getParameter("start"+i).split("/");
-			LocalDate ldt = LocalDate.of(Integer.parseInt(start[0]), Integer.parseInt(start[1]), Integer.parseInt(start[2]));
-			Date start_date = new Date(ldt.toEpochDay());
-		
-			String [] end = request.getParameter("end"+i).split("/");
-			ldt = LocalDate.of(Integer.parseInt(end[0]), Integer.parseInt(end[1]), Integer.parseInt(end[2]));
-			Date end_date = new Date(ldt.toEpochDay());
-			//start , end Date타입으로 변환. 확인 필수!
-			
-			tripDto.setStart_date(start_date);
-			tripDto.setEnd_date(end_date);
-			tripDto.setTrip_member_count(Integer.parseInt(request.getParameter("trip_member_count"+i)));
-
-			tripDao.insertTrip(tripDto);
-			int trip_id = tripDto.getTrip_id();
-			
-			MemberDataBean memberDto = new MemberDataBean();
-			memberDto.setUser_id(user_id);
-			memberDto.setTrip_id(trip_id);
-			memberDao.addTripMember(memberDto);
-
-			}
-
-		// get tags
-		String[] tags = request.getParameterValues("tag");
-		if (tags != null) {// tag를 선택한 경우에만 실행
-			// put them in a Map and call db update
-			Map<String, Integer> tagSetter = new HashMap<String, Integer>();
-			for (String tag : tags) {
-				tagSetter.put("board_no", board_no);
-				tagSetter.put("tag_id", Integer.parseInt(tag));
-				tagDao.setTripTag(tagSetter);	//	FIXME: 태그 후일 정리 부분.
-			}
+			request.setAttribute("board_no", board_no);
+			request.setAttribute("result", boardResult);
 		}
 		
-		return new ModelAndView("svc/tripWritePro");
+		return "1";
 	}
 
 	@RequestMapping("/tripModPro")
@@ -936,6 +894,15 @@ public class SvcProHandler {
 		return jsonCoord;
 	}
 	//////////////////////////////////////ajax추가분 이민재 2018.11.15 /////////////////////////////////////
+	//////////////////////////////////////ajax추가분 황준호 2018.21.21 ///////////////////////////////////////////
+	@RequestMapping(value = "setCoordinate", produces="application/json")
+	@ResponseBody	private void setCoordinate(@RequestBody WriteCoordDataBean coordDto,HttpServletRequest request, HttpServletResponse response ) throws Exception {
+		BoardDBBean boardDao = new BoardDBBean();
+		if(boardDao.countCoord(coordDto) == 0) {
+			boardDao.insertCoord(coordDto);
+		}
+	}
+	//////////////////////////////////////ajax추가분 황준호 ///////////////////////////////////////////
 	///////////////////////////////// etc/////////////////////////////////
 	public static String getRandomString() {
 		return UUID.randomUUID().toString().replaceAll("-", "");
@@ -956,7 +923,7 @@ public class SvcProHandler {
 	public ModelAndView makeLog(HttpServletRequest request, HttpServletResponse response)
 			throws HandlerException, ParseException, IOException {
 		LogDBBean logDao = new LogDBBean();
-		JSONArray jsonPosts = logDao.makeMemberLog();
+		JSONArray jsonPosts = logDao.makeBoardLog();
 		request.setAttribute("json", jsonPosts);
 		return new ModelAndView("googleAPI/makeLog");
 	}
