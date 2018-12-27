@@ -120,7 +120,7 @@
 				<button type="button" class="btn btn-lg btn-secondary btn-block" onclick="location='placeWrite.go'">여행지를 평가해주세요</button>				
 				</c:if>
 				<button type="button" class="btn btn-lg btn-secondary btn-block" onclick="location='reviewPage.go'">평판불러오기</button>				
-				<c:if test="${catchNum ne 0 and catchNum ne null}">
+				<c:if test="${!empty catchNum}">
 					<button type="button" class="btn btn-lg btn-secondary btn-block" onclick="location='review.go'">작성해야 할 평판이 있습니다</button>
 				</c:if>				
 					<button type="button" class="btn btn-lg btn-secondary btn-block" onclick="location='userModPassCheck.go'">${btn_modify}</button>

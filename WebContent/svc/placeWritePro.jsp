@@ -5,5 +5,5 @@
 <h2>장소평가 처리페이지</h2>
 
 <c:if test="${result eq 1}">
-	<c:redirect url="mypage.go"/>
+	<c:redirect url="myPage.go"/>
 </c:if>

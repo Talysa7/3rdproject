@@ -118,12 +118,20 @@ public class SvcViewHandler {
 			List<TripDataBean> usertrip = tripDao.getReviewList(user_id);
 			request.setAttribute("size", usertrip.size());
 			List<Integer> tripid = memberDao.getMemTripId(user_id);
+			int[] catchNum= new int [tripid.size()] ;
 			for(int j=0; j<tripid.size(); j++) {
 				int trip = tripid.get(j);
-				userT.put("trip_id", trip);
-				int catchNumber =reviewDao.getReview(userT).size();
-				request.setAttribute("catchNum", catchNumber);			
-				if(catchNumber !=0) {
+				userT.put("trip_id", trip);				
+				catchNum[j] = reviewDao.getReview(userT).size();
+				request.setAttribute("catchNum", catchNum);		
+				boolean empty= true;
+				for(int in : catchNum) {
+					if(in != 0) {
+						empty =false;
+						break;
+					}
+				}
+				if(empty == false) {
 					Map<String, Object> user = new HashMap<String, Object>();
 					user.put("user_id", user_id);
 					

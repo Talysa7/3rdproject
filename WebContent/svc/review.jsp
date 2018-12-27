@@ -27,24 +27,17 @@
 		<span>일정</span>	
 		<span>
 			<select id="sel1" name="sel1">	
-				<c:forEach var="trip" items="${trip}">	
-				<c:forEach var="member" items="${trip.review_members}">
-				<c:if test="${member.user_id ne user}">
-				<option value="${trip.trip_id}">${trip.coord_name} : ${trip.start_date}~${trip.end_date}</option>
-				</c:if>
-				</c:forEach>
-				</c:forEach>
-						
+				<c:forEach var="trip" items="${trip}">					
+				<option value="${trip.trip_id}">${trip.coord_name} : ${trip.start_date}~${trip.end_date}</option>				
+				</c:forEach>						
 			</select> 
 		</span>		
 		<span>평판대상</span>				
 		<span>
 			<select id="sel2" name="sel2">
 				<c:forEach var="trip" items="${trip}">	
-				<c:forEach var="member" items="${trip.review_members}">
-				<c:if test="${member.user_id ne user}">
-				<option value="${member.user_id}" class="${trip.trip_id}">${member.user_id}</option>
-				</c:if>
+				<c:forEach var="member" items="${trip.review_members}">				
+				<option value="${member.user_id}" class="${trip.trip_id}">${member.user_id}</option>				
 				</c:forEach>
 				</c:forEach>		
 			</select>
