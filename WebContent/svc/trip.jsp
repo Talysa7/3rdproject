@@ -92,7 +92,7 @@
 						</nav>
 						<br>
 						<c:forEach var="trip" items="${boardDto.tripLists}">
-							<div id="trip_${trip.coord_order}" style="display: none">
+							<div id="trip_${trip.coord_order}" style="display: block">
 								<form name="orderInfo">
 									<input type="hidden" name="order_${trip.trip_id}" value="${trip.coord_order}">
 									<input type="hidden" name="member_count_${trip.trip_id}" value="${trip.trip_member_count}">

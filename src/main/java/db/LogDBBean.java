@@ -48,7 +48,7 @@ public class LogDBBean {
 			JSONObject finalJson = new JSONObject();
 			
 			templog = mapper.writeValueAsString(postBean);
-			  m parser = new JSONParser();
+			  JSONParser parser = new JSONParser();
 			Object parseobj = parser.parse(templog);
 			JSONObject postJson = (JSONObject) parseobj;		//	board까지 json처리 완료
 			postJson.remove("thumbnail");

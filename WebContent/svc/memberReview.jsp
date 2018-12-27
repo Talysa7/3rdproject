@@ -33,7 +33,7 @@
 				</center>
 			</c:when>
 			<c:otherwise>			
-			
+			<c:forEach var="bean" items="${users}">
 				<c:forEach var="best" items="${bean}" varStatus="status">
 				<c:choose>
 					<c:when test="${status.first}">
@@ -55,6 +55,7 @@
 									<c:when test="${best.review_point eq 5}"> ★★★★★     </c:when>
 							   </c:choose><br>
 						<label for="comment" class="control-label col-sm-2" >평판내용 : </label>${best.review_comment}<br>									
+				</c:forEach>
 				</c:forEach>
 				<hr size="1px" color="black" noshade>													
 			</c:otherwise>
