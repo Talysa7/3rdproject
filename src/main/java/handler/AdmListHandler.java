@@ -52,15 +52,15 @@ public class AdmListHandler {
 	// 게시판 연산 로직
 	private int start;
 	private int end;
-	public void setBoardLogic(HttpServletRequest request, int count, int start, int end){
-		String pageNum = null;
-		
-		if(request.getParameter("pageNum") == null || request.getParameter("pageNum").equals("")){
-			pageNum = "1";
-		} else {
-			pageNum = request.getParameter("pageNum");
-		}
-		
+	public void setBoardLogic(HttpServletRequest request, String pageNum, int count, int start, int end){
+//		
+//		
+//		if(request.getParameter("pageNum") == null || request.getParameter("pageNum").equals("")){
+//			pageNum = "1";
+//		} else {
+//			pageNum = request.getParameter("pageNum");
+//		}
+//		
 		int currentPage = Integer.parseInt(pageNum);
 		int pageCount = count / pageSize + (count % pageSize>0 ? 1:0 );
 		if( currentPage > pageCount ) currentPage = pageCount;
@@ -84,6 +84,7 @@ public class AdmListHandler {
 		request.setAttribute( "endPage", endPage );
 		request.setAttribute( "pageCount", pageCount );
 		request.setAttribute( "pageBlock", pageBlock );
+		
 	}
 	
 	
@@ -94,18 +95,18 @@ public class AdmListHandler {
 
 	@RequestMapping("/adminTrip")
 	public ModelAndView adminTripHandler(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
-		
+		String pageNum = request.getParameter("pageNum");
+		if(pageNum == null || pageNum.equals("")){
+			pageNum = "1";
+		}
 		request.setAttribute("page", tripP);
 		int count = boardDao.getPostsCount();//list row num
 		
-		setBoardLogic(request, count, start, end);
 		
 		if(count > 0) {
-			Map<String, Integer> map=new HashMap<String,Integer>();
-			map.put("start", start);
-			map.put("end", end);
+			setBoardLogic(request, pageNum, count, start, end);			
 			//method has been changed, it doesn't need end now, plz see that in BoardDBBean
-			List<BoardDataBean>trips = boardDao.getPostList(map.get("start"), map.get("end"));
+			List<BoardDataBean>trips = boardDao.getPostList(Integer.parseInt(pageNum), pageSize);
 			request.setAttribute("trips", trips);
 		}
 //		FIXME : 다음 하단 주석에 대한 변 (준호)
@@ -122,22 +123,31 @@ public class AdmListHandler {
 //			}
 //		}
 		return new ModelAndView("admin/trip");
-//	}
-//	@RequestMapping("/adminComment")
-//	public ModelAndView adminContentHandler(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
-//		request.setAttribute("page", commentP);
-//		int count = cmtDao.getCmtCount();//list row num
-//		
-//		setBoardLogic(request, count, count, count);
-//		if(count>0) {
-//			Map<String, Integer> map = new HashMap<String,Integer>();
-//			map.put("start", start);
-//			map.put("end", end);
-//			
-//			List<CmtDataBean>comments = cmtDao.getComments(map);
-//			request.setAttribute("comments", comments);
-//		}
-//		return new ModelAndView("admin/comment");
+	}
+	@RequestMapping("/adminComment")
+	public ModelAndView adminContentHandler(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
+		request.setAttribute("page", commentP);
+		int count = cmtDao.getCmtCount();//list row num
+		String pageNum = request.getParameter("pageNum");
+		if(pageNum == null || pageNum.equals("")){
+			pageNum = "1";
+		}
+		setBoardLogic(request, pageNum, count, count, count);
+		if(count>0) {
+			Map<String, Integer> map = new HashMap<String,Integer>();
+			int started;
+			if(Integer.parseInt(pageNum)-1>0) {
+				started = (Integer.parseInt(pageNum) - 1 )*pageSize;
+			}else {
+				started = 0;
+			}
+			map.put("start", started);
+			map.put("end", pageSize);
+			
+			List<CmtDataBean>comments = cmtDao.getComments(map);
+			request.setAttribute("comments", comments);
+		}
+		return new ModelAndView("admin/comment");
 //	}
 //	@RequestMapping("/adminUser")
 //	public ModelAndView adminUserHandler(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
