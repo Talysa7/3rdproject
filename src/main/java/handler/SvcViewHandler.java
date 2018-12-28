@@ -557,6 +557,13 @@ public class SvcViewHandler {
 		boardDto.setSearchTag(searchTag);
 		boardDto.setSearchSite(searchSite);
 		
+		try {
+			logDao.makeAdvanceSearchLog(boardDto);
+		} catch (ClassCastException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		String queryHead = "select * from pao_view_board where board_no in (select board_no from pao_trip";
 		
 		String queryDate = "";
@@ -616,7 +623,8 @@ public class SvcViewHandler {
 			
 		//	String querylimit = " limit "+startRowNumber+", "+endRowNumber+"";
 			System.out.println("kki");
-	//		query += querylimit;			
+
+		//	query += querylimit;			
 
 			searchMap.put("query", query);
 			System.out.println(query);
