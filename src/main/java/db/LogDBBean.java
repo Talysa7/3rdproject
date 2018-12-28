@@ -400,14 +400,14 @@ public class LogDBBean {
 		JSONArray jsonArray = new JSONArray();
 		JSONObject jsonObject = new JSONObject();
 		
-		jsonObject.put("fromDate", boardDto.getUser_id());
+		jsonObject.put("fromDate", boardDto.getFromDate());
 		jsonObject.put("toDate", boardDto.getToDate());
 		jsonObject.put("searchPeriod", boardDto.getSearchPeriod());
 		jsonObject.put("searchTag", boardDto.getSearchTag());
 		jsonObject.put("searchSite", boardDto.getSearchSite());
 				
 		JSONObject Object = new JSONObject();
-		Object.put("advanceqSearch_data", jsonObject);
+		Object.put("advanceSearch_data", jsonObject);
 		jsonArray.add(Object);
 		JSONObject jsonjson = new JSONObject();
 		jsonArray.add(jsonjson);
