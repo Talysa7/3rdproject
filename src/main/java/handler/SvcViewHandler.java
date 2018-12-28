@@ -3,9 +3,11 @@ package handler;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -116,12 +118,20 @@ public class SvcViewHandler {
 			List<TripDataBean> usertrip = tripDao.getReviewList(user_id);
 			request.setAttribute("size", usertrip.size());
 			List<Integer> tripid = memberDao.getMemTripId(user_id);
+			int[] catchNum= new int [tripid.size()] ;
 			for(int j=0; j<tripid.size(); j++) {
 				int trip = tripid.get(j);
-				userT.put("trip_id", trip);
-				int catchNumber =reviewDao.getReview(userT).size();
-				request.setAttribute("catchNum", catchNumber);			
-				if(catchNumber !=0) {
+				userT.put("trip_id", trip);				
+				catchNum[j] = reviewDao.getReview(userT).size();
+				request.setAttribute("catchNum", catchNum);		
+				boolean empty= true;
+				for(int in : catchNum) {
+					if(in != 0) {
+						empty =false;
+						break;
+					}
+				}
+				if(empty == false) {
 					Map<String, Object> user = new HashMap<String, Object>();
 					user.put("user_id", user_id);
 					
@@ -211,13 +221,10 @@ public class SvcViewHandler {
 	@RequestMapping("/memberReview")
 	public ModelAndView SvcMemberReviewProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		String user_id=(String)request.getSession().getAttribute("user_id");
-		request.setAttribute("user", user_id);
+		
 		int trip_id = Integer.parseInt(request.getParameter("trip_id"));
 		Map<String, Object>user = new HashMap<String, Object>();
 		List<MemberDataBean>member = memberDao.getMembers(trip_id);
-		List<ReviewDataBean> recent = new ArrayList<ReviewDataBean>();
-		List<ReviewDataBean> worst = new ArrayList<ReviewDataBean>();
-		List<ReviewDataBean> best = new ArrayList<ReviewDataBean>();
 		ArrayList<List <ReviewDataBean>> users  = new ArrayList<List <ReviewDataBean>>();
 		
 		for(int i=0; i<member.size(); i++) {
@@ -226,18 +233,16 @@ public class SvcViewHandler {
 			List<ReviewDataBean> bean = new ArrayList<ReviewDataBean>();
 			List<ReviewDataBean>recentTo = reviewDao.getRecent(user);
 			ReviewDataBean bestTo = reviewDao.getBest(user);
+			ReviewDataBean worstTo = reviewDao.getWorst(user);
 			bean.add(bestTo);
 			bean.addAll(recentTo);
-			bean.add(reviewDao.getWorst(user));
-			users.add(bean);
+			bean.add(worstTo);
+			request.setAttribute("bean", bean);
+			users.add(bean);	
 			
 		}
 
 		request.setAttribute("users", users);
-		request.setAttribute("best", best);
-		request.setAttribute("wst", worst);
-		request.setAttribute("recent", recent);
-		
 		return new ModelAndView("svc/memberReview");
 	}
 	private static final int pageSize=10;
@@ -270,6 +275,7 @@ public class SvcViewHandler {
 			request.setAttribute( "endPage", endPage );
 			request.setAttribute( "pageCount", pageCount );
 			request.setAttribute( "pageBlock", pageBlock );
+			
 		}
 	@RequestMapping("/reviewPage")
 	public ModelAndView SvcReviewProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
@@ -380,8 +386,11 @@ public class SvcViewHandler {
 					for(String temp : tagValue) {
 						 Integer counttag = map.get(temp);
 					     map.put(temp, (counttag == null) ? 1 : counttag + 1);
-					     coord.get(i).setMap(map);
 					}
+					LinkedHashMap<String, Integer> reverseSortedMap = new LinkedHashMap<>();
+			        map.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+			                .forEachOrdered(x -> reverseSortedMap.put(x.getKey(), x.getValue()));
+			        coord.get(i).setMap(reverseSortedMap);
 				}catch(NullPointerException e) {
 					e.printStackTrace();
 				}
@@ -498,7 +507,7 @@ public class SvcViewHandler {
 	}
 	
 	//advance search by site, start date, end date, period, tag
-	@RequestMapping("/advanceSearch")
+	@RequestMapping("advanceSearch")
 	public ModelAndView advanceSearchProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
 		
 		try {
@@ -576,11 +585,11 @@ public class SvcViewHandler {
 		}
 		
 		searchMap.put("query", query);
-		
 		String pageNum = request.getParameter("pageNum");
 		if(pageNum == null || pageNum.equals("")){
 			pageNum = "1";
 		}
+		
 		
 		if(query != null) {
 			List<BoardDataBean> searchReceive = boardDao.advanceSearchByDatePeriod(searchMap);
@@ -614,13 +623,17 @@ public class SvcViewHandler {
 			
 		//	String querylimit = " limit "+startRowNumber+", "+endRowNumber+"";
 			System.out.println("kki");
+
 		//	query += querylimit;			
+
 			searchMap.put("query", query);
 			System.out.println(query);
 			searchReceive = boardDao.advanceSearchByDatePeriod(searchMap);
 			request.setAttribute("searchReceive", searchReceive);
+			
 		}
 	
+
 		if(searchSite != "" && searchSite != null) {
 			List<BoardDataBean> searchReceive = boardDao.advanceSearchBySite(searchMap);
 		    System.out.println("검색결과 개수 장소: "+searchReceive.size()+"\n");
@@ -651,6 +664,7 @@ public class SvcViewHandler {
 	
 			System.out.println(rowNumber);		
 			System.out.println("kki2");
+
 			searchReceive = boardDao.advanceSearchBySite(searchMap);
 			request.setAttribute("searchReceive", searchReceive);
 		}
@@ -684,12 +698,14 @@ public class SvcViewHandler {
 			boardDto.setEndRowNumber(rowNumber*postPerPage);
 	
 			System.out.println(rowNumber);		
+
 			System.out.println(query);
 			searchReceive = boardDao.advanceSearchByTag(searchMap);
 			request.setAttribute("searchReceive", searchReceive);
+			
 		}
-		
 		return new ModelAndView("svc/advanceSearch");
+		
 }
 	/////////////////////////////////album pages/////////////////////////////////
 

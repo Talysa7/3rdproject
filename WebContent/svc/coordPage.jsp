@@ -23,12 +23,6 @@
 
 <body>
 	<div class="container">		
-		<!-- mid area row start -->
-			<div class="row">
-			
-				<!-- left area start -->
-				<div id="left">
-				<div class="coordReview-list" id="coordReview-list">
 				<c:choose>
 				<c:when test="${coord.size() eq 0}">
 					<center>
@@ -38,53 +32,33 @@
 					</center>
 				</c:when>
 				<c:otherwise>
-				<c:forEach var="coord" items="${coord}" varStatus="var">
-					<!-- left row start -->
 				<div class="row">
-					<!-- col-md-11 start -->
-					<div class="col-md-5">
-						<!-- left card start -->
-						<div class="card flex-row mb-2 shadow-sm h-md-250">
-							<!-- card body start -->
-							<div class="card-body">								
+				<c:forEach var="coord" items="${coord}" varStatus="var">
+					<div class="col-md-3">
+						<div class="card mb-3 shadow-sm">
+							<img class="card-img-top" src="${trip.thumbnail}">
+							<div class="card-body">				
 								<strong class="d-inline-block mb-2">						
 						  			<label>장소 : </label>${coord.coord_name}<br>
 						  			&nbsp;&nbsp; ㄴ<label>나라 : </label>${coord.country_name}<br>
 								</strong>
-								<h6 class="mb-0"></h6>
+								<h6 class="mb-0">
 								<c:if test="${coord.average ne 'NaN'}">
 									<label>평균평점 : </label>${coord.average} <br>
 								</c:if>									
-								<c:forEach var="entry" items="${coord.map}">
-									<label class="btn btn-sm taglist">${entry.key} # ${entry.value}번  사용됨</label>
-								</c:forEach>													
+								<c:forEach var="entry" items="${coord.map}" begin="0" end="4">
+									<label class="btn btn-sm taglist"># ${entry.key}</label>
+								</c:forEach>	
+								</h6>												
 								<button type="button" class="btn btn-sm btn-secondary btn-block" onclick="location='coordReview.go?coord_id=${coord.coord_id}'">평판보기</button>								
-								</h6>
+								
 							</div>
 						</div>
-					</div>
-					<!-- thumbnail start -->
-					<div class="thumbnail">
-						<img src="${post.thumbnail}" class="img-fluid">
-					</div>
-					<!-- thumbnail end -->
-				</div>		
-								
+					</div>								
 			</c:forEach>
+			</div>
 			</c:otherwise>
 		</c:choose>
 	</div>
-
-	<!-- left area end -->
-	</div>
-	</div>
-	
-			</div>
-	<!-- Footer -->
-	<footer class="board-footer">
-		<p>
-			<a href="">Back to top</a>
-		</p>
-	</footer>
 </body>
 </html>

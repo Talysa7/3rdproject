@@ -137,17 +137,8 @@
 		ORDER BY comment_id DESC
 	</select>
 	<select id="getComments" parameterType="java.util.Map" resultType="db.CmtDataBean">
-		SELECT comment_id, comment_content, comment_reg_date, board_no, user_id, r
-		FROM (
-			SELECT comment_id, comment_content, comment_reg_date, board_no, user_id, rownum r
-			FROM (
-				SELECT comment_id, comment_content, comment_reg_date, board_no, user_id
-				FROM pao_comment
-				ORDER BY comment_reg_date DESC
-				)
-			ORDER BY comment_reg_date DESC
-			)
-		WHERE r &gt;= #{start} AND r &lt;= #{end}
+		SELECT * FROM pao_comment ORDER BY comment_reg_date DESC
+		limit #{start}, #{end}
 	</select>
 	<select id="getPostByKeyword" parameterType="String" resultType="db.BoardDataBean">
 		select *

@@ -52,7 +52,7 @@
 										<c:set var = "now" value = "<%= new java.util.Date()%>" />
 										<c:if test="${now lt trip.end_date }">
 											<label>평판보기 : </label><a href="/3rdProject/memberReview.go?trip_id=${trip.trip_id}">link</a><br>
-										</c:if>
+										</c:if> 
 									</div>
 								</div>
 							</div>

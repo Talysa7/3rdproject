@@ -225,25 +225,25 @@
 		select * from pao_members where trip_id=#{trip_id} and user_id not in 
 		(select user_id from pao_user_review where trip_id=#{trip_id})
 	</select>	
-	<select id="getReview" parameterType="map" resultType="db.MemberDataBean">
-		select * from pao_members where trip_id=#{trip_id}
+	<select id="getReview" parameterType="java.util.Map" resultType="db.MemberDataBean">
+		select * from pao_members where trip_id = #{trip_id}
 		and user_id not in 
-		(select user_id from pao_user_review where trip_id=#{trip_id})
+		(select user_id from pao_user_review where trip_id = #{trip_id})
 		except
-		select * from pao_members where trip_id=#{trip_id}
-		and user_id=#{user_id};
+		select * from pao_members where trip_id = #{trip_id}
+		and user_id=#{user_id}
 	</select>
-	<select id="getBest" parameterType="map" resultType="db.ReviewDataBean">
+	<select id="getBest" parameterType="java.util.Map" resultType="db.ReviewDataBean">
 		select * from pao_user_review where user_id=#{user_id}
 		order by review_point desc
 		limit 1
 	</select>
-	<select id="getRecent" parameterType="map" resultType="db.ReviewDataBean">
+	<select id="getRecent" parameterType="java.util.Map" resultType="db.ReviewDataBean">
 		select * from pao_user_review where user_id=#{user_id}
 		order by user_review_reg_date desc
 		limit 5
 	</select>
-	<select id="getWorst" parameterType="map" resultType="db.ReviewDataBean">
+	<select id="getWorst" parameterType="java.util.Map" resultType="db.ReviewDataBean">
 		select * from pao_user_review where user_id=#{user_id}
 		order by review_point asc
 		limit 1
