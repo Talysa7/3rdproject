@@ -234,9 +234,9 @@ public class SvcViewHandler {
 			List<ReviewDataBean>recentTo = reviewDao.getRecent(user);
 			ReviewDataBean bestTo = reviewDao.getBest(user);
 			ReviewDataBean worstTo = reviewDao.getWorst(user);
-			bean.add(bestTo);
-			bean.addAll(recentTo);
 			bean.add(worstTo);
+			bean.addAll(recentTo);
+			bean.add(bestTo);
 			request.setAttribute("bean", bean);
 			users.add(bean);	
 			

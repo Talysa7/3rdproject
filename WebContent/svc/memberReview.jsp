@@ -54,10 +54,10 @@
 									<c:when test="${best.review_point eq 4}"> ★★★★    </c:when>
 									<c:when test="${best.review_point eq 5}"> ★★★★★     </c:when>
 							   </c:choose><br>
-						<label for="comment" class="control-label col-sm-2" >평판내용 : </label>${best.review_comment}<br>									
+						<label for="comment" class="control-label col-sm-2" >평판내용 : </label>${best.review_comment}<br>								
 				</c:forEach>
-				</c:forEach>
-				<hr size="1px" color="black" noshade>													
+				<hr size="1px" color="black" noshade>		
+				</c:forEach>															
 			</c:otherwise>
 		</c:choose>
 	</div>
