@@ -153,13 +153,13 @@
 								<br><br>
 	
 								<!-- tripAlbum -->
-								<div id="albumTab_${trip.trip_id}" style="display: none">
+								<div id="albumTab_${trip.trip_id}" style="display: block">
 									<jsp:include page='boardAlbum.go?board_no=${boardDto.board_no}&trip_id=${trip.trip_id}&isMemberOfThisTrip=${isMemberOfThisTrip}'/>
 								</div>
 								<!--- tripMap -->
 								<input type="hidden" value="${trip.coordinate.coord_lat}" id="lat" /> 
 								<input type="hidden" value="${trip.coordinate.coord_lng}" id="lng" />
-								<div id="mapTab_${trip.trip_id}" style="display: none">
+								<div id="mapTab_${trip.trip_id}" style="display: block">
 								</div>
 							</div>
 						</c:forEach>
