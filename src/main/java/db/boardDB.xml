@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="board">
+<!-- talysa7 -->
+	<select id="getPost" parameterType="int" resultType="db.BoardDataBean">
+		select * from pao_view_board where board_no=#{board_no}
+	</select>
+	<select id="getPostList" parameterType="int" resultType="db.BoardDataBean">
+		select *
+		from pao_view_board
+		order by board_level desc, board_no desc
+		limit #{startRowNumber},#{endRowNumber}
+	</select>
+	<select id="getPostsCount" resultType="int">
+		SELECT count(*) FROM pao_board
+	</select>
+	<update id="addViewCount" parameterType="int">
+		UPDATE pao_board SET board_view_count=board_view_count+1 WHERE board_no=#{board_no}
+	</update>
+
+
+	<!-- 요거도 셀렉트키 바꿔서 확인필요. -->
+	<insert id="insertBoard_no" parameterType="db.BoardDataBean" keyProperty="board_no">
+       insert into pao_board (board_title, board_content, board_view_count, board_level, board_contact , board_reg_date, user_id )
+      values(#{board_title}, #{board_content}, 0 , 0, #{board_contact}, current_timestamp, #{user_id})
+      <selectKey keyProperty="board_no" resultType="int" order="AFTER">
+         SELECT LAST_INSERT_ID()
+      </selectKey>
+   	</insert>
+   	<insert id="insertTrip" parameterType="db.TripDataBean" keyProperty="trip_id">
+   		insert into pao_trip(board_no, trip_member_count, coord_id, start_date, end_date) values(#{board_no},#{trip_member_count},#{coord_id},#{start_date},#{end_date})
+	   	<selectKey keyProperty="trip_id" resultType="int" order="AFTER">
+	       SELECT LAST_INSERT_ID()
+	    </selectKey>
+    </insert>
+<!-- svc 단에서는 이 쿼리 안 씀. -->
+	<select id="getBoard" parameterType="int">
+		select * from pao_board where board_no=#{board_no}
+	</select>
+	<update id="updateBoard" parameterType="db.BoardDataBean">
+		UPDATE pao_board SET board_title=#{board_title}, board_content=#{board_content},  board_level=#{board_level}, board_contact=#{board_contact} WHERE board_no=#{board_no}
+	</update>
+	<delete id="deletePost" parameterType="int">
+		DELETE FROM pao_board WHERE board_no=#{board_no}
+	</delete>
+
+	<select id="getTripList" parameterType="int" resultType="db.TripDataBean">
+
+		SELECT * 
+		FROM pao_view_trip 
+		WHERE board_no=#{board_no}
+	</select>
+	<select id="getTripIds" parameterType="int" resultType="java.util.List">
+		select trip_id from pao_trip where board_no=#{board_no}
+	</select>
+	<select id="getTrip" parameterType="int" resultType="db.TripDataBean">
+		SELECT * 
+		FROM pao_view_trip 
+		WHERE trip_id=#{trip_id}
+	</select>
+	<!-- trip insert -->
+	<insert id="addTrip" parameterType="db.TripDataBean">
+		insert into pao_trip
+		values(#{board_no}, #{trip_id}, #{trip_member_count}, #{coord_id}, #{start_date}, #{end_date})
+	</insert>
+	<!-- trip UPDATE -->
+	<update id="addBoardViewCount" parameterType="int">
+		UPDATE pao_board
+		SET board_view_count=board_view_count+1
+		WHERE board_no=#{board_no}
+	</update>
+	<update id="updateTrip" parameterType="db.BoardDataBean">
+		UPDATE pao_trip
+		SET trip_member_count=#{trip_member_count}, coord_id=#{coord_id},
+		start_date=#{start_date}, end_date=#{end_date}
+		WHERE trip_id=#{trip_id}
+	</update>
+	<update id="setBoardLevel" parameterType="db.BoardDataBean">
+		UPDATE pao_board
+		SET board_level=#{board_level}
+		WHERE board_no=#{board_no}
+	</update>
+	<!-- trip delete -->
+	<delete id="deleteTrip" parameterType="int">
+		delete FROM pao_trip
+		WHERE trip_id=#{trip_id}
+	</delete>	
+	<select id="getCoordId" parameterType="int" resultType="int">
+		select coord_id from pao_trip where trip_id=#{trip_id}
+	</select>
+	<select id="advanceSearchByTag" parameterType="java.util.Map" resultType="db.BoardDataBean">
+		<![CDATA[
+		select * from pao_view_board where board_no in
+		(select board_no from pao_view_board_tags where tag_id in
+		(select tag_id from pao_tag where tag_value=#{searchTag}))
+		]]>
+	</select>
+	<select id="advanceSearchBySite" parameterType="java.util.Map" resultType="db.BoardDataBean">
+		<![CDATA[
+		select * from pao_view_board where board_no in
+		(select board_no from pao_trip where coord_id in
+		(select coord_id from pao_coordinate where coord_name=#{searchSite})) 
+		]]>
+	</select>
+	<select id="advanceSearchByDatePeriod" parameterType="java.util.Map" resultType="db.BoardDataBean">
+		<![CDATA[
+		${query}
+		]]>
+	</select>
+	<!--/////////////////////////////////////////////////// start-line pao_comment table ///////////////////////////////////////////////////-->
+	<insert id="insertComment" parameterType="db.CmtDataBean" keyProperty="comment_id">
+		INSERT INTO pao_comment (comment_content, comment_reg_date, board_no, user_id)
+		VALUES(#{comment_content}, now(), #{board_no}, #{user_id})
+		<selectKey keyProperty="comment_id" resultType="int" order="AFTER">
+         SELECT LAST_INSERT_ID()
+      </selectKey>
+	</insert>
+	<update id="updateComment" parameterType="db.CmtDataBean">
+		UPDATE pao_comment
+		SET	comment_content = #{comment_content}
+		WHERE comment_id = #{comment_id}
+	</update>
+	<delete id="deleteComment" parameterType="int">
+		DELETE FROM pao_comment
+		WHERE comment_id = #{comment_id}
+	</delete>
+	<select id="getCmtCount" resultType="int">
+		SELECT count(*)
+		FROM pao_comment
+	</select>
+	<select id="getComment" parameterType="int" resultType="db.CmtDataBean">
+		SELECT *
+		FROM pao_comment
+		WHERE board_no=#{board_no}
+		ORDER BY comment_id DESC
+	</select>
+	<select id="getComments" parameterType="java.util.Map" resultType="db.CmtDataBean">
+		SELECT * FROM pao_comment ORDER BY comment_reg_date DESC
+		limit #{start}, #{end}
+	</select>
+	<select id="getPostByKeyword" parameterType="String" resultType="db.BoardDataBean">
+		select *
+		from pao_view_board
+		where board_title like #{keyword} or board_content like #{keyword}
+	</select>
+	<select id="getPostByUserName" parameterType="String" resultType="db.BoardDataBean">
+		select *
+		from pao_view_board
+		where user_name like #{keyword} or user_id like #{keyword}
+	</select>
+	<!--/////////////////////////////////////////////////// end-line pao_comment table ///////////////////////////////////////////////////-->
+	<!-- //////////////////////////////////////// 로그데이터 생성을 위한 임시 쿼리들 ///////////////////////////////////////////////// -->
+	<select id="tempSelect"  resultType="db.BoardDataBean">
+		select * from pao_view_board
+	</select>
+	<!-- ////////////////////////////////////////////////임시쿼리 끝. 추후 삭제 예정 ///////////////////////////////////////////////// -->
+	<!--  LOG INSERT 문-->
+	<insert id="insertLog" parameterType="java.util.Map" keyProperty="log_id">
+	 	insert into pao_log(log_str) values(#{log_str})
+	 	<selectKey keyProperty="log_id" resultType="int" order="AFTER">
+         SELECT LAST_INSERT_ID()
+      </selectKey>
+	</insert>
+<!-- tripWrite처리 -->
+	<!-- 지도에 검색 시, count해서 체크하고 insert 로 coordinate에 정보 입력 -->
+	<select id="countCoord" resultType="int" parameterType="db.WriteCoordDataBean">
+		SELECT count(*)
+		FROM pao_coordinate
+		WHERE coord_name = #{coord_name}
+		AND country_code = #{country_code}
+		AND coord_long = #{coord_long}
+		AND coord_lat = #{coord_lat}
+	</select>
+	<select id="getCoord_id" resultType="int" parameterType="db.WriteCoordDataBean">
+		SELECT coord_id
+		FROM pao_coordinate
+		<where>
+			<if test="#{coord_name} != null">
+				coord_name = #{coord_name}
+			</if>
+			<if test="#{country_code} != null">
+				AND country_code = #{country_code}
+			</if>
+			<if test="#{coord_long}">
+				AND coord_long = #{coord_long}
+			</if>
+			<if test="#{coord_lat}">
+				AND coord_lat = #{coord_lat}
+			</if>
+		</where>
+	</select>
+	<insert id="insertCoord" useGeneratedKeys="true" keyProperty="coord_id" parameterType="db.WriteCoordDataBean">
+		INSERT INTO pao_coordinate (
+			coord_name,
+			country_code,
+			coord_long,
+			coord_lat
+		) VALUES (
+			#{coord_name},
+			#{country_code},
+			#{coord_long},
+			#{coord_lat}
+		)
+	</insert>
+	<insert id="insertBoardDto" useGeneratedKeys="true" keyProperty="board_no" parameterType="db.WriteBoardDataBean">
+		INSERT INTO pao_board (
+			board_title,
+			board_content,
+			board_level,
+			board_contact,
+			board_reg_date,
+			user_id
+		) VALUES (
+			#{board_title},
+			#{board_content},
+			#{board_level},
+			#{board_contact},
+			current_timestamp,
+			#{user_id}
+		)
+		<selectKey keyProperty="board_no" resultType="int" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+	</insert>
+	<insert id="insertTripDto" useGeneratedKeys="true" keyProperty="trip_id" parameterType="db.WriteTripDataBean">
+		INSERT INTO pao_trip (
+			board_no,
+			trip_member_count,
+			coord_id,
+			start_date,
+			end_date,
+			coord_order
+		) VALUES (
+			#{board_no},
+			#{trip_member_count},
+			#{coord_id},
+			#{start_date},
+			#{end_date},
+			#{coord_order}
+		)
+	</insert>
+	<insert id="insertTagList" parameterType="java.util.Map">
+		insert into pao_board_tag (
+			board_no,
+			tag_id
+		) values (
+			#{board_no},
+			#{tag_id}
+		)
+	</insert>
+</mapper>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tag">
+	<select id="getTagList" resultType="java.util.Map">
+		select * from pao_tag
+	</select>
+
+	<insert id="insertTag" parameterType="String">
+		insert into pao_tag(tag_id, tag_value) values(
+			(select max(tag_id) from pao_tag where tag_id &lt;=100)+1,#{tag_value}) 
+	</insert>
+	
+	<insert id="insertCityTag" parameterType="String">
+		insert into pao_tag(tag_id, tag_value) values(
+			(select max(tag_id) from pao_tag where tag_id >100 and tag_id &lt;=1000)+1,#{tag_value})
+	</insert>
+	
+	<select id="getTagCount" resultType="int">
+		select count(*) from pao_tag where tag_id &lt;=1000
+	</select>
+
+	<select id="getTags" parameterType="java.util.Map" resultType="db.TagDataBean">
+		SELECT tag_id, tag_value, tag_type, r
+		FROM (
+			SELECT tag_id, tag_value, tag_type, rownum r 
+			FROM (
+				SELECT * 
+				FROM pao_tag 
+				WHERE tag_id &lt;= 1000
+				ORDER BY tag_id
+				) 
+			WHERE tag_id &lt;= 1000
+			ORDER BY tag_id
+			)
+		WHERE r &gt;= #{start} 
+		AND r &lt;= #{end} 
+		AND tag_id &lt;= 1000
+	</select>
+
+	<select id="checkTag" parameterType="String" resultType="int">
+		select
+		count(*) from pao_tag where tag_value=#{tag_value}
+	</select>
+
+	<select id="getTag" parameterType="int" resultType="db.TagDataBean">
+		select * from pao_tag where tag_id=#{tag_id}
+	</select>
+
+	<select id="modifyTag" parameterType="db.TagDataBean">
+		update pao_tag set
+		tag_value=#{tag_value} where tag_id=#{tag_id}
+	</select>
+
+	<delete id="deleteTag" parameterType="String">
+		delete from pao_tag where
+		tag_id=#{tag_id}
+	</delete>
+<!-- talysa7 fixed -->
+	<select id="getBoardTags" parameterType="int" resultType="db.TagDataBean">
+		select * from pao_view_board_tags where board_no=#{board_no}
+	</select>
+
+
+	 
+	<select id="getUserTags"  parameterType="String" resultType="db.TagDataBean">
+		select * from pao_view_user_tags where user_id=#{user_id}
+	</select>
+
+	<select id="getStyleTags" resultType="db.TagDataBean">
+		select * from pao_tag where tag_type=9
+	</select>
+	
+	<select id="getCityTags" resultType="db.TagDataBean">
+		<![CDATA[
+		select * from pao_tag where tag_id>=101 and tag_id<=1000
+		]]>
+	</select>
+	
+	<select id="getCountryTags" resultType="db.TagDataBean">
+		<![CDATA[
+		select * from pao_tag where tag_id>=1001 and tag_id<=9999
+		]]>
+	</select>
+	
+	<select id="getTagValue" parameterType="String" resultType="String">
+		select tag_value from pao_tag where tag_id=#{tag_id}
+	</select>
+	
+	<insert id="updateUserTag" parameterType="java.util.Map">
+		insert into pao_user_tag values(#{user_id}, #{tag_id}) 
+	</insert>
+	
+	<insert id="updateTripTags" parameterType="java.util.Map">
+		insert into pao_trip_tag values(#{board_no}, #{tag_id}) 
+	</insert>
+	
+	<select id="getTagId" resultType="int">
+		select tag_id from pao_tag where tag_value=#{tag_value}
+	</select>
+	
+	<delete id="deleteUserTag" parameterType="java.util.Map">
+		delete from pao_user_tag where user_id=#{user_id} and tag_id=#{tag_id}
+	</delete>
+	
+	<delete id="deleteTripTag" parameterType="java.util.Map">
+		delete from pao_trip_tag where tb_no=#{board_no} and tag_id=#{tag_id}
+	</delete>
+	
+	<insert id="insertTripTags" parameterType="java.util.Map">
+		insert into pao_trip_tag(board_no, tag_id) values(#{board_no}, #{tag_id})
+	</insert>
+	
+	<insert id="insertUser_tag" parameterType="java.util.Map">
+		insert into pao_user_tag values(#{user_id}, #{tag_id}) 
+	</insert>
+	<select id="getPostTags" parameterType="int" resultType="db.TagDataBean">
+		select * from pao_view_board_tags where board_no=#{board_no}
+	</select>
+	<select id="tagAutoComplete" parameterType="String" resultType="db.TagDataBean">
+		SELECT tag_id,tag_value FROM pao_tag WHERE tag_value LIKE #{tag_value} AND tag_type != 9
+	</select>
+	<insert id="insertUserTag" parameterType="db.TagDataBean" keyProperty="tag_id">
+		insert into pao_tag(tag_value, tag_type) values(#{tag_value}, 1)
+		<selectKey keyProperty="tag_id" resultType="int" order="AFTER">
+	       SELECT LAST_INSERT_ID()
+	    </selectKey>
+	</insert>
+
+	<select id="getTagByvalue" resultType="db.TagDataBean" parameterType="String">
+		select * from pao_tag where tag_value=#{tag_value}
+	</select>
+</mapper>
