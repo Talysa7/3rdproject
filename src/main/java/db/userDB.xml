@@ -225,6 +225,10 @@
 		select * from pao_members where trip_id=#{trip_id} and user_id not in 
 		(select user_id from pao_user_review where trip_id=#{trip_id})
 	</select>	
+	<select id="getReviewMembers2" parameterType="java.util.Map" resultType="db.MemberDataBean">
+		select * from pao_members where trip_id=#{trip_id} and user_id not in 
+		(select user_id from pao_user_review where user_id=#{user_id} or trip_id=#{trip_id})
+	</select>	
 	<select id="getReview" parameterType="java.util.Map" resultType="db.MemberDataBean">
 		select * from pao_members where trip_id = #{trip_id}
 		and user_id not in 

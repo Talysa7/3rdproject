@@ -27,8 +27,11 @@
 		<span>일정</span>	
 		<span>
 			<select id="sel1" name="sel1">	
-				<c:forEach var="trip" items="${trip}">					
-				<option value="${trip.trip_id}">${trip.coord_name} : ${trip.start_date}~${trip.end_date}</option>				
+				<c:forEach var="trip" items="${trip}">	
+				<c:set var = "now" value = "<%= new java.util.Date()%>" />	
+				<c:if test="${now gt trip.end_date }">			
+				<option value="${trip.trip_id}">${trip.coord_name} : ${trip.start_date}~${trip.end_date}</option>	
+				</c:if>			
 				</c:forEach>									
 			</select> 
 		</span>		
