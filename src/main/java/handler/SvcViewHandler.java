@@ -292,12 +292,19 @@ public class SvcViewHandler {
 		
 		List<Integer> tripid = memberDao.getMemTripId(user_id);
 		int catchNum[] = new int[tripid.size()];
+		boolean isEmpty= false;
 		for(int j=0; j<tripid.size(); j++) {
 			int trip = tripid.get(j);
 			user.put("trip_id", trip);
 			int catchNumber =reviewDao.getReview(user).size();
-			catchNum[j] = catchNumber;	
-			if(catchNum[j] !=0) {
+			catchNum[j] = catchNumber;
+			if(catchNum[j] == 0) {
+				isEmpty = true;
+			}else {
+				isEmpty = false;
+			}
+		}
+			if(isEmpty == true) {
 				
 				List<ReviewDataBean> review = reviewDao.stepOne(user);
 				List<ReviewDataBean> reviewDto = new ArrayList<ReviewDataBean>();
@@ -325,7 +332,7 @@ public class SvcViewHandler {
 				
 				request.setAttribute("reviewDto", reviewDto);			
 			}
-		}
+		
 		return new ModelAndView("svc/reviewPage");
 	}
 	@RequestMapping("/coordPage")

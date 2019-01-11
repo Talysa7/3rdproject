@@ -104,4 +104,11 @@ private SqlSession session=SqlMapClient.getSession();
 		ReviewDataBean review = session.selectOne("user.getWorst", user);
 		return review;
 	}
+	public List<MemberDataBean> getReviewMembers(int trip_id, String user_id) {
+		Map<String, Object> user = new HashMap<String, Object>();
+		user.put("user_id", user_id);
+		user.put("trip_id", trip_id);
+		List<MemberDataBean> review = session.selectList("user.getReviewMembers2", user);
+		return review;
+	}
 }
