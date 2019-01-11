@@ -1,11 +1,23 @@
 package handler;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
+import java.util.stream.Stream;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
@@ -100,6 +112,146 @@ public class SvcViewHandler {
 		return new ModelAndView("svc/login");
 	}
 
+	//view page of after clustering
+	@RequestMapping("/reportView")
+	public ModelAndView reportViewProcess(HttpServletRequest request, HttpServletResponse response) throws HandlerException {
+		
+		try {
+			request.setCharacterEncoding("utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		ArrayList<String> coordNB = new ArrayList<>();
+		
+		try { 
+			Scanner scanner1 = new Scanner(new File("c:\\coordCount.csv")); 
+			scanner1.useDelimiter(System.getProperty("line.separator")); 
+			while(scanner1.hasNext()) 
+				coordNB.add(scanner1.next());
+			scanner1.close(); 
+		} catch(FileNotFoundException e) { 
+			e.printStackTrace(); 
+		}
+		
+		String[] afterReadCoord = coordNB.toArray(new String[coordNB.size()]);
+		
+		String[] temporarySplit = new String[2];
+		String[] coordNameNum = new String[11];
+		String[] coordCountNum = new String[11];
+		
+		for(int i=1; i<11; i++) {
+			temporarySplit = afterReadCoord[i].split(",");
+			coordNameNum[i] = temporarySplit[0];
+			coordCountNum[i] = temporarySplit[1];
+		}
+		
+		coordNameNum[0] = "0"; // null 방지로 임의의 값 대입
+		
+		int[] coordNameNumInt = Arrays.asList(coordNameNum).stream().mapToInt(Integer::parseInt).toArray();
+		
+		Map<String,Integer> sendNum = new HashMap<String, Integer>(); 
+		
+		for(int i=1; i<11; i++) {
+			sendNum.put("coord_id"+i, coordNameNumInt[i]);
+		}
+
+		String convertRst1 = coordDao.coordIdtoCoordName1(sendNum);
+		String convertRst2 = coordDao.coordIdtoCoordName2(sendNum);
+		String convertRst3 = coordDao.coordIdtoCoordName3(sendNum);
+		String convertRst4 = coordDao.coordIdtoCoordName4(sendNum);
+		String convertRst5 = coordDao.coordIdtoCoordName5(sendNum);
+		String convertRst6 = coordDao.coordIdtoCoordName6(sendNum);
+		String convertRst7 = coordDao.coordIdtoCoordName7(sendNum);
+		String convertRst8 = coordDao.coordIdtoCoordName8(sendNum);
+		String convertRst9 = coordDao.coordIdtoCoordName9(sendNum);
+		String convertRst10 = coordDao.coordIdtoCoordName10(sendNum);
+	
+		request.setAttribute("convertRst1",convertRst1);
+		request.setAttribute("convertRst2",convertRst2);
+		request.setAttribute("convertRst3",convertRst3);
+		request.setAttribute("convertRst4",convertRst4);
+		request.setAttribute("convertRst5",convertRst5);
+		request.setAttribute("convertRst6",convertRst6);
+		request.setAttribute("convertRst7",convertRst7);
+		request.setAttribute("convertRst8",convertRst8);
+		request.setAttribute("convertRst9",convertRst9);
+		request.setAttribute("convertRst10",convertRst10);
+		
+		
+		ArrayList<String> tagNB = new ArrayList<>();
+		
+		try { 
+			Scanner scanner2 = new Scanner(new File("c:\\tagCount.csv")); 
+			scanner2.useDelimiter(System.getProperty("line.separator")); 
+			while(scanner2.hasNext()) 
+				tagNB.add(scanner2.next());
+			scanner2.close(); 
+		} catch(FileNotFoundException e) { 
+			e.printStackTrace(); 
+		}
+		
+		String[] afterReadtag = tagNB.toArray(new String[tagNB.size()]);
+		
+		String[] temporarySplit1 = new String[2];
+		String[] tagNameNum = new String[11];
+		String[] tagCountNum = new String[11];
+		
+		for(int i=1; i<11; i++) {
+			temporarySplit1 = afterReadtag[i].split(",");
+			tagNameNum[i] = temporarySplit1[0];
+			tagCountNum[i] = temporarySplit1[1];
+		}
+		
+		tagNameNum[0] = "0"; // null 방지로 임의의 값 대입
+		
+		int[] tagNameNumInt = Arrays.asList(tagNameNum).stream().mapToInt(Integer::parseInt).toArray();
+		
+		Map<String,Integer> sendNum1 = new HashMap<String, Integer>(); 
+		
+		for(int i=1; i<11; i++) {
+			sendNum1.put("tag_id"+i, tagNameNumInt[i]);
+		}
+
+		String tconvertRst1 = tagDao.tagIdtoTagName1(sendNum1);
+		String tconvertRst2 = tagDao.tagIdtoTagName2(sendNum1);
+		String tconvertRst3 = tagDao.tagIdtoTagName3(sendNum1);
+		String tconvertRst4 = tagDao.tagIdtoTagName4(sendNum1);
+		String tconvertRst5 = tagDao.tagIdtoTagName5(sendNum1);
+		String tconvertRst6 = tagDao.tagIdtoTagName6(sendNum1);
+		String tconvertRst7 = tagDao.tagIdtoTagName7(sendNum1);
+		String tconvertRst8 = tagDao.tagIdtoTagName8(sendNum1);
+		String tconvertRst9 = tagDao.tagIdtoTagName9(sendNum1);
+		String tconvertRst10 = tagDao.tagIdtoTagName10(sendNum1);
+	
+		request.setAttribute("tconvertRst1",tconvertRst1);
+		request.setAttribute("tconvertRst2",tconvertRst2);
+		request.setAttribute("tconvertRst3",tconvertRst3);
+		request.setAttribute("tconvertRst4",tconvertRst4);
+		request.setAttribute("tconvertRst5",tconvertRst5);
+		request.setAttribute("tconvertRst6",tconvertRst6);
+		request.setAttribute("tconvertRst7",tconvertRst7);
+		request.setAttribute("tconvertRst8",tconvertRst8);
+		request.setAttribute("tconvertRst9",tconvertRst9);
+		request.setAttribute("tconvertRst10",tconvertRst10);
+		
+		System.out.println(tconvertRst1);
+		System.out.println(tconvertRst2);
+		System.out.println(tconvertRst3);
+		System.out.println(tconvertRst4);
+		System.out.println(tconvertRst5);
+		System.out.println(tconvertRst6);
+		System.out.println(tconvertRst7);
+		System.out.println(tconvertRst8);
+		System.out.println(tconvertRst9);
+		System.out.println(tconvertRst10);
+		
+		
+	//	System.out.println(afterReadCoord[1]);
+	//	System.out.println(coordNB);
+
+		return new ModelAndView("svc/reportView");
+	}
 	/////////////////////////////////user pages/////////////////////////////////
 
 	@RequestMapping("/myPage")

@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 
 <%@ include file="setting.jsp" %>
-<%@include file="header.jsp" %>
+<%@ include file="header.jsp" %>
 
 <link rel="stylesheet" type="text/css" href="${project}style_member.css">
 <script src="${project}script.js"></script>

@@ -131,4 +131,35 @@
 	<select id="getTagByvalue" resultType="db.TagDataBean" parameterType="String">
 		select * from pao_tag where tag_value=#{tag_value}
 	</select>
+	<select id="tagNumToName1" parameterType="java.util.Map" resultType="String">
+		select tag_value from pao_tag where tag_id=#{tag_id1}
+	</select>
+	<select id="tagNumToName2" parameterType="java.util.Map" resultType="String">
+		select tag_value from pao_tag where tag_id=#{tag_id2}
+	</select>
+	<select id="tagNumToName3" parameterType="java.util.Map" resultType="String">
+		select tag_value from pao_tag where tag_id=#{tag_id3}
+	</select>
+	<select id="tagNumToName4" parameterType="java.util.Map" resultType="String">
+		select tag_value from pao_tag where tag_id=#{tag_id4}
+	</select>
+	<select id="tagNumToName5" parameterType="java.util.Map" resultType="String">
+		select tag_value from pao_tag where tag_id=#{tag_id5}
+	</select>
+	<select id="tagNumToName6" parameterType="java.util.Map" resultType="String">
+		select tag_value from pao_tag where tag_id=#{tag_id6}
+	</select>
+	<select id="tagNumToName7" parameterType="java.util.Map" resultType="String">
+		select tag_value from pao_tag where tag_id=#{tag_id7}
+	</select>
+	<select id="tagNumToName8" parameterType="java.util.Map" resultType="String">
+		select tag_value from pao_tag where tag_id=#{tag_id8}
+	</select>
+	<select id="tagNumToName9" parameterType="java.util.Map" resultType="String">
+		select tag_value from pao_tag where tag_id=#{tag_id9}
+	</select>
+	<select id="tagNumToName10" parameterType="java.util.Map" resultType="String">
+		select tag_value from pao_tag where tag_id=#{tag_id10}
+	</select>
+	
 </mapper>

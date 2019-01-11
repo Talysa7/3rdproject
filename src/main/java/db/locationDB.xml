@@ -226,4 +226,35 @@
 	<select id="coordReview" parameterType="int" resultType="db.CoordReviewDataBean">
 		select * from pao_coord_review where coord_id=#{coord_id}
 	</select>
+	<select id="coordNumToName1" parameterType="java.util.Map" resultType="String">
+		select coord_name from pao_coordinate where coord_id=#{coord_id1}
+	</select>
+	<select id="coordNumToName2" parameterType="java.util.Map" resultType="String">
+		select coord_name from pao_coordinate where coord_id=#{coord_id2}
+	</select>
+	<select id="coordNumToName3" parameterType="java.util.Map" resultType="String">
+		select coord_name from pao_coordinate where coord_id=#{coord_id3}
+	</select>
+	<select id="coordNumToName4" parameterType="java.util.Map" resultType="String">
+		select coord_name from pao_coordinate where coord_id=#{coord_id4}
+	</select>
+	<select id="coordNumToName5" parameterType="java.util.Map" resultType="String">
+		select coord_name from pao_coordinate where coord_id=#{coord_id5}
+	</select>
+	<select id="coordNumToName6" parameterType="java.util.Map" resultType="String">
+		select coord_name from pao_coordinate where coord_id=#{coord_id6}
+	</select>
+	<select id="coordNumToName7" parameterType="java.util.Map" resultType="String">
+		select coord_name from pao_coordinate where coord_id=#{coord_id7}
+	</select>
+	<select id="coordNumToName8" parameterType="java.util.Map" resultType="String">
+		select coord_name from pao_coordinate where coord_id=#{coord_id8}
+	</select>
+	<select id="coordNumToName9" parameterType="java.util.Map" resultType="String">
+		select coord_name from pao_coordinate where coord_id=#{coord_id9}
+	</select>
+	<select id="coordNumToName10" parameterType="java.util.Map" resultType="String">
+		select coord_name from pao_coordinate where coord_id=#{coord_id10}
+	</select>
+	
 </mapper>
