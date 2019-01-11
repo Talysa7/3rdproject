@@ -1,6 +1,7 @@
 package db;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
@@ -95,5 +96,34 @@ public class CoordDBBean {
 		return session.selectList("location.coordAll");
 	}
 	
-
+	public String coordIdtoCoordName1(Map<String, Integer> sendNum){
+		return session.selectOne("location.coordNumToName1", sendNum);
+	}
+	public String coordIdtoCoordName2(Map<String, Integer> sendNum){
+		return session.selectOne("location.coordNumToName2", sendNum);
+	}
+	public String coordIdtoCoordName3(Map<String, Integer> sendNum){
+		return session.selectOne("location.coordNumToName3", sendNum);
+	}
+	public String coordIdtoCoordName4(Map<String, Integer> sendNum){
+		return session.selectOne("location.coordNumToName4", sendNum);
+	}
+	public String coordIdtoCoordName5(Map<String, Integer> sendNum){
+		return session.selectOne("location.coordNumToName5", sendNum);
+	}
+	public String coordIdtoCoordName6(Map<String, Integer> sendNum){
+		return session.selectOne("location.coordNumToName6", sendNum);
+	}
+	public String coordIdtoCoordName7(Map<String, Integer> sendNum){
+		return session.selectOne("location.coordNumToName7", sendNum);
+	}
+	public String coordIdtoCoordName8(Map<String, Integer> sendNum){
+		return session.selectOne("location.coordNumToName8", sendNum);
+	}
+	public String coordIdtoCoordName9(Map<String, Integer> sendNum){
+		return session.selectOne("location.coordNumToName9", sendNum);
+	}
+	public String coordIdtoCoordName10(Map<String, Integer> sendNum){
+		return session.selectOne("location.coordNumToName10", sendNum);
+	}
 }

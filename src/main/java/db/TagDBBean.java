@@ -166,4 +166,35 @@ public class TagDBBean {
 		public TagDataBean getTagByValue(String tag_value) {
 			return session.selectOne("tag.getTagByvalue",tag_value);
 		}
+		
+		public String tagIdtoTagName1(Map<String, Integer> sendNum1){
+			return session.selectOne("tag.tagNumToName1", sendNum1);
+		}
+		public String tagIdtoTagName2(Map<String, Integer> sendNum1){
+			return session.selectOne("tag.tagNumToName2", sendNum1);
+		}
+		public String tagIdtoTagName3(Map<String, Integer> sendNum1){
+			return session.selectOne("tag.tagNumToName3", sendNum1);
+		}
+		public String tagIdtoTagName4(Map<String, Integer> sendNum1){
+			return session.selectOne("tag.tagNumToName4", sendNum1);
+		}
+		public String tagIdtoTagName5(Map<String, Integer> sendNum1){
+			return session.selectOne("tag.tagNumToName5", sendNum1);
+		}
+		public String tagIdtoTagName6(Map<String, Integer> sendNum1){
+			return session.selectOne("tag.tagNumToName6", sendNum1);
+		}
+		public String tagIdtoTagName7(Map<String, Integer> sendNum1){
+			return session.selectOne("tag.tagNumToName7", sendNum1);
+		}
+		public String tagIdtoTagName8(Map<String, Integer> sendNum1){
+			return session.selectOne("tag.tagNumToName8", sendNum1);
+		}
+		public String tagIdtoTagName9(Map<String, Integer> sendNum1){
+			return session.selectOne("tag.tagNumToName9", sendNum1);
+		}
+		public String tagIdtoTagName10(Map<String, Integer> sendNum1){
+			return session.selectOne("tag.tagNumToName10", sendNum1);
+		}
 }
