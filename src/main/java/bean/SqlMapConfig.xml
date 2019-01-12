@@ -22,5 +22,6 @@
 		<mapper resource="db/locationDB.xml" />
 		<mapper resource="db/tagDB.xml" />
 		<mapper resource="db/userDB.xml" />
+		<mapper resource="db/predictDB.xml"/>
 	</mappers>
 </configuration>
