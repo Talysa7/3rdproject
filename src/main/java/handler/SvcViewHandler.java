@@ -1,24 +1,19 @@
 package handler;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.stream.Stream;
-import java.util.Calendar;
+
 import java.util.Comparator;
 import java.util.Date;
 import java.sql.Timestamp;
@@ -42,17 +37,19 @@ import db.AlbumDBBean;
 import db.AlbumDataBean;
 import db.BoardDataBean;
 import db.CmtDBBean;
-import db.CmtDataBean;
+
 import db.CoordDBBean;
 import db.CoordDataBean;
 import db.CoordReviewDBBean;
 import db.CoordReviewDataBean;
 import db.CountryDBBean;
-import db.CountryDataBean;
+
 import db.LogDBBean;
 import db.MemberDBBean;
 import db.MemberDataBean;
-import db.RegionDataBean;
+import db.PredictDBBean;
+import db.PredictDataBean;
+
 import db.ReviewDBBean;
 import db.ReviewDataBean;
 import db.TagDBBean;
@@ -89,6 +86,8 @@ public class SvcViewHandler {
 	private LogDBBean logDao;
 	@Resource
 	private CountryDBBean countryDao;
+	@Resource
+	private PredictDBBean predictDao;
 
 	//amount of displayed photos in a page
 	private static final int photoPerPage=6;
@@ -178,7 +177,6 @@ public class SvcViewHandler {
 		request.setAttribute("convertRst9",convertRst9);
 		request.setAttribute("convertRst10",convertRst10);
 		
-		
 		ArrayList<String> tagNB = new ArrayList<>();
 		
 		try { 
@@ -235,20 +233,74 @@ public class SvcViewHandler {
 		request.setAttribute("tconvertRst9",tconvertRst9);
 		request.setAttribute("tconvertRst10",tconvertRst10);
 		
-		System.out.println(tconvertRst1);
-		System.out.println(tconvertRst2);
-		System.out.println(tconvertRst3);
-		System.out.println(tconvertRst4);
-		System.out.println(tconvertRst5);
-		System.out.println(tconvertRst6);
-		System.out.println(tconvertRst7);
-		System.out.println(tconvertRst8);
-		System.out.println(tconvertRst9);
-		System.out.println(tconvertRst10);
 		
+		String user_id = (String)request.getSession().getAttribute("user_id");
+
+		if(user_id != null && user_id != "") {
+			List<Integer> trips = predictDao.getTrips(user_id);
+			PredictDataBean clusters = predictDao.getClu(user_id);
+			List<Integer> rstCoords = new ArrayList<Integer>();
+			List<Integer> p1coords = new ArrayList<Integer>();
+			List<CoordDataBean> coords = new ArrayList<CoordDataBean>();
+			try {
+				int predict1 = clusters.getPredict1();
+				if(predict1!= -1 ) {
+					clusters.setPredictName("predict1");
+					clusters.setClusterNo(predict1);
+					p1coords = predictDao.getCoords(clusters); 
+					for(int i=0; i<p1coords.size(); i++) {
+						int coord = p1coords.get(i);
+						if(!trips.contains(coord)) {
+							rstCoords.add(coord);
+						}
+					}
+				}
+				
+				if(rstCoords.size()<3) {
+					int predict2 = clusters.getPredict2();
+					clusters.setPredictName("predict2");
+					clusters.setClusterNo(predict2);
+					List<Integer> p2coords = predictDao.getCoords(clusters);
+					for(int i=0; i<p2coords.size(); i++) {
+						int coord = p2coords.get(i);
+						if(!trips.contains(coord)) {
+							if(!rstCoords.contains(coord)) {
+								rstCoords.add(coord);
+							}
+						}
+					
+					}
+				
+				}
+				
+				if(rstCoords.size()<3) {
+					int predict3 = clusters.getPredict3();
+					clusters.setPredictName("predict3");
+					clusters.setClusterNo(predict3);
+					List<Integer> p3coords = predictDao.getCoords(clusters);
+					for(int i=0; i<p3coords.size(); i++) {
+						int coord = p3coords.get(i);
+						if(!trips.contains(coord)) {
+							if(!rstCoords.contains(coord)) {
+								rstCoords.add(coord);
+							}
+						}
+					
+					}
+				
+				}
+				
+				for(int i=0; i<3; i++) {
+					int coord = rstCoords.get(i);
+					coords.add(coordDao.getCoordinate(coord));		
+				}
+				request.setAttribute("coords", coords);
+				
+			} catch(NullPointerException e ) {
+				
+			}
+		}
 		
-	//	System.out.println(afterReadCoord[1]);
-	//	System.out.println(coordNB);
 
 		return new ModelAndView("svc/reportView");
 	}
@@ -333,7 +385,6 @@ public class SvcViewHandler {
 					
 				}
 			}
-				
 		}
 		return new ModelAndView("svc/myPage");
 	}

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="predict">
+ 	<select id="getTrips" parameterType="String" resultType="int">
+		SELECT coord_id 
+		FROM pao_members AS a
+		LEFT OUTER JOIN pao_trip AS b on a.trip_id = b.trip_id
+		WHERE a.user_id=#{user_id}
+	</select>
+	 <select id="getClu" parameterType="String" resultType="db.PredictDataBean">
+		SELECT * FROM pao_cluster WHERE user_id = #{user_id}
+	</select>
+	<select id="getCoords" parameterType="db.PredictDataBean" resultType="int">
+		SELECT coord_id FROM (SELECT b.coord_id AS coord_id, count(1) AS cnt  
+		FROM pao_members AS a 
+		LEFT OUTER JOIN pao_trip AS b  ON a.trip_id = b.trip_id
+		WHERE a.user_id IN (SELECT user_id FROM pao_cluster WHERE ${predictName} = #{clusterNo})
+		GROUP BY b.coord_id
+		ORDER BY cnt DESC
+		LIMIT 10) AS a
+	</select>
+ </mapper>

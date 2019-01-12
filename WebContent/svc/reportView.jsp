@@ -11,4 +11,13 @@
 			
 		</form>		
 	</body>	
+
+<c:if test="${sessionScope.user_id ne null}">	
+	<c:forEach items="${coords}" var="coord" >  
+	  <c:out value="${coord.coord_name}"/> 
+	</c:forEach> 
+</c:if>
+<c:if test="${sessionScope.user_id eq null}">	
+	나오냐
+</c:if>
 	

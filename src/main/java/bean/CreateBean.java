@@ -17,6 +17,7 @@ import db.UserDBBean;
 import db.CountryDBBean;
 import db.LogDBBean;
 import db.MemberDBBean;
+import db.PredictDBBean;
 import db.RegionDBBean;
 import db.ReviewDBBean;
 
@@ -73,6 +74,10 @@ public class CreateBean {
 	@Bean
 	public LogDBBean logDao() {
 		return new LogDBBean();
+	}
+	@Bean
+	public PredictDBBean predictDao() {
+		return new PredictDBBean();
 	}
 	@Bean
 	public ViewResolver viewResolver() {
