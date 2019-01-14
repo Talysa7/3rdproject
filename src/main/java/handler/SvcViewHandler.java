@@ -124,7 +124,7 @@ public class SvcViewHandler {
 		ArrayList<String> coordNB = new ArrayList<>();
 		
 		try { 
-			Scanner scanner1 = new Scanner(new File("c:\\coordCount.csv")); 
+			Scanner scanner1 = new Scanner(new File("/home/encore/logs/coordCount.csv")); 
 			scanner1.useDelimiter(System.getProperty("line.separator")); 
 			while(scanner1.hasNext()) 
 				coordNB.add(scanner1.next());
@@ -180,7 +180,7 @@ public class SvcViewHandler {
 		ArrayList<String> tagNB = new ArrayList<>();
 		
 		try { 
-			Scanner scanner2 = new Scanner(new File("c:\\tagCount.csv")); 
+			Scanner scanner2 = new Scanner(new File("/home/encore/logs/tagCount.csv")); 
 			scanner2.useDelimiter(System.getProperty("line.separator")); 
 			while(scanner2.hasNext()) 
 				tagNB.add(scanner2.next());
