@@ -39,7 +39,7 @@
 </head>
 <body>
 	<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-		<a class="navbar-brand" href="tripList.go"> 
+		<a class="navbar-brand" href="reportView.go"> 
 		<img src="${project}img/logo_c.png" width="30" height="30" class="d-inline-block align-top">
 		 Travelers
 		</a>
@@ -54,7 +54,7 @@
 			<ul class="navbar-nav mr-auto">
 				
 				<li class="nav-item">
-					<a class="nav-link" href="tripList.go">${page_main_eng} 
+					<a class="nav-link" href="reportView.go">${page_main_eng} 
 					<span class="sr-only">(current)</span></a>
 				</li>
 				<li class="nav-item"><a class="nav-link" href="tripList.go">${page_board_eng}</a></li>
