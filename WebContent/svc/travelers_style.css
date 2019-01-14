@@ -298,3 +298,18 @@ div.right {
   padding: 6px 12px;
 }
 
+/*===reportView===*/
+
+.separator1 {
+    margin-top: 30px;
+    padding: 50px 20px 0 20px;
+    text-align: center;
+}
+
+.separator {
+
+    margin-top: 80px;
+    padding: 21px;
+    text-align: center;
+    color: #212121;
+}

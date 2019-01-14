@@ -290,11 +290,33 @@ public class SvcViewHandler {
 				
 				}
 				
-				for(int i=0; i<3; i++) {
+				for(int i=0; i<10; i++) {
 					int coord = rstCoords.get(i);
 					coords.add(coordDao.getCoordinate(coord));		
 				}
 				request.setAttribute("coords", coords);
+			
+				String coord1 = coords.get(0).getCoord_name();
+				String coord2 = coords.get(1).getCoord_name();
+				String coord3 = coords.get(2).getCoord_name();
+				String coord4 = coords.get(3).getCoord_name();
+				String coord5 = coords.get(4).getCoord_name();
+				String coord6 = coords.get(5).getCoord_name();
+				String coord7 = coords.get(6).getCoord_name();
+				String coord8 = coords.get(7).getCoord_name();
+				String coord9 = coords.get(8).getCoord_name();
+				String coord10 = coords.get(9).getCoord_name();
+				
+				request.setAttribute("coord1", coord1);
+				request.setAttribute("coord2", coord2);
+				request.setAttribute("coord3", coord3);
+				request.setAttribute("coord4", coord4);
+				request.setAttribute("coord5", coord5);
+				request.setAttribute("coord6", coord6);
+				request.setAttribute("coord7", coord7);
+				request.setAttribute("coord8", coord8);
+				request.setAttribute("coord9", coord9);
+				request.setAttribute("coord10", coord10);
 				
 			} catch(NullPointerException e ) {
 				
