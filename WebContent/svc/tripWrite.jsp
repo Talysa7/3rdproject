@@ -109,7 +109,7 @@
 				<div class="board_part">	
 					<div class="form-group row">
 						<label for="board_content" class="col-2 col-form-label">글내용</label>
-						<textarea class="board_content" name="boardDto[board_content]" placeholder="내용을 입력하세요">
+						<textarea class="board_content" style="width:100%; height:250px;" name="boardDto[board_content]" placeholder="내용을 입력하세요">
 						</textarea>
 					</div>
 					<div class="form-group row">
