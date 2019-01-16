@@ -25,7 +25,7 @@
 
 <!-- Map Search API -->
 <script
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAoC3t0xr7YieFKGY9nIAH366PT6JyaiEg&libraries=places">
+	src="https://maps.googleapis.com/maps/api/js?key=setYourKey&libraries=places">
 </script>
 </head>
 <body>

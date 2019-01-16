@@ -132,7 +132,7 @@
 								 <span id="place-name"  class="title"></span><br>
 								 <span id="place-address"></span>
 							</div>
-							<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDbvvT_kUPxmLL9PHcM9gp2qibpr8sThVQ&libraries=places&callback=initMap" async defer></script>
+							<script src="https://maps.googleapis.com/maps/api/js?key=setYourKey&libraries=places&callback=initMap" async defer></script>
 							<label>날짜</label>
 							<div class="row" style="padding: 0px 0px 10px 14px;">
 								<input id="fromDate" name="fromDate" width="45%"/>

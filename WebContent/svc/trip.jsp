@@ -207,7 +207,7 @@
 </body>
 
 <script async defer
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTHrzKi3xuXtFRo_fm9dGO2cC--hrLBpo&callback=initMap">
+	src="https://maps.googleapis.com/maps/api/js?key=setYourKey&callback=initMap">
 </script>
 
 <!-- Bootstrap core JavaScript
